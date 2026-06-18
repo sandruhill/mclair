@@ -2,7 +2,8 @@ backend:
   name: github
   repo: sandruhill/mclair
   branch: main
-  base_url: https://sveltia-cms-auth.pages.dev
+  auth_type: pkce
+  app_id: Ov23liFXNpqlMWtdssuS
 
 locale: pt
 site_url: https://mclair.vercel.app
