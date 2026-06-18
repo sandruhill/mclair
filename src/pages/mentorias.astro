@@ -1,0 +1,608 @@
+---
+import Layout from '../layouts/Layout.astro';
+const WA_BOLDER = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder.%20Pode%20me%20contar%20mais%3F';
+const WA_PRESS  = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder%20Press.%20Pode%20me%20contar%20mais%3F';
+
+const bolderLevels = [
+  { n:'01', title:'Fundamentos', desc:'Deep dive no seu conhecimento, identificação do diferencial competitivo e definição do seu posicionamento único no mercado.' },
+  { n:'02', title:'Estratégia', desc:'Desenvolvimento da sua narrativa pessoal, criação da esteira de produtos e estruturação do seu pitch perfeito para o público certo.' },
+  { n:'03', title:'Implementação', desc:'Ativação do plano estratégico, produção de conteúdo de autoridade e mensuração de resultados com indicadores reais.' },
+];
+
+const bolderPressLevels = [
+  { n:'01', title:'Fundamentos Estratégicos', desc:'DNA da Assessoria Moderna, mapeamento de mídia e construção de relacionamentos estratégicos com a imprensa.' },
+  { n:'02', title:'Produção de Pautas', desc:'Criação de Pautas Irresistíveis e técnicas avançadas de storytelling para assessoria de imprensa de alto impacto.' },
+  { n:'03', title:'Estratégia e Relacionamento', desc:'Planejamento estratégico de comunicação integrada e gestão de crise com protocolos profissionais.' },
+  { n:'04', title:'Resultados e Inovação', desc:'Mensuração e ROI em Assessoria. Tendências da Assessoria 4.0 incluindo uso de IA e tecnologia em PR.' },
+];
+---
+
+<Layout
+  title="Mentorias Mclair — Bolder e Bolder Press | Marketing de Autoridade"
+  description="Mentorias Mclair: Programa Bolder (Marca Pessoal e Marketing de Autoridade) e Bolder Press (Assessoria de Imprensa Estratégica). Com Kelly Pinheiro, 20+ anos de experiência."
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    name: 'Mentorias Mclair — Bolder e Bolder Press',
+    description: 'Programas exclusivos de mentoria conduzidos por Kelly Pinheiro',
+    itemListElement: [
+      {
+        '@type': 'ListItem', position: 1,
+        item: {
+          '@type': 'Course',
+          name: 'Mentoria Bolder — Marca Pessoal e Marketing de Autoridade',
+          description: 'Mentoria de imersão para profissionais que desejam criar sua marca pessoal e se posicionar como autoridade reconhecida no seu nicho. Conduzida por Kelly Pinheiro.',
+          provider: { '@type': 'Organization', name: 'Mclair Comunicação Estratégica', url: 'https://mclair.vercel.app' },
+          instructor: { '@type': 'Person', name: 'Kelly Pinheiro', jobTitle: 'Fundadora & CEO da Mclair' },
+          courseMode: 'mixed',
+          inLanguage: 'pt-BR',
+          url: 'https://mclair.vercel.app/mentorias#bolder',
+          hasCourseInstance: [
+            { '@type': 'CourseInstance', courseMode: 'blended', name: 'Nível 1: Fundamentos', description: 'Deep dive no diferencial competitivo e posicionamento único.' },
+            { '@type': 'CourseInstance', courseMode: 'blended', name: 'Nível 2: Estratégia', description: 'Narrativa pessoal, esteira de produtos e pitch perfeito.' },
+            { '@type': 'CourseInstance', courseMode: 'blended', name: 'Nível 3: Implementação', description: 'Conteúdo de autoridade e mensuração de resultados.' },
+          ],
+        },
+      },
+      {
+        '@type': 'ListItem', position: 2,
+        item: {
+          '@type': 'Course',
+          name: 'Mentoria Bolder Press — Assessoria de Imprensa Estratégica',
+          description: 'Especialização em Assessoria de Imprensa para jornalistas e profissionais de comunicação. Técnicas avançadas de pauta, relacionamento com mídia e Assessoria 4.0.',
+          provider: { '@type': 'Organization', name: 'Mclair Comunicação Estratégica', url: 'https://mclair.vercel.app' },
+          instructor: { '@type': 'Person', name: 'Kelly Pinheiro', jobTitle: 'Fundadora & CEO da Mclair' },
+          courseMode: 'mixed',
+          inLanguage: 'pt-BR',
+          url: 'https://mclair.vercel.app/mentorias#bolder-press',
+          numberOfCredits: 4,
+        },
+      },
+    ],
+  }}
+>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="ph-photo-bg" aria-hidden="true">
+    <img src="/mentoria/mentoria_06.jpg" alt="" class="ph-photo-img" />
+    <div class="ph-photo-overlay"></div>
+  </div>
+  <div class="ph-bg" aria-hidden="true">
+    <div class="ph-blob ph-blob-1"></div>
+    <div class="ph-blob ph-blob-2"></div>
+  </div>
+  <div class="container ph-inner">
+    <div class="ph-content">
+      <p class="eyebrow" data-anim style="color:rgba(255,255,255,.6)">
+        <span style="background:rgba(255,255,255,.15);width:24px;height:2px;display:inline-block"></span>
+        Programas exclusivos de imersão
+      </p>
+      <h1 class="ph-title word-reveal" data-anim data-delay="1">
+        <span class="word"><span class="word-inner">Mentorias</span></span>
+        <span class="word"><span class="word-inner">que</span></span>
+        <span class="word"><span class="word-inner">transformam</span></span>
+        <br/>
+        <span class="word ph-accent"><span class="word-inner">sua</span></span>
+        <span class="word ph-accent"><span class="word-inner">carreira</span></span>
+      </h1>
+      <p class="ph-sub" data-anim data-delay="2">
+        Conduzidas por Kelly Pinheiro — especialista com mais de 20 anos de experiência em Marketing de Autoridade — as mentorias Bolder e Bolder Press são programas de imersão e desenvolvimento acelerado para quem quer ser referência no mercado.
+      </p>
+      <div class="ph-actions" data-anim data-delay="3">
+        <a href="#bolder" class="btn-white">
+          Mentoria Bolder
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href="#bolder-press" class="btn-ghost">
+          Bolder Press
+        </a>
+      </div>
+    </div>
+    <div class="ph-kelly" data-anim="right" data-delay="2">
+      <div class="pk-card">
+        <div class="pk-photo-wrap">
+          <img src="/mentoria/kelly-pinheiro-new.jpg" alt="Kelly Pinheiro" class="pk-photo" />
+          <div class="pk-photo-badge">CEO & Fundadora</div>
+        </div>
+        <h3 class="pk-name">Kelly Pinheiro</h3>
+        <span class="pk-role">Mclair Comunicação Estratégica</span>
+        <div class="pk-divider"></div>
+        <p class="pk-bio">Mais de 20 anos transformando marcas e profissionais em referências de mercado através de Comunicação Estratégica e Marketing de Autoridade.</p>
+        <div class="pk-tags">
+          <span>Marketing de Autoridade</span>
+          <span>Comunicação Estratégica</span>
+          <span>Assessoria de Imprensa</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- BOLDER -->
+<section class="section bolder-section" id="bolder">
+  <div class="container">
+    <div class="program-header" data-anim>
+      <div class="program-badge program-badge-red">Programa 01</div>
+      <div class="program-name program-name-red" data-anim data-delay="1">Mentoria<br/><span>Bolder</span></div>
+      <h2 class="section-title" style="margin-top:8px">
+        Sua jornada de <span>influência estratégica</span><br/>e Marketing de Autoridade
+      </h2>
+      <p class="section-lead" style="margin-top:16px">
+        O Programa Bolder é a sua mentoria de marca pessoal focada em Marketing de Autoridade. Desenvolvido para quem precisa se diferenciar da concorrência, ampliar a visibilidade e construir uma imagem sólida e confiável. Você será conduzido a se tornar uma Referência no seu mercado através da Comunicação Estratégica.
+      </p>
+      <p class="program-audience" data-anim data-delay="1">
+        <strong>Para quem é:</strong> Profissionais e empreendedores que desejam criar sua marca pessoal e se posicionar como autoridade reconhecida no seu nicho.
+      </p>
+    </div>
+
+    <div class="levels-grid stagger-children" style="margin-top:56px">
+      {bolderLevels.map(l => (
+        <div class="level-card level-red">
+          <span class="level-num">{l.n}</span>
+          <h3 class="level-title">{l.title}</h3>
+          <p class="level-desc">{l.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="program-cta" data-anim>
+      <div>
+        <h3>Pronto para se tornar uma referência?</h3>
+        <p>Dê o próximo passo na construção da sua autoridade de mercado.</p>
+      </div>
+      <a href={WA_BOLDER} class="btn-primary" target="_blank" rel="noopener">
+        Inscreva-se na Mentoria Bolder
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- DIVIDER -->
+<div class="programs-divider">
+  <div class="container">
+    <div class="pd-line" data-anim="fade"></div>
+    <span class="pd-label">+</span>
+  </div>
+</div>
+
+<!-- BOLDER PRESS -->
+<section class="section press-section" id="bolder-press">
+  <div class="container">
+    <div class="program-header" data-anim>
+      <div class="program-badge program-badge-teal">Programa 02</div>
+      <div class="program-name program-name-teal" data-anim data-delay="1">Mentoria<br/><span>Bolder Press</span></div>
+      <h2 class="section-title" style="margin-top:8px">
+        Domine a <span>Assessoria de Imprensa</span><br/>Estratégica
+      </h2>
+      <p class="section-lead" style="margin-top:16px">
+        O Programa Bolder Press é a especialização que você precisa para dominar a Assessoria de Imprensa Estratégica. Aprenda a criar pautas que jornalistas realmente querem publicar, construir relacionamentos duradouros com a mídia e entregar resultados consistentes para seus clientes.
+      </p>
+      <p class="program-audience" data-anim data-delay="1">
+        <strong>Para quem é:</strong> Jornalistas e profissionais de comunicação que desejam adquirir mais conhecimentos e se especializar em Assessoria de Imprensa estratégica e de alto impacto.
+      </p>
+    </div>
+
+    <div class="levels-grid levels-4 stagger-children" style="margin-top:56px">
+      {bolderPressLevels.map(l => (
+        <div class="level-card level-teal">
+          <span class="level-num">{l.n}</span>
+          <h3 class="level-title">{l.title}</h3>
+          <p class="level-desc">{l.desc}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="program-cta program-cta-teal" data-anim>
+      <div>
+        <h3>Quer dominar a Assessoria de Imprensa?</h3>
+        <p>Eleve seu nível profissional com o método Bolder Press.</p>
+      </div>
+      <a href={WA_PRESS} class="btn-primary" target="_blank" rel="noopener" style="background:var(--teal)">
+        Saiba Mais sobre Bolder Press
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- GALERIA BENTO -->
+<section class="galeria-section">
+  <div class="container galeria-intro" data-anim>
+    <p class="eyebrow" style="justify-content:center;color:rgba(255,255,255,.4)">Momentos das mentorias</p>
+    <h2 class="galeria-title">Transformação em <span>cada encontro</span></h2>
+  </div>
+  <div class="bento-grid" id="bento-grid">
+    <div class="bento-item bg-a" data-lb="0"><img src="/mentoria/mentoria_08.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-b" data-lb="1"><img src="/mentoria/mentoria_04.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-c" data-lb="2"><img src="/mentoria/mentoria_07.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-d" data-lb="3"><img src="/mentoria/mentoria_05.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-e" data-lb="4"><img src="/mentoria/mentoria_11.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-f" data-lb="5"><img src="/mentoria/mentoria_06.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-g" data-lb="6"><img src="/mentoria/mentoria_12.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-h" data-lb="7"><img src="/mentoria/mentoria_02.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-i" data-lb="8"><img src="/mentoria/mentoria_03.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-j" data-lb="9"><img src="/mentoria/mentoria_13.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+  </div>
+
+  <!-- LIGHTBOX -->
+  <div id="lb-overlay" class="lb-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+    <button class="lb-close" id="lb-close" aria-label="Fechar">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    <button class="lb-nav lb-prev" id="lb-prev" aria-label="Anterior">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+    </button>
+    <button class="lb-nav lb-next" id="lb-next" aria-label="Próximo">
+      <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </button>
+    <div class="lb-stage">
+      <img id="lb-img" src="" alt="" class="lb-img" />
+    </div>
+    <div class="lb-dots" id="lb-dots"></div>
+  </div>
+</section>
+
+</Layout>
+
+<style>
+/* HERO */
+.page-hero {
+  background: var(--dark); min-height:88vh;
+  display:flex; align-items:center;
+  position:relative; overflow:hidden;
+  padding-top:78px;
+}
+
+/* Hero photo background */
+.ph-photo-bg { position:absolute; inset:0; z-index:0; }
+.ph-photo-img { width:100%; height:100%; object-fit:cover; object-position:center; }
+.ph-photo-overlay {
+  position:absolute; inset:0;
+  background:linear-gradient(105deg,rgba(21,18,16,.92) 0%,rgba(21,18,16,.78) 55%,rgba(21,18,16,.65) 100%);
+}
+
+.ph-bg { position:absolute; inset:0; pointer-events:none; z-index:1; }
+.ph-blob { position:absolute; border-radius:50%; filter:blur(100px); }
+.ph-blob-1 { width:500px;height:500px; top:-100px;left:-80px; background:radial-gradient(circle,rgba(200,16,46,.12) 0%,transparent 70%); }
+.ph-blob-2 { width:400px;height:400px; bottom:-80px;right:-80px; background:radial-gradient(circle,rgba(27,138,118,.07) 0%,transparent 70%); }
+
+.ph-inner {
+  display:grid; grid-template-columns:1fr 360px; gap:60px; align-items:center;
+  padding-top:72px; padding-bottom:72px;
+  position:relative; z-index:2;
+}
+.ph-title {
+  font-size:clamp(2.6rem,5.5vw,5rem); font-weight:900;
+  line-height:1.05; letter-spacing:-.04em; color:#fff;
+  margin:18px 0 24px; display:block;
+}
+.ph-accent { color:var(--red); }
+.ph-sub {
+  font-size:clamp(.92rem,1.4vw,1rem); font-weight:300; color:rgba(255,255,255,.5);
+  line-height:1.85; max-width:520px; margin-bottom:36px;
+}
+.ph-actions { display:flex; gap:12px; flex-wrap:wrap; }
+.btn-white {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  background:#fff; color:var(--dark);
+  padding:.88rem 1.8rem; border-radius:var(--r-sm);
+  transition:background .2s, transform .15s;
+}
+.btn-white:hover { background:var(--cream-2); transform:translateY(-2px); }
+.btn-ghost {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:.78rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:rgba(255,255,255,.7); border:1.5px solid rgba(255,255,255,.2);
+  padding:.85rem 1.7rem; border-radius:var(--r-sm);
+  transition:border-color .2s, color .2s;
+}
+.btn-ghost:hover { border-color:rgba(255,255,255,.5); color:#fff; }
+
+/* Kelly card */
+.pk-card {
+  background:rgba(255,255,255,.06); backdrop-filter:blur(14px);
+  -webkit-backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.12); border-radius:var(--r-xl);
+  padding:0; overflow:hidden;
+}
+.pk-photo-wrap { position:relative; height:240px; overflow:hidden; }
+.pk-photo { width:100%; height:100%; object-fit:cover; object-position:center top; }
+.pk-photo-badge {
+  position:absolute; bottom:12px; left:12px;
+  font-size:.62rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase;
+  color:#fff; background:var(--red); padding:.3rem .8rem; border-radius:99px;
+}
+.pk-card > *:not(.pk-photo-wrap) { padding-left:28px; padding-right:28px; }
+.pk-name { font-size:1.15rem; font-weight:700; color:#fff; margin-bottom:4px; padding-top:24px; }
+.pk-role { font-size:.72rem; color:rgba(255,255,255,.4); letter-spacing:.06em; text-transform:uppercase; display:block; }
+.pk-divider { height:1px; background:rgba(255,255,255,.08); margin:20px 0; }
+.pk-bio { font-size:.88rem; color:rgba(255,255,255,.45); line-height:1.8; font-weight:300; margin-bottom:20px; }
+.pk-tags { display:flex; flex-direction:column; gap:6px; padding-bottom:28px; }
+.pk-tags span { font-size:.64rem; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+
+/* PROGRAM SECTION */
+.bolder-section { background:#fff; }
+.press-section { background:var(--cream); }
+
+.program-header { max-width:700px; }
+.program-badge {
+  display:inline-block; font-size:.68rem; font-weight:700; letter-spacing:.18em; text-transform:uppercase;
+  padding:.35rem 1rem; border-radius:99px; margin-bottom:10px;
+}
+.program-badge-red { background:var(--red-soft); color:var(--red); }
+.program-badge-teal { background:var(--teal-soft); color:var(--teal); }
+.program-name {
+  font-size:clamp(2.8rem,6vw,5.2rem); font-weight:900;
+  letter-spacing:-.04em; line-height:1.0;
+  color:var(--ink); margin-bottom:18px;
+}
+.program-name span { display:block; }
+.program-name-red span { color:var(--red); }
+.program-name-teal span { color:var(--teal); }
+.program-audience {
+  margin-top:20px; padding:16px 20px;
+  background:var(--cream-2); border-left:3px solid var(--red);
+  border-radius:0 var(--r-md) var(--r-md) 0;
+  font-size:.9rem; color:var(--ink-2); line-height:1.7;
+}
+.press-section .program-audience { border-left-color:var(--teal); }
+
+.levels-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+.levels-4 { grid-template-columns:repeat(4,1fr); }
+.level-card {
+  padding:32px 24px; border-radius:var(--r-lg); border:1px solid var(--line);
+  background:#fff; transition:box-shadow .25s, transform .2s;
+}
+.level-card:hover { box-shadow:var(--shadow-md); transform:translateY(-4px); }
+.level-red { border-color:rgba(200,16,46,.18); box-shadow:0 -4px 24px rgba(200,16,46,.1), 0 4px 20px rgba(0,0,0,.04); }
+.level-teal { border-color:rgba(27,138,118,.18); box-shadow:0 -4px 24px rgba(27,138,118,.1), 0 4px 20px rgba(0,0,0,.04); }
+.bolder-section .level-card { background:var(--cream); }
+.press-section .level-card { background:#fff; }
+.level-num { font-size:.65rem; font-weight:700; letter-spacing:.18em; display:block; margin-bottom:16px; }
+.level-red .level-num { color:var(--red); }
+.level-teal .level-num { color:var(--teal); }
+.level-title { font-size:1rem; font-weight:700; color:var(--ink); margin-bottom:10px; }
+.level-desc { font-size:.84rem; color:var(--ink-3); line-height:1.75; font-weight:300; }
+
+.program-cta {
+  display:flex; align-items:center; justify-content:space-between;
+  gap:32px; flex-wrap:wrap;
+  margin-top:52px; padding:36px 40px;
+  background:var(--cream-2); border-radius:var(--r-xl);
+  border:1px solid var(--line);
+}
+.program-cta h3 { font-size:1.2rem; font-weight:700; color:var(--ink); margin-bottom:6px; }
+.program-cta p { font-size:.88rem; color:var(--ink-3); font-weight:300; }
+.program-cta-teal { background:rgba(27,138,118,.04); border-color:rgba(27,138,118,.15); }
+
+/* Divider */
+.programs-divider { padding:0; position:relative; }
+.pd-line { height:1px; background:var(--line); }
+.pd-label {
+  position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);
+  width:36px; height:36px; background:#fff; border:1px solid var(--line);
+  border-radius:50%; display:flex; align-items:center; justify-content:center;
+  font-size:1.2rem; color:var(--ink-4); font-weight:300;
+}
+
+@media (max-width:900px) {
+  .ph-inner { grid-template-columns:1fr; }
+  .pk-card { display:none; }
+  .levels-grid { grid-template-columns:1fr 1fr; }
+  .levels-4 { grid-template-columns:1fr 1fr; }
+}
+@media (max-width:600px) {
+  .levels-grid, .levels-4 { grid-template-columns:1fr; }
+  .program-cta { flex-direction:column; }
+}
+
+/* ═══ GALERIA BENTO ═══ */
+.galeria-section { background:var(--dark); padding-top:80px; }
+.galeria-intro { text-align:center; max-width:560px; margin:0 auto 52px; }
+.galeria-title {
+  font-size:clamp(1.8rem,3vw,2.6rem); font-weight:900;
+  letter-spacing:-.03em; color:#fff; margin-top:14px;
+}
+.galeria-title span { color:var(--red); }
+
+.bento-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: repeat(4, 240px);
+  grid-template-areas:
+    "a a b c"
+    "a a d c"
+    "e f f g"
+    "h h i j";
+  gap: 4px;
+}
+.bento-item { overflow:hidden; position:relative; background:var(--dark-2); }
+.bento-item img {
+  width:100%; height:100%; object-fit:cover; object-position:center;
+  display:block;
+  transition: transform 0.7s cubic-bezier(.25,.46,.45,.94), filter 0.5s;
+  filter: brightness(.88) saturate(.9);
+}
+.bento-item:hover img { transform:scale(1.08); filter:brightness(1) saturate(1.1); }
+
+.bg-a { grid-area: a; }
+.bg-b { grid-area: b; }
+.bg-c { grid-area: c; }
+.bg-d { grid-area: d; }
+.bg-e { grid-area: e; }
+.bg-f { grid-area: f; }
+.bg-g { grid-area: g; }
+.bg-h { grid-area: h; }
+.bg-i { grid-area: i; }
+.bg-j { grid-area: j; }
+
+@media (max-width:900px) {
+  .bento-grid {
+    grid-template-columns: repeat(2, 1fr);
+    grid-template-rows: repeat(7, 200px);
+    grid-template-areas:
+      "a a"
+      "a a"
+      "b c"
+      "d e"
+      "f f"
+      "g h"
+      "i j";
+  }
+}
+@media (max-width:600px) {
+  .bento-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: repeat(6, 180px);
+    grid-template-areas:
+      "a a"
+      "b c"
+      "d e"
+      "f f"
+      "g h"
+      "i j";
+  }
+}
+
+/* ═══ LIGHTBOX ═══ */
+.lb-overlay {
+  position: fixed; inset: 0; z-index: 900;
+  background: rgba(10,8,7,.97);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .35s cubic-bezier(.22,1,.36,1);
+}
+.lb-overlay.lb-active { opacity: 1; pointer-events: all; }
+
+.lb-stage {
+  max-width: min(90vw, 1200px);
+  max-height: 85vh;
+  display: flex; align-items: center; justify-content: center;
+}
+.lb-img {
+  max-width: 100%; max-height: 85vh;
+  object-fit: contain;
+  border-radius: 6px;
+  box-shadow: 0 32px 80px rgba(0,0,0,.6);
+  transition: opacity .25s ease, transform .25s ease;
+}
+.lb-img.lb-fade { opacity: 0; transform: scale(.97); }
+
+.lb-close {
+  position: absolute; top: 20px; right: 20px;
+  width: 48px; height: 48px; border-radius: 50%;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.lb-close:hover { background: rgba(255,255,255,.18); }
+
+.lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,.08); border: 1px solid rgba(255,255,255,.15);
+  color: #fff; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.lb-nav:hover { background: rgba(255,255,255,.18); transform: translateY(-50%) scale(1.08); }
+.lb-prev { left: 20px; }
+.lb-next { right: 20px; }
+
+.lb-dots {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  display: flex; gap: 6px;
+}
+.lb-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(255,255,255,.25);
+  transition: background .2s, transform .2s;
+  cursor: pointer;
+}
+.lb-dot.lb-dot-active { background: #fff; transform: scale(1.4); }
+
+.bento-item { cursor: pointer; }
+</style>
+
+<script>
+(function() {
+  const photos = [
+    '/mentoria/mentoria_08.jpg',
+    '/mentoria/mentoria_04.jpg',
+    '/mentoria/mentoria_07.jpg',
+    '/mentoria/mentoria_05.jpg',
+    '/mentoria/mentoria_11.jpg',
+    '/mentoria/mentoria_06.jpg',
+    '/mentoria/mentoria_12.jpg',
+    '/mentoria/mentoria_02.jpg',
+    '/mentoria/mentoria_03.jpg',
+    '/mentoria/mentoria_13.jpg',
+  ];
+
+  let cur = 0;
+  const overlay = document.getElementById('lb-overlay');
+  const img     = document.getElementById('lb-img');
+  const dotsEl  = document.getElementById('lb-dots');
+
+  // Build dots
+  photos.forEach((_, i) => {
+    const d = document.createElement('button');
+    d.className = 'lb-dot' + (i === 0 ? ' lb-dot-active' : '');
+    d.setAttribute('aria-label', `Foto ${i+1}`);
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  });
+
+  function updateDots() {
+    dotsEl.querySelectorAll('.lb-dot').forEach((d, i) => {
+      d.classList.toggle('lb-dot-active', i === cur);
+    });
+  }
+
+  function goTo(idx) {
+    img.classList.add('lb-fade');
+    setTimeout(() => {
+      cur = (idx + photos.length) % photos.length;
+      img.src = photos[cur];
+      img.onload = () => img.classList.remove('lb-fade');
+      updateDots();
+    }, 200);
+  }
+
+  function open(idx) {
+    cur = idx;
+    img.src = photos[cur];
+    overlay.classList.add('lb-active');
+    overlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    updateDots();
+  }
+
+  function close() {
+    overlay.classList.remove('lb-active');
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.bento-item[data-lb]').forEach(el => {
+    el.addEventListener('click', () => open(Number(el.dataset.lb)));
+  });
+
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', () => goTo(cur - 1));
+  document.getElementById('lb-next').addEventListener('click', () => goTo(cur + 1));
+
+  overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+
+  document.addEventListener('keydown', e => {
+    if (!overlay.classList.contains('lb-active')) return;
+    if (e.key === 'Escape')      close();
+    if (e.key === 'ArrowLeft')   goTo(cur - 1);
+    if (e.key === 'ArrowRight')  goTo(cur + 1);
+  });
+})();
+</script>

@@ -1,0 +1,607 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20resultados%20como%20esse.';
+
+export function getStaticPaths() {
+  const allCases = [
+  {
+    slug: 'claudia-elisa',
+    num: '01', color: 'var(--red)', accent: '#C8102E',
+    client: 'Claudia Elisa',
+    sector: 'Marca Pessoal & Marketing de Autoridade',
+    challenge: 'Com mais de 30 anos de experiência, Claudia Elisa buscava consolidar sua Marca Pessoal e ampliar sua reputação como referência absoluta no mercado de liderança e comunicação. O desafio: criar uma Comunicação Estratégica coesa e impactante em diversas plataformas simultaneamente, sem perder a essência e autenticidade da sua trajetória.',
+    solution: 'Desenvolvemos um projeto completo de Branding Estratégico, incluindo a construção das marcas "Claudia Elisa", "Liderança em Pauta" e "Mentoria Sharp". Implementamos comunicação multiplataforma robusta com Assessoria de Imprensa, Gestão de Mídias Sociais e Criação de Conteúdo Estratégico, garantindo consistência visual e narrativa em todos os pontos de contato.',
+    results: [{ v:'3', l:'Marcas construídas e lançadas' }, { v:'5+', l:'Plataformas com presença ativa' }, { v:'Top', l:'Autoridade consolidada no segmento' }],
+    tags: ['Branding', 'Marca Pessoal', 'Assessoria de Imprensa', 'Social Media', 'Marketing de Autoridade'],
+    description: 'Como a Mclair ajudou Claudia Elisa a construir três marcas e consolidar autoridade de mercado em liderança e comunicação.',
+    gallery: [
+      { src:'/cases-img/claudia-elisa-logos.jpg', caption:'Três marcas criadas: Claudia Elisa, Liderança em Pauta e Mentoria Sharp' },
+      { src:'/cases-img/claudia-elisa.jpg', caption:'Identidade visual e materiais de marca Mentoria Sharp' },
+      { src:'/cases-img/claudia-elisa-social.jpg', caption:'Presença digital multiplataforma e cobertura na imprensa' },
+    ],
+  },
+  {
+    slug: 'fidalgo',
+    num: '02', color: 'var(--teal)', accent: '#1B8A76',
+    client: 'Fidalgo Leilões',
+    sector: 'Assessoria de Imprensa — Resultados Expressivos',
+    challenge: 'Divulgação de leilões estratégicos (Caixa Econômica Federal, Justiça Federal, Correios) com necessidade de grande repercussão na mídia nacional e regional em prazos curtos e com alta assertividade. Cada leilão exigia cobertura específica e direcionada ao público-alvo correto.',
+    solution: 'Assessoria de Imprensa Estratégica com foco em geração de cobertura de alto alcance. Desenvolvimento de releases impactantes e diferenciados, relacionamento ativo e personalizado com redações, e posicionamento estratégico nos principais veículos de notícias do Brasil — do nacional ao regional.',
+    results: [{ v:'11.600+', l:'Inserções totais na mídia' }, { v:'Nacional', l:'Alcance geográfico garantido' }, { v:'Top 3', l:'Veículos de maior audiência alcançados' }],
+    tags: ['Assessoria de Imprensa', 'Relações com Mídia', 'Release Estratégico', 'Comunicação B2B'],
+    description: 'Como a Mclair garantiu mais de 11.600 inserções na mídia para o Fidalgo Leilões com cobertura nacional expressiva.',
+    gallery: [
+      { src:'/cases-img/fidalgo.jpg', caption:'Cobertura na Folha de São Paulo, Band e veículos de grande alcance nacional' },
+    ],
+  },
+  {
+    slug: 'alexandre-magno',
+    num: '03', color: 'var(--orange)', accent: '#D4611B',
+    client: 'Alexandre Magno',
+    sector: 'Gestão de Crise, PR & Marca Pessoal',
+    challenge: 'Gerir a comunicação desafiadora e sensível da aquisição da Emergee pelo Banco Itaú e, posteriormente, consolidar a Marca Pessoal de Alexandre como consultor de transformação organizacional de alto nível no Brasil, criando autoridade e reputação em um nicho muito especializado.',
+    solution: 'Assessoria de Imprensa estratégica para a aquisição com foco em gestão de narrativa e proteção de reputação, Marketing de Autoridade intensivo para a marca pessoal e lançamento estratégico da The Cynefin Co. Brazil — referência em gestão de complexidade organizacional no país.',
+    results: [{ v:'100%', l:'Comunicação de crise gerenciada com sucesso' }, { v:'C-Level', l:'Posicionamento conquistado no mercado' }, { v:'Nacional', l:'Cobertura do lançamento Cynefin' }],
+    tags: ['Gestão de Crise', 'Marca Pessoal', 'Marketing de Autoridade', 'PR Estratégico', 'Lançamento de Marca'],
+    description: 'Gestão de crise na aquisição da Emergee pelo Itaú e construção de autoridade pessoal para Alexandre Magno.',
+    gallery: [
+      { src:'/cases-img/alexandre-magno.jpg', caption:'Alexandre Magno em destaque nos principais veículos nacionais e no lançamento da The Cynefin Co. Brazil' },
+    ],
+  },
+  {
+    slug: 'elemar-jr',
+    num: '04', color: 'var(--red)', accent: '#C8102E',
+    client: 'Elemar Jr. — EximiaCo',
+    sector: 'Branding Estratégico & Presença Digital',
+    challenge: 'Evoluir de uma operação individual de consultoria para uma empresa estruturada e reconhecida em arquitetura de software — a EximiaCo. O desafio era criar uma identidade de marca sólida, com posicionamento claro e autoridade estabelecida no competitivo mercado de tecnologia brasileiro.',
+    solution: 'Branding Estratégico completo para a marca EximiaCo — da identidade visual ao posicionamento de mercado. Estratégia e Gestão de Presença Digital integrada, Assessoria de Imprensa Estratégica nos principais veículos de tecnologia e Criação de Conteúdo de Autoridade para estabelecer Elemar Jr. como referência em arquitetura de software.',
+    results: [{ v:'EximiaCo', l:'Marca estruturada e lançada com sucesso' }, { v:'Integrado', l:'Ecossistema de comunicação construído' }, { v:'Referência', l:'Posicionamento conquistado em TI' }],
+    tags: ['Branding', 'Presença Digital', 'Assessoria de Imprensa', 'Tecnologia', 'Marca Pessoal'],
+    description: 'Como a Mclair transformou a operação individual de Elemar Jr. na consultoria estruturada EximiaCo — referência em TI.',
+    gallery: [
+      { src:'/cases-img/elemar-jr.jpg', caption:'Identidade visual EximiaCo — branding completo e canais de comunicação' },
+      { src:'/cases-img/elemar-jr-press.jpg', caption:'Posicionamento de Elemar Jr. como autoridade em tecnologia nos principais veículos' },
+    ],
+  },
+  {
+    slug: 'bms-abimaq',
+    num: '05', color: 'var(--teal)', accent: '#1B8A76',
+    client: 'BMS / ABIMAQ + ApexBrasil',
+    sector: 'Assessoria de Imprensa Internacional',
+    challenge: 'Fortalecer a presença internacional do projeto Brazil Machinery Solutions — parceria estratégica entre ABIMAQ e ApexBrasil para promoção das exportações do setor de máquinas e equipamentos industriais. O desafio era atingir imprensa estrangeira com credibilidade e impacto real.',
+    solution: 'Assessoria de Imprensa especializada em mídia internacional, relacionamento direto com correspondentes estrangeiros e jornalistas de comércio internacional, produção de conteúdo bilíngue (PT/EN) para mercados-alvo estratégicos e planejamento de cobertura por regiões e setores de interesse.',
+    results: [{ v:'2.000+', l:'Inserções totais na mídia' }, { v:'1.734', l:'Publicações na imprensa internacional' }, { v:'15+', l:'Países alcançados' }],
+    tags: ['Assessoria Internacional', 'B2B', 'Exportação', 'Mídia Global', 'Comunicação Institucional'],
+    description: 'Assessoria de imprensa que gerou 1.734 publicações internacionais para o BMS/ABIMAQ em mais de 15 países.',
+    gallery: [
+      { src:'/cases-img/bms-abimaq.jpg', caption:'Big Numbers 2022/2023: 2.097 inserções na mídia, presença em 15+ países' },
+      { src:'/cases-img/bms-abimaq-press.jpg', caption:'Cobertura internacional: EFEcomunica, TV Américas no Ar, Band — alcance global confirmado' },
+    ],
+  },
+  {
+    slug: 'insight-rh',
+    num: '06', color: 'var(--orange)', accent: '#D4611B',
+    client: 'Insight RH',
+    sector: 'Rebranding, Digital & Naming',
+    challenge: 'A Insight RH, consultoria especializada em desenvolvimento de lideranças e gestão de pessoas, precisava profissionalizar e estruturar uma área de marketing e comunicação que ainda não existia de forma organizada — transformando a presença de marca de maneira consistente e escalável.',
+    solution: 'Conduzimos a transformação digital completa: rebranding da marca, criação de canais de comunicação (redes sociais e site institucional), desenvolvimento de landing page com teste interativo de maturidade de liderança, naming e estruturação do Insight LAB (escola de liderança), construção da esteira de produtos com trilhas segmentadas por nível de desenvolvimento, e estruturação de parceria corporativa com o Ibiti Projeto.',
+    results: [{ v:'360°', l:'Transformação digital realizada' }, { v:'Insight LAB', l:'Escola de liderança nomeada e estruturada' }, { v:'Multi', l:'Esteira de produtos com trilhas segmentadas' }],
+    tags: ['Rebranding', 'Naming', 'Marketing Digital', 'Branding Estratégico', 'Comunicação Corporativa'],
+    description: 'Como a Mclair transformou digitalmente a Insight RH — criando marca, canais, landing page interativa e escola de liderança do zero.',
+    gallery: [
+      { src:'/cases-img/insight-rh.jpg', caption:'Transformação digital: site institucional, landing page interativa e presença em redes sociais' },
+    ],
+  },
+  {
+    slug: 'diego-nogare',
+    num: '07', color: 'var(--red)', accent: '#C8102E',
+    client: 'Diego Nogare',
+    sector: 'Assessoria de Imprensa — Dados & IA',
+    challenge: 'Posicionar Diego Nogare — especialista com 25 anos de experiência em Dados, Inteligência Artificial e Machine Learning (desde 2013) — como voz de autoridade reconhecida no mercado tech e de negócios, com passagem por Microsoft, Deloitte, Bayer e Itaú.',
+    solution: 'Assessoria de Imprensa estratégica com foco em posicionamento como referência em IA e Dados. Relacionamento ativo com os principais veículos de negócios e tecnologia do Brasil, construção de pauta consistente alinhada ao momento de expansão da IA no mercado corporativo.',
+    results: [{ v:'Exame', l:'Presença constante nos principais veículos' }, { v:'CNN', l:'HSM, Baguete, It Forum, entre outros' }, { v:'2025+', l:'Autoridade consolidada em IA e Dados' }],
+    tags: ['Assessoria de Imprensa', 'Marca Pessoal', 'Tecnologia', 'Inteligência Artificial', 'Marketing de Autoridade'],
+    description: 'Como a Mclair posicionou Diego Nogare como autoridade em IA e Dados em veículos como Exame, CNN e HSM.',
+    gallery: [
+      { src:'/cases-img/diego-nogare.jpg', caption:'Diego Nogare em destaque no UOL, Exame, Baguete, Startups e veículos líderes em tecnologia e IA' },
+    ],
+  },
+  {
+    slug: 'lambda3',
+    num: '08', color: 'var(--teal)', accent: '#1B8A76',
+    client: 'Lambda3',
+    sector: 'Assessoria de Imprensa & Comunicação Digital',
+    challenge: 'Posicionar a Lambda3 como parceiro estratégico de referência para empresas que tomam decisões baseadas em tecnologia e dados, ampliando a visibilidade e o reconhecimento da empresa na comunidade tech brasileira ao longo de uma parceria de longo prazo.',
+    solution: 'Por cinco anos, atuamos como braço estratégico de comunicação da Lambda3. Desde 2018, desenvolvemos Assessoria de Imprensa consistente e Comunicação Digital integrada, com produção de infoprodutos, posicionando a empresa como parceiro estratégico de referência para a tomada de decisão baseada em tecnologia e dados.',
+    results: [{ v:'5 anos', l:'Parceria estratégica contínua' }, { v:'2018+', l:'Assessoria e comunicação digital' }, { v:'Tech', l:'Referência consolidada na comunidade' }],
+    tags: ['Assessoria de Imprensa', 'Comunicação Digital', 'Infoprodutos', 'Tecnologia', 'B2B'],
+    description: 'Cinco anos de parceria estratégica posicionando a Lambda3 como referência em tecnologia e dados no Brasil.',
+    gallery: [
+      { src:'/cases-img/lambda3.jpg', caption:'Cinco anos de parceria — eventos, infoprodutos, assessoria e comunicação digital integrada' },
+    ],
+  },
+  {
+    slug: 'zbra',
+    num: '09', color: 'var(--orange)', accent: '#D4611B',
+    client: 'Zbra',
+    sector: 'Rebranding + Assessoria + Social Media',
+    challenge: 'Adequar toda a comunicação da Zbra ao seu novo posicionamento após um processo de rebranding, alinhando a narrativa de marca, a presença digital e o relacionamento com a imprensa à nova identidade visual e ao novo posicionamento estratégico da empresa no mercado tech.',
+    solution: 'Realizamos benchmarking aprofundado e estudo de público e segmento para embasar a estratégia. Estruturamos a gestão de Redes Sociais alinhada à nova marca e iniciamos o diálogo da Zbra e de seus porta-vozes com o mercado e a comunidade tech por meio de Assessoria de Imprensa estratégica.',
+    results: [{ v:'Novo', l:'Posicionamento comunicado com clareza' }, { v:'Tech', l:'Presença ativa na comunidade' }, { v:'360°', l:'Comunicação alinhada ao rebranding' }],
+    tags: ['Rebranding', 'Social Media', 'Assessoria de Imprensa', 'Comunicação Digital', 'Tecnologia'],
+    description: 'Como a Mclair alinhou toda a comunicação da Zbra após seu rebranding — redes sociais, imprensa e posicionamento integrados.',
+    gallery: [
+      { src:'/cases-img/zbra.jpg', caption:'Rebranding Zbra: social media, assessoria de imprensa e posicionamento integrados ao novo visual' },
+    ],
+  },
+  {
+    slug: 'nexinvoice',
+    num: '10', color: 'var(--red)', accent: '#C8102E',
+    client: 'Guiando / NexInvoice',
+    sector: 'Naming, Branding & Mascote',
+    challenge: 'O time Guiando precisava criar do zero o nome, o conceito e a identidade visual de uma nova solução de automação financeira para empresas — incluindo uma mascote que personificasse a proposta de valor de tecnologia e inovação do produto.',
+    solution: 'Desenvolvemos o nome NexInvoice, o conceito de produto e toda a identidade visual. Criamos a Annie — uma robô com 27 anos de "experiência", homenagem à Annie J. Easley, cientista afro-americana da NASA — como mascote oficial. O NexInvoice foi adquirido pela Asaas, que manteve toda a comunicação visual desenvolvida pela Mclair.',
+    results: [{ v:'NexInvoice', l:'Nome, conceito e visual criados do zero' }, { v:'Annie', l:'Mascote com storytelling próprio e profundo' }, { v:'Asaas', l:'Produto adquirido — identidade preservada' }],
+    tags: ['Naming', 'Branding', 'Identidade Visual', 'Mascote', 'Fintech'],
+    description: 'Como a Mclair criou o NexInvoice e a mascote Annie para o Guiando — marca depois adquirida pela Asaas.',
+    gallery: [
+      { src:'/cases-img/nexinvoice.jpg', caption:'NexInvoice: identidade visual completa com stationery e materiais de marca' },
+      { src:'/cases-img/nexinvoice-annie.jpg', caption:'Annie — mascote com storytelling inspirado em Annie J. Easley, cientista da computação da NASA' },
+      { src:'/cases-img/nexinvoice-product.jpg', caption:'Plataforma e identidade visual preservados pela Asaas após a aquisição' },
+    ],
+  },
+  {
+    slug: 'silene-chiconini',
+    num: '11', color: 'var(--teal)', accent: '#1B8A76',
+    client: 'Silene Chiconini',
+    sector: 'Marca Pessoal — Comunicação e Sustentabilidade',
+    challenge: 'Silene Chiconini estava em um momento de reposicionamento de carreira e precisava de uma marca pessoal que comunicasse seu trabalho como consultora em projetos de Comunicação baseados em ações de Sustentabilidade — com credibilidade, expertise e abordagem inovadora.',
+    solution: 'Desenvolvemos em conjunto com a cliente uma identidade de marca pessoal que reflete confiança, expertise e a abordagem inovadora que a consultoria traz ao mercado. A identidade visual criada posiciona Silene como referência na intersecção entre Comunicação Estratégica e Sustentabilidade.',
+    results: [{ v:'Marca', l:'Identidade pessoal criada e posicionada' }, { v:'Único', l:'Nicho próprio: Comunicação + Sustentabilidade' }, { v:'Novo', l:'Reposicionamento de carreira realizado' }],
+    tags: ['Marca Pessoal', 'Branding', 'Sustentabilidade', 'Identidade Visual', 'Comunicação'],
+    description: 'Criação de marca pessoal para Silene Chiconini — consultora em Comunicação e Sustentabilidade em transição de carreira.',
+    gallery: [
+      { src:'/cases-img/silene-chiconini.jpg', caption:'Logomarca e sistema visual: versões e paleta da marca pessoal Silene Chiconini' },
+      { src:'/cases-img/silene-chiconini-brand.jpg', caption:'Aplicações de marca: papelaria, cartão de visita e letterhead com identidade completa' },
+    ],
+  },
+  ];
+  return allCases.map(c => ({ params: { slug: c.slug }, props: { c, otherCases: allCases.filter(x => x.slug !== c.slug) } }));
+}
+
+const { c, otherCases } = Astro.props;
+---
+
+<Layout
+  title={`Case ${c.client} — Mclair | Marketing de Autoridade e Comunicação Estratégica`}
+  description={c.description}
+>
+
+<!-- HERO -->
+<section class="case-hero" style={`--accent:${c.accent}`}>
+  <div class="ch-img-wrap">
+    <img src="/cases-hero.jpg" alt={c.client} class="ch-img" />
+    <div class="ch-overlay"></div>
+  </div>
+  <div class="container ch-inner">
+    <div class="ch-breadcrumb" data-anim>
+      <a href="/cases">Cases</a>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+      <span>{c.client}</span>
+    </div>
+    <div class="ch-badge" data-anim data-delay="1">{c.sector}</div>
+    <h1 class="ch-title" data-anim data-delay="2">{c.client}</h1>
+    <div class="ch-tags stagger-children" data-anim data-delay="3">
+      {c.tags.map(t => <span class="ch-tag">{t}</span>)}
+    </div>
+  </div>
+  <div class="ch-num" aria-hidden="true">{c.num}</div>
+</section>
+
+<!-- BODY -->
+<section class="case-body-section">
+  <div class="container">
+    <div class="cb-grid">
+      <!-- Challenge -->
+      <div class="cb-block" data-anim="left">
+        <div class="cb-icon" style={`color:${c.accent};border-color:${c.accent}20`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <h2 class="cb-title">O Desafio</h2>
+        <p class="cb-text">{c.challenge}</p>
+      </div>
+      <!-- Solution -->
+      <div class="cb-block" data-anim data-delay="1">
+        <div class="cb-icon" style={`color:${c.accent};border-color:${c.accent}20`}>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+        </div>
+        <h2 class="cb-title">A Solução Mclair</h2>
+        <p class="cb-text">{c.solution}</p>
+      </div>
+      <!-- Results -->
+      <div class="cb-results" data-anim="right" data-delay="1">
+        <h2 class="cbr-title">Resultados</h2>
+        <div class="cbr-list">
+          {c.results.map(r => (
+            <div class="cbr-item">
+              <strong style={`color:${c.accent}`}>{r.v}</strong>
+              <span>{r.l}</span>
+            </div>
+          ))}
+        </div>
+        <div class="cbr-tags">
+          {c.tags.map(t => <span class="cbrt">{t}</span>)}
+        </div>
+        <a href={WA} class="btn-primary" target="_blank" rel="noopener" style={`background:${c.accent};width:100%;justify-content:center;margin-top:24px;white-space:nowrap`}>
+          Quero Resultados Assim
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- GALLERY -->
+{c.gallery && c.gallery.length > 0 && (
+  <section class="case-gallery">
+    <div class="container">
+      <div class="cg-header" data-anim>
+        <div class="cg-label">
+          <span class="cg-dot" style={`background:${c.accent}`}></span>
+          Materiais do Projeto
+        </div>
+        <h2 class="cg-title">O trabalho em detalhes</h2>
+      </div>
+      <div class={`cg-grid cg-cols-${Math.min(c.gallery.length, 2)}`}>
+        {c.gallery.map((img, i) => (
+          <div class="cg-item" data-anim data-delay={String(i)}>
+            <button class="cg-img-wrap" data-src={img.src} data-caption={img.caption} data-idx={String(i)} aria-label={`Ampliar: ${img.caption}`}>
+              <div class="cg-img-frame">
+                <img src={img.src} alt={img.caption} class="cg-img" loading="lazy" />
+              </div>
+              <div class="cg-overlay" style={`background:linear-gradient(to top,${c.accent}dd 0%,transparent 55%)`}>
+                <p class="cg-caption">{img.caption}</p>
+                <span class="cg-zoom">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35M11 8v6M8 11h6"/></svg>
+                  Ampliar
+                </span>
+              </div>
+            </button>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<!-- LIGHTBOX -->
+<div id="cg-lightbox" class="cg-lightbox" role="dialog" aria-modal="true" aria-label="Visualizador de imagem">
+  <button class="cg-lb-close" id="cg-lb-close" aria-label="Fechar">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+  </button>
+  <button class="cg-lb-nav cg-lb-prev" id="cg-lb-prev" aria-label="Anterior">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M15 18l-6-6 6-6"/></svg>
+  </button>
+  <button class="cg-lb-nav cg-lb-next" id="cg-lb-next" aria-label="Próxima">
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </button>
+  <div class="cg-lb-inner">
+    <img id="cg-lb-img" src="" alt="" class="cg-lb-img" />
+    <p id="cg-lb-caption" class="cg-lb-caption"></p>
+    <div class="cg-lb-dots" id="cg-lb-dots"></div>
+  </div>
+</div>
+
+<!-- OTHER CASES -->
+<section class="other-cases">
+  <div class="container">
+    <h2 class="oc-title" data-anim>Outros cases de sucesso</h2>
+    <div class="oc-grid stagger-children">
+      {otherCases.slice(0,3).map(oc => (
+        <a href={`/cases/${oc.slug}`} class="oc-card">
+          <span class="oc-num" style={`color:${oc.accent}`}>{oc.num}</span>
+          <h3 class="oc-client">{oc.client}</h3>
+          <span class="oc-sector">{oc.sector}</span>
+          <span class="oc-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+</Layout>
+
+<style define:vars={{ accent: c.accent }}>
+/* HERO */
+.case-hero {
+  position: relative; min-height: 70vh;
+  display: flex; align-items: flex-end;
+  padding-top: 88px; overflow: hidden;
+}
+.ch-img-wrap { position: absolute; inset: 0; }
+.ch-img { width: 100%; height: 100%; object-fit: cover; object-position: center; }
+.ch-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(21,18,16,.92) 40%, rgba(21,18,16,.5) 100%);
+}
+.ch-inner { position: relative; z-index: 2; padding-bottom: 64px; padding-top: 32px; }
+.ch-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: 20px;
+}
+.ch-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
+.ch-breadcrumb a:hover { color: #fff; }
+.ch-badge {
+  display: inline-block; font-size: .64rem; font-weight: 700; letter-spacing: .15em; text-transform: uppercase;
+  color: var(--accent); background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.15);
+  padding: .35rem 1rem; border-radius: 99px; margin-bottom: 16px;
+}
+.ch-title { font-size: clamp(2.6rem,6vw,5rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 20px; }
+.ch-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+.ch-tag {
+  font-size: .62rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.2);
+  padding: .25rem .7rem; border-radius: 99px;
+}
+.ch-num {
+  position: absolute; bottom: -20px; right: 5vw; z-index: 1;
+  font-size: 22rem; font-weight: 900; letter-spacing: -.05em; line-height: 1;
+  color: rgba(255,255,255,.03); pointer-events: none; user-select: none;
+}
+
+/* BODY */
+.case-body-section { background: #fff; padding: clamp(64px,8vw,100px) 0; }
+.cb-grid { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 48px; align-items: start; }
+.cb-block { }
+.cb-icon {
+  width: 46px; height: 46px; border: 1px solid;
+  border-radius: var(--r-md); display: flex; align-items: center; justify-content: center;
+  margin-bottom: 20px;
+}
+.cb-title { font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--line); }
+.cb-text { font-size: .94rem; color: var(--ink-3); line-height: 1.9; font-weight: 300; }
+
+.cb-results {
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-xl);
+  padding: 28px; position: sticky; top: 100px;
+}
+.cbr-title { font-size: .68rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 20px; }
+.cbr-list { display: flex; flex-direction: column; gap: 0; margin-bottom: 20px; }
+.cbr-item { display: flex; align-items: center; justify-content: space-between; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.cbr-item:last-child { border: none; }
+.cbr-item strong { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+.cbr-item span { font-size: .76rem; color: var(--ink-3); text-align: right; max-width: 120px; line-height: 1.4; }
+.cbr-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.cbrt { font-size: .6rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-4); background: var(--cream-2); padding: .2rem .6rem; border-radius: 99px; }
+
+/* GALLERY */
+.case-gallery {
+  background: var(--dark);
+  padding: clamp(64px,8vw,100px) 0;
+}
+.cg-header { margin-bottom: 40px; }
+.cg-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .65rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: 12px;
+}
+.cg-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.cg-title {
+  font-size: clamp(1.4rem,2.8vw,2.2rem); font-weight: 700;
+  color: #fff; letter-spacing: -.02em;
+}
+.cg-grid {
+  display: grid; gap: 16px;
+}
+.cg-cols-1 { grid-template-columns: 1fr; }
+.cg-cols-2 { grid-template-columns: repeat(2, 1fr); }
+.cg-cols-2 .cg-item:last-child:nth-child(odd) { grid-column: 1 / -1; }
+.cg-item { }
+.cg-img-wrap {
+  position: relative; border-radius: var(--r-lg); overflow: hidden;
+  border: 1px solid rgba(255,255,255,.08);
+  box-shadow: 0 8px 32px rgba(0,0,0,.3);
+  cursor: zoom-in; background: none; padding: 0; width: 100%; display: block;
+  text-align: left;
+}
+.cg-img-frame {
+  height: 320px; overflow: hidden;
+}
+.cg-img {
+  width: 100%; height: 100%; display: block;
+  object-fit: cover; object-position: top center;
+  transition: transform .6s cubic-bezier(.22,1,.36,1);
+}
+.cg-img-wrap:hover .cg-img { transform: scale(1.04); }
+.cg-overlay {
+  position: absolute; inset: 0;
+  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-end;
+  padding: 20px 24px;
+  opacity: 0;
+  transition: opacity .3s;
+}
+.cg-img-wrap:hover .cg-overlay { opacity: 1; }
+.cg-caption {
+  font-size: .78rem; font-weight: 500; color: #fff;
+  line-height: 1.5; text-shadow: 0 1px 4px rgba(0,0,0,.4);
+  margin-bottom: 8px;
+}
+.cg-zoom {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; background: rgba(255,255,255,.2); border-radius: 99px;
+  padding: .3rem .85rem; backdrop-filter: blur(8px);
+}
+
+/* LIGHTBOX */
+.cg-lightbox {
+  position: fixed; inset: 0; z-index: 9999;
+  background: rgba(0,0,0,.94);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.cg-lightbox.is-open { opacity: 1; pointer-events: all; }
+.cg-lb-close {
+  position: absolute; top: 20px; right: 24px;
+  width: 44px; height: 44px;
+  display: flex; align-items: center; justify-content: center;
+  background: rgba(255,255,255,.12); border: none; border-radius: 50%;
+  color: #fff; cursor: pointer;
+  transition: background .2s; z-index: 2;
+}
+.cg-lb-close:hover { background: rgba(255,255,255,.25); }
+.cg-lb-nav {
+  position: absolute; top: 50%; transform: translateY(-50%);
+  width: 52px; height: 52px; border-radius: 50%;
+  background: rgba(255,255,255,.1); border: 1px solid rgba(255,255,255,.2);
+  color: #fff; cursor: pointer; z-index: 2;
+  display: flex; align-items: center; justify-content: center;
+  transition: background .2s, transform .2s;
+}
+.cg-lb-nav:hover { background: rgba(255,255,255,.22); }
+.cg-lb-prev { left: 20px; }
+.cg-lb-prev:hover { transform: translateY(-50%) translateX(-2px); }
+.cg-lb-next { right: 20px; }
+.cg-lb-next:hover { transform: translateY(-50%) translateX(2px); }
+.cg-lb-nav:disabled { opacity: .25; pointer-events: none; }
+.cg-lb-inner {
+  display: flex; flex-direction: column; align-items: center;
+  max-width: min(88vw, 1200px); max-height: 92vh;
+  gap: 14px;
+}
+.cg-lb-img {
+  max-width: 100%; max-height: 78vh;
+  object-fit: contain; border-radius: var(--r-md);
+  box-shadow: 0 24px 80px rgba(0,0,0,.6);
+  transform: scale(.96);
+  transition: transform .3s cubic-bezier(.22,1,.36,1), opacity .2s;
+}
+.cg-lightbox.is-open .cg-lb-img { transform: scale(1); }
+.cg-lb-img.cg-fade { opacity: 0; transform: scale(.96); }
+.cg-lb-caption {
+  font-size: .82rem; color: rgba(255,255,255,.55); text-align: center;
+  max-width: 680px; line-height: 1.6;
+}
+.cg-lb-dots {
+  display: flex; gap: 8px; align-items: center;
+}
+.cg-lb-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: rgba(255,255,255,.25); border: none; cursor: pointer; padding: 0;
+  transition: background .2s, transform .2s;
+}
+.cg-lb-dot.is-active { background: #fff; transform: scale(1.35); }
+
+@media (max-width: 700px) {
+  .cg-cols-2 { grid-template-columns: 1fr; }
+}
+
+/* OTHER CASES */
+.other-cases { background: var(--cream-2); padding: clamp(52px,7vw,84px) 0; }
+.oc-title { font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 700; color: var(--ink); margin-bottom: 36px; }
+.oc-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.oc-card {
+  background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 28px 24px; display: flex; flex-direction: column; gap: 8px;
+  text-decoration: none; position: relative; overflow: hidden;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.oc-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.oc-num { font-size: .65rem; font-weight: 700; letter-spacing: .15em; }
+.oc-client { font-size: 1rem; font-weight: 700; color: var(--ink); }
+.oc-sector { font-size: .78rem; color: var(--ink-4); font-weight: 300; }
+.oc-arrow { position: absolute; top: 20px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
+.oc-card:hover .oc-arrow { color: var(--red); transform: translate(2px,-2px); }
+
+@media (max-width: 900px) { .cb-grid { grid-template-columns: 1fr; } .oc-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .oc-grid { grid-template-columns: 1fr; } .ch-num { display: none; } }
+</style>
+
+<script is:inline>
+(function() {
+  var lb      = document.getElementById('cg-lightbox');
+  var lbImg   = document.getElementById('cg-lb-img');
+  var lbCap   = document.getElementById('cg-lb-caption');
+  var lbClose = document.getElementById('cg-lb-close');
+  var lbPrev  = document.getElementById('cg-lb-prev');
+  var lbNext  = document.getElementById('cg-lb-next');
+  var lbDots  = document.getElementById('cg-lb-dots');
+  if (!lb) return;
+
+  var items = [];
+  document.querySelectorAll('.cg-img-wrap').forEach(function(btn) {
+    items.push({ src: btn.dataset.src, caption: btn.dataset.caption });
+  });
+
+  var cur = 0;
+
+  // Build dots
+  items.forEach(function(_, i) {
+    var d = document.createElement('button');
+    d.className = 'cg-lb-dot' + (i === 0 ? ' is-active' : '');
+    d.setAttribute('aria-label', 'Imagem ' + (i + 1));
+    d.addEventListener('click', function() { goTo(i); });
+    lbDots.appendChild(d);
+  });
+
+  function syncDots() {
+    lbDots.querySelectorAll('.cg-lb-dot').forEach(function(d, i) {
+      d.classList.toggle('is-active', i === cur);
+    });
+    lbPrev.disabled = items.length <= 1;
+    lbNext.disabled = items.length <= 1;
+    if (items.length <= 1) { lbPrev.style.display = 'none'; lbNext.style.display = 'none'; lbDots.style.display = 'none'; }
+  }
+
+  function goTo(idx) {
+    lbImg.classList.add('cg-fade');
+    setTimeout(function() {
+      cur = (idx + items.length) % items.length;
+      lbImg.src = items[cur].src;
+      lbImg.alt = items[cur].caption;
+      lbCap.textContent = items[cur].caption;
+      lbImg.onload = function() { lbImg.classList.remove('cg-fade'); };
+      syncDots();
+    }, 180);
+  }
+
+  function openLb(idx) {
+    cur = idx;
+    lbImg.src = items[cur].src;
+    lbImg.alt = items[cur].caption;
+    lbCap.textContent = items[cur].caption;
+    lb.classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+    syncDots();
+  }
+
+  function closeLb() {
+    lb.classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+
+  document.querySelectorAll('.cg-img-wrap').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      openLb(Number(btn.dataset.idx));
+    });
+  });
+
+  lbPrev.addEventListener('click', function() { goTo(cur - 1); });
+  lbNext.addEventListener('click', function() { goTo(cur + 1); });
+  lbClose.addEventListener('click', closeLb);
+  lb.addEventListener('click', function(e) {
+    if (e.target === lb) closeLb();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (!lb.classList.contains('is-open')) return;
+    if (e.key === 'Escape')     closeLb();
+    if (e.key === 'ArrowLeft')  goTo(cur - 1);
+    if (e.key === 'ArrowRight') goTo(cur + 1);
+  });
+})();
+</script>

@@ -1,0 +1,294 @@
+---
+import Layout from '../../layouts/Layout.astro';
+
+const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços.';
+
+export function getStaticPaths() {
+  const allServices = [
+  {
+    slug: 'marketing-de-autoridade',
+    num: '01', color: 'var(--red)', accent: '#C8102E', bg: 'var(--red-soft)',
+    title: 'Marketing de Autoridade',
+    headline: 'Construa sua referência e reputação de marca',
+    intro: 'Posicionamos sua marca como a referência reconhecida no seu setor. Através do Marketing de Autoridade, aplicamos estratégias que constroem credibilidade, confiança e uma reputação sólida de forma consistente.',
+    desc: 'O Marketing de Autoridade é a estratégia que transforma marcas e profissionais em referências reconhecidas pelo mercado. Na Mclair, desenvolvemos planos personalizados que combinam posicionamento de marca, criação de conteúdo estratégico e presença digital para construir autoridade duradoura.',
+    items: [
+      'Mentoria em posicionamento digital e marca pessoal',
+      'Estratégias de conteúdo para Marketing de Autoridade',
+      'Gestão de presença digital multiplataforma',
+      'Diagnóstico e auditoria de autoridade de marca',
+      'Planejamento estratégico de comunicação B2B',
+      'Monitoramento de reputação e percepção de mercado',
+    ],
+    cta: 'Solicitar Diagnóstico de Autoridade',
+    description: 'Construa sua autoridade de marca com a Mclair. Estratégias de Marketing de Autoridade para posicionar sua empresa como referência reconhecida no mercado.',
+  },
+  {
+    slug: 'assessoria-de-imprensa',
+    num: '02', color: 'var(--teal)', accent: '#1B8A76', bg: 'rgba(27,138,118,.08)',
+    title: 'Assessoria de Imprensa',
+    headline: 'Visibilidade estratégica nos veículos que importam',
+    intro: 'Ampliamos sua visibilidade e credibilidade com Assessoria de Imprensa estratégica e relacionamento com mídia, fortalecendo sua reputação de marca nos principais veículos do Brasil.',
+    desc: 'Nossa Assessoria de Imprensa vai além do envio de releases. Construímos relacionamentos duradouros com jornalistas, identificamos pautas que interessam às redações e posicionamos sua marca nas histórias que importam. Com mais de 11.600 inserções para nossos clientes, sabemos como gerar cobertura com impacto real.',
+    items: [
+      'Redação e distribuição de releases estratégicos',
+      'Relacionamento com veículos, jornalistas e influenciadores',
+      'Gestão de clipping e monitoramento de mídia',
+      'Posicionamento e treinamento de porta-vozes',
+      'Coletivas, entrevistas e eventos de imprensa',
+      'Assessoria de crise e gestão de reputação',
+    ],
+    cta: 'Ampliar sua Presença na Mídia',
+    description: 'Assessoria de Imprensa Estratégica Mclair. Visibilidade nos veículos certos com relacionamento genuíno com jornalistas e redações.',
+  },
+  {
+    slug: 'branding-estrategico',
+    num: '03', color: 'var(--orange)', accent: '#D4611B', bg: 'rgba(212,97,27,.08)',
+    title: 'Branding Estratégico',
+    headline: 'Criando marcas fortes com propósito e coerência',
+    intro: 'Construímos e revitalizamos marcas através do Branding Estratégico, alinhando identidade, propósito e posicionamento para criar conexões duradouras com o público certo.',
+    desc: 'Uma marca forte vai muito além de um logo bonito. É a soma de cada experiência que o público tem com sua empresa. Na Mclair, desenvolvemos Branding Estratégico que conecta identidade visual, tom de voz, propósito e posicionamento de mercado — criando marcas que ficam na memória e geram valor tangível.',
+    items: [
+      'Estratégia de marca e posicionamento de mercado',
+      'Identidade visual e manual de marca completo',
+      'Tom de voz, linguagem e personalidade da marca',
+      'Redesign e rebranding estratégico',
+      'Aplicações e materiais gráficos institucionais',
+      'Brand guidelines e governança de marca',
+    ],
+    cta: 'Transformar sua Marca',
+    description: 'Branding Estratégico com a Mclair. Construção e revitalização de marcas com propósito, identidade sólida e posicionamento de mercado claro.',
+  },
+  {
+    slug: 'marketing-digital',
+    num: '04', color: 'var(--red)', accent: '#C8102E', bg: 'var(--red-soft)',
+    title: 'Marketing Digital Integrado',
+    headline: 'Performance e growth para resultados mensuráveis',
+    intro: 'Marketing Digital Integrado focado em crescimento sustentável, atração de leads qualificados e otimização contínua de resultados através de estratégias multiplataforma.',
+    desc: 'O Marketing Digital da Mclair integra SEO, conteúdo estratégico, social media e mídia paga em uma estratégia coesa focada em resultados reais. Não gerenciamos canais isolados — construímos ecossistemas digitais que trabalham juntos para gerar crescimento consistente e leads qualificados.',
+    items: [
+      'Estratégia e planejamento digital integrado',
+      'SEO e marketing de conteúdo estratégico',
+      'Gestão de mídias sociais com foco em engajamento',
+      'Tráfego pago — Google Ads e Meta Ads',
+      'Automação de marketing e CRM',
+      'Analytics, relatórios e otimização contínua',
+    ],
+    cta: 'Acelerar seu Crescimento Digital',
+    description: 'Marketing Digital Integrado com a Mclair. SEO, conteúdo, social media e ads em estratégia coesa para crescimento real e leads qualificados.',
+  },
+  {
+    slug: 'consultoria-em-comunicacao',
+    num: '05', color: 'var(--teal)', accent: '#1B8A76', bg: 'rgba(27,138,118,.08)',
+    title: 'Consultoria em Comunicação',
+    headline: 'Planejamento estratégico personalizado para resultados',
+    intro: 'Nossa Consultoria em Comunicação avalia sua situação atual, identifica oportunidades e desenvolve planos estratégicos focados em resultados concretos e posicionamento de marca sólido.',
+    desc: 'Antes de agir, é preciso pensar. Nossa Consultoria em Comunicação oferece uma visão externa e estratégica da sua comunicação — identificando gaps, oportunidades e os caminhos mais eficientes para alcançar seus objetivos. Com diagnósticos precisos e planos executáveis, transformamos insights em resultados.',
+    items: [
+      'Diagnóstico completo de comunicação corporativa',
+      'Desenvolvimento de plano estratégico integrado',
+      'Gestão de crises e reputação de marca',
+      'Comunicação institucional e stakeholders',
+      'Treinamento e capacitação de porta-vozes',
+      'Planejamento de comunicação anual',
+    ],
+    cta: 'Solicitar Consultoria Estratégica',
+    description: 'Consultoria em Comunicação Estratégica com a Mclair. Diagnóstico e planejamento personalizado para resultados em comunicação e posicionamento de marca.',
+  },
+  {
+    slug: 'mentorias-exclusivas',
+    num: '06', color: 'var(--orange)', accent: '#D4611B', bg: 'rgba(212,97,27,.08)',
+    title: 'Mentorias Exclusivas',
+    headline: 'Bolder e Bolder Press — transformação acelerada',
+    intro: 'Programas de mentoria em Marketing de Autoridade e Assessoria de Imprensa conduzidos por Kelly Pinheiro, com mais de 20 anos de experiência transformando profissionais em referências de mercado.',
+    desc: 'As mentorias Bolder e Bolder Press são programas de imersão exclusivos para profissionais que querem acelerar sua transformação. Com método desenvolvido ao longo de mais de 20 anos por Kelly Pinheiro, esses programas oferecem acompanhamento personalizado, ferramentas práticas e uma rede de alunos poderosa.',
+    items: [
+      'Mentoria Bolder — Marca Pessoal e Autoridade (3 níveis)',
+      'Mentoria Bolder Press — Assessoria Estratégica (4 módulos)',
+      'Acompanhamento personalizado com Kelly Pinheiro',
+      'Deep dive em posicionamento e diferencial competitivo',
+      'Desenvolvimento de narrativa pessoal e pitch',
+      'Certificação e rede de alunos exclusiva',
+    ],
+    cta: 'Conhecer as Mentorias',
+    description: 'Mentorias Mclair: Bolder (Marca Pessoal e Marketing de Autoridade) e Bolder Press (Assessoria de Imprensa). Com Kelly Pinheiro, 20+ anos de experiência.',
+  },
+  ];
+  return allServices.map(s => ({ params: { slug: s.slug }, props: { s, others: allServices.filter(x => x.slug !== s.slug).slice(0,3) } }));
+}
+
+const { s, others } = Astro.props;
+---
+
+<Layout
+  title={`${s.title} — Mclair | Agência de Comunicação Estratégica`}
+  description={s.description}
+>
+
+<!-- HERO -->
+<section class="svc-hero" style={`--accent:${s.accent}`}>
+  <div class="sh-bg">
+    <div class="sh-blob-1"></div>
+    <div class="sh-blob-2"></div>
+  </div>
+  <div class="container sh-inner">
+    <div class="sh-content">
+      <div class="sh-breadcrumb" data-anim>
+        <a href="/servicos">Serviços</a>
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+        <span>{s.title}</span>
+      </div>
+      <span class="sh-num" data-anim>{s.num}</span>
+      <h1 class="sh-title" data-anim data-delay="1">{s.title}</h1>
+      <p class="sh-headline" data-anim data-delay="2">{s.headline}</p>
+      <p class="sh-intro" data-anim data-delay="3">{s.intro}</p>
+      <div class="sh-actions" data-anim data-delay="4">
+        <a href={WA} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
+        <a href="/contato" class="btn-ghost-white">Ver todos os serviços</a>
+      </div>
+    </div>
+    <div class="sh-card" data-anim="right" data-delay="2">
+      <div class="sc-inner">
+        <div class="sc-num-big" style={`color:${s.accent}`}>{s.num}</div>
+        <h3 class="sc-title">{s.title}</h3>
+        <div class="sc-divider"></div>
+        <ul class="sc-items">
+          {s.items.slice(0,4).map(item => (
+            <li>
+              <span class="sci-dot" style={`background:${s.accent}`}></span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CONTENT -->
+<section class="svc-content-section">
+  <div class="container svc-content-grid">
+    <div class="sc-left" data-anim="left">
+      <h2 class="scl-title">{s.headline}</h2>
+      <p class="scl-desc">{s.desc}</p>
+      <ul class="scl-items stagger-children">
+        {s.items.map(item => (
+          <li>
+            <span class="scli-dot" style={`background:${s.accent}`}></span>
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+      <a href={WA} class="btn-primary" target="_blank" rel="noopener" style={`background:${s.accent};margin-top:32px;display:inline-flex`}>
+        {s.cta}
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+    <div class="sc-right" data-anim="right" data-delay="1">
+      <div class="scr-card" style={`background:${s.bg};border-color:${s.accent}20`}>
+        <img src="/brand/mockup-completo.jpg" alt="Mclair branding" class="scr-img" />
+        <div class="scr-overlay"></div>
+        <div class="scr-content">
+          <p class="scr-quote">"Resultados que constroem legado."</p>
+          <span class="scr-by">— Mclair, desde 2017</span>
+        </div>
+      </div>
+      <div class="scr-cta-box">
+        <h3>Pronto para começar?</h3>
+        <p>Converse com nossa equipe e receba uma proposta personalizada.</p>
+        <a href={WA} class="btn-primary" target="_blank" rel="noopener" style={`background:${s.accent};width:100%;justify-content:center;margin-top:16px`}>
+          Falar com Especialista
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- OTHER SERVICES -->
+<section class="other-services">
+  <div class="container">
+    <h2 class="os-title" data-anim>Outros serviços Mclair</h2>
+    <div class="os-grid stagger-children">
+      {others.map(os => (
+        <a href={`/servicos/${os.slug}`} class="os-card">
+          <span class="os-num" style={`color:${os.accent}`}>{os.num}</span>
+          <div class="os-accent-bar" style={`background:${os.accent}`}></div>
+          <h3 class="os-title-inner">{os.title}</h3>
+          <p class="os-desc">{os.headline}</p>
+          <span class="os-arrow">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+          </span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+</Layout>
+
+<style>
+/* HERO */
+.svc-hero {
+  background: var(--dark); padding-top: 88px; position: relative; overflow: hidden;
+}
+.sh-bg { position: absolute; inset: 0; pointer-events: none; }
+.sh-blob-1 { position: absolute; width: 500px; height: 500px; border-radius: 50%; filter: blur(100px); top: -100px; right: -80px; background: radial-gradient(circle, color-mix(in srgb, var(--accent) 15%, transparent) 0%, transparent 70%); }
+.sh-blob-2 { position: absolute; width: 350px; height: 350px; border-radius: 50%; filter: blur(100px); bottom: -60px; left: -60px; background: radial-gradient(circle, rgba(27,138,118,.08) 0%, transparent 70%); }
+.sh-inner { display: grid; grid-template-columns: 1fr 340px; gap: 60px; align-items: center; padding-top: 72px; padding-bottom: 72px; }
+.sh-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 14px; }
+.sh-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
+.sh-breadcrumb a:hover { color: #fff; }
+.sh-num { font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 10px; }
+.sh-title { font-size: clamp(2.4rem,5vw,4rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 12px; }
+.sh-headline { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,.6); margin-bottom: 16px; }
+.sh-intro { font-size: .94rem; font-weight: 300; color: rgba(255,255,255,.4); line-height: 1.85; margin-bottom: 32px; max-width: 520px; }
+.sh-actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.btn-white { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .88rem 1.8rem; border-radius: var(--r-sm); transition: opacity .2s, transform .15s; }
+.btn-white:hover { opacity: .9; transform: translateY(-2px); }
+.btn-ghost-white { display: inline-flex; align-items: center; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: rgba(255,255,255,.6); border: 1.5px solid rgba(255,255,255,.2); padding: .85rem 1.7rem; border-radius: var(--r-sm); transition: border-color .2s, color .2s; }
+.btn-ghost-white:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+.sh-card { background: rgba(255,255,255,.06); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-xl); overflow: hidden; }
+.sc-inner { padding: 28px; }
+.sc-num-big { font-size: 5rem; font-weight: 900; line-height: 1; margin-bottom: -8px; opacity: .2; }
+.sc-title { font-size: 1rem; font-weight: 700; color: #fff; margin-bottom: 16px; }
+.sc-divider { height: 1px; background: rgba(255,255,255,.1); margin-bottom: 16px; }
+.sc-items { display: flex; flex-direction: column; gap: 8px; }
+.sc-items li { display: flex; align-items: flex-start; gap: 10px; font-size: .82rem; color: rgba(255,255,255,.5); line-height: 1.5; }
+.sci-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+/* CONTENT */
+.svc-content-section { background: #fff; padding: clamp(64px,8vw,100px) 0; }
+.svc-content-grid { display: grid; grid-template-columns: 1fr 380px; gap: 64px; align-items: start; }
+.scl-title { font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 700; color: var(--ink); margin-bottom: 16px; line-height: 1.2; }
+.scl-desc { font-size: .94rem; color: var(--ink-3); line-height: 1.9; font-weight: 300; margin-bottom: 28px; }
+.scl-items { display: flex; flex-direction: column; gap: 10px; }
+.scl-items li { display: flex; align-items: flex-start; gap: 12px; font-size: .88rem; color: var(--ink-2); line-height: 1.6; }
+.scli-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; margin-top: 7px; }
+.sc-right { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 100px; }
+.scr-card { border: 1px solid; border-radius: var(--r-xl); overflow: hidden; position: relative; height: 260px; }
+.scr-img { width: 100%; height: 100%; object-fit: cover; }
+.scr-overlay { position: absolute; inset: 0; background: rgba(21,18,16,.55); }
+.scr-content { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px; }
+.scr-quote { font-size: .88rem; font-weight: 300; color: rgba(255,255,255,.8); font-style: italic; margin-bottom: 6px; }
+.scr-by { font-size: .65rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.4); }
+.scr-cta-box { background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 24px; }
+.scr-cta-box h3 { font-size: .95rem; font-weight: 700; color: var(--ink); margin-bottom: 8px; }
+.scr-cta-box p { font-size: .84rem; color: var(--ink-3); font-weight: 300; line-height: 1.65; }
+
+/* OTHER SERVICES */
+.other-services { background: var(--cream-2); padding: clamp(52px,7vw,84px) 0; }
+.os-title { font-size: clamp(1.4rem,2.5vw,2rem); font-weight: 700; color: var(--ink); margin-bottom: 36px; }
+.os-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.os-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 24px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; position: relative; overflow: hidden; transition: border-color .2s, box-shadow .2s, transform .2s; }
+.os-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.os-num { font-size: .65rem; font-weight: 700; letter-spacing: .15em; }
+.os-accent-bar { width: 32px; height: 3px; border-radius: 99px; margin: 4px 0; transition: width .3s; }
+.os-card:hover .os-accent-bar { width: 52px; }
+.os-title-inner { font-size: .98rem; font-weight: 700; color: var(--ink); }
+.os-desc { font-size: .78rem; color: var(--ink-4); font-weight: 300; line-height: 1.5; }
+.os-arrow { position: absolute; top: 20px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
+.os-card:hover .os-arrow { color: var(--red); transform: translate(2px,-2px); }
+
+@media (max-width: 900px) { .sh-inner { grid-template-columns: 1fr; } .sh-card { display: none; } .svc-content-grid { grid-template-columns: 1fr; } .sc-right { position: static; } .os-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .os-grid { grid-template-columns: 1fr; } }
+</style>

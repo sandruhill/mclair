@@ -1,0 +1,138 @@
+backend:
+  name: github
+  repo: sandruhill/mclair
+  branch: main
+  base_url: https://sveltia-cms-auth.pages.dev
+
+locale: pt
+site_url: https://mclair.vercel.app
+display_url: https://mclair.vercel.app
+
+media_folder: public/uploads
+public_folder: /uploads
+
+# ─── COLEÇÕES ────────────────────────────────────────────────────────────────
+
+collections:
+
+  # ── BLOG ──────────────────────────────────────────────────────────────────
+  - name: blog
+    label: Blog
+    label_singular: Post
+    folder: src/content/blog
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    preview_path: "/blog/{{slug}}"
+    summary: "{{title}} — {{author}} ({{date}})"
+    sortable_fields: [date, title, author]
+    view_filters:
+      - label: Claudia Elisa Soares
+        field: author
+        pattern: Claudia Elisa Soares
+      - label: Elemar Júnior
+        field: author
+        pattern: Elemar Júnior
+      - label: Lambda3
+        field: author
+        pattern: Lambda3
+    fields:
+      - { label: Título, name: title, widget: string, hint: "Máx. 70 caracteres para SEO ideal" }
+      - { label: Subtítulo, name: subtitle, widget: string, required: false, hint: "Aparece abaixo do título e é usado na meta description" }
+      - { label: Data, name: date, widget: datetime, date_format: DD/MM/YYYY, time_format: false, format: DD/MM/YYYY }
+      - { label: Autor, name: author, widget: string, default: "Mclair Comunicação" }
+      - label: Imagem de Capa
+        name: image
+        widget: image
+        required: false
+        hint: "Ideal 1200×630px. Usada no Open Graph (WhatsApp, LinkedIn, etc.)"
+      - label: Conteúdo
+        name: body
+        widget: markdown
+        hint: "Escreva o conteúdo do post aqui"
+
+  # ── CASES ─────────────────────────────────────────────────────────────────
+  - name: cases
+    label: Cases
+    label_singular: Case
+    folder: src/content/cases
+    create: true
+    delete: true
+    slug: "{{slug}}"
+    preview_path: "/cases/{{slug}}"
+    summary: "{{title}} — {{category}}"
+    fields:
+      - { label: Nome do Cliente, name: title, widget: string }
+      - { label: Slug (URL), name: slug, widget: string, hint: "Ex: claudia-elisa (sem espaços, sem acentos)" }
+      - { label: Categoria, name: category, widget: string, hint: "Ex: Branding, Assessoria de Imprensa" }
+      - { label: Descrição curta, name: description, widget: string }
+      - { label: Texto completo, name: body, widget: markdown }
+      - label: Imagem principal
+        name: image
+        widget: image
+        required: false
+      - label: Galeria de imagens
+        name: gallery
+        widget: list
+        required: false
+        fields:
+          - { label: Imagem, name: src, widget: image }
+          - { label: Legenda, name: caption, widget: string, required: false }
+      - label: Resultados / Métricas
+        name: results
+        widget: list
+        required: false
+        fields:
+          - { label: Número, name: n, widget: string, hint: "Ex: 3×, 45%, 200+" }
+          - { label: Descrição, name: label, widget: string }
+      - label: Tags de serviços
+        name: tags
+        widget: list
+        required: false
+        field: { label: Tag, name: tag, widget: string }
+
+  # ── CLIENTES ──────────────────────────────────────────────────────────────
+  - name: clientes
+    label: Clientes
+    label_singular: Cliente
+    folder: src/content/clientes
+    create: true
+    delete: true
+    slug: "{{name}}"
+    summary: "{{name}}"
+    fields:
+      - { label: Nome, name: name, widget: string }
+      - label: Logo
+        name: logo
+        widget: image
+        required: false
+        hint: "PNG com fundo transparente, ideal"
+
+  # ── CONFIGURAÇÕES DAS PÁGINAS ──────────────────────────────────────────────
+  - name: pages
+    label: Páginas
+    files:
+
+      - label: Página Inicial
+        name: home
+        file: src/data/pages/home.json
+        fields:
+          - { label: Título principal (H1), name: hero_title, widget: string }
+          - { label: Subtítulo hero, name: hero_subtitle, widget: text }
+          - { label: Texto do botão CTA, name: hero_cta, widget: string }
+
+      - label: Sobre
+        name: sobre
+        file: src/data/pages/sobre.json
+        fields:
+          - { label: Título, name: title, widget: string }
+          - { label: Texto principal, name: body, widget: markdown }
+
+      - label: Mentorias
+        name: mentorias
+        file: src/data/pages/mentorias.json
+        fields:
+          - { label: Título Bolder, name: bolder_title, widget: string }
+          - { label: Descrição Bolder, name: bolder_desc, widget: markdown }
+          - { label: Título Bolder Press, name: press_title, widget: string }
+          - { label: Descrição Bolder Press, name: press_desc, widget: markdown }

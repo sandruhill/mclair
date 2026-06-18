@@ -1,0 +1,550 @@
+---
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  ogImage?: string;
+  ogType?: string;
+  articleAuthor?: string;
+  articlePublishedTime?: string;
+  articleModifiedTime?: string;
+  articleSection?: string;
+  keywords?: string;
+  prevUrl?: string;
+  nextUrl?: string;
+  schema?: object | object[];
+}
+
+const BASE = 'https://mclair.vercel.app';
+const {
+  title,
+  description = 'Mclair — Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito desde 2017.',
+  ogImage = `${BASE}/android-chrome-512x512.png`,
+  ogType = 'website',
+  articleAuthor,
+  articlePublishedTime,
+  articleModifiedTime,
+  articleSection,
+  keywords,
+  prevUrl,
+  nextUrl,
+  schema,
+} = Astro.props;
+const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
+const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
+
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'MarketingAgency',
+  '@id': `${BASE}/#organization`,
+  name: 'Mclair Comunicação Estratégica',
+  alternateName: ['Mclair', 'Mclair Agência', 'Mclair Marketing'],
+  url: BASE,
+  logo: {
+    '@type': 'ImageObject',
+    url: `${BASE}/logos/logo-negativo.png`,
+    width: 200,
+    height: 60,
+  },
+  image: `${BASE}/android-chrome-512x512.png`,
+  description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. Posicionamos marcas como referência reconhecida no mercado.',
+  foundingDate: '2017',
+  founder: {
+    '@type': 'Person',
+    name: 'Kelly Pinheiro',
+    jobTitle: 'Fundadora & CEO',
+    sameAs: ['https://instagram.com/mclair.com.br'],
+  },
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'São Paulo',
+    addressRegion: 'SP',
+    addressCountry: 'BR',
+  },
+  contactPoint: [
+    {
+      '@type': 'ContactPoint',
+      telephone: '+55-11-98860-0372',
+      contactType: 'customer service',
+      availableLanguage: 'Portuguese',
+      contactOption: 'TollFree',
+    },
+    {
+      '@type': 'ContactPoint',
+      email: 'kelly@mclair.com.br',
+      contactType: 'customer service',
+    },
+  ],
+  sameAs: [
+    'https://instagram.com/mclair.com.br',
+    'https://linkedin.com/company/mclair-comunicacao',
+    'https://mclair.com.br',
+  ],
+  areaServed: {
+    '@type': 'Country',
+    name: 'Brasil',
+  },
+  knowsAbout: [
+    'Marketing de Autoridade',
+    'Comunicação Estratégica',
+    'Assessoria de Imprensa',
+    'Branding Estratégico',
+    'Marketing Digital',
+    'Consultoria em Comunicação',
+    'Marca Pessoal',
+    'Gestão de Reputação',
+    'Marketing B2B',
+    'Relações Públicas',
+  ],
+  hasOfferCatalog: {
+    '@type': 'OfferCatalog',
+    name: 'Serviços de Marketing e Comunicação',
+    itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Marketing de Autoridade' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Assessoria de Imprensa' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Branding Estratégico' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Marketing Digital Integrado' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Consultoria em Comunicação' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mentoria Bolder' } },
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Mentoria Bolder Press' } },
+    ],
+  },
+};
+
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${BASE}/#website`,
+  url: BASE,
+  name: 'Mclair — Agência de Marketing e Comunicação Estratégica',
+  description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
+  publisher: { '@id': `${BASE}/#organization` },
+  potentialAction: {
+    '@type': 'SearchAction',
+    target: `${BASE}/contato?q={search_term_string}`,
+    'query-input': 'required name=search_term_string',
+  },
+  inLanguage: 'pt-BR',
+};
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
+
+    <!-- ── Favicons ── -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+    <link rel="icon" type="image/png" sizes="48x48" href="/favicon-48x48.png" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta name="msapplication-TileColor" content="#C8102E" />
+    <meta name="msapplication-TileImage" content="/mstile-150x150.png" />
+    <meta name="theme-color" content="#151210" />
+
+    <!-- ── Open Graph ── -->
+    <meta property="og:type"          content={ogType} />
+    <meta property="og:url"           content={canonicalURL} />
+    <meta property="og:title"         content={title} />
+    <meta property="og:description"   content={description} />
+    <meta property="og:image"         content={ogImage} />
+    <meta property="og:image:width"   content="1200" />
+    <meta property="og:image:height"  content="630" />
+    <meta property="og:locale"        content="pt_BR" />
+    <meta property="og:site_name"     content="Mclair — Agência de Marketing" />
+    {ogType === 'article' && articlePublishedTime && (
+      <meta property="article:published_time" content={articlePublishedTime} />
+    )}
+    {ogType === 'article' && articleModifiedTime && (
+      <meta property="article:modified_time"  content={articleModifiedTime} />
+    )}
+    {ogType === 'article' && articleAuthor && (
+      <meta property="article:author"         content={articleAuthor} />
+    )}
+    {ogType === 'article' && articleSection && (
+      <meta property="article:section"        content={articleSection} />
+    )}
+
+    <!-- ── Twitter / X ── -->
+    <meta name="twitter:card"         content="summary_large_image" />
+    <meta name="twitter:title"        content={title} />
+    <meta name="twitter:description"  content={description} />
+    <meta name="twitter:image"        content={ogImage} />
+    <meta name="twitter:site"         content="@mclaircomunicacao" />
+    {articleAuthor && <meta name="twitter:creator" content={`@${articleAuthor.toLowerCase().replace(/\s+/g,'')}`} />}
+
+    <!-- ── SEO + GEO ── -->
+    <meta name="robots"           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="author"           content={articleAuthor || 'Mclair Comunicação Estratégica'} />
+    {keywords && <meta name="keywords" content={keywords} />}
+    <meta name="geo.region"       content="BR-SP" />
+    <meta name="geo.placename"    content="São Paulo" />
+    <meta name="geo.position"     content="-23.5505;-46.6333" />
+    <meta name="ICBM"             content="-23.5505, -46.6333" />
+    <meta name="language"         content="Portuguese" />
+    <meta name="revisit-after"    content="7 days" />
+    <meta name="rating"           content="general" />
+
+    <!-- ── Pagination (SEO) ── -->
+    {prevUrl && <link rel="prev" href={prevUrl} />}
+    {nextUrl && <link rel="next" href={nextUrl} />}
+
+    <!-- ── JSON-LD Structured Data ── -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgSchema)} />
+    <script type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />
+    {schemas.map(s => (
+      <script type="application/ld+json" set:html={JSON.stringify(s)} />
+    ))}
+
+    <!-- ── Fonts ── -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet" />
+  </head>
+  <body>
+    <!-- Custom cursor -->
+    <div id="cursor" aria-hidden="true">
+      <div id="cursor-dot"></div>
+      <div id="cursor-ring"></div>
+    </div>
+
+    <Header />
+    <main class="page-content">
+      <slot />
+    </main>
+    <Footer />
+
+    <script is:inline>
+    (function() {
+      // ── Intersection Observer for [data-anim] ──
+      var animObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            animObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+      document.querySelectorAll('[data-anim]').forEach(function(el) {
+        animObs.observe(el);
+      });
+
+      // ── Stagger containers ──
+      var staggerObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            staggerObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.05 });
+
+      document.querySelectorAll('.stagger-children').forEach(function(el) {
+        staggerObs.observe(el);
+      });
+
+      // ── Word reveal ──
+      var wordObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            wordObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.2 });
+
+      document.querySelectorAll('.word-reveal').forEach(function(el) {
+        wordObs.observe(el);
+      });
+
+      // ── Line grow ──
+      var lineObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('in');
+            lineObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('.line-grow, .line-center').forEach(function(el) {
+        lineObs.observe(el);
+      });
+
+      // ── Number counters ──
+      function animateCounter(el) {
+        var target = parseInt(el.getAttribute('data-target') || '0');
+        var prefix = el.getAttribute('data-prefix') || '';
+        var suffix = el.getAttribute('data-suffix') || '';
+        var duration = 2000;
+        var start = performance.now();
+        function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+        function tick(now) {
+          var p = Math.min((now - start) / duration, 1);
+          var val = Math.round(easeOut(p) * target);
+          el.textContent = prefix + val.toLocaleString('pt-BR') + suffix;
+          if (p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+      }
+
+      var counterObs = new IntersectionObserver(function(entries) {
+        entries.forEach(function(e) {
+          if (e.isIntersecting) {
+            animateCounter(e.target);
+            counterObs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.5 });
+
+      document.querySelectorAll('[data-target]').forEach(function(el) {
+        counterObs.observe(el);
+      });
+
+      // ── Custom cursor ──
+      var cursor = document.getElementById('cursor');
+      var dot = document.getElementById('cursor-dot');
+      var ring = document.getElementById('cursor-ring');
+      if (cursor && dot && ring && window.matchMedia('(pointer: fine)').matches) {
+        cursor.style.display = 'block';
+        var mx = 0, my = 0, rx = 0, ry = 0;
+        document.addEventListener('mousemove', function(e) {
+          mx = e.clientX; my = e.clientY;
+          dot.style.transform = 'translate(' + (mx-4) + 'px,' + (my-4) + 'px)';
+        });
+        function animRing() {
+          rx += (mx - rx) * 0.12;
+          ry += (my - ry) * 0.12;
+          ring.style.transform = 'translate(' + (rx-20) + 'px,' + (ry-20) + 'px)';
+          requestAnimationFrame(animRing);
+        }
+        animRing();
+
+        document.querySelectorAll('a, button, [role="button"]').forEach(function(el) {
+          el.addEventListener('mouseenter', function() { ring.classList.add('expand'); });
+          el.addEventListener('mouseleave', function() { ring.classList.remove('expand'); });
+        });
+      }
+
+      // ── Parallax on hero shapes ──
+      var parallaxEls = document.querySelectorAll('[data-parallax]');
+      if (parallaxEls.length) {
+        window.addEventListener('scroll', function() {
+          var sy = window.scrollY;
+          parallaxEls.forEach(function(el) {
+            var speed = parseFloat(el.getAttribute('data-parallax') || '0.15');
+            el.style.transform = 'translateY(' + (sy * speed) + 'px)';
+          });
+        }, { passive: true });
+      }
+    })();
+    </script>
+
+    <style is:global>
+      /* Custom cursor */
+      #cursor { display:none; pointer-events:none; position:fixed; z-index:99999; top:0; left:0; }
+      #cursor-dot {
+        position:fixed; width:8px; height:8px; border-radius:50%;
+        background:var(--red); pointer-events:none;
+        transition:opacity .2s;
+      }
+      #cursor-ring {
+        position:fixed; width:40px; height:40px; border-radius:50%;
+        border:1.5px solid rgba(200,16,46,.5);
+        pointer-events:none;
+        transition:transform .08s linear, width .3s, height .3s, border-color .3s;
+      }
+      #cursor-ring.expand {
+        width:56px; height:56px;
+        border-color:rgba(200,16,46,.8);
+        margin:-8px;
+      }
+      @media (pointer: coarse) { #cursor { display:none !important; } }
+
+      /* ── WhatsApp Modal ── */
+      .wa-modal {
+        position:fixed; inset:0; z-index:800;
+        display:flex; align-items:center; justify-content:center;
+        background:rgba(10,8,7,.55); backdrop-filter:blur(8px);
+        -webkit-backdrop-filter:blur(8px);
+        opacity:0; pointer-events:none;
+        transition:opacity .35s cubic-bezier(.22,1,.36,1);
+      }
+      .wa-modal.wa-open { opacity:1; pointer-events:all; }
+
+      .wa-glass {
+        background:rgba(30,26,22,.75);
+        backdrop-filter:blur(40px) saturate(180%);
+        -webkit-backdrop-filter:blur(40px) saturate(180%);
+        border:1px solid rgba(255,255,255,.12);
+        border-radius:24px;
+        padding:44px 40px 40px;
+        max-width:440px; width:calc(100% - 40px);
+        position:relative;
+        box-shadow:0 40px 100px rgba(0,0,0,.45), 0 0 0 1px rgba(255,255,255,.06);
+        transform:translateY(20px) scale(.97);
+        transition:transform .35s cubic-bezier(.22,1,.36,1);
+      }
+      .wa-modal.wa-open .wa-glass { transform:none; }
+
+      .wa-x {
+        position:absolute; top:16px; right:16px;
+        width:36px; height:36px; border-radius:50%;
+        background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+        color:rgba(255,255,255,.6); font-size:1.3rem; line-height:1;
+        cursor:pointer; display:flex; align-items:center; justify-content:center;
+        transition:background .2s;
+      }
+      .wa-x:hover { background:rgba(255,255,255,.14); }
+
+      .wa-icon {
+        width:56px; height:56px; border-radius:16px;
+        background:linear-gradient(135deg,#25D366,#128C7E);
+        display:flex; align-items:center; justify-content:center;
+        margin-bottom:20px;
+        box-shadow:0 8px 24px rgba(37,211,102,.3);
+      }
+      .wa-title {
+        font-size:1.5rem; font-weight:900; color:#fff;
+        letter-spacing:-.03em; margin-bottom:8px;
+      }
+      .wa-sub {
+        font-size:.88rem; color:rgba(255,255,255,.45);
+        line-height:1.6; margin-bottom:28px; font-weight:300;
+      }
+
+      .wa-form { display:flex; flex-direction:column; gap:14px; }
+      .wa-field { display:flex; flex-direction:column; gap:6px; }
+      .wa-field label {
+        font-size:.7rem; font-weight:700; letter-spacing:.1em;
+        text-transform:uppercase; color:rgba(255,255,255,.4);
+      }
+      .wa-field input,
+      .wa-field select {
+        background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+        border-radius:10px; padding:.85rem 1rem;
+        color:#fff; font-size:.95rem; font-family:inherit;
+        outline:none; transition:border-color .2s, background .2s;
+        appearance:none; -webkit-appearance:none;
+      }
+      .wa-field input::placeholder { color:rgba(255,255,255,.25); }
+      .wa-field select option { background:#1E1B18; color:#fff; }
+      .wa-field input:focus,
+      .wa-field select:focus { border-color:rgba(37,211,102,.5); background:rgba(255,255,255,.1); }
+
+      .wa-submit {
+        display:flex; align-items:center; justify-content:center; gap:10px;
+        background:linear-gradient(135deg,#25D366,#128C7E);
+        color:#fff; border:none; border-radius:12px;
+        font-size:.88rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase;
+        padding:1rem 1.6rem; cursor:pointer; margin-top:6px;
+        transition:opacity .2s, transform .15s;
+        box-shadow:0 6px 20px rgba(37,211,102,.25);
+      }
+      .wa-submit:hover { opacity:.9; transform:translateY(-2px); }
+      .wa-submit:active { transform:none; }
+
+      @media (max-width:480px) {
+        .wa-glass { padding:36px 24px 28px; border-radius:20px; }
+      }
+    </style>
+
+    <!-- WhatsApp Popup -->
+    <div id="wa-modal" class="wa-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="wa-title">
+      <div class="wa-glass">
+        <button class="wa-x" id="wa-x" aria-label="Fechar">×</button>
+        <div class="wa-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="#fff"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <h3 class="wa-title" id="wa-title">Fale com a Mclair</h3>
+        <p class="wa-sub">Preencha rapidamente e te levamos direto ao WhatsApp com tudo preenchido.</p>
+        <form id="wa-form" class="wa-form" novalidate>
+          <div class="wa-field">
+            <label for="wa-name">Seu nome</label>
+            <input id="wa-name" type="text" placeholder="Como posso chamar você?" autocomplete="given-name" />
+          </div>
+          <div class="wa-field">
+            <label for="wa-service">O que você precisa?</label>
+            <select id="wa-service">
+              <option value="">Selecione um serviço...</option>
+              <option>Marketing de Autoridade</option>
+              <option>Assessoria de Imprensa</option>
+              <option>Branding Estratégico</option>
+              <option>Marketing Digital</option>
+              <option>Consultoria em Comunicação</option>
+              <option>Mentoria Bolder ou Bolder Press</option>
+              <option>Não sei ainda — quero conversar</option>
+            </select>
+          </div>
+          <button type="submit" class="wa-submit">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            Enviar no WhatsApp
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script is:inline>
+    (function() {
+      var modal  = document.getElementById('wa-modal');
+      var form   = document.getElementById('wa-form');
+      var nameEl = document.getElementById('wa-name');
+      var svcEl  = document.getElementById('wa-service');
+      var xBtn   = document.getElementById('wa-x');
+      var WA_NUM = '5511988600372';
+
+      function openModal() {
+        modal.classList.add('wa-open');
+        modal.setAttribute('aria-hidden','false');
+        document.body.style.overflow = 'hidden';
+        setTimeout(function(){ if(nameEl) nameEl.focus(); }, 350);
+      }
+      function closeModal() {
+        modal.classList.remove('wa-open');
+        modal.setAttribute('aria-hidden','true');
+        document.body.style.overflow = '';
+      }
+
+      // Intercept all WA links
+      document.querySelectorAll('[href*="wa.me"]').forEach(function(link) {
+        link.addEventListener('click', function(e) {
+          e.preventDefault();
+          openModal();
+        });
+      });
+
+      xBtn && xBtn.addEventListener('click', closeModal);
+      modal && modal.addEventListener('click', function(e) {
+        if (e.target === modal) closeModal();
+      });
+      document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape' && modal.classList.contains('wa-open')) closeModal();
+      });
+
+      form && form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        var name = (nameEl && nameEl.value.trim()) || '';
+        var svc  = (svcEl  && svcEl.value)        || '';
+        var msg  = 'Olá Mclair! ';
+        if (name)       msg += 'Meu nome é ' + name + '. ';
+        if (svc)        msg += 'Gostaria de saber mais sobre: ' + svc + '.';
+        else            msg += 'Gostaria de conhecer os serviços.';
+        var url = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
+        window.open(url, '_blank', 'noopener,noreferrer');
+        closeModal();
+      });
+    })();
+    </script>
+
+  </body>
+</html>

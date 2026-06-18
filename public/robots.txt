@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+
+# Sitemaps
+Sitemap: https://mclair.vercel.app/sitemap-index.xml
+Sitemap: https://mclair.vercel.app/sitemap-0.xml
+
+# Crawl-delay for respectful crawling
+Crawl-delay: 1

@@ -1,0 +1,403 @@
+---
+import Layout from '../layouts/Layout.astro';
+const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20consultoria.';
+
+const faqs = [
+  {
+    q:'O que é Marketing de Autoridade e como a Mclair aplica?',
+    a:'Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca.',
+  },
+  {
+    q:'Qual a diferença entre uma agência de marketing comum e a Mclair?',
+    a:'Enquanto o termo "360º" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros.',
+  },
+  {
+    q:'Como a Mclair mede os resultados em comunicação?',
+    a:'Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa.',
+  },
+  {
+    q:'Como solicitar uma proposta de Comunicação Estratégica?',
+    a:'É simples! Preencha o formulário abaixo, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução.',
+  },
+];
+
+const servicos = [
+  'Marketing de Autoridade','Assessoria de Imprensa','Branding Estratégico',
+  'Marketing Digital','Consultoria em Comunicação','Mentoria Bolder','Mentoria Bolder Press',
+];
+---
+
+<Layout
+  title="Contato Mclair — Inicie sua Jornada de Marketing de Autoridade"
+  description="Fale com a Mclair. Solicite uma consultoria em Comunicação Estratégica ou Marketing de Autoridade. São Paulo: kelly@mclair.com.br | (11) 98860-0372"
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'O que é Marketing de Autoridade e como a Mclair aplica?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Qual a diferença entre uma agência de marketing comum e a Mclair?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Enquanto o termo "360º" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Como a Mclair mede os resultados em comunicação?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Como solicitar uma proposta de Comunicação Estratégica?',
+        acceptedAnswer: { '@type': 'Answer', text: 'É simples! Preencha o formulário, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução.' },
+      },
+    ],
+  }}
+>
+
+<!-- HERO -->
+<section class="page-hero">
+  <div class="ph-bg" aria-hidden="true">
+    <div class="ph-blob-1"></div>
+    <div class="ph-blob-2"></div>
+  </div>
+  <div class="container ph-inner">
+    <div class="ph-text">
+      <p class="eyebrow" data-anim style="color:rgba(255,255,255,.5)">
+        <span style="background:rgba(255,255,255,.2);width:24px;height:2px;display:inline-block"></span>
+        Fale conosco
+      </p>
+      <h1 class="ph-title" data-anim data-delay="1">
+        Inicie sua jornada de<br/><span>Marketing de Autoridade</span>
+      </h1>
+      <p class="ph-sub" data-anim data-delay="2">
+        Pronto para elevar sua Comunicação Estratégica e construir sua Autoridade no mercado? Nossa equipe está pronta para entender seus desafios e propor a melhor solução.
+      </p>
+      <div class="ph-contact-info stagger-children" data-anim data-delay="3">
+        <a href="mailto:kelly@mclair.com.br" class="pci-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+          kelly@mclair.com.br
+        </a>
+        <a href="tel:+5511988600372" class="pci-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.07 2.18 2 2 0 012.06 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+          (11) 98860-0372
+        </a>
+        <span class="pci-item">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          São Paulo, SP — Brasil
+        </span>
+      </div>
+    </div>
+    <div class="ph-wa-card" data-anim="right" data-delay="2">
+      <p class="pwa-title">Resposta mais rápida?</p>
+      <p class="pwa-sub">Nosso WhatsApp tem resposta média de 2h em dias úteis.</p>
+      <a href={WA} class="btn-white" target="_blank" rel="noopener" style="margin-top:20px;width:100%;justify-content:center">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Abrir WhatsApp
+      </a>
+      <div class="pwa-info">
+        <span>Seg–Sex: 9h às 18h</span>
+        <span>São Paulo, SP</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FORM + ASIDE -->
+<section class="section contact-section">
+  <div class="container contact-grid">
+    <div class="form-wrap" data-anim="left">
+      <h2 class="fw-title">Envie sua mensagem</h2>
+      <p class="fw-sub">Preencha o formulário e entraremos em contato em até 24 horas úteis.</p>
+      <form class="contact-form" id="contact-form" novalidate>
+        <div class="form-row">
+          <div class="field">
+            <label for="nome">Nome completo *</label>
+            <input type="text" id="nome" name="nome" placeholder="Seu nome completo" required />
+          </div>
+          <div class="field">
+            <label for="empresa">Empresa</label>
+            <input type="text" id="empresa" name="empresa" placeholder="Nome da empresa" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="field">
+            <label for="email">E-mail *</label>
+            <input type="email" id="email" name="email" placeholder="seu@email.com.br" required />
+          </div>
+          <div class="field">
+            <label for="tel">Telefone / WhatsApp</label>
+            <input type="tel" id="tel" name="tel" placeholder="(11) 98860-0372" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Serviços de interesse</label>
+          <div class="checkbox-grid">
+            {servicos.map(s => (
+              <label class="cb-item">
+                <input type="checkbox" name="servico" value={s} />
+                <span class="cb-box"></span>
+                <span class="cb-label">{s}</span>
+              </label>
+            ))}
+          </div>
+        </div>
+        <div class="field">
+          <label for="msg">Mensagem *</label>
+          <textarea id="msg" name="msg" rows="5" placeholder="Conte sobre seu projeto, objetivos ou desafios de comunicação..." required></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%;justify-content:center">
+          Solicitar Contato para Consultoria
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      </form>
+    </div>
+
+    <div class="contact-aside" data-anim="right" data-delay="1">
+      <div class="aside-block">
+        <h3 class="ab-title">Informações de contato</h3>
+        <ul class="ab-list">
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 01-2.06 0L2 7"/></svg>
+            <div><strong>E-mail</strong><a href="mailto:kelly@mclair.com.br">kelly@mclair.com.br</a></div>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 8.63 19.79 19.79 0 01.07 2.18 2 2 0 012.06 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14.92z"/></svg>
+            <div><strong>Telefone / WhatsApp</strong><a href="tel:+5511988600372">(11) 98860-0372</a></div>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            <div><strong>Localização</strong><span>São Paulo, SP — Brasil</span></div>
+          </li>
+          <li>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+            <div><strong>Horário de atendimento</strong><span>Segunda a Sexta: 9h às 18h</span></div>
+          </li>
+        </ul>
+      </div>
+      <div class="aside-block">
+        <h3 class="ab-title">Redes sociais</h3>
+        <div class="aside-socials">
+          <a href="https://instagram.com/mclair.com.br" target="_blank" rel="noopener" class="as-item">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            @mclair.com.br
+          </a>
+          <a href="https://linkedin.com/company/mclair-comunicacao" target="_blank" rel="noopener" class="as-item">
+            <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019H3.555V9h3.564v11.452z"/></svg>
+            mclair-comunicacao
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section faq-section">
+  <div class="container">
+    <div class="faq-header" data-anim>
+      <p class="eyebrow" style="justify-content:center">Perguntas frequentes</p>
+      <h2 class="section-title" style="margin-top:14px;text-align:center">
+        Dúvidas sobre <span>Marketing e Comunicação</span>
+      </h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((f,i) => (
+        <div class="faq-item" data-anim data-delay={(i%2+1).toString()}>
+          <h3 class="faq-q">{f.q}</h3>
+          <p class="faq-a">{f.a}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+</Layout>
+
+<script is:inline>
+(function(){
+  var form = document.getElementById('contact-form');
+  if (!form) return;
+
+  function setError(id, msg) {
+    var el = document.getElementById(id);
+    el.classList.add('field-error');
+    var err = el.parentElement.querySelector('.err-msg');
+    if (!err) {
+      err = document.createElement('span');
+      err.className = 'err-msg';
+      el.parentElement.appendChild(err);
+    }
+    err.textContent = msg;
+  }
+
+  function clearError(id) {
+    var el = document.getElementById(id);
+    el.classList.remove('field-error');
+    var err = el.parentElement.querySelector('.err-msg');
+    if (err) err.textContent = '';
+  }
+
+  function isValidEmail(v) {
+    return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim());
+  }
+
+  ['nome','email','msg'].forEach(function(id) {
+    var el = document.getElementById(id);
+    el.addEventListener('input', function() { clearError(id); });
+    el.addEventListener('blur', function() {
+      var v = el.value.trim();
+      if (!v) {
+        setError(id, id === 'nome' ? 'Informe seu nome.' : id === 'email' ? 'Informe seu e-mail.' : 'Escreva sua mensagem.');
+      } else if (id === 'email' && !isValidEmail(v)) {
+        setError('email', 'E-mail inválido.');
+      }
+    });
+  });
+
+  form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    var valid = true;
+
+    var nomeVal = document.getElementById('nome').value.trim();
+    var emailVal = document.getElementById('email').value.trim();
+    var msgVal = document.getElementById('msg').value.trim();
+
+    clearError('nome'); clearError('email'); clearError('msg');
+
+    if (!nomeVal) { setError('nome', 'Informe seu nome completo.'); valid = false; }
+    if (!emailVal) { setError('email', 'Informe seu e-mail.'); valid = false; }
+    else if (!isValidEmail(emailVal)) { setError('email', 'E-mail inválido. Verifique e tente novamente.'); valid = false; }
+    if (!msgVal) { setError('msg', 'Escreva sua mensagem antes de enviar.'); valid = false; }
+
+    if (!valid) {
+      var first = form.querySelector('.field-error');
+      if (first) first.scrollIntoView({ behavior:'smooth', block:'center' });
+      return;
+    }
+
+    var empresa = document.getElementById('empresa').value.trim();
+    var tel = document.getElementById('tel').value.trim();
+    var servicos = [];
+    document.querySelectorAll('input[name="servico"]:checked').forEach(function(cb) { servicos.push(cb.value); });
+
+    var text = 'Olá Mclair! Me chamo ' + nomeVal
+      + (empresa ? ', da empresa ' + empresa : '')
+      + '.\n\n*Serviços de interesse:* ' + (servicos.length ? servicos.join(', ') : 'a definir')
+      + '\n\n*Mensagem:* ' + msgVal
+      + (tel ? '\n\n*Telefone:* ' + tel : '');
+    window.open('https://wa.me/5511988600372?text=' + encodeURIComponent(text), '_blank');
+  });
+})();
+</script>
+
+<style>
+/* HERO */
+.page-hero { background:var(--dark); padding-top:78px; position:relative; overflow:hidden; }
+.ph-bg { position:absolute; inset:0; pointer-events:none; }
+.ph-blob-1 { position:absolute; width:500px;height:500px;border-radius:50%;filter:blur(100px); top:-100px;left:-80px; background:radial-gradient(circle,rgba(200,16,46,.12) 0%,transparent 70%); }
+.ph-blob-2 { position:absolute; width:400px;height:400px;border-radius:50%;filter:blur(100px); bottom:-60px;right:-60px; background:radial-gradient(circle,rgba(27,138,118,.1) 0%,transparent 70%); }
+.ph-inner { display:grid; grid-template-columns:1fr 300px; gap:60px; align-items:center; padding-top:72px; padding-bottom:72px; }
+.ph-title { font-size:clamp(2.4rem,5vw,4rem); font-weight:900; letter-spacing:-.03em; line-height:1.08; color:#fff; margin:18px 0 22px; }
+.ph-title span { color:var(--red); }
+.ph-sub { font-size:1rem; font-weight:300; color:rgba(255,255,255,.45); line-height:1.85; max-width:540px; }
+.ph-contact-info { display:flex; flex-direction:column; gap:12px; margin-top:32px; }
+.pci-item {
+  display:inline-flex; align-items:center; gap:10px;
+  font-size:.88rem; color:rgba(255,255,255,.5);
+  transition:color .2s;
+}
+.pci-item:hover { color:rgba(255,255,255,.9); }
+.pci-item svg { color:var(--red); flex-shrink:0; }
+
+.ph-wa-card {
+  background:rgba(255,255,255,.06); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.1); border-radius:var(--r-xl);
+  padding:28px; position:relative; overflow:hidden; cursor:pointer;
+  transition:border-color .2s, background .2s;
+}
+.ph-wa-card:hover { background:rgba(255,255,255,.1); border-color:rgba(255,255,255,.2); }
+.ph-wa-card .btn-white { position:relative; z-index:1; }
+.ph-wa-card .btn-white::after { content:''; position:absolute; inset:0; z-index:0; }
+.pwa-title { font-size:1.1rem; font-weight:700; color:#fff; margin-bottom:8px; }
+.pwa-sub { font-size:.86rem; color:rgba(255,255,255,.45); line-height:1.65; }
+.btn-white { display:inline-flex;align-items:center;gap:8px;font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;background:#fff;color:var(--dark);padding:.88rem 1.8rem;border-radius:var(--r-sm);transition:background .2s; }
+.btn-white:hover { background:var(--cream-2); }
+.pwa-info { display:flex; flex-direction:column; gap:4px; margin-top:14px; }
+.pwa-info span { font-size:.74rem; color:rgba(255,255,255,.3); }
+
+/* CONTACT */
+.contact-section { background:#fff; }
+.contact-grid { display:grid; grid-template-columns:1fr 340px; gap:60px; align-items:start; }
+.fw-title { font-size:1.4rem; font-weight:700; color:var(--ink); margin-bottom:8px; }
+.fw-sub { font-size:.88rem; color:var(--ink-3); font-weight:300; margin-bottom:32px; }
+.contact-form { display:flex; flex-direction:column; gap:18px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.field { display:flex; flex-direction:column; gap:7px; }
+.field label { font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-3); }
+.field input, .field textarea {
+  border:1.5px solid var(--line-2); border-radius:var(--r-md);
+  padding:11px 14px; font-size:.92rem; font-family:inherit; color:var(--ink);
+  background:#fff; outline:none;
+  transition:border-color .2s, box-shadow .2s;
+}
+.field input:focus, .field textarea:focus {
+  border-color:var(--red);
+  box-shadow:0 0 0 3px rgba(200,16,46,.07);
+}
+.field input.field-error, .field textarea.field-error {
+  border-color:#e53e3e;
+  box-shadow:0 0 0 3px rgba(229,62,62,.08);
+}
+.err-msg {
+  font-size:.7rem; font-weight:600; color:#e53e3e;
+  min-height:1em; display:block;
+}
+.field textarea { resize:vertical; min-height:120px; }
+.checkbox-grid { display:grid; grid-template-columns:1fr 1fr; gap:8px; }
+.cb-item { display:flex; align-items:center; gap:9px; cursor:pointer; padding:8px 10px; border:1.5px solid var(--line); border-radius:var(--r-md); transition:border-color .2s; }
+.cb-item:hover { border-color:var(--red); }
+.cb-box { width:14px; height:14px; border:1.5px solid var(--line-2); border-radius:3px; flex-shrink:0; transition:all .15s; position:relative; }
+.cb-item input { display:none; }
+.cb-item input:checked ~ .cb-box { background:var(--red); border-color:var(--red); }
+.cb-item input:checked ~ .cb-box::after { content:'✓'; position:absolute; inset:0; display:flex; align-items:center; justify-content:center; color:#fff; font-size:.6rem; font-weight:700; }
+.cb-item input:checked ~ .cb-label { color:var(--red); }
+.cb-label { font-size:.8rem; color:var(--ink-3); }
+
+.contact-aside { display:flex; flex-direction:column; gap:20px; }
+.aside-block { border:1px solid var(--line); border-radius:var(--r-lg); padding:24px; background:var(--cream); }
+.ab-title { font-size:.92rem; font-weight:700; color:var(--ink); margin-bottom:18px; padding-bottom:14px; border-bottom:1px solid var(--line); }
+.ab-list { display:flex; flex-direction:column; gap:14px; }
+.ab-list li { display:flex; align-items:flex-start; gap:12px; }
+.ab-list svg { color:var(--red); flex-shrink:0; margin-top:2px; }
+.ab-list strong { display:block; font-size:.7rem; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-4); margin-bottom:3px; }
+.ab-list span, .ab-list a { font-size:.88rem; color:var(--ink-2); transition:color .2s; }
+.ab-list a:hover { color:var(--red); }
+.aside-socials { display:flex; flex-direction:column; gap:10px; }
+.as-item { display:flex; align-items:center; gap:10px; font-size:.88rem; color:var(--ink-2); transition:color .2s; }
+.as-item:hover { color:var(--red); }
+
+/* FAQ */
+.faq-section { background:var(--cream-2); }
+.faq-header { text-align:center; max-width:520px; margin:0 auto 56px; }
+.faq-list { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.faq-item { background:#fff; border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 24px; transition:border-color .2s, box-shadow .2s; }
+.faq-item:hover { border-color:var(--red); box-shadow:var(--shadow-sm); }
+.faq-q { font-size:.95rem; font-weight:700; color:var(--ink); margin-bottom:12px; line-height:1.4; }
+.faq-a { font-size:.86rem; color:var(--ink-3); font-weight:300; line-height:1.8; }
+
+@media (max-width:900px) {
+  .ph-inner { grid-template-columns:1fr; }
+  .ph-wa-card { display:none; }
+  .contact-grid { grid-template-columns:1fr; }
+  .contact-aside { max-width:480px; }
+}
+@media (max-width:640px) {
+  .form-row { grid-template-columns:1fr; }
+  .checkbox-grid { grid-template-columns:1fr; }
+  .faq-list { grid-template-columns:1fr; }
+}
+</style>

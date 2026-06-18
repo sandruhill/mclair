@@ -1,0 +1,867 @@
+---
+import Layout from '../layouts/Layout.astro';
+const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
+
+const services = [
+  { num:'01', title:'Marketing de Autoridade', desc:'Posicionamos sua marca como líder reconhecida no mercado. Construímos sua autoridade através de estratégias de conteúdo, presença digital e comunicação estratégica.', color:'var(--red)', href:'/servicos/marketing-de-autoridade' },
+  { num:'02', title:'Assessoria de Imprensa', desc:'Construímos e gerenciamos sua presença editorial nos veículos que importam. Do release ao relacionamento com jornalistas, garantimos cobertura que gera credibilidade real.', color:'var(--teal)', href:'/servicos/assessoria-de-imprensa' },
+  { num:'03', title:'Branding Estratégico', desc:'Criamos e revitalizamos marcas com propósito e coerência. Da estratégia à identidade visual, desenvolvemos marcas que ficam na memória e se destacam no mercado.', color:'var(--orange)', href:'/servicos/branding-estrategico' },
+  { num:'04', title:'Marketing Digital', desc:'Estratégias integradas de SEO, conteúdo estratégico, gestão de mídias sociais, ads e automação para gerar leads qualificados e resultados mensuráveis.', color:'var(--red)', href:'/servicos/marketing-digital' },
+  { num:'05', title:'Consultoria em Comunicação', desc:'Diagnóstico preciso e planejamento personalizado. Avaliamos sua situação, identificamos oportunidades e desenvolvemos planos estratégicos focados em resultados duradouros.', color:'var(--teal)', href:'/servicos/consultoria-em-comunicacao' },
+  { num:'06', title:'Mentorias Exclusivas', desc:'Programas Bolder e Bolder Press: mentorias de imersão para profissionais que querem consolidar sua marca pessoal e dominar a Assessoria de Imprensa Estratégica.', color:'var(--orange)', href:'/servicos/mentorias-exclusivas' },
+];
+
+const cases = [
+  { client:'Claudia Elisa', sector:'Marca Pessoal', result:'+3 marcas construídas, autoridade consolidada em liderança', accent:'#C8102E', slug:'claudia-elisa' },
+  { client:'Fidalgo Leilões', sector:'Assessoria de Imprensa', result:'+11.600 inserções na mídia nacional e regional', accent:'#1B8A76', slug:'fidalgo' },
+  { client:'BMS / ABIMAQ', sector:'Visibilidade Internacional', result:'+2.000 inserções — 1.734 na imprensa internacional', accent:'#D4611B', slug:'bms-abimaq' },
+  { client:'Alexandre Magno', sector:'Gestão de Crise & PR', result:'Comunicação da aquisição Emergee/Itaú e lançamento The Cynefin Co.', accent:'#C8102E', slug:'alexandre-magno' },
+  { client:'Elemar Jr.', sector:'Branding & Presença Digital', result:'Da operação individual à consultoria estruturada — EximiaCo', accent:'#1B8A76', slug:'elemar-jr' },
+];
+
+const stats = [
+  { n:8, s:'+', label:'Anos de mercado' },
+  { n:200, s:'+', label:'Clientes atendidos' },
+  { n:11600, s:'+', label:'Inserções na mídia' },
+  { n:1734, s:'+', label:'Publicações internacionais' },
+];
+
+const testimonials = [
+  { quote:'Para administradores que têm o desafio de gerir os recursos de forma mais eficiente possível, encontrar uma empresa que entrega mais do que o acordado é o caminho do sucesso. Pessoas de alta competência e interesse no nosso negócio.', name:'Rogério Carvalho', role:'CEO, Automatiza Sistemas', photo:'https://mclair.com.br/images/galeria/26-02-2020_5_1fa80566e63cd0930a41c408a044b79b.jpg' },
+  { quote:'A experiência com a MClair deu grande visibilidade ao meu trabalho. Em pouco tempo surgiram diversos convites para escrever artigos e participar de entrevistas, o que aumentou muito minha valorização e segurança profissional.', name:'Fabiana Carvalho Vinke', role:'Fundadora, Zoom Mind', photo:'https://mclair.com.br/images/galeria/26-02-2020_5_fcbf8c0777f942b2961a5675026d5759.jpg' },
+  { quote:'A equipe da MClair tem um talento ímpar para definir estratégias de comunicação assertivas e explicitar o posicionamento de empresas, impactando positivamente na capacidade de gerar resultados percebidos.', name:'Elemar Jr.', role:'CEO, EximiaCo', photo:'https://mclair.com.br/images/galeria/26-05-2020_5_d9e1215f43a9a75024512370f3cea093.jpg' },
+  { quote:'É um prazer trabalhar com o time Mclair, sempre enérgicos e com uma capacidade fantástica de produzir estratégia de comunicação. O resultado desta parceria está transformando a maneira como a Guiando relaciona-se com seus clientes com impacto direto em nossos negócios.', name:'Eduardo Camargo', role:'Sócio & Head of Growth, Guiando', photo:'https://mclair.com.br/images/galeria/25-01-2021_5_ecf44731ffd9b0e4189b1181f4ae829f.png' },
+  { quote:'O que diferencia a Mclair é sua intensa capacidade de pensar o estratégico já conectado com a fluidez da execução. O segredo para isso está em fazer as perguntas certas para obter as respostas que precisam. A Mclair é o ponto de inflexão rumo ao sucesso de qualquer negócio.', name:'Denis Zanini', role:'CEO, Ynusitado', photo:'https://mclair.com.br/images/galeria/26-01-2021_1_e7408324dd0280fffa43e88331fee076.png' },
+];
+---
+
+<Layout
+  title="Mclair — Agência de Marketing para Comunicação Estratégica e de Autoridade"
+  description="Mclair: Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito. São Paulo, desde 2017."
+  schema={{
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: 'Mclair — Agência de Marketing e Comunicação Estratégica',
+    description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
+    url: 'https://mclair.vercel.app/',
+    isPartOf: { '@id': 'https://mclair.vercel.app/#website' },
+    about: { '@id': 'https://mclair.vercel.app/#organization' },
+    speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.hero-title', '.section-title'] },
+  }}
+>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="hero">
+  <!-- YouTube video background -->
+  <div class="hero-video-wrap" aria-hidden="true">
+    <iframe
+      src="https://www.youtube.com/embed/SB26MowGMDM?autoplay=1&mute=1&loop=1&playlist=SB26MowGMDM&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
+      frameborder="0"
+      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+      allowfullscreen
+    ></iframe>
+    <div class="hero-video-overlay"></div>
+  </div>
+
+  <!-- Animated top layer -->
+  <div class="hero-bg" aria-hidden="true">
+    <div class="hero-grid"></div>
+    <div class="hero-blob hero-blob-1" data-parallax="0.08"></div>
+    <div class="hero-blob hero-blob-2" data-parallax="0.06"></div>
+  </div>
+
+  <div class="container hero-inner">
+    <div class="hero-content">
+      <div class="hero-eyebrow" data-anim="fade">
+        <span class="he-line line-grow"></span>
+        <span class="he-label">Agência de Marketing · São Paulo · Desde 2017</span>
+      </div>
+
+      <h1 class="hero-title">
+        <span class="hero-title-line word-reveal">
+          <span class="word"><span class="word-inner">Agência</span></span>
+          <span class="word"><span class="word-inner">de</span></span>
+          <span class="word"><span class="word-inner hero-accent">Comunicação</span></span>
+          <span class="word"><span class="word-inner hero-accent">Estratégica</span></span>
+        </span>
+        <span class="hero-title-line word-reveal wr-delay">
+          <span class="word italic-light"><span class="word-inner">e</span></span>
+          <span class="word"><span class="word-inner hero-accent">Marketing</span></span>
+          <span class="word"><span class="word-inner hero-accent">de</span></span>
+          <span class="word"><span class="word-inner hero-accent">Autoridade.</span></span>
+        </span>
+      </h1>
+
+      <p class="hero-sub" data-anim data-delay="4">
+        Unimos Comunicação Estratégica com Marketing de Autoridade para construir marcas fortes, com propósito e resultados duradouros. Transformamos sua mensagem em legado.
+      </p>
+
+      <div class="hero-actions" data-anim data-delay="5">
+        <a href="/servicos" class="btn-hero-primary">
+          Descubra Nossas Soluções
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <a href={WA} class="btn-hero-ghost" target="_blank" rel="noopener">
+          Fale com Especialista
+        </a>
+      </div>
+    </div>
+
+    <!-- Floating stats card -->
+    <div class="hero-stats-card" data-anim="right" data-delay="3">
+      <div class="hsc-header">
+        <img src="/logos/logo-icone-M.png" alt="Mclair" width="52" height="52" style="border-radius:8px" />
+        <div>
+          <span class="hsc-name">Mclair</span>
+          <span class="hsc-since">Comunicação Estratégica</span>
+        </div>
+      </div>
+      <div class="hsc-divider"></div>
+      {stats.map(s => (
+        <div class="hsc-stat">
+          <strong class="hsc-num counter" data-target={s.n} data-suffix={s.s}>0</strong>
+          <span class="hsc-label">{s.label}</span>
+        </div>
+      ))}
+      <div class="hsc-footer">
+        <span class="hsc-tag">✦ Marketing de Autoridade</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="hero-scroll" data-anim="fade" data-delay="6">
+    <span>Scroll</span>
+    <div class="hs-line"><div class="hs-indicator"></div></div>
+  </div>
+</section>
+
+<!-- ═══════════════ CLIENTS MARQUEE ═══════════════ -->
+<div class="clients-strip">
+  <div class="clients-label">Empresas que confiam na Mclair</div>
+  <div class="marquee-wrap" aria-hidden="true">
+    <div class="marquee-track">
+      {['Fidalgo Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind','Fidalgo Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind'].map(c => (
+        <span class="marquee-item">{c}<span class="marquee-dot">◆</span></span>
+      ))}
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════ ABOUT / INTRO ═══════════════ -->
+<section class="section about-section">
+  <div class="container about-grid">
+    <div class="about-visual" data-anim="left">
+      <!-- Real agency photo -->
+      <div class="av-photo-wrap">
+        <img src="https://mclair.com.br/images/mclair/slide04.jpg" alt="Equipe Mclair" class="av-photo" />
+        <div class="av-photo-overlay"></div>
+      </div>
+      <!-- Floating cards -->
+      <div class="av-card av-card-2">
+        <span class="av-icon">◈</span>
+        <p>Comunicação<br/>com propósito</p>
+      </div>
+      <div class="av-card av-card-3">
+        <span class="av-agency-dot"></span>
+        <strong>Agência Mclair</strong>
+        <span>São Paulo · Desde 2017</span>
+        <span class="av-exp">B2B &amp; B2C</span>
+      </div>
+      <div class="av-year-badge">
+        <span class="ayb-year">2017</span>
+        <span class="ayb-label">Fundação</span>
+      </div>
+      <div class="av-bg-number" aria-hidden="true">8</div>
+    </div>
+    <div class="about-text">
+      <p class="eyebrow" data-anim>Quem somos</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:16px">
+        Transformamos sua<br/>comunicação em <span>legado</span>
+      </h2>
+      <p class="section-lead" data-anim data-delay="2">
+        Combinamos expertise multidisciplinar, dados e criatividade para desenvolver estratégias de comunicação B2B e B2C que engajam, geram valor tangível e fortalecem a reputação de marca no longo prazo.
+      </p>
+      <p class="section-lead" data-anim data-delay="3" style="margin-top:12px">
+        Acreditamos em propósitos transformadores que geram engajamento e constroem relacionamentos. Nosso objetivo é traduzir o valor da sua marca em comunicação que deixa um legado.
+      </p>
+      <div class="about-pills stagger-children" data-anim data-delay="3">
+        <span class="pill">Comunicação Estratégica</span>
+        <span class="pill">Marketing de Autoridade</span>
+        <span class="pill">Assessoria de Imprensa</span>
+        <span class="pill">Branding Estratégico</span>
+      </div>
+      <a href="/sobre" class="btn-text" data-anim data-delay="4" style="margin-top:28px">
+        Conheça Nossa Abordagem
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ SERVICES ═══════════════ -->
+<section class="section services-section">
+  <div class="container">
+    <div class="section-header">
+      <div>
+        <p class="eyebrow" data-anim>O que fazemos</p>
+        <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+          Do Branding Estratégico<br/>ao <span>Marketing de Autoridade</span>
+        </h2>
+      </div>
+      <a href="/servicos" class="btn-text" data-anim data-delay="2" style="align-self:flex-end">
+        Ver todos os serviços
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+
+    <div class="services-grid stagger-children">
+      {services.map(s => (
+        <a href={s.href} class="svc-card" style={`--accent:${s.color}`}>
+          <div class="svc-glow" aria-hidden="true"></div>
+          <div class="svc-top">
+            <span class="svc-num">{s.num}</span>
+            <span class="svc-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </span>
+          </div>
+          <div class="svc-accent"></div>
+          <h3 class="svc-title">{s.title}</h3>
+          <p class="svc-desc">{s.desc}</p>
+          <span class="svc-learn">Saiba mais →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CASES ═══════════════ -->
+<section class="cases-section">
+  <!-- Full-bleed banner -->
+  <div class="cases-banner" data-anim>
+    <img src="/cases-hero.jpg" alt="Cases Mclair" class="cases-banner-img" />
+    <div class="cases-banner-overlay">
+      <div class="container cases-banner-inner">
+        <div>
+          <p class="eyebrow eyebrow-light" style="justify-content:flex-start">Resultados reais</p>
+          <h2 class="cases-banner-title">Cases que<br/><em>falam por si</em></h2>
+        </div>
+        <div class="cib-stats">
+          <div class="cibs"><strong>11.600+</strong><span>Inserções na mídia</span></div>
+          <div class="cibs"><strong>1.734</strong><span>Publicações int'l</span></div>
+          <div class="cibs"><strong>5</strong><span>Cases</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="container" style="padding-top:64px;padding-bottom:80px">
+    <div class="cases-list">
+      {cases.map((c, i) => (
+        <a href={`/cases/${c.slug}`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()}>
+          <div class="case-row-inner">
+            <span class="case-idx">0{i+1}</span>
+            <div class="case-info">
+              <span class="case-sector tag" style={`color:${c.accent};border-color:${c.accent}28`}>{c.sector}</span>
+              <h3 class="case-client">{c.client}</h3>
+            </div>
+            <p class="case-result">{c.result}</p>
+            <span class="case-cta">
+              Ver case
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </span>
+          </div>
+          <div class="case-line"></div>
+        </a>
+      ))}
+    </div>
+    <div class="cases-cta-row" data-anim>
+      <a href="/cases" class="btn-teal">
+        Ver todos os cases
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ MENTORIAS TEASER ═══════════════ -->
+<section class="mentorias-section">
+  <div class="mentorias-top">
+    <!-- Kelly Pinheiro animated background -->
+    <div class="mt-kelly-bg" aria-hidden="true">
+      <img src="/kelly-pinheiro.jpg" alt="" class="mt-kelly-bg-img" />
+      <div class="mt-kelly-bg-overlay"></div>
+    </div>
+    <div class="container">
+      <div class="mt-header">
+        <div>
+          <p class="eyebrow eyebrow-light" style="justify-content:flex-start" data-anim>Programas exclusivos</p>
+          <h2 class="mt-headline" data-anim data-delay="1">
+            Mentorias que<br/><em>transformam carreiras</em>
+          </h2>
+        </div>
+        <p class="mt-lead" data-anim data-delay="2">
+          Conduzidas por Kelly Pinheiro, com mais de 20 anos de experiência em Marketing de Autoridade. Programas de imersão para quem quer ser referência no mercado.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="mt-cards-row">
+      <div class="mt-prog-card mt-prog-1" data-anim data-delay="1">
+        <div class="mtpc-top">
+          <span class="mtpc-tag">Bolder</span>
+          <span class="mtpc-icon">◈</span>
+        </div>
+        <h3 class="mtpc-title">Marca Pessoal &amp; Marketing de Autoridade</h3>
+        <p class="mtpc-desc">Para profissionais e empreendedores que querem se posicionar como referência e construir uma marca que gera resultados duradouros.</p>
+        <ul class="mtpc-list">
+          <li>Estratégia de posicionamento</li>
+          <li>Conteúdo de autoridade</li>
+          <li>Presença digital estratégica</li>
+        </ul>
+        <a href="/mentorias" class="mtpc-cta">
+          Conhecer o Bolder
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="mt-prog-card mt-prog-2" data-anim data-delay="2">
+        <div class="mtpc-top">
+          <span class="mtpc-tag mtpc-tag-2">Bolder Press</span>
+          <span class="mtpc-icon" style="color:var(--teal)">▣</span>
+        </div>
+        <h3 class="mtpc-title">Assessoria de Imprensa Estratégica</h3>
+        <p class="mtpc-desc">Para jornalistas e comunicadores que querem dominar a assessoria moderna, gerar resultados reais e se destacar no mercado.</p>
+        <ul class="mtpc-list">
+          <li>Relacionamento com mídia</li>
+          <li>Pautas irresistíveis</li>
+          <li>Assessoria 4.0 com IA</li>
+        </ul>
+        <a href="/mentorias" class="mtpc-cta mtpc-cta-2">
+          Conhecer o Bolder Press
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </div>
+
+      <div class="mt-kelly-card" data-anim data-delay="3">
+        <div class="mtkc-avatar">KP</div>
+        <div class="mtkc-info">
+          <strong>Kelly Pinheiro</strong>
+          <span>CEO & Fundadora · Mclair</span>
+        </div>
+        <blockquote class="mtkc-quote">
+          "Minha missão é transformar profissionais em autoridades reconhecidas pelo mercado."
+        </blockquote>
+        <div class="mtkc-stats">
+          <div><strong>20+</strong><span>anos de mercado</span></div>
+          <div><strong>200+</strong><span>mentorados</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ TESTIMONIALS ═══════════════ -->
+<section class="section testimonials-section">
+  <div class="container">
+    <div style="text-align:center;max-width:520px;margin:0 auto 64px">
+      <p class="eyebrow" data-anim style="justify-content:center">Depoimentos</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+        O que dizem nossos <span>clientes</span>
+      </h2>
+    </div>
+    <div class="testimonials-grid stagger-children">
+      {testimonials.map((t, i) => (
+        <div class="t-card">
+          <div class="t-quote-mark">"</div>
+          <p class="t-quote">{t.quote}</p>
+          <div class="t-author">
+            <img src={t.photo} alt={t.name} class="t-avatar-img" loading="lazy" />
+            <div>
+              <strong class="t-name">{t.name}</strong>
+              <span class="t-role">{t.role}</span>
+            </div>
+          </div>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+</Layout>
+
+<style>
+/* ═══════════ HERO ═══════════ */
+.hero {
+  min-height: 100svh;
+  background: var(--dark);
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  padding-top: 88px;
+}
+
+/* YouTube video background */
+.hero-video-wrap {
+  position: absolute; inset: 0;
+  pointer-events: none; overflow: hidden; z-index: 0;
+}
+.hero-video-wrap iframe {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  width: max(100%, calc(100vh * 1.778));
+  height: max(100%, calc(100vw * 0.5625));
+  min-width: 100%; min-height: 100%;
+  pointer-events: none;
+  opacity: 0.45;
+}
+.hero-video-overlay {
+  position: absolute; inset: 0; z-index: 1;
+  background: linear-gradient(135deg, rgba(21,18,16,.88) 0%, rgba(21,18,16,.72) 50%, rgba(21,18,16,.85) 100%);
+}
+
+.hero-bg { position:absolute; inset:0; pointer-events:none; z-index: 2; }
+.hero-grid {
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(200,16,46,.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(200,16,46,.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.hero-blob { position:absolute; border-radius:50%; filter:blur(90px); animation: blob-float 8s ease-in-out infinite; }
+.hero-blob-1 { width:500px;height:500px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(200,16,46,.12) 0%,transparent 70%); }
+.hero-blob-2 { width:300px;height:300px;bottom:-60px;left:-40px;background:radial-gradient(circle,rgba(27,138,118,.07) 0%,transparent 70%);animation-delay:-4s; }
+@keyframes blob-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-20px) scale(1.03)} }
+
+.hero-inner {
+  flex:1; display:grid; grid-template-columns:1fr 380px;
+  gap:60px; align-items:end;
+  padding-top:60px; padding-bottom:72px;
+  position: relative; z-index: 3;
+}
+
+/* Eyebrow */
+.hero-eyebrow { display:flex; align-items:center; gap:14px; margin-bottom:28px; }
+.he-line { display:block; width:32px; height:2px; background:var(--red); transform-origin:left; }
+.he-label { font-size:.68rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.45); }
+
+/* Title — white on dark video, compact 2-line layout */
+.hero-title {
+  font-size: clamp(1.9rem, 3.2vw, 3.4rem);
+  font-weight: 900; line-height: 1.08; letter-spacing: -.03em;
+  color: #fff;
+  display: flex; flex-direction: column; gap: .12em;
+  margin-bottom: 24px;
+}
+.hero-title-line { display:flex; flex-wrap:wrap; gap:.25em; }
+.hero-accent { color: var(--red); }
+.italic-light { font-weight:300; font-style:italic; color:rgba(255,255,255,.35); }
+
+.word-reveal .word-inner { transition: transform .75s cubic-bezier(.22,1,.36,1); }
+.wr-delay .word-inner { transition-delay: .12s; }
+.wr-delay-2 .word-inner { transition-delay: .24s; }
+.wr-delay-3 .word-inner { transition-delay: .36s; }
+
+.hero-sub {
+  font-size: clamp(.95rem,1.4vw,1.05rem); font-weight:300;
+  color:rgba(255,255,255,.5); line-height:1.85; max-width:500px;
+  margin-bottom: 36px;
+}
+.hero-actions { display:flex; gap:12px; flex-wrap:wrap; }
+
+.btn-hero-primary {
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:#fff;background:var(--red);
+  padding:.9rem 1.8rem;border-radius:var(--r-sm);
+  transition:background .2s,transform .15s;
+}
+.btn-hero-primary:hover { background:var(--red-2);transform:translateY(-2px); }
+.btn-hero-ghost {
+  display:inline-flex;align-items:center;
+  font-size:.78rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:rgba(255,255,255,.65);border:1.5px solid rgba(255,255,255,.2);
+  padding:.87rem 1.7rem;border-radius:var(--r-sm);
+  transition:border-color .2s,color .2s;
+}
+.btn-hero-ghost:hover { border-color:rgba(255,255,255,.5);color:#fff; }
+
+/* Stats card */
+.hero-stats-card {
+  background:#fff; border:1px solid var(--line);
+  border-radius:var(--r-xl); padding:28px;
+  box-shadow: var(--shadow-lg);
+  display:flex; flex-direction:column; gap:0;
+}
+.hsc-header { display:flex;align-items:center;gap:12px;margin-bottom:18px; }
+.hsc-header img { border-radius:8px; }
+.hsc-name { display:block;font-size:.88rem;font-weight:700;color:var(--ink); }
+.hsc-since { display:block;font-size:.68rem;color:var(--ink-4);letter-spacing:.04em; }
+.hsc-divider { height:1px;background:var(--line);margin-bottom:18px; }
+.hsc-stat { display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line); }
+.hsc-stat:last-of-type { border:none; }
+.hsc-num { font-size:1.5rem;font-weight:900;color:var(--red); }
+.hsc-label { font-size:.72rem;color:var(--ink-3);text-align:right;max-width:120px;line-height:1.4; }
+.hsc-footer { margin-top:16px; }
+.hsc-tag { font-size:.64rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;color:var(--red);background:var(--red-soft);padding:.3rem .8rem;border-radius:99px; }
+
+/* Scroll indicator */
+.hero-scroll {
+  position:absolute;bottom:32px;left:50%;transform:translateX(-50%);
+  display:flex;flex-direction:column;align-items:center;gap:8px;z-index:3;
+  font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:rgba(255,255,255,.3);
+}
+.hs-line { width:1px;height:48px;background:rgba(255,255,255,.15);position:relative;overflow:hidden; }
+.hs-indicator { position:absolute;top:0;width:100%;height:40%;background:var(--red);animation:scroll-ind 2s ease-in-out infinite; }
+@keyframes scroll-ind { 0%{transform:translateY(-100%)} 100%{transform:translateY(350%)} }
+
+/* ═══════════ CLIENTS MARQUEE ═══════════ */
+.clients-strip { border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--cream-2);padding:20px 0;overflow:hidden;display:flex;align-items:center;gap:24px; }
+.clients-label { font-size:.6rem;font-weight:700;letter-spacing:.2em;text-transform:uppercase;color:var(--ink-4);white-space:nowrap;padding-left:clamp(20px,5vw,64px);flex-shrink:0; }
+.marquee-wrap { flex:1;overflow:hidden; }
+.marquee-item { display:inline-flex;align-items:center;gap:16px;padding:0 8px;font-size:.82rem;font-weight:400;color:var(--ink-3);white-space:nowrap; }
+.marquee-dot { color:var(--red);font-size:.5rem; }
+
+/* ═══════════ ABOUT ═══════════ */
+.about-section { background:#fff; }
+.about-grid { display:grid;grid-template-columns:1fr 1fr;gap:80px;align-items:center; }
+
+.about-visual { position:relative;height:500px; }
+.av-photo-wrap {
+  position:absolute;inset:0;border-radius:var(--r-xl);overflow:hidden;
+  box-shadow:var(--shadow-lg);
+}
+.av-photo { width:100%;height:100%;object-fit:cover;object-position:center top; }
+.av-photo-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(160deg,rgba(21,18,16,.1) 0%,rgba(21,18,16,.38) 100%);
+}
+
+.av-card {
+  position:absolute; background:rgba(255,255,255,.95);
+  backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.8); border-radius:var(--r-lg); padding:18px 20px;
+  box-shadow:var(--shadow-md);
+}
+.av-card-2 { bottom:100px;left:-20px;width:150px;text-align:center; }
+.av-icon { font-size:1.4rem;color:var(--red);display:block;margin-bottom:6px; }
+.av-card-2 p { font-size:.78rem;color:var(--ink-3);line-height:1.4; }
+.av-card-3 { bottom:0;right:-10px;width:195px;display:flex;flex-direction:column;gap:3px; }
+.av-agency-dot { display:block;width:8px;height:8px;border-radius:50%;background:var(--teal);margin-bottom:4px; }
+.av-card-3 strong { font-size:.9rem;color:var(--ink); }
+.av-card-3 span { font-size:.7rem;color:var(--ink-3); }
+.av-exp { color:var(--teal) !important;font-weight:700 !important;margin-top:2px; }
+
+.av-year-badge {
+  position:absolute;top:20px;right:-10px;
+  background:var(--red);color:#fff;border-radius:var(--r-md);
+  padding:10px 16px;box-shadow:var(--shadow-md);
+  display:flex;flex-direction:column;align-items:center;
+}
+.ayb-year { font-size:1.3rem;font-weight:900;line-height:1; }
+.ayb-label { font-size:.58rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.8; }
+
+.av-bg-number {
+  position:absolute;bottom:40px;left:50%;transform:translateX(-50%);
+  font-size:14rem;font-weight:900;color:rgba(255,255,255,.07);
+  line-height:1;pointer-events:none;user-select:none;z-index:1;
+}
+.about-pills { display:flex;flex-wrap:wrap;gap:8px;margin-top:24px; }
+.pill { display:inline-block;font-size:.68rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-2);background:var(--cream-2);border:1px solid var(--line);padding:.3rem .9rem;border-radius:99px;transition:border-color .2s,color .2s; }
+.pill:hover { border-color:var(--red);color:var(--red); }
+
+/* ═══════════ SERVICES ═══════════ */
+.services-section { background:var(--cream-2); }
+.section-header { display:flex;align-items:flex-start;justify-content:space-between;gap:24px;margin-bottom:36px;flex-wrap:wrap; }
+
+.services-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:16px; }
+.svc-card {
+  background:#fff;padding:36px 28px;
+  display:flex;flex-direction:column;color:inherit;
+  position:relative;overflow:hidden;
+  border-radius:var(--r-lg);
+  border:1px solid var(--line);
+  transition:transform .3s cubic-bezier(.22,1,.36,1),box-shadow .3s,border-color .3s;
+}
+.svc-glow {
+  position:absolute;inset:0;border-radius:inherit;
+  background:radial-gradient(circle at 20% 20%,var(--accent,.1) 0%,transparent 60%);
+  opacity:0;transition:opacity .4s ease;pointer-events:none;
+}
+.svc-card:hover { transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:transparent; }
+.svc-card:hover .svc-glow { opacity:.06; }
+.svc-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
+.svc-num { font-size:.65rem;font-weight:700;letter-spacing:.18em;color:var(--accent, var(--red)); }
+.svc-arrow {
+  width:32px;height:32px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--cream-2);color:var(--ink-4);
+  transition:background .25s,color .25s,transform .3s cubic-bezier(.22,1,.36,1);
+}
+.svc-card:hover .svc-arrow { background:var(--accent,var(--red));color:#fff;transform:rotate(45deg) scale(1.1); }
+.svc-accent { height:3px;width:36px;border-radius:99px;margin-bottom:20px;background:var(--accent,var(--red));transition:width .35s cubic-bezier(.22,1,.36,1); }
+.svc-card:hover .svc-accent { width:80px; }
+.svc-title { font-size:1.02rem;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.3; }
+.svc-desc { font-size:.84rem;color:var(--ink-3);line-height:1.75;font-weight:300;flex:1; }
+.svc-learn {
+  display:inline-block;margin-top:20px;
+  font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
+  color:var(--accent,var(--red));
+  opacity:0;transform:translateY(6px);
+  transition:opacity .25s,transform .25s;
+}
+.svc-card:hover .svc-learn { opacity:1;transform:none; }
+
+/* ═══════════ CASES ═══════════ */
+.cases-section { background:#fff; }
+.eyebrow-light { color:rgba(255,255,255,.5) !important; }
+.eyebrow-light .he-line, .eyebrow-light::before { background:rgba(255,255,255,.3) !important; }
+
+.cases-banner {
+  position:relative;height:clamp(360px,45vw,520px);overflow:hidden;
+}
+.cases-banner-img { width:100%;height:100%;object-fit:cover;object-position:center 30%; }
+.cases-banner-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(21,18,16,.6) 0%,rgba(21,18,16,.82) 100%);
+  display:flex;align-items:flex-end;
+}
+.cases-banner-inner {
+  display:flex;align-items:flex-end;justify-content:space-between;
+  padding-bottom:56px;gap:40px;flex-wrap:wrap;
+}
+.cases-banner-title {
+  font-size:clamp(2.4rem,5vw,4.2rem);font-weight:900;line-height:1.05;
+  color:#fff;letter-spacing:-.03em;margin-top:12px;
+}
+.cases-banner-title em { color:var(--red);font-style:normal; }
+
+.cib-stats { display:flex;gap:36px;flex-shrink:0;padding-bottom:8px; }
+.cibs { display:flex;flex-direction:column;gap:4px; }
+.cibs strong { font-size:clamp(1.8rem,3vw,2.8rem);font-weight:900;color:#fff;line-height:1; }
+.cibs span { font-size:.6rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.4); }
+
+.cases-list { border-top:1px solid var(--line); }
+.case-row {
+  display:block;color:inherit;border-bottom:1px solid var(--line);
+  transition:background .2s;position:relative;overflow:hidden;
+}
+.case-row:hover { background:var(--cream); }
+.case-row-inner {
+  display:grid;grid-template-columns:72px 1fr 1fr auto;
+  align-items:center;gap:32px;
+  padding:36px 0;
+}
+.case-line {
+  position:absolute;bottom:0;left:0;height:3px;width:0;
+  background:var(--accent,var(--red));
+  transition:width .5s cubic-bezier(.22,1,.36,1);
+}
+.case-row:hover .case-line { width:100%; }
+.case-idx {
+  font-size:2.2rem;font-weight:900;letter-spacing:-.04em;
+  color:rgba(200,16,46,.1);line-height:1;
+}
+.case-row:hover .case-idx { color:var(--accent,var(--red)); transition:color .2s; }
+.case-sector { font-size:.6rem;display:block;margin-bottom:8px; }
+.case-client { font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.2; }
+.case-result { font-size:.88rem;color:var(--ink-3);font-weight:300;line-height:1.65; }
+.case-cta {
+  display:flex;align-items:center;gap:6px;white-space:nowrap;
+  font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--ink-4);transition:color .2s,gap .2s;
+}
+.case-row:hover .case-cta { color:var(--accent,var(--red));gap:10px; }
+
+.cases-cta-row { text-align:center;margin-top:56px; }
+.btn-teal {
+  display:inline-flex;align-items:center;gap:8px;
+  font-size:.82rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;
+  color:#fff;background:var(--teal);
+  padding:1rem 2.2rem;border-radius:var(--r-sm);white-space:nowrap;
+  transition:background .2s,transform .15s,box-shadow .2s;
+  box-shadow:0 4px 16px rgba(27,138,118,.25);
+}
+.btn-teal:hover { background:#157a68;transform:translateY(-2px);box-shadow:0 8px 24px rgba(27,138,118,.32); }
+
+/* ═══════════ MENTORIAS ═══════════ */
+.mentorias-section { background:var(--dark); }
+.mentorias-top {
+  padding:100px 0 72px;
+  position:relative;overflow:hidden;
+}
+.mt-kelly-bg {
+  position:absolute;inset:0;
+}
+.mt-kelly-bg-img {
+  width:100%;height:100%;object-fit:cover;object-position:center top;
+  animation:kelly-zoom 18s ease-in-out infinite alternate;
+  transform-origin:center top;
+}
+@keyframes kelly-zoom {
+  0% { transform:scale(1) translateX(0); }
+  100% { transform:scale(1.06) translateX(-1%); }
+}
+.mt-kelly-bg-overlay {
+  position:absolute;inset:0;
+  background:linear-gradient(to bottom,rgba(21,18,16,.82) 0%,rgba(21,18,16,.88) 60%,rgba(21,18,16,.96) 100%);
+}
+.mt-header {
+  position:relative;z-index:2;
+  display:flex;align-items:flex-start;gap:60px;flex-wrap:wrap;
+}
+.mt-headline {
+  font-size:clamp(2.4rem,4.5vw,4rem);font-weight:900;line-height:1.05;
+  color:#fff;letter-spacing:-.03em;margin-top:12px;
+}
+.mt-headline em { color:var(--red);font-style:normal; }
+.mt-lead {
+  font-size:1rem;color:rgba(255,255,255,.5);line-height:1.85;font-weight:300;
+  max-width:440px;flex:1;padding-top:20px;
+}
+
+.mt-cards-row {
+  display:grid;grid-template-columns:1fr 1fr 320px;gap:20px;
+  padding-bottom:80px;margin-top:-20px;
+  position:relative;z-index:2;
+}
+
+.mt-prog-card {
+  background:rgba(255,255,255,.06);
+  backdrop-filter:blur(20px) saturate(160%);
+  -webkit-backdrop-filter:blur(20px) saturate(160%);
+  border:1px solid rgba(255,255,255,.13);
+  border-radius:var(--r-xl);padding:36px 28px;
+  display:flex;flex-direction:column;gap:0;
+  position:relative;overflow:hidden;
+  transition:background .35s,border-color .35s,transform .35s,box-shadow .35s;
+  box-shadow:0 8px 32px rgba(0,0,0,.18),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.mt-prog-card::before {
+  content:'';position:absolute;inset:0;
+  background:radial-gradient(ellipse at 50% -20%, rgba(255,255,255,.06) 0%, transparent 70%);
+  pointer-events:none;
+  transition:opacity .35s;
+}
+.mt-prog-card:hover {
+  background:rgba(255,255,255,.11);
+  border-color:rgba(255,255,255,.26);
+  transform:translateY(-6px);
+  box-shadow:0 20px 56px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.mt-prog-card:hover::before { opacity:1.4; }
+.mt-prog-1 {
+  border-top:3px solid var(--red);
+  box-shadow:0 8px 32px rgba(0,0,0,.18),0 0 0 0 rgba(200,16,46,0),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.mt-prog-1:hover {
+  box-shadow:0 20px 56px rgba(0,0,0,.28),0 0 40px rgba(200,16,46,.15),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.mt-prog-2 {
+  border-top:3px solid var(--teal);
+  box-shadow:0 8px 32px rgba(0,0,0,.18),0 0 0 0 rgba(27,138,118,0),inset 0 1px 0 rgba(255,255,255,.1);
+}
+.mt-prog-2:hover {
+  box-shadow:0 20px 56px rgba(0,0,0,.28),0 0 40px rgba(27,138,118,.15),inset 0 1px 0 rgba(255,255,255,.18);
+}
+.mtpc-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
+.mtpc-tag {
+  display:inline-block;font-size:.62rem;font-weight:700;letter-spacing:.15em;text-transform:uppercase;
+  color:var(--red);background:rgba(200,16,46,.12);
+  padding:.25rem .7rem;border-radius:99px;
+}
+.mtpc-tag-2 { color:var(--teal);background:rgba(27,138,118,.12); }
+.mtpc-icon { font-size:1.2rem;color:var(--red); }
+.mtpc-title { font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3; }
+.mtpc-desc { font-size:.84rem;color:rgba(255,255,255,.45);line-height:1.75;font-weight:300;flex:1; }
+.mtpc-list {
+  list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:8px;
+}
+.mtpc-list li {
+  font-size:.78rem;color:rgba(255,255,255,.55);padding-left:16px;position:relative;
+}
+.mtpc-list li::before { content:'◆';position:absolute;left:0;font-size:.4rem;color:var(--red);top:4px; }
+.mt-prog-2 .mtpc-list li::before { color:var(--teal); }
+.mt-prog-card { cursor:pointer; }
+.mtpc-cta {
+  display:inline-flex;align-items:center;gap:8px;margin-top:24px;
+  font-size:.7rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--red);transition:gap .2s;
+}
+.mtpc-cta::after {
+  content:''; position:absolute; inset:0;
+}
+.mtpc-cta-2 { color:var(--teal); }
+.mt-prog-card:hover .mtpc-cta { gap:12px; }
+
+.mt-kelly-card {
+  background:var(--red);border-radius:var(--r-xl);padding:32px 28px;
+  display:flex;flex-direction:column;gap:16px;
+  position:relative;overflow:hidden;
+}
+.mt-kelly-card::after {
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:200px;height:200px;border-radius:50%;
+  background:rgba(255,255,255,.06);
+}
+.mtkc-avatar {
+  width:52px;height:52px;border-radius:50%;
+  background:rgba(255,255,255,.2);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:.88rem;font-weight:700;letter-spacing:.05em;
+}
+.mtkc-info strong { display:block;font-size:.95rem;font-weight:700;color:#fff; }
+.mtkc-info span { display:block;font-size:.72rem;color:rgba(255,255,255,.6);font-weight:300; }
+.mtkc-quote {
+  font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.7;
+  font-style:italic;font-weight:300;flex:1;
+  border-left:2px solid rgba(255,255,255,.25);padding-left:14px;
+}
+.mtkc-stats { display:flex;gap:24px;padding-top:8px;border-top:1px solid rgba(255,255,255,.15); }
+.mtkc-stats > div { display:flex;flex-direction:column;gap:2px; }
+.mtkc-stats strong { font-size:1.3rem;font-weight:900;color:#fff; }
+.mtkc-stats span { font-size:.62rem;color:rgba(255,255,255,.55);font-weight:300; }
+
+/* ═══════════ TESTIMONIALS ═══════════ */
+.testimonials-section { background:#fff; }
+.testimonials-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:24px; }
+@media (min-width:900px) { .testimonials-grid { grid-template-columns:repeat(3,1fr); } }
+.t-card { background:var(--cream);border:1px solid var(--line);border-radius:var(--r-lg);padding:36px 28px;transition:box-shadow .25s,transform .25s; }
+.t-card:hover { box-shadow:var(--shadow-md);transform:translateY(-3px); }
+.t-quote-mark { font-size:4rem;line-height:1;color:var(--red);opacity:.2;font-weight:900;height:32px;display:block; }
+.t-quote { font-size:.88rem;color:var(--ink-2);line-height:1.85;font-weight:300;font-style:italic;margin-bottom:24px; }
+.t-author { display:flex;align-items:center;gap:12px; }
+.t-avatar-img { width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--line); }
+.t-name { display:block;font-size:.88rem;font-weight:700;color:var(--ink); }
+.t-role { display:block;font-size:.74rem;color:var(--ink-3);font-weight:300; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width:1100px) {
+  .hero-inner { grid-template-columns:1fr; }
+  .hero-stats-card { display:none; }
+  .mt-cards-row { grid-template-columns:1fr 1fr; }
+  .mt-kelly-card { grid-column:1/-1; flex-direction:row; align-items:center; }
+}
+@media (max-width:900px) {
+  .about-grid { grid-template-columns:1fr; }
+  .about-visual { height:360px; }
+  .av-bg-number { display:none; }
+  .services-grid { grid-template-columns:repeat(2,1fr); }
+  .testimonials-grid { grid-template-columns:repeat(2,1fr); }
+  .cases-grid { grid-template-columns:repeat(2,1fr); }
+  .cases-banner-inner { flex-direction:column;align-items:flex-start;padding-bottom:40px; }
+  .cib-stats { gap:24px; }
+  .mt-header { flex-direction:column;gap:24px; }
+  .mt-cards-row { grid-template-columns:1fr; }
+  .mt-kelly-card { flex-direction:column; }
+}
+@media (max-width:640px) {
+  .services-grid { grid-template-columns:1fr; }
+  .section-header { flex-direction:column; }
+  .clients-strip { flex-direction:column;gap:12px;align-items:flex-start; }
+  .hero-title { font-size:clamp(2.4rem,8vw,3.6rem); }
+  .cases-grid { grid-template-columns:1fr; }
+  .testimonials-grid { grid-template-columns:1fr; }
+}
+</style>
