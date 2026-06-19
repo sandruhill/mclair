@@ -7,6 +7,7 @@ import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://mclair.vercel.app',
+  output: 'static',
   adapter: vercel(),
   integrations: [
     sitemap({
