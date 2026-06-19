@@ -6,8 +6,9 @@ import keystaticConfig from '../../keystatic.config';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const clientesData = await reader.singletons.clientes.read().catch(() => null);
-const clients = (clientesData?.clients ?? []) as any[];
-const stats   = (clientesData?.stats   ?? []) as any[];
+const clientesContent = (clientesData as any)?.content;
+const clients = (clientesContent?.clients ?? []) as any[];
+const stats   = (clientesContent?.stats   ?? []) as any[];
 ---
 
 <Layout

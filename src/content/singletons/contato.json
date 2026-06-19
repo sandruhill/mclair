@@ -1,24 +1,26 @@
 {
-  "contactInfo": {
-    "phone": "(11) 98860-0372",
-    "email": "kelly@mclair.com.br"
-  },
-  "faqs": [
-    {
-      "q": "O que é Marketing de Autoridade e como a Mclair aplica?",
-      "a": "Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca."
+  "content": {
+    "contactInfo": {
+      "phone": "(11) 98860-0372",
+      "email": "kelly@mclair.com.br"
     },
-    {
-      "q": "Qual a diferença entre uma agência de marketing comum e a Mclair?",
-      "a": "Enquanto o termo \"360º\" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros."
-    },
-    {
-      "q": "Como a Mclair mede os resultados em comunicação?",
-      "a": "Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa."
-    },
-    {
-      "q": "Como solicitar uma proposta de Comunicação Estratégica?",
-      "a": "É simples! Preencha o formulário abaixo, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução."
-    }
-  ]
+    "faqs": [
+      {
+        "q": "O que é Marketing de Autoridade e como a Mclair aplica?",
+        "a": "Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca."
+      },
+      {
+        "q": "Qual a diferença entre uma agência de marketing comum e a Mclair?",
+        "a": "Enquanto o termo \"360º\" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros."
+      },
+      {
+        "q": "Como a Mclair mede os resultados em comunicação?",
+        "a": "Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa."
+      },
+      {
+        "q": "Como solicitar uma proposta de Comunicação Estratégica?",
+        "a": "É simples! Preencha o formulário abaixo, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução."
+      }
+    ]
+  }
 }

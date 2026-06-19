@@ -8,9 +8,10 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20so
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const contatoData = await reader.singletons.contato.read().catch(() => null);
-const faqs    = (contatoData?.faqs  ?? []) as any[];
-const phone   = (contatoData as any)?.contactInfo?.phone ?? '(11) 98860-0372';
-const email   = (contatoData as any)?.contactInfo?.email ?? 'kelly@mclair.com.br';
+const contatoContent = (contatoData as any)?.content;
+const faqs    = (contatoContent?.faqs  ?? []) as any[];
+const phone   = contatoContent?.contactInfo?.phone ?? '(11) 98860-0372';
+const email   = contatoContent?.contactInfo?.email ?? 'kelly@mclair.com.br';
 
 const servicos = [
   'Marketing de Autoridade','Assessoria de Imprensa','Branding Estratégico',

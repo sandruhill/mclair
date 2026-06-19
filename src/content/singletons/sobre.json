@@ -1,58 +1,78 @@
 {
-  "valores": [
-    {
-      "icon": "◈",
-      "title": "Comunicação Estratégica",
-      "desc": "Cada ação é planejada com base em dados, objetivos claros e conhecimento profundo do mercado. Nada é aleatório."
-    },
-    {
-      "icon": "◉",
-      "title": "Marketing de Autoridade",
-      "desc": "Posicionamos sua marca como referência reconhecida. Construímos autoridade que gera credibilidade e confiança duradouras."
-    },
-    {
-      "icon": "◆",
-      "title": "Propósito e Legado",
-      "desc": "Acreditamos em comunicação com propósito transformador que gera engajamento genuíno e constrói relacionamentos reais."
-    },
-    {
-      "icon": "◇",
-      "title": "Resultados Mensuráveis",
-      "desc": "Focamos em KPIs reais, relatórios claros e evolução contínua. Transparência em cada etapa do trabalho."
-    }
-  ],
-  "equipe": [
-    {
-      "nome": "Kelly Pinheiro",
-      "cargo": "Fundadora & CEO",
-      "initials": "KP",
-      "bio": "Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência. Conduz as mentorias Bolder e Bolder Press, transformando profissionais em referências de mercado."
-    },
-    {
-      "nome": "Equipe Editorial",
-      "cargo": "Assessoria de Imprensa",
-      "initials": "AE",
-      "bio": "Jornalistas e especialistas em relacionamento com mídia, construindo narrativas estratégicas que garantem cobertura relevante nos principais veículos do Brasil."
-    },
-    {
-      "nome": "Equipe Digital",
-      "cargo": "Marketing Digital & Social",
-      "initials": "ED",
-      "bio": "Especialistas em performance, SEO, conteúdo estratégico e gestão de mídias sociais para maximizar resultados e crescimento sustentável."
-    },
-    {
-      "nome": "Equipe Criativa",
-      "cargo": "Branding & Identidade",
-      "initials": "EC",
-      "bio": "Estrategistas de marca e designers que constroem identidades visuais com propósito, criando marcas fortes e com coerência em todos os pontos de contato."
-    }
-  ],
-  "timeline": [
-    { "year": "2017", "ev": "Fundação da Mclair em São Paulo com foco em Comunicação Estratégica e Assessoria de Imprensa" },
-    { "year": "2019", "ev": "Expansão para Marketing Digital Integrado e Gestão de Redes Sociais" },
-    { "year": "2021", "ev": "Lançamento da área de Branding Estratégico e Consultoria em Comunicação" },
-    { "year": "2022", "ev": "Marco de mais de 100 marcas atendidas e +5.000 inserções na mídia" },
-    { "year": "2024", "ev": "Lançamento das mentorias exclusivas Bolder e Bolder Press com Kelly Pinheiro" },
-    { "year": "2025", "ev": "Consolidação como referência em Marketing de Autoridade no Brasil" }
-  ]
+  "content": {
+    "valores": [
+      {
+        "icon": "◈",
+        "title": "Comunicação Estratégica",
+        "desc": "Cada ação é planejada com base em dados, objetivos claros e conhecimento profundo do mercado. Nada é aleatório."
+      },
+      {
+        "icon": "◉",
+        "title": "Marketing de Autoridade",
+        "desc": "Posicionamos sua marca como referência reconhecida. Construímos autoridade que gera credibilidade e confiança duradouras."
+      },
+      {
+        "icon": "◆",
+        "title": "Propósito e Legado",
+        "desc": "Acreditamos em comunicação com propósito transformador que gera engajamento genuíno e constrói relacionamentos reais."
+      },
+      {
+        "icon": "◇",
+        "title": "Resultados Mensuráveis",
+        "desc": "Focamos em KPIs reais, relatórios claros e evolução contínua. Transparência em cada etapa do trabalho."
+      }
+    ],
+    "equipe": [
+      {
+        "nome": "Kelly Pinheiro",
+        "cargo": "Fundadora & CEO",
+        "initials": "KP",
+        "bio": "Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência. Conduz as mentorias Bolder e Bolder Press, transformando profissionais em referências de mercado."
+      },
+      {
+        "nome": "Equipe Editorial",
+        "cargo": "Assessoria de Imprensa",
+        "initials": "AE",
+        "bio": "Jornalistas e especialistas em relacionamento com mídia, construindo narrativas estratégicas que garantem cobertura relevante nos principais veículos do Brasil."
+      },
+      {
+        "nome": "Equipe Digital",
+        "cargo": "Marketing Digital & Social",
+        "initials": "ED",
+        "bio": "Especialistas em performance, SEO, conteúdo estratégico e gestão de mídias sociais para maximizar resultados e crescimento sustentável."
+      },
+      {
+        "nome": "Equipe Criativa",
+        "cargo": "Branding & Identidade",
+        "initials": "EC",
+        "bio": "Estrategistas de marca e designers que constroem identidades visuais com propósito, criando marcas fortes e com coerência em todos os pontos de contato."
+      }
+    ],
+    "timeline": [
+      {
+        "year": "2017",
+        "ev": "Fundação da Mclair em São Paulo com foco em Comunicação Estratégica e Assessoria de Imprensa"
+      },
+      {
+        "year": "2019",
+        "ev": "Expansão para Marketing Digital Integrado e Gestão de Redes Sociais"
+      },
+      {
+        "year": "2021",
+        "ev": "Lançamento da área de Branding Estratégico e Consultoria em Comunicação"
+      },
+      {
+        "year": "2022",
+        "ev": "Marco de mais de 100 marcas atendidas e +5.000 inserções na mídia"
+      },
+      {
+        "year": "2024",
+        "ev": "Lançamento das mentorias exclusivas Bolder e Bolder Press com Kelly Pinheiro"
+      },
+      {
+        "year": "2025",
+        "ev": "Consolidação como referência em Marketing de Autoridade no Brasil"
+      }
+    ]
+  }
 }

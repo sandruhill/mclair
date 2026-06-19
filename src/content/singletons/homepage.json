@@ -1,41 +1,59 @@
 {
-  "heroVideoId": "SB26MowGMDM",
-  "stats": [
-    { "n": "8", "s": "+", "label": "Anos de mercado" },
-    { "n": "200", "s": "+", "label": "Clientes atendidos" },
-    { "n": "11600", "s": "+", "label": "Inserções na mídia" },
-    { "n": "1734", "s": "+", "label": "Publicações internacionais" }
-  ],
-  "testimonials": [
-    {
-      "quote": "Para administradores que têm o desafio de gerir os recursos de forma mais eficiente possível, encontrar uma empresa que entrega mais do que o acordado é o caminho do sucesso. Pessoas de alta competência e interesse no nosso negócio.",
-      "name": "Rogério Carvalho",
-      "role": "CEO, Automatiza Sistemas",
-      "photo": "https://mclair.com.br/images/galeria/26-02-2020_5_1fa80566e63cd0930a41c408a044b79b.jpg"
-    },
-    {
-      "quote": "A experiência com a MClair deu grande visibilidade ao meu trabalho. Em pouco tempo surgiram diversos convites para escrever artigos e participar de entrevistas, o que aumentou muito minha valorização e segurança profissional.",
-      "name": "Fabiana Carvalho Vinke",
-      "role": "Fundadora, Zoom Mind",
-      "photo": "https://mclair.com.br/images/galeria/26-02-2020_5_fcbf8c0777f942b2961a5675026d5759.jpg"
-    },
-    {
-      "quote": "A equipe da MClair tem um talento ímpar para definir estratégias de comunicação assertivas e explicitar o posicionamento de empresas, impactando positivamente na capacidade de gerar resultados percebidos.",
-      "name": "Elemar Jr.",
-      "role": "CEO, EximiaCo",
-      "photo": "https://mclair.com.br/images/galeria/26-05-2020_5_d9e1215f43a9a75024512370f3cea093.jpg"
-    },
-    {
-      "quote": "É um prazer trabalhar com o time Mclair, sempre enérgicos e com uma capacidade fantástica de produzir estratégia de comunicação. O resultado desta parceria está transformando a maneira como a Guiando relaciona-se com seus clientes com impacto direto em nossos negócios.",
-      "name": "Eduardo Camargo",
-      "role": "Sócio & Head of Growth, Guiando",
-      "photo": "https://mclair.com.br/images/galeria/25-01-2021_5_ecf44731ffd9b0e4189b1181f4ae829f.png"
-    },
-    {
-      "quote": "O que diferencia a Mclair é sua intensa capacidade de pensar o estratégico já conectado com a fluidez da execução. O segredo para isso está em fazer as perguntas certas para obter as respostas que precisam. A Mclair é o ponto de inflexão rumo ao sucesso de qualquer negócio.",
-      "name": "Denis Zanini",
-      "role": "CEO, Ynusitado",
-      "photo": "https://mclair.com.br/images/galeria/26-01-2021_1_e7408324dd0280fffa43e88331fee076.png"
-    }
-  ]
+  "content": {
+    "heroVideoId": "SB26MowGMDM",
+    "stats": [
+      {
+        "n": "8",
+        "s": "+",
+        "label": "Anos de mercado"
+      },
+      {
+        "n": "200",
+        "s": "+",
+        "label": "Clientes atendidos"
+      },
+      {
+        "n": "11600",
+        "s": "+",
+        "label": "Inserções na mídia"
+      },
+      {
+        "n": "1734",
+        "s": "+",
+        "label": "Publicações internacionais"
+      }
+    ],
+    "testimonials": [
+      {
+        "quote": "Para administradores que têm o desafio de gerir os recursos de forma mais eficiente possível, encontrar uma empresa que entrega mais do que o acordado é o caminho do sucesso. Pessoas de alta competência e interesse no nosso negócio.",
+        "name": "Rogério Carvalho",
+        "role": "CEO, Automatiza Sistemas",
+        "photo": "https://mclair.com.br/images/galeria/26-02-2020_5_1fa80566e63cd0930a41c408a044b79b.jpg"
+      },
+      {
+        "quote": "A experiência com a MClair deu grande visibilidade ao meu trabalho. Em pouco tempo surgiram diversos convites para escrever artigos e participar de entrevistas, o que aumentou muito minha valorização e segurança profissional.",
+        "name": "Fabiana Carvalho Vinke",
+        "role": "Fundadora, Zoom Mind",
+        "photo": "https://mclair.com.br/images/galeria/26-02-2020_5_fcbf8c0777f942b2961a5675026d5759.jpg"
+      },
+      {
+        "quote": "A equipe da MClair tem um talento ímpar para definir estratégias de comunicação assertivas e explicitar o posicionamento de empresas, impactando positivamente na capacidade de gerar resultados percebidos.",
+        "name": "Elemar Jr.",
+        "role": "CEO, EximiaCo",
+        "photo": "https://mclair.com.br/images/galeria/26-05-2020_5_d9e1215f43a9a75024512370f3cea093.jpg"
+      },
+      {
+        "quote": "É um prazer trabalhar com o time Mclair, sempre enérgicos e com uma capacidade fantástica de produzir estratégia de comunicação. O resultado desta parceria está transformando a maneira como a Guiando relaciona-se com seus clientes com impacto direto em nossos negócios.",
+        "name": "Eduardo Camargo",
+        "role": "Sócio & Head of Growth, Guiando",
+        "photo": "https://mclair.com.br/images/galeria/25-01-2021_5_ecf44731ffd9b0e4189b1181f4ae829f.png"
+      },
+      {
+        "quote": "O que diferencia a Mclair é sua intensa capacidade de pensar o estratégico já conectado com a fluidez da execução. O segredo para isso está em fazer as perguntas certas para obter as respostas que precisam. A Mclair é o ponto de inflexão rumo ao sucesso de qualquer negócio.",
+        "name": "Denis Zanini",
+        "role": "CEO, Ynusitado",
+        "photo": "https://mclair.com.br/images/galeria/26-01-2021_1_e7408324dd0280fffa43e88331fee076.png"
+      }
+    ]
+  }
 }

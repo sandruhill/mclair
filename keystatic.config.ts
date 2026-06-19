@@ -23,29 +23,32 @@ export default config({
       label: 'Homepage',
       path: 'src/content/singletons/homepage',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/',
       schema: {
-        heroVideoId: fields.text({
-          label: 'YouTube — ID do vídeo',
-          defaultValue: 'SB26MowGMDM',
-          description: 'Apenas o ID do vídeo (ex: SB26MowGMDM)',
-        }),
-        stats: fields.array(
-          fields.object({
-            n: fields.text({ label: 'Número' }),
-            s: fields.text({ label: 'Sufixo', defaultValue: '+' }),
-            label: fields.text({ label: 'Rótulo' }),
-          }, { layout: [3, 3, 6] }),
-          { label: 'Estatísticas do Hero', itemLabel: (p) => p.fields.label.value }
-        ),
-        testimonials: fields.array(
-          fields.object({
-            quote: fields.text({ label: 'Depoimento', multiline: true }),
-            name: fields.text({ label: 'Nome' }),
-            role: fields.text({ label: 'Cargo / Empresa' }),
-            photo: fields.url({ label: 'Foto (URL)' }),
-          }, { layout: [12, 6, 6, 12] }),
-          { label: 'Depoimentos', itemLabel: (p) => p.fields.name.value }
-        ),
+        content: fields.object({
+          heroVideoId: fields.text({
+            label: 'YouTube — ID do vídeo',
+            defaultValue: 'SB26MowGMDM',
+            description: 'Apenas o ID do vídeo (ex: SB26MowGMDM)',
+          }),
+          stats: fields.array(
+            fields.object({
+              n: fields.text({ label: 'Número' }),
+              s: fields.text({ label: 'Sufixo', defaultValue: '+' }),
+              label: fields.text({ label: 'Rótulo' }),
+            }, { layout: [3, 3, 6] }),
+            { label: 'Estatísticas do Hero', itemLabel: (p) => p.fields.label.value }
+          ),
+          testimonials: fields.array(
+            fields.object({
+              quote: fields.text({ label: 'Depoimento', multiline: true }),
+              name: fields.text({ label: 'Nome' }),
+              role: fields.text({ label: 'Cargo / Empresa' }),
+              photo: fields.url({ label: 'Foto (URL)' }),
+            }, { layout: [12, 6, 6, 12] }),
+            { label: 'Depoimentos', itemLabel: (p) => p.fields.name.value }
+          ),
+        }, { layout: [12, 6, 6] }),
       },
     }),
 
@@ -53,31 +56,34 @@ export default config({
       label: 'Sobre',
       path: 'src/content/singletons/sobre',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/sobre',
       schema: {
-        valores: fields.array(
-          fields.object({
-            icon: fields.text({ label: 'Ícone / Símbolo' }),
-            title: fields.text({ label: 'Título' }),
-            desc: fields.text({ label: 'Descrição', multiline: true }),
-          }, { layout: [2, 4, 6] }),
-          { label: 'Valores', itemLabel: (p) => p.fields.title.value }
-        ),
-        equipe: fields.array(
-          fields.object({
-            nome: fields.text({ label: 'Nome' }),
-            cargo: fields.text({ label: 'Cargo' }),
-            initials: fields.text({ label: 'Iniciais (2 letras)' }),
-            bio: fields.text({ label: 'Bio', multiline: true }),
-          }, { layout: [4, 4, 4, 12] }),
-          { label: 'Equipe', itemLabel: (p) => p.fields.nome.value }
-        ),
-        timeline: fields.array(
-          fields.object({
-            year: fields.text({ label: 'Ano' }),
-            ev: fields.text({ label: 'Evento', multiline: true }),
-          }, { layout: [3, 9] }),
-          { label: 'Timeline', itemLabel: (p) => p.fields.year.value }
-        ),
+        content: fields.object({
+          valores: fields.array(
+            fields.object({
+              icon: fields.text({ label: 'Ícone / Símbolo' }),
+              title: fields.text({ label: 'Título' }),
+              desc: fields.text({ label: 'Descrição', multiline: true }),
+            }, { layout: [2, 4, 6] }),
+            { label: 'Valores', itemLabel: (p) => p.fields.title.value }
+          ),
+          equipe: fields.array(
+            fields.object({
+              nome: fields.text({ label: 'Nome' }),
+              cargo: fields.text({ label: 'Cargo' }),
+              initials: fields.text({ label: 'Iniciais (2 letras)' }),
+              bio: fields.text({ label: 'Bio', multiline: true }),
+            }, { layout: [4, 4, 4, 12] }),
+            { label: 'Equipe', itemLabel: (p) => p.fields.nome.value }
+          ),
+          timeline: fields.array(
+            fields.object({
+              year: fields.text({ label: 'Ano' }),
+              ev: fields.text({ label: 'Evento', multiline: true }),
+            }, { layout: [3, 9] }),
+            { label: 'Timeline', itemLabel: (p) => p.fields.year.value }
+          ),
+        }, { layout: [6, 6, 12] }),
       },
     }),
 
@@ -85,21 +91,24 @@ export default config({
       label: 'Clientes',
       path: 'src/content/singletons/clientes',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/clientes',
       schema: {
-        clients: fields.array(
-          fields.object({
-            name: fields.text({ label: 'Nome do cliente' }),
-            logo: fields.url({ label: 'Logo (URL)' }),
-          }, { layout: [6, 6] }),
-          { label: 'Clientes', itemLabel: (p) => p.fields.name.value || '(logo sem nome)' }
-        ),
-        stats: fields.array(
-          fields.object({
-            n: fields.text({ label: 'Número' }),
-            label: fields.text({ label: 'Rótulo' }),
-          }, { layout: [4, 8] }),
-          { label: 'Estatísticas', itemLabel: (p) => p.fields.label.value }
-        ),
+        content: fields.object({
+          clients: fields.array(
+            fields.object({
+              name: fields.text({ label: 'Nome do cliente' }),
+              logo: fields.url({ label: 'Logo (URL)' }),
+            }, { layout: [6, 6] }),
+            { label: 'Clientes', itemLabel: (p) => p.fields.name.value || '(logo sem nome)' }
+          ),
+          stats: fields.array(
+            fields.object({
+              n: fields.text({ label: 'Número' }),
+              label: fields.text({ label: 'Rótulo' }),
+            }, { layout: [4, 8] }),
+            { label: 'Estatísticas', itemLabel: (p) => p.fields.label.value }
+          ),
+        }, { layout: [8, 4] }),
       },
     }),
 
@@ -107,18 +116,21 @@ export default config({
       label: 'Contato',
       path: 'src/content/singletons/contato',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/contato',
       schema: {
-        contactInfo: fields.object({
-          phone: fields.text({ label: 'Telefone / WhatsApp', defaultValue: '(11) 98860-0372' }),
-          email: fields.text({ label: 'E-mail', defaultValue: 'kelly@mclair.com.br' }),
-        }, { layout: [6, 6] }),
-        faqs: fields.array(
-          fields.object({
-            q: fields.text({ label: 'Pergunta' }),
-            a: fields.text({ label: 'Resposta', multiline: true }),
+        content: fields.object({
+          contactInfo: fields.object({
+            phone: fields.text({ label: 'Telefone / WhatsApp', defaultValue: '(11) 98860-0372' }),
+            email: fields.text({ label: 'E-mail', defaultValue: 'kelly@mclair.com.br' }),
           }, { layout: [6, 6] }),
-          { label: 'FAQs', itemLabel: (p) => p.fields.q.value }
-        ),
+          faqs: fields.array(
+            fields.object({
+              q: fields.text({ label: 'Pergunta' }),
+              a: fields.text({ label: 'Resposta', multiline: true }),
+            }, { layout: [6, 6] }),
+            { label: 'FAQs', itemLabel: (p) => p.fields.q.value }
+          ),
+        }, { layout: [4, 8] }),
       },
     }),
 
@@ -126,23 +138,26 @@ export default config({
       label: 'Mentorias',
       path: 'src/content/singletons/mentorias',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/mentorias',
       schema: {
-        bolderLevels: fields.array(
-          fields.object({
-            n: fields.text({ label: 'Número' }),
-            title: fields.text({ label: 'Título do nível' }),
-            desc: fields.text({ label: 'Descrição', multiline: true }),
-          }, { layout: [2, 4, 6] }),
-          { label: 'Níveis — Mentoria Bolder', itemLabel: (p) => p.fields.title.value }
-        ),
-        bolderPressLevels: fields.array(
-          fields.object({
-            n: fields.text({ label: 'Número' }),
-            title: fields.text({ label: 'Título do módulo' }),
-            desc: fields.text({ label: 'Descrição', multiline: true }),
-          }, { layout: [2, 4, 6] }),
-          { label: 'Módulos — Bolder Press', itemLabel: (p) => p.fields.title.value }
-        ),
+        content: fields.object({
+          bolderLevels: fields.array(
+            fields.object({
+              n: fields.text({ label: 'Número' }),
+              title: fields.text({ label: 'Título do nível' }),
+              desc: fields.text({ label: 'Descrição', multiline: true }),
+            }, { layout: [2, 4, 6] }),
+            { label: 'Níveis — Mentoria Bolder', itemLabel: (p) => p.fields.title.value }
+          ),
+          bolderPressLevels: fields.array(
+            fields.object({
+              n: fields.text({ label: 'Número' }),
+              title: fields.text({ label: 'Título do módulo' }),
+              desc: fields.text({ label: 'Descrição', multiline: true }),
+            }, { layout: [2, 4, 6] }),
+            { label: 'Módulos — Bolder Press', itemLabel: (p) => p.fields.title.value }
+          ),
+        }, { layout: [6, 6] }),
       },
     }),
   },
@@ -154,6 +169,7 @@ export default config({
       path: 'src/content/blog/*',
       format: { contentField: 'content' },
       entryLayout: 'content',
+      previewUrl: 'https://mclair.vercel.app/blog/{slug}',
       schema: {
         title: fields.slug({
           name: {
@@ -269,6 +285,7 @@ export default config({
       slugField: 'title',
       path: 'src/content/servicos/*',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/servicos/{slug}',
       schema: {
         title: fields.slug({ name: { label: 'Título do Serviço' } }),
         num: fields.text({ label: 'Número (01, 02...)' }),
@@ -307,6 +324,7 @@ export default config({
       slugField: 'client',
       path: 'src/content/cases/*',
       format: { data: 'json' },
+      previewUrl: 'https://mclair.vercel.app/cases/{slug}',
       schema: {
         client: fields.slug({ name: { label: 'Nome do cliente' } }),
         num: fields.text({ label: 'Número (01, 02...)' }),

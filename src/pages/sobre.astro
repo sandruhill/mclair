@@ -8,9 +8,10 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20fa
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const sobreData = await reader.singletons.sobre.read().catch(() => null);
-const valores  = (sobreData?.valores  ?? []) as any[];
-const equipe   = (sobreData?.equipe   ?? []) as any[];
-const timeline = (sobreData?.timeline ?? []) as any[];
+const sobreContent = (sobreData as any)?.content;
+const valores  = (sobreContent?.valores  ?? []) as any[];
+const equipe   = (sobreContent?.equipe   ?? []) as any[];
+const timeline = (sobreContent?.timeline ?? []) as any[];
 ---
 
 <Layout

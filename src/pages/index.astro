@@ -9,8 +9,9 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 const reader = createReader(process.cwd(), keystaticConfig);
 
 const hp = await reader.singletons.homepage.read().catch(() => null);
-const stats  = (hp?.stats ?? []);
-const testimonials = (hp?.testimonials ?? []);
+const hpContent = (hp as any)?.content;
+const stats  = (hpContent?.stats ?? []);
+const testimonials = (hpContent?.testimonials ?? []);
 
 const allServicos = await reader.collections.servicos.all().catch(() => []);
 const services = (allServicos as any[])
@@ -56,7 +57,7 @@ const cases = (allCases as any[])
   <!-- YouTube video background -->
   <div class="hero-video-wrap" aria-hidden="true">
     <iframe
-      src="https://www.youtube.com/embed/SB26MowGMDM?autoplay=1&mute=1&loop=1&playlist=SB26MowGMDM&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3"
+      src={`https://www.youtube.com/embed/${hpContent?.heroVideoId ?? 'SB26MowGMDM'}?autoplay=1&mute=1&loop=1&playlist=${hpContent?.heroVideoId ?? 'SB26MowGMDM'}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`}
       frameborder="0"
       allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
       allowfullscreen

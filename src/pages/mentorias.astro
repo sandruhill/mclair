@@ -9,8 +9,9 @@ const WA_PRESS  = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20int
 
 const reader = createReader(process.cwd(), keystaticConfig);
 const mentoriasData = await reader.singletons.mentorias.read().catch(() => null);
-const bolderLevels     = (mentoriasData?.bolderLevels      ?? []) as any[];
-const bolderPressLevels = (mentoriasData?.bolderPressLevels ?? []) as any[];
+const mentoriasContent = (mentoriasData as any)?.content;
+const bolderLevels     = (mentoriasContent?.bolderLevels      ?? []) as any[];
+const bolderPressLevels = (mentoriasContent?.bolderPressLevels ?? []) as any[];
 ---
 
 <Layout
