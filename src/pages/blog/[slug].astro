@@ -1,67 +1,115 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import posts from '../../data/blog.json';
+import legacyPosts from '../../data/blog.json';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+import { documentToHtml } from '../../utils/documentToHtml';
 
 export async function getStaticPaths() {
-  return posts.map(post => ({
-    params: { slug: post.slug },
-    props: { post }
-  }));
+  // CMS posts
+  let cmsPaths: any[] = [];
+  try {
+    const { createReader: cr } = await import('@keystatic/core/reader');
+    const { default: cfg } = await import('../../../keystatic.config');
+    const { documentToHtml: toHtml } = await import('../../utils/documentToHtml');
+    const reader = cr(process.cwd(), cfg);
+    const all = await reader.collections.blog.all();
+    cmsPaths = await Promise.all(
+      all.map(async (p) => {
+        const nodes = await p.entry.content();
+        return {
+          params: { slug: p.slug },
+          props: {
+            post: {
+              slug: p.slug,
+              title: p.entry.title.name,
+              subtitle: p.entry.subtitle ?? '',
+              metaDescription: p.entry.metaDescription ?? '',
+              date: p.entry.date ?? '',
+              author: p.entry.author ?? 'Equipe Mclair',
+              image: p.entry.image ?? '',
+              content: toHtml(nodes as any),
+              keywords: p.entry.keywords ?? [],
+              aboutTopics: p.entry.aboutTopics ?? [],
+              faqItems: p.entry.faqItems ?? [],
+            },
+            source: 'cms',
+          },
+        };
+      })
+    );
+  } catch { /* no CMS posts yet */ }
+
+  // Legacy posts — skip slugs already covered by CMS
+  const cmsSlugs = new Set(cmsPaths.map((p) => p.params.slug));
+  const legacyPaths = legacyPosts
+    .filter((p) => !cmsSlugs.has(p.slug))
+    .map((post) => ({
+      params: { slug: post.slug },
+      props: { post, source: 'legacy' },
+    }));
+
+  return [...cmsPaths, ...legacyPaths];
 }
 
-const { post } = Astro.props;
+const { post, source } = Astro.props;
 const BASE = 'https://mclair.vercel.app';
 const canonicalURL = `${BASE}/blog/${post.slug}`;
 
-function formatDate(d) {
+function formatDate(d: string) {
   if (!d) return '';
-  const [dd, mm, yy] = d.split('/');
+  let dd: string, mm: string, yy: string;
+  if (d.includes('-')) {
+    [yy, mm, dd] = d.split('-');
+  } else {
+    [dd, mm, yy] = d.split('/');
+  }
   const months = ['janeiro','fevereiro','março','abril','maio','junho','julho','agosto','setembro','outubro','novembro','dezembro'];
   return `${parseInt(dd)} de ${months[parseInt(mm)-1]} de ${yy}`;
 }
 
-function isoDate(d) {
+function isoDate(d: string) {
   if (!d) return '';
+  if (d.includes('-')) return d;
   const [dd, mm, yy] = d.split('/');
   return `${yy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`;
 }
 
-function stripHtml(html) {
+function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-// ── Auto SEO ──────────────────────────────────────────────────
-const plainText   = stripHtml(post.content);
-const metaDesc    = (post.subtitle || plainText).slice(0, 155).trimEnd();
-const seoTitle    = post.title.length <= 52
+// ── SEO ───────────────────────────────────────────────────────
+const plainText = stripHtml(post.content);
+const metaDesc  = (post.metaDescription || post.subtitle || plainText).slice(0, 160).trimEnd();
+const seoTitle  = post.title.length <= 52
   ? `${post.title} — Blog Mclair`
   : `${post.title.slice(0, 52).trimEnd()}… — Mclair`;
-const dateISO     = isoDate(post.date);
-const ogImg       = post.image || `${BASE}/android-chrome-512x512.png`;
+const dateISO   = isoDate(post.date);
+const ogImg     = post.image || `${BASE}/android-chrome-512x512.png`;
 
-// Keywords: words >4 chars from title (simple, no external deps)
-const stopWords   = new Set(['para','como','que','com','uma','dos','das','por','mais','são','nas','nos','pela','pelo','suas','seus','este','esta','esses','essas','muito','quando','sobre','entre','isso','numa','num']);
+// Keywords: explicit (CMS) or auto-generated from title
+const stopWords = new Set(['para','como','que','com','uma','dos','das','por','mais','são','nas','nos','pela','pelo','suas','seus','este','esta','esses','essas','muito','quando','sobre','entre','isso','numa','num']);
 const autoKeywords = [...new Set(
   post.title.toLowerCase()
     .replace(/[^a-záàâãéèêíïóôõöúüç\s]/g,'')
     .split(/\s+/)
-    .filter(w => w.length > 4 && !stopWords.has(w))
-)].slice(0, 8).join(', ');
+    .filter((w: string) => w.length > 4 && !stopWords.has(w))
+)].slice(0, 8);
+
+const keywordsList: string[] = post.keywords?.length ? post.keywords : autoKeywords as string[];
+const keywordsString = keywordsList.join(', ');
 
 // ── JSON-LD: Article ──────────────────────────────────────────
-const articleSchema = {
+const aboutTopics: string[] = post.aboutTopics ?? [];
+const articleSchema: Record<string, any> = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   '@id': `${canonicalURL}#article`,
   headline: post.title,
   description: metaDesc,
   ...(post.image && {
-    image: {
-      '@type': 'ImageObject',
-      url: post.image,
-      width: 1200,
-      height: 630,
-    },
+    image: { '@type': 'ImageObject', url: post.image, width: 1200, height: 630 },
   }),
   datePublished: dateISO,
   dateModified:  dateISO,
@@ -74,7 +122,10 @@ const articleSchema = {
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
   isPartOf:         { '@id': `${BASE}/#website` },
   inLanguage:       'pt-BR',
-  about: autoKeywords.split(', ').map(k => ({ '@type': 'Thing', name: k })),
+  keywords:         keywordsString || undefined,
+  ...(aboutTopics.length && {
+    about: aboutTopics.map((k) => ({ '@type': 'Thing', name: k })),
+  }),
   speakable: {
     '@type': 'SpeakableSpecification',
     cssSelector: ['.ph-title', '.ph-subtitle', '.post-content p'],
@@ -92,15 +143,29 @@ const breadcrumbSchema = {
   ],
 };
 
-// Related posts — same author, excluding current
-const related = posts
-  .filter(p => p.slug !== post.slug && p.author === post.author)
+// ── JSON-LD: FAQ ──────────────────────────────────────────────
+const faqItems: { question: string; answer: string }[] = post.faqItems ?? [];
+const faqSchema = faqItems.length
+  ? {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqItems.map((f) => ({
+        '@type': 'Question',
+        name: f.question,
+        acceptedAnswer: { '@type': 'Answer', text: f.answer },
+      })),
+    }
+  : null;
+
+const schemas = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])];
+
+// Related posts (from legacy only to keep things fast)
+const related = legacyPosts
+  .filter((p) => p.slug !== post.slug && p.author === post.author)
   .slice(0, 3);
-
 const relatedFallback = related.length < 3
-  ? posts.filter(p => p.slug !== post.slug && !related.find(r => r.slug === p.slug)).slice(0, 3 - related.length)
+  ? legacyPosts.filter((p) => p.slug !== post.slug && !related.find((r) => r.slug === p.slug)).slice(0, 3 - related.length)
   : [];
-
 const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 ---
 
@@ -113,8 +178,8 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   articlePublishedTime={dateISO}
   articleModifiedTime={dateISO}
   articleSection="Marketing e Comunicação"
-  keywords={autoKeywords}
-  schema={[articleSchema, breadcrumbSchema]}
+  keywords={keywordsString}
+  schema={schemas}
 >
 
 <!-- ARTICLE HERO -->
@@ -177,6 +242,23 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     </div>
   </div>
 </article>
+
+<!-- FAQ (rendered only if present) -->
+{faqItems.length > 0 && (
+  <section class="faq-section">
+    <div class="container faq-inner">
+      <h2 class="faq-title">Perguntas frequentes</h2>
+      <dl class="faq-list">
+        {faqItems.map((f) => (
+          <div class="faq-item">
+            <dt class="faq-q">{f.question}</dt>
+            <dd class="faq-a">{f.answer}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+  </section>
+)}
 
 <!-- RELATED POSTS -->
 {relatedPosts.length > 0 && (
@@ -304,9 +386,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   font-size: 1.1rem; font-weight: 700; letter-spacing:-.01em;
   color: var(--ink); margin: 1.6rem 0 .6rem;
 }
-.prose :global(p) {
-  margin-bottom: 1.2rem;
-}
+.prose :global(p) { margin-bottom: 1.2rem; }
 .prose :global(strong) { font-weight: 800; color: var(--ink); }
 .prose :global(em) { font-style: italic; }
 .prose :global(a) {
@@ -314,22 +394,21 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 }
 .prose :global(a:hover) { text-decoration: none; }
 .prose :global(ul),
-.prose :global(ol) {
-  padding-left: 1.5rem; margin-bottom: 1.2rem;
-}
+.prose :global(ol) { padding-left: 1.5rem; margin-bottom: 1.2rem; }
 .prose :global(li) { margin-bottom: .4rem; }
 .prose :global(blockquote) {
   border-left: 3px solid var(--red); padding: .8rem 1.4rem;
   margin: 1.6rem 0; background: var(--cream); border-radius: 0 var(--r-sm) var(--r-sm) 0;
 }
 .prose :global(blockquote p) { margin: 0; font-style: italic; color: var(--ink-2); }
-.prose :global(img) {
-  width: 100%; height: auto; border-radius: var(--r-md);
-  margin: 1.6rem 0;
+.prose :global(img) { width: 100%; height: auto; border-radius: var(--r-md); margin: 1.6rem 0; }
+.prose :global(hr) { border: none; border-top: 1px solid var(--line); margin: 2.4rem 0; }
+.prose :global(code) {
+  background: var(--cream); border-radius: 4px; padding: .1em .4em;
+  font-size: .88em; font-family: 'Courier New', monospace;
 }
-.prose :global(hr) {
-  border: none; border-top: 1px solid var(--line); margin: 2.4rem 0;
-}
+.prose :global(pre) { background: var(--dark); border-radius: var(--r-md); padding: 1.4rem; margin: 1.6rem 0; overflow-x: auto; }
+.prose :global(pre code) { background: none; color: rgba(255,255,255,.85); padding: 0; font-size: .9rem; }
 
 /* ═══ SIDEBAR ═══ */
 .post-sidebar {
@@ -344,22 +423,12 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   font-size: .6rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
   color: var(--ink-3); margin-bottom: 8px;
 }
-.sb-author {
-  font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 4px;
-  letter-spacing: -.01em;
-}
-.sb-date {
-  font-size: .7rem; color: var(--ink-3); line-height: 1.5;
-}
+.sb-author { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; letter-spacing: -.01em; }
+.sb-date { font-size: .7rem; color: var(--ink-3); line-height: 1.5; }
 
 .sidebar-cta { background: var(--dark); border-color: transparent; }
-.sb-cta-title {
-  font-size: .95rem; font-weight: 800; color: #fff; margin-bottom: 8px;
-  letter-spacing: -.01em;
-}
-.sb-cta-text {
-  font-size: .8rem; color: rgba(255,255,255,.45); line-height: 1.6; margin-bottom: 20px;
-}
+.sb-cta-title { font-size: .95rem; font-weight: 800; color: #fff; margin-bottom: 8px; letter-spacing: -.01em; }
+.sb-cta-text { font-size: .8rem; color: rgba(255,255,255,.45); line-height: 1.6; margin-bottom: 20px; }
 .sb-cta-btn {
   display: inline-flex; align-items: center; gap: 8px;
   background: var(--red); color: #fff;
@@ -370,15 +439,28 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 }
 .sb-cta-btn:hover { opacity: .85; }
 
+/* ═══ FAQ ═══ */
+.faq-section { background: #fff; padding: 0 0 72px; }
+.faq-inner { max-width: 860px; }
+.faq-title {
+  font-size: 1.4rem; font-weight: 900; letter-spacing: -.03em;
+  color: var(--ink); margin-bottom: 32px;
+}
+.faq-list { display: flex; flex-direction: column; gap: 16px; }
+.faq-item {
+  background: var(--cream); border: 1.5px solid var(--line);
+  border-radius: var(--r-lg); padding: 24px 28px;
+}
+.faq-q {
+  font-size: 1rem; font-weight: 800; color: var(--ink);
+  margin-bottom: 10px; letter-spacing: -.01em;
+}
+.faq-a { font-size: .92rem; color: var(--ink-2); line-height: 1.7; margin: 0; }
+
 /* ═══ RELATED ═══ */
 .related-section { background: var(--cream); padding-top: 72px; padding-bottom: 96px; }
-.related-title {
-  font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em;
-  color: var(--ink); margin-bottom: 40px;
-}
-.related-grid {
-  display: grid; grid-template-columns: repeat(3,1fr); gap: 24px;
-}
+.related-title { font-size: 1.6rem; font-weight: 900; letter-spacing: -.03em; color: var(--ink); margin-bottom: 40px; }
+.related-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
 .rel-card {
   display: flex; flex-direction: column;
   border-radius: var(--r-lg); overflow: hidden;
@@ -386,10 +468,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   text-decoration: none; color: inherit;
   transition: box-shadow .3s, transform .3s cubic-bezier(.22,1,.36,1);
 }
-.rel-card:hover {
-  box-shadow: 0 12px 36px rgba(0,0,0,.08);
-  transform: translateY(-3px);
-}
+.rel-card:hover { box-shadow: 0 12px 36px rgba(0,0,0,.08); transform: translateY(-3px); }
 .rel-img-wrap { height: 160px; overflow: hidden; background: var(--cream); }
 .rel-img-placeholder { height: 160px; background: var(--cream); }
 .rel-img { width:100%; height:100%; object-fit:cover; }
@@ -398,10 +477,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   display: block; font-size: .6rem; font-weight: 700; letter-spacing: .1em;
   text-transform: uppercase; color: var(--red); margin-bottom: 8px;
 }
-.rel-title {
-  font-size: .88rem; font-weight: 700; line-height: 1.35;
-  letter-spacing: -.01em; color: var(--ink);
-}
+.rel-title { font-size: .88rem; font-weight: 700; line-height: 1.35; letter-spacing: -.01em; color: var(--ink); }
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 960px) {

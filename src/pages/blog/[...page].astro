@@ -1,9 +1,84 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-import posts from '../../data/blog.json';
+import legacyPosts from '../../data/blog.json';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+import { documentToHtml } from '../../utils/documentToHtml';
+
+// ── Merge CMS posts with legacy blog.json ────────────────────
+let cmsPosts: any[] = [];
+try {
+  const reader = createReader(process.cwd(), keystaticConfig);
+  const all = await reader.collections.blog.all();
+  cmsPosts = await Promise.all(
+    all.map(async (p) => {
+      const nodes = await p.entry.content();
+      return {
+        id: `cms-${p.slug}`,
+        slug: p.slug,
+        title: p.entry.title.name,
+        subtitle: p.entry.subtitle ?? '',
+        date: p.entry.date ?? '',
+        author: p.entry.author ?? 'Equipe Mclair',
+        image: p.entry.image ?? '',
+        content: documentToHtml(nodes as any),
+        _cms: true,
+      };
+    })
+  );
+} catch {
+  // No CMS posts yet
+}
+
+// Sort newest first — CMS date is YYYY-MM-DD, legacy is DD/MM/YYYY
+function toTimestamp(d: string): number {
+  if (!d) return 0;
+  if (d.includes('-')) return new Date(d).getTime();
+  const [dd, mm, yy] = d.split('/');
+  return new Date(`${yy}-${mm}-${dd}`).getTime();
+}
+
+const allPosts = [...cmsPosts, ...legacyPosts].sort(
+  (a, b) => toTimestamp(b.date) - toTimestamp(a.date)
+);
 
 export async function getStaticPaths({ paginate }) {
-  return paginate(posts, { pageSize: 18 });
+  // Re-run the same merge (getStaticPaths runs in its own scope)
+  let cms: any[] = [];
+  try {
+    const { createReader } = await import('@keystatic/core/reader');
+    const { default: cfg } = await import('../../../keystatic.config');
+    const { documentToHtml: toHtml } = await import('../../utils/documentToHtml');
+    const reader = createReader(process.cwd(), cfg);
+    const all = await reader.collections.blog.all();
+    cms = await Promise.all(
+      all.map(async (p) => {
+        const nodes = await p.entry.content();
+        return {
+          id: `cms-${p.slug}`,
+          slug: p.slug,
+          title: p.entry.title.name,
+          subtitle: p.entry.subtitle ?? '',
+          date: p.entry.date ?? '',
+          author: p.entry.author ?? 'Equipe Mclair',
+          image: p.entry.image ?? '',
+          content: toHtml(nodes as any),
+          _cms: true,
+        };
+      })
+    );
+  } catch { /* no CMS posts */ }
+
+  function ts(d: string) {
+    if (!d) return 0;
+    if (d.includes('-')) return new Date(d).getTime();
+    const [dd, mm, yy] = d.split('/');
+    return new Date(`${yy}-${mm}-${dd}`).getTime();
+  }
+  const { default: legacy } = await import('../../data/blog.json');
+  const merged = [...cms, ...legacy].sort((a, b) => ts(b.date) - ts(a.date));
+
+  return paginate(merged, { pageSize: 18 });
 }
 
 const { page } = Astro.props;
@@ -19,13 +94,15 @@ const blogSchema = {
   url: `${BASE}/blog`,
   publisher: { '@id': `${BASE}/#organization` },
   inLanguage: 'pt-BR',
-  blogPost: page.data.map(p => ({
+  blogPost: page.data.map((p: any) => ({
     '@type': 'BlogPosting',
     headline: p.title,
     url: `${BASE}/blog/${p.slug}`,
     ...(p.image && { image: p.image }),
     datePublished: p.date
-      ? `${p.date.split('/')[2]}-${p.date.split('/')[1]}-${p.date.split('/')[0]}`
+      ? p.date.includes('-')
+        ? p.date
+        : `${p.date.split('/')[2]}-${p.date.split('/')[1]}-${p.date.split('/')[0]}`
       : undefined,
     author: p.author
       ? { '@type': 'Person', name: p.author }
@@ -33,18 +110,23 @@ const blogSchema = {
   })),
 };
 
-function stripHtml(html) {
+function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
 }
 
-function excerpt(html, len = 110) {
+function excerpt(html: string, len = 110) {
   const text = stripHtml(html);
   return text.length > len ? text.slice(0, len).trimEnd() + '…' : text;
 }
 
-function formatDate(d) {
+function formatDate(d: string) {
   if (!d) return '';
-  const [dd, mm, yy] = d.split('/');
+  let dd: string, mm: string, yy: string;
+  if (d.includes('-')) {
+    [yy, mm, dd] = d.split('-');
+  } else {
+    [dd, mm, yy] = d.split('/');
+  }
   const months = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
   return `${parseInt(dd)} ${months[parseInt(mm)-1]} ${yy}`;
 }
@@ -88,7 +170,7 @@ function formatDate(d) {
     )}
 
     <div class="blog-grid stagger-children">
-      {page.data.map((post, i) => (
+      {page.data.map((post: any, i: number) => (
         <article class="blog-card" data-anim data-delay={((i % 3) + 1).toString()}>
           <a href={`/blog/${post.slug}`} class="bc-link">
             {post.image ? (

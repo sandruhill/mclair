@@ -1,9 +1,13 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
+import keystatic from '@keystatic/astro';
+import vercel from '@astrojs/vercel/serverless';
 
 export default defineConfig({
   site: 'https://mclair.vercel.app',
+  output: 'hybrid',
+  adapter: vercel(),
   integrations: [
     sitemap({
       changefreq: 'weekly',
@@ -29,5 +33,6 @@ export default defineConfig({
         'https://mclair.vercel.app/contato',
       ],
     }),
+    keystatic(),
   ],
 });
