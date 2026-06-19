@@ -183,9 +183,16 @@ export default config({
           defaultValue: 'Equipe Mclair',
         }),
 
+        featuredImage: fields.image({
+          label: 'Imagem de destaque',
+          description: 'Arraste a foto aqui ou clique para selecionar. Recomendado: 1200 × 630 px.',
+          directory: 'public/blog-images',
+          publicPath: '/blog-images/',
+        }),
+
         image: fields.url({
-          label: 'Imagem de destaque (URL)',
-          description: 'Recomendado: 1200 × 630 px',
+          label: 'Imagem (URL externa — somente posts antigos)',
+          description: 'Deixe em branco para novos posts. Use o campo acima para enviar fotos.',
         }),
 
         category: fields.select({
@@ -241,7 +248,10 @@ export default config({
           formatting: true,
           dividers: true,
           links: true,
-          images: false,
+          images: {
+            directory: 'public/blog-images',
+            publicPath: '/blog-images/',
+          },
         }),
       },
     }),

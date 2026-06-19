@@ -28,7 +28,7 @@ export async function getStaticPaths() {
               metaDescription: p.entry.metaDescription ?? '',
               date: p.entry.date ?? '',
               author: p.entry.author ?? 'Equipe Mclair',
-              image: p.entry.image ?? '',
+              image: (p.entry as any).featuredImage ?? p.entry.image ?? '',
               content: toHtml(nodes as any),
               keywords: p.entry.keywords ?? [],
               aboutTopics: p.entry.aboutTopics ?? [],
