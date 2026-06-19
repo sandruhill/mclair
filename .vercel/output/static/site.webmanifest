@@ -1,0 +1,22 @@
+{
+  "name": "Mclair — Agência de Marketing",
+  "short_name": "Mclair",
+  "description": "Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#151210",
+  "theme_color": "#C8102E",
+  "lang": "pt-BR",
+  "icons": [
+    { "src": "/favicon-16x16.png",        "sizes": "16x16",   "type": "image/png" },
+    { "src": "/favicon-32x32.png",        "sizes": "32x32",   "type": "image/png" },
+    { "src": "/android-chrome-192x192.png","sizes": "192x192", "type": "image/png", "purpose": "maskable any" },
+    { "src": "/android-chrome-512x512.png","sizes": "512x512", "type": "image/png", "purpose": "maskable any" }
+  ],
+  "shortcuts": [
+    { "name": "Serviços",   "url": "/servicos",  "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }] },
+    { "name": "Mentorias",  "url": "/mentorias", "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }] },
+    { "name": "Cases",      "url": "/cases",     "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }] },
+    { "name": "Contato",    "url": "/contato",   "icons": [{ "src": "/favicon-32x32.png", "sizes": "32x32" }] }
+  ]
+}
