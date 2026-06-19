@@ -33,6 +33,7 @@ export async function getStaticPaths() {
               keywords: p.entry.keywords ?? [],
               aboutTopics: p.entry.aboutTopics ?? [],
               faqItems: p.entry.faqItems ?? [],
+              category: (p.entry as any).category ?? 'geral',
             },
             source: 'cms',
           },
@@ -178,7 +179,19 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   articleAuthor={post.author}
   articlePublishedTime={dateISO}
   articleModifiedTime={dateISO}
-  articleSection="Marketing e Comunicação"
+  articleSection={post.category ? (() => {
+    const cats: Record<string, string> = {
+      'assessoria-de-imprensa': 'Assessoria de Imprensa',
+      'marketing-de-autoridade': 'Marketing de Autoridade',
+      'branding-estrategico': 'Branding Estratégico',
+      'marketing-digital': 'Marketing Digital',
+      'comunicacao': 'Comunicação',
+      'marca-pessoal': 'Marca Pessoal',
+      'negocios': 'Negócios',
+      'geral': 'Marketing e Comunicação',
+    };
+    return cats[post.category] ?? 'Marketing e Comunicação';
+  })() : 'Marketing e Comunicação'}
   keywords={keywordsString}
   schema={schemas}
 >

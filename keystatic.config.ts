@@ -188,6 +188,22 @@ export default config({
           description: 'Recomendado: 1200 × 630 px',
         }),
 
+        category: fields.select({
+          label: 'Categoria',
+          description: 'Categoria principal do post (usada para SEO e filtros)',
+          options: [
+            { label: 'Assessoria de Imprensa', value: 'assessoria-de-imprensa' },
+            { label: 'Marketing de Autoridade', value: 'marketing-de-autoridade' },
+            { label: 'Branding Estratégico', value: 'branding-estrategico' },
+            { label: 'Marketing Digital', value: 'marketing-digital' },
+            { label: 'Comunicação', value: 'comunicacao' },
+            { label: 'Marca Pessoal', value: 'marca-pessoal' },
+            { label: 'Negócios', value: 'negocios' },
+            { label: 'Geral', value: 'geral' },
+          ],
+          defaultValue: 'geral',
+        }),
+
         keywords: fields.array(
           fields.text({ label: 'Palavra-chave' }),
           {

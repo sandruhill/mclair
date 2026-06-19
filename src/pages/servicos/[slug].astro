@@ -39,6 +39,39 @@ const { s, others } = Astro.props;
 <Layout
   title={`${s.title} — Mclair | Agência de Comunicação Estratégica`}
   description={s.description}
+  keywords={`${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`}
+  schema={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      '@id': `https://mclair.vercel.app/servicos/${s.slug}#service`,
+      name: s.title,
+      description: s.description || s.intro || s.headline,
+      provider: { '@id': 'https://mclair.vercel.app/#organization' },
+      url: `https://mclair.vercel.app/servicos/${s.slug}`,
+      areaServed: { '@type': 'Country', name: 'Brasil' },
+      inLanguage: 'pt-BR',
+      ...(s.items?.length ? {
+        hasOfferCatalog: {
+          '@type': 'OfferCatalog',
+          name: `O que inclui — ${s.title}`,
+          itemListElement: s.items.map((item: string, i: number) => ({
+            '@type': 'ListItem', position: i + 1,
+            item: { '@type': 'Offer', itemOffered: { '@type': 'Service', name: item } },
+          })),
+        },
+      } : {}),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.vercel.app' },
+        { '@type': 'ListItem', position: 2, name: 'Serviços', item: 'https://mclair.vercel.app/servicos' },
+        { '@type': 'ListItem', position: 3, name: s.title, item: `https://mclair.vercel.app/servicos/${s.slug}` },
+      ],
+    },
+  ]}
 >
 
 <!-- HERO -->

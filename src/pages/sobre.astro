@@ -16,6 +16,37 @@ const timeline = (sobreData?.timeline ?? []) as any[];
 <Layout
   title="Sobre a Mclair — Comunicação Estratégica desde 2017"
   description="Agência fundada em 2017 por Kelly Pinheiro. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia e 1.734 publicações internacionais."
+  ogImage="https://mclair.vercel.app/sobre/equipe-mclair-comunicacao-estrategica.jpg"
+  keywords="agência comunicação estratégica, marketing de autoridade São Paulo, assessoria de imprensa, Kelly Pinheiro, Mclair agência, história Mclair, equipe Mclair, agência 2017"
+  schema={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'AboutPage',
+      '@id': 'https://mclair.vercel.app/sobre#page',
+      name: 'Sobre a Mclair — Comunicação Estratégica desde 2017',
+      description: 'Conheça a Mclair: fundada em 2017 por Kelly Pinheiro, especializada em Comunicação Estratégica e Marketing de Autoridade. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia.',
+      url: 'https://mclair.vercel.app/sobre',
+      mainEntity: { '@id': 'https://mclair.vercel.app/#organization' },
+      breadcrumb: {
+        '@type': 'BreadcrumbList',
+        itemListElement: [
+          { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.vercel.app' },
+          { '@type': 'ListItem', position: 2, name: 'Sobre', item: 'https://mclair.vercel.app/sobre' },
+        ],
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      '@id': 'https://mclair.vercel.app/sobre#kelly',
+      name: 'Kelly Pinheiro',
+      jobTitle: 'Fundadora & CEO',
+      worksFor: { '@id': 'https://mclair.vercel.app/#organization' },
+      description: 'Fundadora e CEO da Mclair. Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência.',
+      sameAs: ['https://instagram.com/mclair.com.br', 'https://linkedin.com/company/mclair-comunicacao'],
+      knowsAbout: ['Marketing de Autoridade', 'Comunicação Estratégica', 'Assessoria de Imprensa', 'Branding', 'Marca Pessoal'],
+    },
+  ]}
 >
 
 <!-- HERO -->
