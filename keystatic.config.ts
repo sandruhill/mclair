@@ -279,6 +279,12 @@ export default config({
           fields.text({ label: 'Item' }),
           { label: 'O que inclui', itemLabel: (p) => p.value }
         ),
+        image: fields.image({
+          label: 'Imagem de destaque',
+          description: 'Arraste ou clique. Aparece no hero da página do serviço. Recomendado: 1200 × 800 px.',
+          directory: 'public/servicos-img',
+          publicPath: '/servicos-img/',
+        }),
         cta: fields.text({ label: 'Texto do botão CTA' }),
         metaDescription: fields.text({
           label: 'Meta Descrição SEO (até 160 caracteres)',
@@ -312,11 +318,26 @@ export default config({
           fields.text({ label: 'Tag' }),
           { label: 'Tags', itemLabel: (p) => p.value }
         ),
-        img: fields.text({ label: 'Imagem principal (caminho /cases-img/...)' }),
-        logo: fields.url({ label: 'Logo do cliente (URL)' }),
+        img: fields.image({
+          label: 'Imagem principal',
+          description: 'Arraste ou clique para enviar. Recomendado: 1200 × 630 px.',
+          directory: 'public/cases-img',
+          publicPath: '/cases-img/',
+        }),
+        logo: fields.image({
+          label: 'Logo do cliente',
+          description: 'Arraste ou clique. Formatos: PNG, SVG, WebP.',
+          directory: 'public/cases-img/logos',
+          publicPath: '/cases-img/logos/',
+        }),
         gallery: fields.array(
           fields.object({
-            src: fields.text({ label: 'Caminho da imagem' }),
+            src: fields.image({
+              label: 'Foto',
+              description: 'Arraste ou clique.',
+              directory: 'public/cases-img',
+              publicPath: '/cases-img/',
+            }),
             caption: fields.text({ label: 'Legenda' }),
           }),
           { label: 'Galeria', itemLabel: (p) => p.fields.caption.value }

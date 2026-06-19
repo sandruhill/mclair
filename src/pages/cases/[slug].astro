@@ -24,6 +24,8 @@ export async function getStaticPaths() {
       results:     (c.entry.results ?? []) as { v: string; l: string }[],
       tags:        (c.entry.tags ?? []) as string[],
       description: c.entry.metaDescription ?? '',
+      heroImg:     c.entry.img ?? '',
+      logo:        c.entry.logo ?? '',
       gallery:     (c.entry.gallery ?? []) as { src: string; caption: string }[],
     }));
 
