@@ -34,7 +34,7 @@ export default config({
             n: fields.text({ label: 'Número' }),
             s: fields.text({ label: 'Sufixo', defaultValue: '+' }),
             label: fields.text({ label: 'Rótulo' }),
-          }),
+          }, { layout: [3, 3, 6] }),
           { label: 'Estatísticas do Hero', itemLabel: (p) => p.fields.label.value }
         ),
         testimonials: fields.array(
@@ -43,7 +43,7 @@ export default config({
             name: fields.text({ label: 'Nome' }),
             role: fields.text({ label: 'Cargo / Empresa' }),
             photo: fields.url({ label: 'Foto (URL)' }),
-          }),
+          }, { layout: [12, 6, 6, 12] }),
           { label: 'Depoimentos', itemLabel: (p) => p.fields.name.value }
         ),
       },
@@ -114,7 +114,7 @@ export default config({
           fields.object({
             q: fields.text({ label: 'Pergunta' }),
             a: fields.text({ label: 'Resposta', multiline: true }),
-          }),
+          }, { layout: [6, 6] }),
           { label: 'FAQs', itemLabel: (p) => p.fields.q.value }
         ),
       },
@@ -151,6 +151,7 @@ export default config({
       slugField: 'title',
       path: 'src/content/blog/*',
       format: { contentField: 'content' },
+      entryLayout: 'content',
       schema: {
         title: fields.slug({
           name: {
@@ -195,6 +196,11 @@ export default config({
           description: 'Deixe em branco para novos posts. Use o campo acima para enviar fotos.',
         }),
 
+        heroVideo: fields.url({
+          label: 'Vídeo do hero (substitui a imagem)',
+          description: 'Cole a URL do YouTube ou Vimeo. Se preenchido, exibe o vídeo no lugar da imagem de destaque.',
+        }),
+
         category: fields.select({
           label: 'Categoria',
           description: 'Categoria principal do post (usada para SEO e filtros)',
@@ -234,7 +240,7 @@ export default config({
           fields.object({
             question: fields.text({ label: 'Pergunta' }),
             answer: fields.text({ label: 'Resposta', multiline: true }),
-          }),
+          }, { layout: [6, 6] }),
           {
             label: 'FAQ — Featured Snippets',
             description:
@@ -311,7 +317,7 @@ export default config({
           fields.object({
             v: fields.text({ label: 'Valor (ex: 11.600+)' }),
             l: fields.text({ label: 'Rótulo' }),
-          }),
+          }, { layout: [4, 8] }),
           { label: 'Resultados', itemLabel: (p) => `${p.fields.v.value} — ${p.fields.l.value}` }
         ),
         tags: fields.array(
@@ -339,7 +345,7 @@ export default config({
               publicPath: '/cases-img/',
             }),
             caption: fields.text({ label: 'Legenda' }),
-          }),
+          }, { layout: [6, 6] }),
           { label: 'Galeria', itemLabel: (p) => p.fields.caption.value }
         ),
         homeResult: fields.text({
