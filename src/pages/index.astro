@@ -1,38 +1,38 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 
-const services = [
-  { num:'01', title:'Marketing de Autoridade', desc:'Posicionamos sua marca como líder reconhecida no mercado. Construímos sua autoridade através de estratégias de conteúdo, presença digital e comunicação estratégica.', color:'var(--red)', href:'/servicos/marketing-de-autoridade' },
-  { num:'02', title:'Assessoria de Imprensa', desc:'Construímos e gerenciamos sua presença editorial nos veículos que importam. Do release ao relacionamento com jornalistas, garantimos cobertura que gera credibilidade real.', color:'var(--teal)', href:'/servicos/assessoria-de-imprensa' },
-  { num:'03', title:'Branding Estratégico', desc:'Criamos e revitalizamos marcas com propósito e coerência. Da estratégia à identidade visual, desenvolvemos marcas que ficam na memória e se destacam no mercado.', color:'var(--orange)', href:'/servicos/branding-estrategico' },
-  { num:'04', title:'Marketing Digital', desc:'Estratégias integradas de SEO, conteúdo estratégico, gestão de mídias sociais, ads e automação para gerar leads qualificados e resultados mensuráveis.', color:'var(--red)', href:'/servicos/marketing-digital' },
-  { num:'05', title:'Consultoria em Comunicação', desc:'Diagnóstico preciso e planejamento personalizado. Avaliamos sua situação, identificamos oportunidades e desenvolvemos planos estratégicos focados em resultados duradouros.', color:'var(--teal)', href:'/servicos/consultoria-em-comunicacao' },
-  { num:'06', title:'Mentorias Exclusivas', desc:'Programas Bolder e Bolder Press: mentorias de imersão para profissionais que querem consolidar sua marca pessoal e dominar a Assessoria de Imprensa Estratégica.', color:'var(--orange)', href:'/servicos/mentorias-exclusivas' },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
 
-const cases = [
-  { client:'Claudia Elisa', sector:'Marca Pessoal', result:'+3 marcas construídas, autoridade consolidada em liderança', accent:'#C8102E', slug:'claudia-elisa' },
-  { client:'Fidalgo Leilões', sector:'Assessoria de Imprensa', result:'+11.600 inserções na mídia nacional e regional', accent:'#1B8A76', slug:'fidalgo' },
-  { client:'BMS / ABIMAQ', sector:'Visibilidade Internacional', result:'+2.000 inserções — 1.734 na imprensa internacional', accent:'#D4611B', slug:'bms-abimaq' },
-  { client:'Alexandre Magno', sector:'Gestão de Crise & PR', result:'Comunicação da aquisição Emergee/Itaú e lançamento The Cynefin Co.', accent:'#C8102E', slug:'alexandre-magno' },
-  { client:'Elemar Jr.', sector:'Branding & Presença Digital', result:'Da operação individual à consultoria estruturada — EximiaCo', accent:'#1B8A76', slug:'elemar-jr' },
-];
+const hp = await reader.singletons.homepage.read().catch(() => null);
+const stats  = (hp?.stats ?? []);
+const testimonials = (hp?.testimonials ?? []);
 
-const stats = [
-  { n:8, s:'+', label:'Anos de mercado' },
-  { n:200, s:'+', label:'Clientes atendidos' },
-  { n:11600, s:'+', label:'Inserções na mídia' },
-  { n:1734, s:'+', label:'Publicações internacionais' },
-];
+const allServicos = await reader.collections.servicos.all().catch(() => []);
+const services = (allServicos as any[])
+  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .map(s => ({
+    num:   s.entry.num ?? '',
+    title: s.entry.title.name,
+    desc:  s.entry.homeDesc || s.entry.intro || '',
+    color: s.entry.color || 'var(--red)',
+    href:  `/servicos/${s.slug}`,
+  }));
 
-const testimonials = [
-  { quote:'Para administradores que têm o desafio de gerir os recursos de forma mais eficiente possível, encontrar uma empresa que entrega mais do que o acordado é o caminho do sucesso. Pessoas de alta competência e interesse no nosso negócio.', name:'Rogério Carvalho', role:'CEO, Automatiza Sistemas', photo:'https://mclair.com.br/images/galeria/26-02-2020_5_1fa80566e63cd0930a41c408a044b79b.jpg' },
-  { quote:'A experiência com a MClair deu grande visibilidade ao meu trabalho. Em pouco tempo surgiram diversos convites para escrever artigos e participar de entrevistas, o que aumentou muito minha valorização e segurança profissional.', name:'Fabiana Carvalho Vinke', role:'Fundadora, Zoom Mind', photo:'https://mclair.com.br/images/galeria/26-02-2020_5_fcbf8c0777f942b2961a5675026d5759.jpg' },
-  { quote:'A equipe da MClair tem um talento ímpar para definir estratégias de comunicação assertivas e explicitar o posicionamento de empresas, impactando positivamente na capacidade de gerar resultados percebidos.', name:'Elemar Jr.', role:'CEO, EximiaCo', photo:'https://mclair.com.br/images/galeria/26-05-2020_5_d9e1215f43a9a75024512370f3cea093.jpg' },
-  { quote:'É um prazer trabalhar com o time Mclair, sempre enérgicos e com uma capacidade fantástica de produzir estratégia de comunicação. O resultado desta parceria está transformando a maneira como a Guiando relaciona-se com seus clientes com impacto direto em nossos negócios.', name:'Eduardo Camargo', role:'Sócio & Head of Growth, Guiando', photo:'https://mclair.com.br/images/galeria/25-01-2021_5_ecf44731ffd9b0e4189b1181f4ae829f.png' },
-  { quote:'O que diferencia a Mclair é sua intensa capacidade de pensar o estratégico já conectado com a fluidez da execução. O segredo para isso está em fazer as perguntas certas para obter as respostas que precisam. A Mclair é o ponto de inflexão rumo ao sucesso de qualquer negócio.', name:'Denis Zanini', role:'CEO, Ynusitado', photo:'https://mclair.com.br/images/galeria/26-01-2021_1_e7408324dd0280fffa43e88331fee076.png' },
-];
+const allCases = await reader.collections.cases.all().catch(() => []);
+const cases = (allCases as any[])
+  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .slice(0, 5)
+  .map(c => ({
+    client: c.entry.client.name,
+    sector: c.entry.sector ?? '',
+    result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
+    accent: c.entry.accent || '#C8102E',
+    slug:   c.slug,
+  }));
 ---
 
 <Layout

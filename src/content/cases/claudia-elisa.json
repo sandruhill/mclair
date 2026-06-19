@@ -1,0 +1,48 @@
+{
+  "client": "Claudia Elisa",
+  "num": "01",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "sector": "Marca Pessoal & Marketing de Autoridade",
+  "challenge": "Com mais de 30 anos de experiência, Claudia Elisa buscava consolidar sua Marca Pessoal e ampliar sua reputação como referência absoluta no mercado de liderança e comunicação. O desafio: criar uma Comunicação Estratégica coesa e impactante em diversas plataformas simultaneamente, sem perder a essência e autenticidade da sua trajetória.",
+  "solution": "Desenvolvemos um projeto completo de Branding Estratégico, incluindo a construção das marcas \"Claudia Elisa\", \"Liderança em Pauta\" e \"Mentoria Sharp\". Implementamos comunicação multiplataforma robusta com Assessoria de Imprensa, Gestão de Mídias Sociais e Criação de Conteúdo Estratégico, garantindo consistência visual e narrativa em todos os pontos de contato.",
+  "results": [
+    {
+      "v": "3",
+      "l": "Marcas construídas e lançadas"
+    },
+    {
+      "v": "5+",
+      "l": "Plataformas com presença ativa"
+    },
+    {
+      "v": "Top",
+      "l": "Autoridade consolidada no segmento"
+    }
+  ],
+  "tags": [
+    "Branding",
+    "Marca Pessoal",
+    "Assessoria de Imprensa",
+    "Social Media",
+    "Marketing de Autoridade"
+  ],
+  "img": "/cases-img/claudia-elisa.jpg",
+  "logo": "https://mclair.com.br/images/galeria/25-01-2021_1_495c6167ed709eba2b282411b6ab37bd.png",
+  "gallery": [
+    {
+      "src": "/cases-img/claudia-elisa-logos.jpg",
+      "caption": "Três marcas criadas: Claudia Elisa, Liderança em Pauta e Mentoria Sharp"
+    },
+    {
+      "src": "/cases-img/claudia-elisa.jpg",
+      "caption": "Identidade visual e materiais de marca Mentoria Sharp"
+    },
+    {
+      "src": "/cases-img/claudia-elisa-social.jpg",
+      "caption": "Presença digital multiplataforma e cobertura na imprensa"
+    }
+  ],
+  "homeResult": "+3 marcas construídas, autoridade consolidada em liderança",
+  "metaDescription": "Como a Mclair ajudou Claudia Elisa a construir três marcas e consolidar autoridade de mercado em liderança e comunicação."
+}

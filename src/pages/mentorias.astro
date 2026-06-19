@@ -1,20 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
 const WA_BOLDER = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder.%20Pode%20me%20contar%20mais%3F';
 const WA_PRESS  = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder%20Press.%20Pode%20me%20contar%20mais%3F';
 
-const bolderLevels = [
-  { n:'01', title:'Fundamentos', desc:'Deep dive no seu conhecimento, identificação do diferencial competitivo e definição do seu posicionamento único no mercado.' },
-  { n:'02', title:'Estratégia', desc:'Desenvolvimento da sua narrativa pessoal, criação da esteira de produtos e estruturação do seu pitch perfeito para o público certo.' },
-  { n:'03', title:'Implementação', desc:'Ativação do plano estratégico, produção de conteúdo de autoridade e mensuração de resultados com indicadores reais.' },
-];
-
-const bolderPressLevels = [
-  { n:'01', title:'Fundamentos Estratégicos', desc:'DNA da Assessoria Moderna, mapeamento de mídia e construção de relacionamentos estratégicos com a imprensa.' },
-  { n:'02', title:'Produção de Pautas', desc:'Criação de Pautas Irresistíveis e técnicas avançadas de storytelling para assessoria de imprensa de alto impacto.' },
-  { n:'03', title:'Estratégia e Relacionamento', desc:'Planejamento estratégico de comunicação integrada e gestão de crise com protocolos profissionais.' },
-  { n:'04', title:'Resultados e Inovação', desc:'Mensuração e ROI em Assessoria. Tendências da Assessoria 4.0 incluindo uso de IA e tecnologia em PR.' },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const mentoriasData = await reader.singletons.mentorias.read().catch(() => null);
+const bolderLevels     = (mentoriasData?.bolderLevels      ?? []) as any[];
+const bolderPressLevels = (mentoriasData?.bolderPressLevels ?? []) as any[];
 ---
 
 <Layout

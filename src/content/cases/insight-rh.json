@@ -1,0 +1,39 @@
+{
+  "client": "Insight RH",
+  "num": "06",
+  "color": "var(--orange)",
+  "accent": "#D4611B",
+  "sector": "Rebranding, Digital & Naming",
+  "challenge": "A Insight RH, consultoria especializada em desenvolvimento de lideranças e gestão de pessoas, precisava profissionalizar e estruturar uma área de marketing e comunicação que ainda não existia de forma organizada — transformando a presença de marca de maneira consistente e escalável.",
+  "solution": "Conduzimos a transformação digital completa: rebranding da marca, criação de canais de comunicação (redes sociais e site institucional), desenvolvimento de landing page com teste interativo de maturidade de liderança, naming e estruturação do Insight LAB (escola de liderança), construção da esteira de produtos com trilhas segmentadas por nível de desenvolvimento, e estruturação de parceria corporativa com o Ibiti Projeto.",
+  "results": [
+    {
+      "v": "360°",
+      "l": "Transformação digital realizada"
+    },
+    {
+      "v": "Insight LAB",
+      "l": "Escola de liderança nomeada e estruturada"
+    },
+    {
+      "v": "Multi",
+      "l": "Esteira de produtos com trilhas segmentadas"
+    }
+  ],
+  "tags": [
+    "Rebranding",
+    "Naming",
+    "Marketing Digital",
+    "Branding Estratégico",
+    "Comunicação Corporativa"
+  ],
+  "img": "/cases-img/insight-rh.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/insight-rh.jpg",
+      "caption": "Transformação digital: site institucional, landing page interativa e presença em redes sociais"
+    }
+  ],
+  "homeResult": "Transformação digital completa — rebranding, site e escola de liderança",
+  "metaDescription": "Como a Mclair transformou digitalmente a Insight RH — criando marca, canais, landing page interativa e escola de liderança do zero."
+}

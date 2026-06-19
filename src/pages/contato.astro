@@ -1,25 +1,15 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20consultoria.';
 
-const faqs = [
-  {
-    q:'O que é Marketing de Autoridade e como a Mclair aplica?',
-    a:'Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca.',
-  },
-  {
-    q:'Qual a diferença entre uma agência de marketing comum e a Mclair?',
-    a:'Enquanto o termo "360º" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros.',
-  },
-  {
-    q:'Como a Mclair mede os resultados em comunicação?',
-    a:'Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa.',
-  },
-  {
-    q:'Como solicitar uma proposta de Comunicação Estratégica?',
-    a:'É simples! Preencha o formulário abaixo, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução.',
-  },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const contatoData = await reader.singletons.contato.read().catch(() => null);
+const faqs    = (contatoData?.faqs  ?? []) as any[];
+const phone   = contatoData?.phone ?? '(11) 98860-0372';
+const email   = contatoData?.email ?? 'kelly@mclair.com.br';
 
 const servicos = [
   'Marketing de Autoridade','Assessoria de Imprensa','Branding Estratégico',
@@ -33,28 +23,11 @@ const servicos = [
   schema={{
     '@context': 'https://schema.org',
     '@type': 'FAQPage',
-    mainEntity: [
-      {
-        '@type': 'Question',
-        name: 'O que é Marketing de Autoridade e como a Mclair aplica?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Marketing de Autoridade é a estratégia para posicionar sua marca como referência reconhecida no seu nicho. Na Mclair, desenvolvemos estratégias personalizadas — incluindo criação de conteúdo estratégico, mentoria em posicionamento digital e assessoria de imprensa — para construir e solidificar sua autoridade e reputação de marca.' },
-      },
-      {
-        '@type': 'Question',
-        name: 'Qual a diferença entre uma agência de marketing comum e a Mclair?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Enquanto o termo "360º" indica amplitude, nosso diferencial é a profundidade na união entre Comunicação Estratégica e Marketing de Autoridade. Não trabalhamos para que sua marca apenas apareça — trabalhamos para que ela seja a Referência reconhecida no seu setor, com resultados duradouros.' },
-      },
-      {
-        '@type': 'Question',
-        name: 'Como a Mclair mede os resultados em comunicação?',
-        acceptedAnswer: { '@type': 'Answer', text: 'Nosso foco é em resultados estratégicos e mensuráveis. Utilizamos dados, KPIs e ferramentas de análise para monitorar o progresso e o impacto das nossas ações de Comunicação Estratégica, sempre alinhados aos seus objetivos de negócio e com relatórios claros em cada etapa.' },
-      },
-      {
-        '@type': 'Question',
-        name: 'Como solicitar uma proposta de Comunicação Estratégica?',
-        acceptedAnswer: { '@type': 'Answer', text: 'É simples! Preencha o formulário, ligue para (11) 98860-0372 ou envie uma mensagem via WhatsApp. Nossa equipe entra em contato em até 24 horas úteis para entender seus objetivos e propor a melhor solução.' },
-      },
-    ],
+    mainEntity: faqs.map((f: any) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
   }}
 >
 

@@ -1,0 +1,39 @@
+{
+  "client": "Zbra",
+  "num": "09",
+  "color": "var(--orange)",
+  "accent": "#D4611B",
+  "sector": "Rebranding + Assessoria + Social Media",
+  "challenge": "Adequar toda a comunicação da Zbra ao seu novo posicionamento após um processo de rebranding, alinhando a narrativa de marca, a presença digital e o relacionamento com a imprensa à nova identidade visual e ao novo posicionamento estratégico da empresa no mercado tech.",
+  "solution": "Realizamos benchmarking aprofundado e estudo de público e segmento para embasar a estratégia. Estruturamos a gestão de Redes Sociais alinhada à nova marca e iniciamos o diálogo da Zbra e de seus porta-vozes com o mercado e a comunidade tech por meio de Assessoria de Imprensa estratégica.",
+  "results": [
+    {
+      "v": "Novo",
+      "l": "Posicionamento comunicado com clareza"
+    },
+    {
+      "v": "Tech",
+      "l": "Presença ativa na comunidade"
+    },
+    {
+      "v": "360°",
+      "l": "Comunicação alinhada ao rebranding"
+    }
+  ],
+  "tags": [
+    "Rebranding",
+    "Social Media",
+    "Assessoria de Imprensa",
+    "Comunicação Digital",
+    "Tecnologia"
+  ],
+  "img": "/cases-img/zbra.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/zbra.jpg",
+      "caption": "Rebranding Zbra: social media, assessoria de imprensa e posicionamento integrados ao novo visual"
+    }
+  ],
+  "homeResult": "Comunicação 360° alinhada ao rebranding — presença na comunidade tech",
+  "metaDescription": "Como a Mclair alinhou toda a comunicação da Zbra após seu rebranding — redes sociais, imprensa e posicionamento integrados."
+}

@@ -1,0 +1,39 @@
+{
+  "client": "Alexandre Magno",
+  "num": "04",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "sector": "Gestão de Crise, PR & Marca Pessoal",
+  "challenge": "Gerir a comunicação desafiadora e sensível da aquisição da Emergee pelo Banco Itaú e, posteriormente, consolidar a Marca Pessoal de Alexandre como consultor de transformação organizacional de alto nível no Brasil, criando autoridade e reputação em um nicho muito especializado.",
+  "solution": "Assessoria de Imprensa estratégica para a aquisição com foco em gestão de narrativa e proteção de reputação, Marketing de Autoridade intensivo para a marca pessoal e lançamento estratégico da The Cynefin Co. Brazil — referência em gestão de complexidade organizacional no país.",
+  "results": [
+    {
+      "v": "100%",
+      "l": "Comunicação de crise gerenciada com sucesso"
+    },
+    {
+      "v": "C-Level",
+      "l": "Posicionamento conquistado no mercado"
+    },
+    {
+      "v": "Nacional",
+      "l": "Cobertura do lançamento Cynefin"
+    }
+  ],
+  "tags": [
+    "Gestão de Crise",
+    "Marca Pessoal",
+    "Marketing de Autoridade",
+    "PR Estratégico",
+    "Lançamento de Marca"
+  ],
+  "img": "/cases-img/alexandre-magno.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/alexandre-magno.jpg",
+      "caption": "Alexandre Magno em destaque nos principais veículos nacionais e no lançamento da The Cynefin Co. Brazil"
+    }
+  ],
+  "homeResult": "Comunicação da aquisição Emergee/Itaú e lançamento The Cynefin Co.",
+  "metaDescription": "Gestão de crise na aquisição da Emergee pelo Itaú e construção de autoridade pessoal para Alexandre Magno."
+}

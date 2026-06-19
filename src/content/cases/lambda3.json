@@ -1,0 +1,39 @@
+{
+  "client": "Lambda3",
+  "num": "08",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "sector": "Assessoria de Imprensa & Comunicação Digital",
+  "challenge": "Posicionar a Lambda3 como parceiro estratégico de referência para empresas que tomam decisões baseadas em tecnologia e dados, ampliando a visibilidade e o reconhecimento da empresa na comunidade tech brasileira ao longo de uma parceria de longo prazo.",
+  "solution": "Por cinco anos, atuamos como braço estratégico de comunicação da Lambda3. Desde 2018, desenvolvemos Assessoria de Imprensa consistente e Comunicação Digital integrada, com produção de infoprodutos, posicionando a empresa como parceiro estratégico de referência para a tomada de decisão baseada em tecnologia e dados.",
+  "results": [
+    {
+      "v": "5 anos",
+      "l": "Parceria estratégica contínua"
+    },
+    {
+      "v": "2018+",
+      "l": "Assessoria e comunicação digital"
+    },
+    {
+      "v": "Tech",
+      "l": "Referência consolidada na comunidade"
+    }
+  ],
+  "tags": [
+    "Assessoria de Imprensa",
+    "Comunicação Digital",
+    "Infoprodutos",
+    "Tecnologia",
+    "B2B"
+  ],
+  "img": "/cases-img/lambda3.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/lambda3.jpg",
+      "caption": "Cinco anos de parceria — eventos, infoprodutos, assessoria e comunicação digital integrada"
+    }
+  ],
+  "homeResult": "5 anos de parceria — referência consolidada em tecnologia e dados",
+  "metaDescription": "Cinco anos de parceria estratégica posicionando a Lambda3 como referência em tecnologia e dados no Brasil."
+}

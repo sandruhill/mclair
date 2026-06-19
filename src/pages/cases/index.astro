@@ -1,109 +1,45 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20saber%20mais%20sobre%20os%20cases.';
 
-const cases = [
-  {
-    num:'01', color:'var(--red)', accent:'#C8102E', slug:'claudia-elisa',
-    img:'/cases-img/claudia-elisa.jpg',
-    logo:'https://mclair.com.br/images/galeria/25-01-2021_1_495c6167ed709eba2b282411b6ab37bd.png',
-    client:'Claudia Elisa',
-    sector:'Marca Pessoal & Marketing de Autoridade',
-    challenge:'Com mais de 30 anos de experiência, Claudia Elisa buscava consolidar sua Marca Pessoal e ampliar sua reputação como referência. O desafio: criar uma Comunicação Estratégica coesa e impactante em diversas plataformas simultaneamente.',
-    solution:'Desenvolvemos um projeto completo de Branding Estratégico, incluindo a construção das marcas "Claudia Elisa", "Liderança em Pauta" e "Mentoria Sharp". Implementamos comunicação multiplataforma robusta com Assessoria de Imprensa, Gestão de Mídias Sociais e Criação de Conteúdo Estratégico.',
-    results:[ { v:'3', l:'Marcas construídas' }, { v:'5+', l:'Plataformas ativas' }, { v:'Top', l:'Autoridade no segmento' } ],
-    tags:['Branding', 'Marca Pessoal', 'Assessoria de Imprensa', 'Social Media'],
-  },
-  {
-    num:'02', color:'var(--teal)', accent:'#1B8A76', slug:'fidalgo',
-    img:'/cases-img/fidalgo.jpg',
-    client:'Fidalgo Leilões',
-    sector:'Assessoria de Imprensa — Resultados Expressivos',
-    challenge:'Divulgação de leilões estratégicos (Caixa Econômica Federal, Justiça Federal, Correios) com necessidade de grande repercussão na mídia nacional e regional em prazos curtos e assertivos.',
-    solution:'Assessoria de Imprensa Estratégica com foco em geração de cobertura de alto alcance. Desenvolvimento de releases impactantes, relacionamento ativo com redações e posicionamento estratégico nos principais veículos do Brasil.',
-    results:[ { v:'11.600+', l:'Inserções na mídia' }, { v:'Nacional', l:'Cobertura geográfica' }, { v:'Top 3', l:'Veículos alcançados' } ],
-    tags:['Assessoria de Imprensa', 'Relações com Mídia', 'Release Estratégico'],
-  },
-  {
-    num:'03', color:'var(--orange)', accent:'#D4611B', slug:'alexandre-magno',
-    img:'/cases-img/alexandre-magno.jpg',
-    client:'Alexandre Magno',
-    sector:'Gestão de Crise, PR & Marca Pessoal',
-    challenge:'Gerir a comunicação desafiadora da aquisição da Emergee pelo Banco Itaú e, posteriormente, consolidar a Marca Pessoal de Alexandre como consultor de transformação organizacional de alto nível no Brasil.',
-    solution:'Assessoria de Imprensa estratégica para a aquisição, foco em Marketing de Autoridade para a marca pessoal e lançamento estratégico da The Cynefin Co. Brazil, referência em gestão de complexidade organizacional.',
-    results:[ { v:'100%', l:'Comunicação de crise gerenciada' }, { v:'C-Level', l:'Posicionamento conquistado' }, { v:'Nacional', l:'Cobertura do lançamento' } ],
-    tags:['Gestão de Crise', 'Marca Pessoal', 'Marketing de Autoridade', 'PR'],
-  },
-  {
-    num:'04', color:'var(--red)', accent:'#C8102E', slug:'elemar-jr',
-    img:'/cases-img/elemar-jr.jpg',
-    logo:'https://mclair.com.br/images/galeria/25-01-2021_1_7078d0276d91a9b37ffc6b0eac8a9d54.png',
-    client:'Elemar Jr. — EximiaCo',
-    sector:'Branding Estratégico & Presença Digital',
-    challenge:'Evoluir de uma operação individual para uma consultoria estruturada e reconhecida em arquitetura de software, com posicionamento claro e autoridade estabelecida no mercado de tecnologia brasileiro.',
-    solution:'Branding Estratégico completo para a marca EximiaCo, Estratégia e Gestão de Presença Digital, Assessoria de Imprensa Estratégica e Criação de Conteúdo de Autoridade para o segmento de tecnologia.',
-    results:[ { v:'EximiaCo', l:'Marca estruturada e lançada' }, { v:'Integrado', l:'Ecossistema de comunicação' }, { v:'Referência', l:'Posicionamento em TI' } ],
-    tags:['Branding', 'Presença Digital', 'Assessoria de Imprensa', 'Tecnologia'],
-  },
-  {
-    num:'05', color:'var(--teal)', accent:'#1B8A76', slug:'bms-abimaq',
-    img:'/cases-img/bms-abimaq.jpg',
-    client:'BMS / ABIMAQ + ApexBrasil',
-    sector:'Visibilidade Internacional',
-    challenge:'Fortalecer a presença internacional do projeto Brazil Machinery Solutions — parceria estratégica entre ABIMAQ e ApexBrasil para promoção das exportações do setor de máquinas e equipamentos industriais.',
-    solution:'Assessoria de Imprensa com foco em mídia internacional, relacionamento com correspondentes estrangeiros e jornalistas especializados em comércio internacional, produção de conteúdo bilíngue para mercados-alvo.',
-    results:[ { v:'2.000+', l:'Inserções totais na mídia' }, { v:'1.734', l:'Publicações internacionais' }, { v:'15+', l:'Países alcançados' } ],
-    tags:['Assessoria Internacional', 'B2B', 'Exportação', 'Mídia Global'],
-  },
-  {
-    num:'06', color:'var(--orange)', accent:'#D4611B', slug:'insight-rh',
-    img:'/cases-img/insight-rh.jpg',
-    client:'Insight RH',
-    sector:'Rebranding, Digital & Naming',
-    challenge:'A Insight RH precisava profissionalizar e estruturar toda a sua área de marketing e comunicação — transformando a presença de marca de maneira consistente e escalável em uma consultoria de desenvolvimento de lideranças.',
-    solution:'Transformação digital completa: rebranding, criação de canais (redes sociais e site), landing page com teste interativo de maturidade de liderança, naming e estruturação do Insight LAB (escola de liderança), esteira de produtos segmentada e parceria corporativa com o Ibiti Projeto.',
-    results:[ { v:'360°', l:'Transformação digital realizada' }, { v:'Insight LAB', l:'Escola de liderança estruturada' }, { v:'Multi', l:'Esteira de produtos criada' } ],
-    tags:['Rebranding', 'Naming', 'Marketing Digital', 'Branding Estratégico'],
-  },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const allCases = await reader.collections.cases.all().catch(() => []);
+const sorted = (allCases as any[])
+  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''));
 
-const compactCases = [
-  {
-    slug:'diego-nogare', accent:'#C8102E',
-    client:'Diego Nogare',
-    sector:'Assessoria de Imprensa — Dados & IA',
-    result:'Exame, CNN, HSM, Baguete e It Forum — autoridade em IA consolidada',
-    tags:['Assessoria de Imprensa', 'IA', 'Marca Pessoal'],
-  },
-  {
-    slug:'lambda3', accent:'#1B8A76',
-    client:'Lambda3',
-    sector:'Assessoria de Imprensa & Digital',
-    result:'5 anos como parceiro estratégico da comunidade tech brasileira',
-    tags:['Assessoria de Imprensa', 'Comunicação Digital', 'Tecnologia'],
-  },
-  {
-    slug:'zbra', accent:'#D4611B',
-    client:'Zbra',
-    sector:'Rebranding + Social + Assessoria',
-    result:'Comunicação alinhada ao novo posicionamento na comunidade tech',
-    tags:['Rebranding', 'Social Media', 'Assessoria de Imprensa'],
-  },
-  {
-    slug:'nexinvoice', accent:'#C8102E',
-    client:'Guiando / NexInvoice',
-    sector:'Naming, Branding & Mascote',
-    result:'NexInvoice e mascote Annie criados — marca adquirida pela Asaas',
-    tags:['Naming', 'Branding', 'Identidade Visual'],
-  },
-  {
-    slug:'silene-chiconini', accent:'#1B8A76',
-    client:'Silene Chiconini',
-    sector:'Marca Pessoal — Comunicação & Sustentabilidade',
-    result:'Identidade única na intersecção entre Comunicação e Sustentabilidade',
-    tags:['Marca Pessoal', 'Branding', 'Sustentabilidade'],
-  },
-];
+// First 6: full detailed cards; rest: compact cards
+const cases = sorted.slice(0, 6).map(c => ({
+  num:       c.entry.num ?? '',
+  color:     c.entry.color || 'var(--red)',
+  accent:    c.entry.accent || '#C8102E',
+  slug:      c.slug,
+  img:       c.entry.img ?? '',
+  logo:      c.entry.logo ?? '',
+  client:    c.entry.client.name,
+  sector:    c.entry.sector ?? '',
+  challenge: c.entry.challenge ?? '',
+  solution:  c.entry.solution ?? '',
+  results:   (c.entry.results ?? []) as { v: string; l: string }[],
+  tags:      (c.entry.tags ?? []) as string[],
+}));
+
+const compactCases = sorted.slice(6).map(c => ({
+  slug:   c.slug,
+  accent: c.entry.accent || '#C8102E',
+  client: c.entry.client.name,
+  sector: c.entry.sector ?? '',
+  result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
+  tags:   (c.entry.tags ?? []) as string[],
+}));
+
+const allCasesForSchema = sorted.map((c, i) => ({
+  position: i + 1,
+  name: `Case ${c.entry.client.name}`,
+  url: `https://mclair.vercel.app/cases/${c.slug}`,
+}));
 ---
 
 <Layout
@@ -115,19 +51,7 @@ const compactCases = [
     name: 'Cases de Sucesso — Mclair Comunicação Estratégica',
     description: 'Resultados reais em Marketing de Autoridade, Assessoria de Imprensa e Comunicação Estratégica.',
     url: 'https://mclair.vercel.app/cases',
-    itemListElement: [
-      { '@type': 'ListItem', position: 1, name: 'Case Claudia Elisa', url: 'https://mclair.vercel.app/cases/claudia-elisa' },
-      { '@type': 'ListItem', position: 2, name: 'Case Fidalgo Leilões', url: 'https://mclair.vercel.app/cases/fidalgo' },
-      { '@type': 'ListItem', position: 3, name: 'Case Alexandre Magno', url: 'https://mclair.vercel.app/cases/alexandre-magno' },
-      { '@type': 'ListItem', position: 4, name: 'Case Elemar Jr. — EximiaCo', url: 'https://mclair.vercel.app/cases/elemar-jr' },
-      { '@type': 'ListItem', position: 5, name: 'Case BMS / ABIMAQ', url: 'https://mclair.vercel.app/cases/bms-abimaq' },
-      { '@type': 'ListItem', position: 6, name: 'Case Insight RH', url: 'https://mclair.vercel.app/cases/insight-rh' },
-      { '@type': 'ListItem', position: 7, name: 'Case Diego Nogare', url: 'https://mclair.vercel.app/cases/diego-nogare' },
-      { '@type': 'ListItem', position: 8, name: 'Case Lambda3', url: 'https://mclair.vercel.app/cases/lambda3' },
-      { '@type': 'ListItem', position: 9, name: 'Case Zbra', url: 'https://mclair.vercel.app/cases/zbra' },
-      { '@type': 'ListItem', position: 10, name: 'Case Guiando / NexInvoice', url: 'https://mclair.vercel.app/cases/nexinvoice' },
-      { '@type': 'ListItem', position: 11, name: 'Case Silene Chiconini', url: 'https://mclair.vercel.app/cases/silene-chiconini' },
-    ],
+    itemListElement: allCasesForSchema.map((c: any) => ({ '@type': 'ListItem', ...c })),
   }}
 >
 

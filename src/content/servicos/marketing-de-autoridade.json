@@ -1,0 +1,21 @@
+{
+  "title": "Marketing de Autoridade",
+  "num": "01",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "bg": "var(--red-soft)",
+  "headline": "Construa sua referência e reputação de marca",
+  "intro": "Posicionamos sua marca como a referência reconhecida no seu setor. Através do Marketing de Autoridade, aplicamos estratégias que constroem credibilidade, confiança e uma reputação sólida de forma consistente.",
+  "desc": "O Marketing de Autoridade é a estratégia que transforma marcas e profissionais em referências reconhecidas pelo mercado. Na Mclair, desenvolvemos planos personalizados que combinam posicionamento de marca, criação de conteúdo estratégico e presença digital para construir autoridade duradoura.",
+  "homeDesc": "Posicionamos sua marca como líder reconhecida no mercado. Construímos sua autoridade através de estratégias de conteúdo, presença digital e comunicação estratégica.",
+  "items": [
+    "Mentoria em posicionamento digital e marca pessoal",
+    "Estratégias de conteúdo para Marketing de Autoridade",
+    "Gestão de presença digital multiplataforma",
+    "Diagnóstico e auditoria de autoridade de marca",
+    "Planejamento estratégico de comunicação B2B",
+    "Monitoramento de reputação e percepção de mercado"
+  ],
+  "cta": "Solicitar Diagnóstico de Autoridade",
+  "metaDescription": "Construa sua autoridade de marca com a Mclair. Estratégias de Marketing de Autoridade para posicionar sua empresa como referência reconhecida no mercado."
+}

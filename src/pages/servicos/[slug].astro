@@ -3,118 +3,33 @@ import Layout from '../../layouts/Layout.astro';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços.';
 
-export function getStaticPaths() {
-  const allServices = [
-  {
-    slug: 'marketing-de-autoridade',
-    num: '01', color: 'var(--red)', accent: '#C8102E', bg: 'var(--red-soft)',
-    title: 'Marketing de Autoridade',
-    headline: 'Construa sua referência e reputação de marca',
-    intro: 'Posicionamos sua marca como a referência reconhecida no seu setor. Através do Marketing de Autoridade, aplicamos estratégias que constroem credibilidade, confiança e uma reputação sólida de forma consistente.',
-    desc: 'O Marketing de Autoridade é a estratégia que transforma marcas e profissionais em referências reconhecidas pelo mercado. Na Mclair, desenvolvemos planos personalizados que combinam posicionamento de marca, criação de conteúdo estratégico e presença digital para construir autoridade duradoura.',
-    items: [
-      'Mentoria em posicionamento digital e marca pessoal',
-      'Estratégias de conteúdo para Marketing de Autoridade',
-      'Gestão de presença digital multiplataforma',
-      'Diagnóstico e auditoria de autoridade de marca',
-      'Planejamento estratégico de comunicação B2B',
-      'Monitoramento de reputação e percepção de mercado',
-    ],
-    cta: 'Solicitar Diagnóstico de Autoridade',
-    description: 'Construa sua autoridade de marca com a Mclair. Estratégias de Marketing de Autoridade para posicionar sua empresa como referência reconhecida no mercado.',
-  },
-  {
-    slug: 'assessoria-de-imprensa',
-    num: '02', color: 'var(--teal)', accent: '#1B8A76', bg: 'rgba(27,138,118,.08)',
-    title: 'Assessoria de Imprensa',
-    headline: 'Visibilidade estratégica nos veículos que importam',
-    intro: 'Ampliamos sua visibilidade e credibilidade com Assessoria de Imprensa estratégica e relacionamento com mídia, fortalecendo sua reputação de marca nos principais veículos do Brasil.',
-    desc: 'Nossa Assessoria de Imprensa vai além do envio de releases. Construímos relacionamentos duradouros com jornalistas, identificamos pautas que interessam às redações e posicionamos sua marca nas histórias que importam. Com mais de 11.600 inserções para nossos clientes, sabemos como gerar cobertura com impacto real.',
-    items: [
-      'Redação e distribuição de releases estratégicos',
-      'Relacionamento com veículos, jornalistas e influenciadores',
-      'Gestão de clipping e monitoramento de mídia',
-      'Posicionamento e treinamento de porta-vozes',
-      'Coletivas, entrevistas e eventos de imprensa',
-      'Assessoria de crise e gestão de reputação',
-    ],
-    cta: 'Ampliar sua Presença na Mídia',
-    description: 'Assessoria de Imprensa Estratégica Mclair. Visibilidade nos veículos certos com relacionamento genuíno com jornalistas e redações.',
-  },
-  {
-    slug: 'branding-estrategico',
-    num: '03', color: 'var(--orange)', accent: '#D4611B', bg: 'rgba(212,97,27,.08)',
-    title: 'Branding Estratégico',
-    headline: 'Criando marcas fortes com propósito e coerência',
-    intro: 'Construímos e revitalizamos marcas através do Branding Estratégico, alinhando identidade, propósito e posicionamento para criar conexões duradouras com o público certo.',
-    desc: 'Uma marca forte vai muito além de um logo bonito. É a soma de cada experiência que o público tem com sua empresa. Na Mclair, desenvolvemos Branding Estratégico que conecta identidade visual, tom de voz, propósito e posicionamento de mercado — criando marcas que ficam na memória e geram valor tangível.',
-    items: [
-      'Estratégia de marca e posicionamento de mercado',
-      'Identidade visual e manual de marca completo',
-      'Tom de voz, linguagem e personalidade da marca',
-      'Redesign e rebranding estratégico',
-      'Aplicações e materiais gráficos institucionais',
-      'Brand guidelines e governança de marca',
-    ],
-    cta: 'Transformar sua Marca',
-    description: 'Branding Estratégico com a Mclair. Construção e revitalização de marcas com propósito, identidade sólida e posicionamento de mercado claro.',
-  },
-  {
-    slug: 'marketing-digital',
-    num: '04', color: 'var(--red)', accent: '#C8102E', bg: 'var(--red-soft)',
-    title: 'Marketing Digital Integrado',
-    headline: 'Performance e growth para resultados mensuráveis',
-    intro: 'Marketing Digital Integrado focado em crescimento sustentável, atração de leads qualificados e otimização contínua de resultados através de estratégias multiplataforma.',
-    desc: 'O Marketing Digital da Mclair integra SEO, conteúdo estratégico, social media e mídia paga em uma estratégia coesa focada em resultados reais. Não gerenciamos canais isolados — construímos ecossistemas digitais que trabalham juntos para gerar crescimento consistente e leads qualificados.',
-    items: [
-      'Estratégia e planejamento digital integrado',
-      'SEO e marketing de conteúdo estratégico',
-      'Gestão de mídias sociais com foco em engajamento',
-      'Tráfego pago — Google Ads e Meta Ads',
-      'Automação de marketing e CRM',
-      'Analytics, relatórios e otimização contínua',
-    ],
-    cta: 'Acelerar seu Crescimento Digital',
-    description: 'Marketing Digital Integrado com a Mclair. SEO, conteúdo, social media e ads em estratégia coesa para crescimento real e leads qualificados.',
-  },
-  {
-    slug: 'consultoria-em-comunicacao',
-    num: '05', color: 'var(--teal)', accent: '#1B8A76', bg: 'rgba(27,138,118,.08)',
-    title: 'Consultoria em Comunicação',
-    headline: 'Planejamento estratégico personalizado para resultados',
-    intro: 'Nossa Consultoria em Comunicação avalia sua situação atual, identifica oportunidades e desenvolve planos estratégicos focados em resultados concretos e posicionamento de marca sólido.',
-    desc: 'Antes de agir, é preciso pensar. Nossa Consultoria em Comunicação oferece uma visão externa e estratégica da sua comunicação — identificando gaps, oportunidades e os caminhos mais eficientes para alcançar seus objetivos. Com diagnósticos precisos e planos executáveis, transformamos insights em resultados.',
-    items: [
-      'Diagnóstico completo de comunicação corporativa',
-      'Desenvolvimento de plano estratégico integrado',
-      'Gestão de crises e reputação de marca',
-      'Comunicação institucional e stakeholders',
-      'Treinamento e capacitação de porta-vozes',
-      'Planejamento de comunicação anual',
-    ],
-    cta: 'Solicitar Consultoria Estratégica',
-    description: 'Consultoria em Comunicação Estratégica com a Mclair. Diagnóstico e planejamento personalizado para resultados em comunicação e posicionamento de marca.',
-  },
-  {
-    slug: 'mentorias-exclusivas',
-    num: '06', color: 'var(--orange)', accent: '#D4611B', bg: 'rgba(212,97,27,.08)',
-    title: 'Mentorias Exclusivas',
-    headline: 'Bolder e Bolder Press — transformação acelerada',
-    intro: 'Programas de mentoria em Marketing de Autoridade e Assessoria de Imprensa conduzidos por Kelly Pinheiro, com mais de 20 anos de experiência transformando profissionais em referências de mercado.',
-    desc: 'As mentorias Bolder e Bolder Press são programas de imersão exclusivos para profissionais que querem acelerar sua transformação. Com método desenvolvido ao longo de mais de 20 anos por Kelly Pinheiro, esses programas oferecem acompanhamento personalizado, ferramentas práticas e uma rede de alunos poderosa.',
-    items: [
-      'Mentoria Bolder — Marca Pessoal e Autoridade (3 níveis)',
-      'Mentoria Bolder Press — Assessoria Estratégica (4 módulos)',
-      'Acompanhamento personalizado com Kelly Pinheiro',
-      'Deep dive em posicionamento e diferencial competitivo',
-      'Desenvolvimento de narrativa pessoal e pitch',
-      'Certificação e rede de alunos exclusiva',
-    ],
-    cta: 'Conhecer as Mentorias',
-    description: 'Mentorias Mclair: Bolder (Marca Pessoal e Marketing de Autoridade) e Bolder Press (Assessoria de Imprensa). Com Kelly Pinheiro, 20+ anos de experiência.',
-  },
-  ];
-  return allServices.map(s => ({ params: { slug: s.slug }, props: { s, others: allServices.filter(x => x.slug !== s.slug).slice(0,3) } }));
+export async function getStaticPaths() {
+  const { createReader } = await import('@keystatic/core/reader');
+  const { default: cfg } = await import('../../../keystatic.config');
+  const reader = createReader(process.cwd(), cfg);
+
+  const all = await reader.collections.servicos.all();
+  const services = (all as any[])
+    .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+    .map(s => ({
+      slug:        s.slug,
+      num:         s.entry.num ?? '',
+      color:       s.entry.color || 'var(--red)',
+      accent:      s.entry.accent || '#C8102E',
+      bg:          s.entry.bg || 'var(--red-soft)',
+      title:       s.entry.title.name,
+      headline:    s.entry.headline ?? '',
+      intro:       s.entry.intro ?? '',
+      desc:        s.entry.desc ?? '',
+      items:       (s.entry.items ?? []) as string[],
+      cta:         s.entry.cta ?? '',
+      description: s.entry.metaDescription ?? '',
+    }));
+
+  return services.map(s => ({
+    params: { slug: s.slug },
+    props: { s, others: services.filter((x: any) => x.slug !== s.slug).slice(0, 3) },
+  }));
 }
 
 const { s, others } = Astro.props;

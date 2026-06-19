@@ -1,0 +1,21 @@
+{
+  "title": "Mentorias Exclusivas",
+  "num": "06",
+  "color": "var(--orange)",
+  "accent": "#D4611B",
+  "bg": "rgba(212,97,27,.08)",
+  "headline": "Bolder e Bolder Press — transformação acelerada",
+  "intro": "Programas de mentoria em Marketing de Autoridade e Assessoria de Imprensa conduzidos por Kelly Pinheiro, com mais de 20 anos de experiência transformando profissionais em referências de mercado.",
+  "desc": "As mentorias Bolder e Bolder Press são programas de imersão exclusivos para profissionais que querem acelerar sua transformação. Com método desenvolvido ao longo de mais de 20 anos por Kelly Pinheiro, esses programas oferecem acompanhamento personalizado, ferramentas práticas e uma rede de alunos poderosa.",
+  "homeDesc": "Programas Bolder e Bolder Press: mentorias de imersão para profissionais que querem consolidar sua marca pessoal e dominar a Assessoria de Imprensa Estratégica.",
+  "items": [
+    "Mentoria Bolder — Marca Pessoal e Autoridade (3 níveis)",
+    "Mentoria Bolder Press — Assessoria Estratégica (4 módulos)",
+    "Acompanhamento personalizado com Kelly Pinheiro",
+    "Deep dive em posicionamento e diferencial competitivo",
+    "Desenvolvimento de narrativa pessoal e pitch",
+    "Certificação e rede de alunos exclusiva"
+  ],
+  "cta": "Conhecer as Mentorias",
+  "metaDescription": "Mentorias Mclair: Bolder (Marca Pessoal e Marketing de Autoridade) e Bolder Press (Assessoria de Imprensa). Com Kelly Pinheiro, 20+ anos de experiência."
+}

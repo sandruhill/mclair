@@ -1,0 +1,43 @@
+{
+  "client": "BMS / ABIMAQ + ApexBrasil",
+  "num": "03",
+  "color": "var(--orange)",
+  "accent": "#D4611B",
+  "sector": "Assessoria de Imprensa Internacional",
+  "challenge": "Fortalecer a presença internacional do projeto Brazil Machinery Solutions — parceria estratégica entre ABIMAQ e ApexBrasil para promoção das exportações do setor de máquinas e equipamentos industriais. O desafio era atingir imprensa estrangeira com credibilidade e impacto real.",
+  "solution": "Assessoria de Imprensa especializada em mídia internacional, relacionamento direto com correspondentes estrangeiros e jornalistas de comércio internacional, produção de conteúdo bilíngue (PT/EN) para mercados-alvo estratégicos e planejamento de cobertura por regiões e setores de interesse.",
+  "results": [
+    {
+      "v": "2.000+",
+      "l": "Inserções totais na mídia"
+    },
+    {
+      "v": "1.734",
+      "l": "Publicações na imprensa internacional"
+    },
+    {
+      "v": "15+",
+      "l": "Países alcançados"
+    }
+  ],
+  "tags": [
+    "Assessoria Internacional",
+    "B2B",
+    "Exportação",
+    "Mídia Global",
+    "Comunicação Institucional"
+  ],
+  "img": "/cases-img/bms-abimaq.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/bms-abimaq.jpg",
+      "caption": "Big Numbers 2022/2023: 2.097 inserções na mídia, presença em 15+ países"
+    },
+    {
+      "src": "/cases-img/bms-abimaq-press.jpg",
+      "caption": "Cobertura internacional: EFEcomunica, TV Américas no Ar, Band — alcance global confirmado"
+    }
+  ],
+  "homeResult": "+2.000 inserções — 1.734 na imprensa internacional",
+  "metaDescription": "Assessoria de imprensa que gerou 1.734 publicações internacionais para o BMS/ABIMAQ em mais de 15 países."
+}

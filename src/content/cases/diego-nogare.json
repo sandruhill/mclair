@@ -1,0 +1,39 @@
+{
+  "client": "Diego Nogare",
+  "num": "07",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "sector": "Assessoria de Imprensa — Dados & IA",
+  "challenge": "Posicionar Diego Nogare — especialista com 25 anos de experiência em Dados, Inteligência Artificial e Machine Learning (desde 2013) — como voz de autoridade reconhecida no mercado tech e de negócios, com passagem por Microsoft, Deloitte, Bayer e Itaú.",
+  "solution": "Assessoria de Imprensa estratégica com foco em posicionamento como referência em IA e Dados. Relacionamento ativo com os principais veículos de negócios e tecnologia do Brasil, construção de pauta consistente alinhada ao momento de expansão da IA no mercado corporativo.",
+  "results": [
+    {
+      "v": "Exame",
+      "l": "Presença constante nos principais veículos"
+    },
+    {
+      "v": "CNN",
+      "l": "HSM, Baguete, It Forum, entre outros"
+    },
+    {
+      "v": "2025+",
+      "l": "Autoridade consolidada em IA e Dados"
+    }
+  ],
+  "tags": [
+    "Assessoria de Imprensa",
+    "Marca Pessoal",
+    "Tecnologia",
+    "Inteligência Artificial",
+    "Marketing de Autoridade"
+  ],
+  "img": "/cases-img/diego-nogare.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/diego-nogare.jpg",
+      "caption": "Diego Nogare em destaque no UOL, Exame, Baguete, Startups e veículos líderes em tecnologia e IA"
+    }
+  ],
+  "homeResult": "Autoridade consolidada em IA e Dados — Exame, CNN, HSM",
+  "metaDescription": "Como a Mclair posicionou Diego Nogare como autoridade em IA e Dados em veículos como Exame, CNN e HSM."
+}

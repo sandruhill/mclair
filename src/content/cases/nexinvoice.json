@@ -1,0 +1,47 @@
+{
+  "client": "Guiando / NexInvoice",
+  "num": "10",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "sector": "Naming, Branding & Mascote",
+  "challenge": "O time Guiando precisava criar do zero o nome, o conceito e a identidade visual de uma nova solução de automação financeira para empresas — incluindo uma mascote que personificasse a proposta de valor de tecnologia e inovação do produto.",
+  "solution": "Desenvolvemos o nome NexInvoice, o conceito de produto e toda a identidade visual. Criamos a Annie — uma robô com 27 anos de \"experiência\", homenagem à Annie J. Easley, cientista afro-americana da NASA — como mascote oficial. O NexInvoice foi adquirido pela Asaas, que manteve toda a comunicação visual desenvolvida pela Mclair.",
+  "results": [
+    {
+      "v": "NexInvoice",
+      "l": "Nome, conceito e visual criados do zero"
+    },
+    {
+      "v": "Annie",
+      "l": "Mascote com storytelling próprio e profundo"
+    },
+    {
+      "v": "Asaas",
+      "l": "Produto adquirido — identidade preservada"
+    }
+  ],
+  "tags": [
+    "Naming",
+    "Branding",
+    "Identidade Visual",
+    "Mascote",
+    "Fintech"
+  ],
+  "img": "/cases-img/nexinvoice.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/nexinvoice.jpg",
+      "caption": "NexInvoice: identidade visual completa com stationery e materiais de marca"
+    },
+    {
+      "src": "/cases-img/nexinvoice-annie.jpg",
+      "caption": "Annie — mascote com storytelling inspirado em Annie J. Easley, cientista da computação da NASA"
+    },
+    {
+      "src": "/cases-img/nexinvoice-product.jpg",
+      "caption": "Plataforma e identidade visual preservados pela Asaas após a aquisição"
+    }
+  ],
+  "homeResult": "Naming, branding e mascote — produto adquirido pela Asaas",
+  "metaDescription": "Como a Mclair criou o NexInvoice e a mascote Annie para o Guiando — marca depois adquirida pela Asaas."
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Consultoria em Comunicação",
+  "num": "05",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "bg": "rgba(27,138,118,.08)",
+  "headline": "Planejamento estratégico personalizado para resultados",
+  "intro": "Nossa Consultoria em Comunicação avalia sua situação atual, identifica oportunidades e desenvolve planos estratégicos focados em resultados concretos e posicionamento de marca sólido.",
+  "desc": "Antes de agir, é preciso pensar. Nossa Consultoria em Comunicação oferece uma visão externa e estratégica da sua comunicação — identificando gaps, oportunidades e os caminhos mais eficientes para alcançar seus objetivos. Com diagnósticos precisos e planos executáveis, transformamos insights em resultados.",
+  "homeDesc": "Diagnóstico preciso e planejamento personalizado. Avaliamos sua situação, identificamos oportunidades e desenvolvemos planos estratégicos focados em resultados duradouros.",
+  "items": [
+    "Diagnóstico completo de comunicação corporativa",
+    "Desenvolvimento de plano estratégico integrado",
+    "Gestão de crises e reputação de marca",
+    "Comunicação institucional e stakeholders",
+    "Treinamento e capacitação de porta-vozes",
+    "Planejamento de comunicação anual"
+  ],
+  "cta": "Solicitar Consultoria Estratégica",
+  "metaDescription": "Consultoria em Comunicação Estratégica com a Mclair. Diagnóstico e planejamento personalizado para resultados em comunicação e posicionamento de marca."
+}

@@ -1,0 +1,44 @@
+{
+  "client": "Elemar Jr.",
+  "num": "05",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "sector": "Branding Estratégico & Presença Digital",
+  "challenge": "Evoluir de uma operação individual de consultoria para uma empresa estruturada e reconhecida em arquitetura de software — a EximiaCo. O desafio era criar uma identidade de marca sólida, com posicionamento claro e autoridade estabelecida no competitivo mercado de tecnologia brasileiro.",
+  "solution": "Branding Estratégico completo para a marca EximiaCo — da identidade visual ao posicionamento de mercado. Estratégia e Gestão de Presença Digital integrada, Assessoria de Imprensa Estratégica nos principais veículos de tecnologia e Criação de Conteúdo de Autoridade para estabelecer Elemar Jr. como referência em arquitetura de software.",
+  "results": [
+    {
+      "v": "EximiaCo",
+      "l": "Marca estruturada e lançada com sucesso"
+    },
+    {
+      "v": "Integrado",
+      "l": "Ecossistema de comunicação construído"
+    },
+    {
+      "v": "Referência",
+      "l": "Posicionamento conquistado em TI"
+    }
+  ],
+  "tags": [
+    "Branding",
+    "Presença Digital",
+    "Assessoria de Imprensa",
+    "Tecnologia",
+    "Marca Pessoal"
+  ],
+  "img": "/cases-img/elemar-jr.jpg",
+  "logo": "https://mclair.com.br/images/galeria/25-01-2021_1_7078d0276d91a9b37ffc6b0eac8a9d54.png",
+  "gallery": [
+    {
+      "src": "/cases-img/elemar-jr.jpg",
+      "caption": "Identidade visual EximiaCo — branding completo e canais de comunicação"
+    },
+    {
+      "src": "/cases-img/elemar-jr-press.jpg",
+      "caption": "Posicionamento de Elemar Jr. como autoridade em tecnologia nos principais veículos"
+    }
+  ],
+  "homeResult": "Da operação individual à consultoria estruturada — EximiaCo",
+  "metaDescription": "Como a Mclair transformou a operação individual de Elemar Jr. na consultoria estruturada EximiaCo — referência em TI."
+}

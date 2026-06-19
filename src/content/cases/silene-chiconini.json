@@ -1,0 +1,39 @@
+{
+  "client": "Silene Chiconini",
+  "num": "11",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "sector": "Marca Pessoal — Comunicação e Sustentabilidade",
+  "challenge": "Silene Chiconini estava em um momento de reposicionamento de carreira e precisava de uma marca pessoal que comunicasse seu trabalho como consultora em projetos de Comunicação baseados em ações de Sustentabilidade — com credibilidade, expertise e abordagem inovadora.",
+  "solution": "Desenvolvemos em conjunto com a cliente uma identidade de marca pessoal que reflete confiança, expertise e a abordagem inovadora que a consultoria traz ao mercado. A identidade visual criada posiciona Silene como referência na intersecção entre Comunicação Estratégica e Sustentabilidade.",
+  "results": [
+    {
+      "v": "Marca",
+      "l": "Identidade pessoal criada e posicionada"
+    },
+    {
+      "v": "Único",
+      "l": "Nicho próprio: Comunicação + Sustentabilidade"
+    },
+    {
+      "v": "Novo",
+      "l": "Reposicionamento de carreira realizado"
+    }
+  ],
+  "tags": [
+    "Marca Pessoal",
+    "Branding",
+    "Sustentabilidade",
+    "Identidade Visual",
+    "Comunicação"
+  ],
+  "img": "/cases-img/silene-chiconini.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/silene-chiconini.jpg",
+      "caption": "Identidade de marca pessoal: Comunicação Estratégica + Sustentabilidade"
+    }
+  ],
+  "homeResult": "Marca pessoal criada — nicho único de Comunicação + Sustentabilidade",
+  "metaDescription": "Como a Mclair posicionou Silene Chiconini como consultora referência em Comunicação e Sustentabilidade."
+}

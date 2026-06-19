@@ -1,0 +1,38 @@
+{
+  "client": "Fidalgo Leilões",
+  "num": "02",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "sector": "Assessoria de Imprensa — Resultados Expressivos",
+  "challenge": "Divulgação de leilões estratégicos (Caixa Econômica Federal, Justiça Federal, Correios) com necessidade de grande repercussão na mídia nacional e regional em prazos curtos e com alta assertividade. Cada leilão exigia cobertura específica e direcionada ao público-alvo correto.",
+  "solution": "Assessoria de Imprensa Estratégica com foco em geração de cobertura de alto alcance. Desenvolvimento de releases impactantes e diferenciados, relacionamento ativo e personalizado com redações, e posicionamento estratégico nos principais veículos de notícias do Brasil — do nacional ao regional.",
+  "results": [
+    {
+      "v": "11.600+",
+      "l": "Inserções totais na mídia"
+    },
+    {
+      "v": "Nacional",
+      "l": "Alcance geográfico garantido"
+    },
+    {
+      "v": "Top 3",
+      "l": "Veículos de maior audiência alcançados"
+    }
+  ],
+  "tags": [
+    "Assessoria de Imprensa",
+    "Relações com Mídia",
+    "Release Estratégico",
+    "Comunicação B2B"
+  ],
+  "img": "/cases-img/fidalgo.jpg",
+  "gallery": [
+    {
+      "src": "/cases-img/fidalgo.jpg",
+      "caption": "Cobertura na Folha de São Paulo, Band e veículos de grande alcance nacional"
+    }
+  ],
+  "homeResult": "+11.600 inserções na mídia nacional e regional",
+  "metaDescription": "Como a Mclair garantiu mais de 11.600 inserções na mídia para o Fidalgo Leilões com cobertura nacional expressiva."
+}

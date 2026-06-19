@@ -1,0 +1,21 @@
+{
+  "title": "Assessoria de Imprensa",
+  "num": "02",
+  "color": "var(--teal)",
+  "accent": "#1B8A76",
+  "bg": "rgba(27,138,118,.08)",
+  "headline": "Visibilidade estratégica nos veículos que importam",
+  "intro": "Ampliamos sua visibilidade e credibilidade com Assessoria de Imprensa estratégica e relacionamento com mídia, fortalecendo sua reputação de marca nos principais veículos do Brasil.",
+  "desc": "Nossa Assessoria de Imprensa vai além do envio de releases. Construímos relacionamentos duradouros com jornalistas, identificamos pautas que interessam às redações e posicionamos sua marca nas histórias que importam. Com mais de 11.600 inserções para nossos clientes, sabemos como gerar cobertura com impacto real.",
+  "homeDesc": "Construímos e gerenciamos sua presença editorial nos veículos que importam. Do release ao relacionamento com jornalistas, garantimos cobertura que gera credibilidade real.",
+  "items": [
+    "Redação e distribuição de releases estratégicos",
+    "Relacionamento com veículos, jornalistas e influenciadores",
+    "Gestão de clipping e monitoramento de mídia",
+    "Posicionamento e treinamento de porta-vozes",
+    "Coletivas, entrevistas e eventos de imprensa",
+    "Assessoria de crise e gestão de reputação"
+  ],
+  "cta": "Ampliar sua Presença na Mídia",
+  "metaDescription": "Assessoria de Imprensa Estratégica Mclair. Visibilidade nos veículos certos com relacionamento genuíno com jornalistas e redações."
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Marketing Digital",
+  "num": "04",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "bg": "var(--red-soft)",
+  "headline": "Performance e growth para resultados mensuráveis",
+  "intro": "Marketing Digital Integrado focado em crescimento sustentável, atração de leads qualificados e otimização contínua de resultados através de estratégias multiplataforma.",
+  "desc": "O Marketing Digital da Mclair integra SEO, conteúdo estratégico, social media e mídia paga em uma estratégia coesa focada em resultados reais. Não gerenciamos canais isolados — construímos ecossistemas digitais que trabalham juntos para gerar crescimento consistente e leads qualificados.",
+  "homeDesc": "Estratégias integradas de SEO, conteúdo estratégico, gestão de mídias sociais, ads e automação para gerar leads qualificados e resultados mensuráveis.",
+  "items": [
+    "Estratégia e planejamento digital integrado",
+    "SEO e marketing de conteúdo estratégico",
+    "Gestão de mídias sociais com foco em engajamento",
+    "Tráfego pago — Google Ads e Meta Ads",
+    "Automação de marketing e CRM",
+    "Analytics, relatórios e otimização contínua"
+  ],
+  "cta": "Acelerar seu Crescimento Digital",
+  "metaDescription": "Marketing Digital Integrado com a Mclair. SEO, conteúdo, social media e ads em estratégia coesa para crescimento real e leads qualificados."
+}

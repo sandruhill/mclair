@@ -1,37 +1,12 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
 
-const clients = [
-  { name:'ABIMAPI',                logo:'https://mclair.com.br/images/galeria/25-01-2021_1_3b8a2851ca5df570ce7e0941cc5f8d96.png' },
-  { name:'Abrolhos Filmes',        logo:'https://mclair.com.br/images/galeria/25-01-2021_1_dbfabe5e77d87856d3432c6a9018606a.png' },
-  { name:'Darnel Group',           logo:'https://mclair.com.br/images/galeria/23-01-2021_1_29a54088cdbd06554140399088396bdd.jpg' },
-  { name:'Automatiza Sistemas',    logo:'https://mclair.com.br/images/galeria/24-02-2020_1_62ab989da3cd3e2f7023546b961d58d7.jpg' },
-  { name:'Blue Skies',             logo:'https://mclair.com.br/images/galeria/24-02-2020_1_a99e9e2c6fd7152eb8ccfd34b0ea5dc8.jpg' },
-  { name:'',                       logo:'https://mclair.com.br/images/galeria/24-02-2020_1_3f53bb23fdf3ee4ce209c5a35a094709.jpg' },
-  { name:'Claudia Elisa',          logo:'https://mclair.com.br/images/galeria/25-01-2021_1_495c6167ed709eba2b282411b6ab37bd.png' },
-  { name:'Dr. Newton Roldão',      logo:'https://mclair.com.br/images/galeria/24-02-2020_1_d117b83b6a0b5b52b35be115e9fc55e7.jpg' },
-  { name:'Comunicação Cubo',       logo:'https://mclair.com.br/images/galeria/25-01-2021_1_30ef930b69014e997004038d5912ff23.png' },
-  { name:'EximiaCo',               logo:'https://mclair.com.br/images/galeria/25-01-2021_1_7078d0276d91a9b37ffc6b0eac8a9d54.png' },
-  { name:'',                       logo:'https://mclair.com.br/images/galeria/24-02-2020_1_18c4b9aeb00273518cf90c09df265cd2.jpg' },
-  { name:'Secretaria de Educação', logo:'https://mclair.com.br/images/galeria/24-02-2020_1_b0d1320e9b949ec70639845aa05dac36.jpg' },
-  { name:'SSP-SP',                 logo:'https://mclair.com.br/images/galeria/24-02-2020_1_7ca684f687a81c84eb3df32758fe33dd.jpg' },
-  { name:'Guiando',                logo:'https://mclair.com.br/images/galeria/23-01-2021_1_222db3a83d3019ac73403cbe39040b2d.jpg' },
-  { name:'Infinix Mobility',       logo:'https://mclair.com.br/images/galeria/25-01-2021_1_dacbe942dc0fd882e25df51442e45ee7.png' },
-  { name:'Lambda3',                logo:'https://mclair.com.br/images/galeria/24-02-2020_1_140deaf51d31c2467f5f0a4283ba28f8.jpg' },
-  { name:'NexInvoice',             logo:'https://mclair.com.br/images/galeria/25-01-2021_1_2582b644049154cde322221083aa2107.png' },
-  { name:'Dra. Arenata Ascencio',  logo:'https://mclair.com.br/images/galeria/24-02-2020_1_49435150cc23562f294f7b1c69f01eca.jpg' },
-  { name:'Simone Neri',            logo:'https://mclair.com.br/images/galeria/25-01-2021_1_1dfec622f48b7e6dd09af51b5c3dc7f9.png' },
-  { name:'Trinta e Três Tattoo',   logo:'https://mclair.com.br/images/galeria/24-02-2020_1_5f223f44b3a29468b434011fddd554e4.jpg' },
-  { name:'Vissla Aut',             logo:'https://mclair.com.br/images/galeria/25-01-2021_1_f74f3bcbdf8a02edb1d6604db961ddfd.png' },
-  { name:'YNus Itá Digital',       logo:'https://mclair.com.br/images/galeria/26-01-2021_1_11535f163d849f16b286848b80e65d6e.png' },
-  { name:'',                       logo:'https://mclair.com.br/images/galeria/24-02-2020_1_15688bd282380991aaf32679a8aadec9.jpg' },
-];
-
-const stats = [
-  { n: '200+', label: 'Clientes atendidos' },
-  { n: '8+', label: 'Anos de mercado' },
-  { n: '23+', label: 'Segmentos' },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const clientesData = await reader.singletons.clientes.read().catch(() => null);
+const clients = (clientesData?.clients ?? []) as any[];
+const stats   = (clientesData?.stats   ?? []) as any[];
 ---
 
 <Layout

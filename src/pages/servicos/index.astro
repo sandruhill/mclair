@@ -1,105 +1,25 @@
 ---
 import Layout from '../../layouts/Layout.astro';
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../../keystatic.config';
+
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20proposta.';
 
-const services = [
-  {
-    num:'01', color:'var(--red)', bg:'var(--red-soft)',
-    slug:'marketing-de-autoridade',
-    title:'Marketing de Autoridade',
-    headline:'Construa sua referência e reputação de marca',
-    desc:'Posicionamos sua marca como líder através do Marketing de Autoridade. Aplicamos estratégias de comunicação B2B e criação de conteúdo estratégico para fortalecer sua reputação de marca e torná-la a referência reconhecida no seu setor.',
-    items:[
-      'Mentoria em posicionamento digital e marca pessoal',
-      'Estratégias de conteúdo para Marketing de Autoridade',
-      'Gestão de presença digital multiplataforma',
-      'Diagnóstico e auditoria de autoridade de marca',
-      'Planejamento estratégico de comunicação B2B',
-      'Monitoramento de reputação e percepção de mercado',
-    ],
-    cta:'Saiba Mais sobre Marketing de Autoridade',
-  },
-  {
-    num:'02', color:'var(--orange)', bg:'rgba(212,97,27,.08)',
-    slug:'assessoria-de-imprensa',
-    title:'Assessoria de Imprensa',
-    headline:'Visibilidade estratégica nos veículos que importam',
-    desc:'Ampliamos sua visibilidade e credibilidade com Assessoria de Imprensa e relacionamento estratégico com mídia e influenciadores, fortalecendo sua reputação de marca. Conectamos sua marca às vozes certas para alcançar seu público-alvo.',
-    items:[
-      'Redação e distribuição de releases estratégicos',
-      'Relacionamento com veículos, jornalistas e influenciadores',
-      'Gestão de clipping e monitoramento de mídia',
-      'Posicionamento e treinamento de porta-vozes',
-      'Coletivas, entrevistas e eventos de imprensa',
-      'Assessoria de crise e gestão de reputação',
-    ],
-    cta:'Fortaleça sua Presença na Mídia',
-  },
-  {
-    num:'03', color:'var(--teal)', bg:'rgba(27,138,118,.08)',
-    slug:'branding-estrategico',
-    title:'Branding Estratégico',
-    headline:'Criando marcas fortes com propósito e coerência',
-    desc:'Construímos e revitalizamos marcas através do Branding Estratégico, alinhando ao seu propósito para criar conexões duradouras. Da definição do posicionamento de mercado até a identidade visual completa, criamos marcas que ficam na memória.',
-    items:[
-      'Estratégia de marca e posicionamento de mercado',
-      'Identidade visual e manual de marca completo',
-      'Tom de voz, linguagem e personalidade da marca',
-      'Redesign e rebranding estratégico',
-      'Aplicações e materiais gráficos institucionais',
-      'Brand guidelines e governança de marca',
-    ],
-    cta:'Descubra Nossas Soluções de Branding',
-  },
-  {
-    num:'04', color:'var(--red)', bg:'var(--red-soft)',
-    slug:'marketing-digital',
-    title:'Marketing Digital Integrado',
-    headline:'Growth hacking e performance para resultados mensuráveis',
-    desc:'Marketing Digital Integrado focado em growth hacking, atração de leads, retenção e otimização de resultados através de soluções de comunicação multiplataforma. SEO, conteúdo estratégico, social media e ads em perfeita integração.',
-    items:[
-      'Estratégia e planejamento digital integrado',
-      'SEO e marketing de conteúdo estratégico',
-      'Gestão de mídias sociais com foco em engajamento',
-      'Tráfego pago — Google Ads e Meta Ads',
-      'Automação de marketing e CRM',
-      'Analytics, relatórios e otimização contínua',
-    ],
-    cta:'Impulsione seu Crescimento Digital',
-  },
-  {
-    num:'05', color:'var(--teal)', bg:'rgba(27,138,118,.08)',
-    slug:'consultoria-em-comunicacao',
-    title:'Consultoria em Comunicação',
-    headline:'Planejamento estratégico personalizado para resultados reais',
-    desc:'Nossa consultoria em comunicação avalia sua situação atual, identifica oportunidades e desenvolve planos estratégicos focados em resultados em comunicação e posicionamento de marca. Incluindo estratégias proativas e reativas para proteger e fortalecer sua reputação.',
-    items:[
-      'Diagnóstico completo de comunicação corporativa',
-      'Desenvolvimento de plano estratégico integrado',
-      'Gestão de crises e reputação de marca',
-      'Comunicação institucional e stakeholders',
-      'Treinamento e capacitação de porta-vozes',
-      'Planejamento de comunicação anual',
-    ],
-    cta:'Solicite uma Consultoria Estratégica',
-  },
-  {
-    num:'06', color:'var(--orange)', bg:'rgba(212,97,27,.08)',
-    slug:'mentorias-exclusivas',
-    title:'Mentorias Exclusivas',
-    headline:'Bolder e Bolder Press — transformação acelerada',
-    desc:'Nossos programas de mentoria focados em Marketing de Autoridade e especialização em Assessoria de Imprensa são conduzidos por Kelly Pinheiro, com mais de 20 anos de experiência. Imersão e desenvolvimento acelerado para profissionais que querem ser referência.',
-    items:[
-      'Mentoria Bolder — Marca Pessoal e Autoridade',
-      'Mentoria Bolder Press — Assessoria Estratégica',
-      '3 níveis de transformação (Bolder)',
-      '4 módulos especializados (Bolder Press)',
-      'Acompanhamento personalizado com Kelly Pinheiro',
-      'Certificação e rede de alunos exclusiva',
-    ],
-    cta:'Conheça as Mentorias',
-  },
-];
+const reader = createReader(process.cwd(), keystaticConfig);
+const allServicos = await reader.collections.servicos.all().catch(() => []);
+const services = (allServicos as any[])
+  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .map(s => ({
+    num:      s.entry.num ?? '',
+    color:    s.entry.color || 'var(--red)',
+    bg:       s.entry.bg || 'var(--red-soft)',
+    slug:     s.slug,
+    title:    s.entry.title.name,
+    headline: s.entry.headline ?? '',
+    desc:     s.entry.homeDesc || s.entry.intro || '',
+    items:    (s.entry.items ?? []) as string[],
+    cta:      s.entry.cta ?? '',
+  }));
 ---
 
 <Layout
