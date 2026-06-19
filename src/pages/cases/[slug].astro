@@ -44,7 +44,7 @@ const { c, otherCases } = Astro.props;
 <!-- HERO -->
 <section class="case-hero" style={`--accent:${c.accent}`}>
   <div class="ch-img-wrap">
-    <img src="/cases-hero.jpg" alt={c.client} class="ch-img" />
+    <img src={c.heroImg} alt={`${c.client} — ${c.sector} | Mclair`} title={`Case ${c.client}: ${c.sector}`} class="ch-img" />
     <div class="ch-overlay"></div>
   </div>
   <div class="container ch-inner">

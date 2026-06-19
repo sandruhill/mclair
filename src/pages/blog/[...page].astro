@@ -150,7 +150,6 @@ function formatDate(d: string) {
   </div>
   <div class="container bh-inner">
     <p class="eyebrow" data-anim style="justify-content:flex-start">
-      <span class="he-line"></span>
       Conteúdo que gera autoridade
     </p>
     <h1 class="bh-title" data-anim data-delay="1">
@@ -176,13 +175,7 @@ function formatDate(d: string) {
           <a href={`/blog/${post.slug}`} class="bc-link">
             {post.image ? (
               <div class="bc-img-wrap">
-                <img
-                  src={post.image}
-                  alt={post.title}
-                  class="bc-img"
-                  loading="lazy"
-                  onerror="this.parentElement.style.display='none'"
-                />
+                <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
               </div>
             ) : (
               <div class="bc-img-placeholder">
@@ -203,6 +196,102 @@ function formatDate(d: string) {
           </a>
         </article>
       ))}
+    </div>
+
+    <!-- Mobile layout -->
+    <div class="blog-mobile-layout">
+      <!-- Post 0: featured full-width -->
+      {page.data.length > 0 && (
+        <article class="blog-card blog-card-featured">
+          <a href={`/blog/${page.data[0].slug}`} class="bc-link">
+            {page.data[0].image ? (
+              <div class="bc-img-wrap">
+                <img src={page.data[0].image} alt={page.data[0].title} class="bc-img" loading="eager" onerror="this.parentElement.style.display='none'" />
+              </div>
+            ) : (
+              <div class="bc-img-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            )}
+            <div class="bc-body">
+              <div class="bc-meta">
+                <time class="bc-date">{formatDate(page.data[0].date)}</time>
+                {page.data[0].author && <span class="bc-dot">·</span>}
+                {page.data[0].author && <span class="bc-author">{page.data[0].author}</span>}
+              </div>
+              <h2 class="bc-title">{page.data[0].title}</h2>
+              {page.data[0].subtitle && <p class="bc-subtitle">{page.data[0].subtitle}</p>}
+              <p class="bc-excerpt">{excerpt(page.data[0].content)}</p>
+              <span class="bc-read">Ler artigo →</span>
+            </div>
+          </a>
+        </article>
+      )}
+
+      <!-- Posts 1-9: 2-col swipe carousel -->
+      {page.data.length > 1 && (
+        <div class="blog-swipe-wrap">
+          {page.data.slice(1, 10).map((post) => (
+            <article class="blog-card blog-swipe-card">
+              <a href={`/blog/${post.slug}`} class="bc-link">
+                {post.image ? (
+                  <div class="bc-img-wrap">
+                    <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
+                  </div>
+                ) : (
+                  <div class="bc-img-placeholder">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  </div>
+                )}
+                <div class="bc-body">
+                  <div class="bc-meta">
+                    <time class="bc-date">{formatDate(post.date)}</time>
+                  </div>
+                  <h2 class="bc-title">{post.title}</h2>
+                  <p class="bc-excerpt">{excerpt(post.content, 80)}</p>
+                  <span class="bc-read">Ler →</span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+
+      <!-- Posts 10+: hidden, shown on "Carregar mais" -->
+      {page.data.length > 10 && (
+        <div class="blog-more-wrap" id="blog-more-wrap" aria-hidden="true">
+          {page.data.slice(10).map((post) => (
+            <article class="blog-card">
+              <a href={`/blog/${post.slug}`} class="bc-link">
+                {post.image ? (
+                  <div class="bc-img-wrap">
+                    <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
+                  </div>
+                ) : (
+                  <div class="bc-img-placeholder">
+                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+                  </div>
+                )}
+                <div class="bc-body">
+                  <div class="bc-meta">
+                    <time class="bc-date">{formatDate(post.date)}</time>
+                  </div>
+                  <h2 class="bc-title">{post.title}</h2>
+                  <p class="bc-excerpt">{excerpt(post.content, 80)}</p>
+                  <span class="bc-read">Ler →</span>
+                </div>
+              </a>
+            </article>
+          ))}
+        </div>
+      )}
+
+      {page.data.length > 10 && (
+        <button class="blog-load-btn" id="blog-load-btn">
+          Carregar mais
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </button>
+      )}
     </div>
 
     <!-- PAGINATION -->
@@ -262,7 +351,6 @@ function formatDate(d: string) {
   position:relative; z-index:1;
   padding-top:72px; padding-bottom:72px;
 }
-.he-line { display:inline-block;width:32px;height:2px;background:var(--red);flex-shrink:0; }
 .bh-title {
   font-size:clamp(3rem,7vw,6rem); font-weight:900; line-height:1.02;
   letter-spacing:-.04em; color:#fff; margin-top:16px; margin-bottom:18px;
@@ -283,6 +371,7 @@ function formatDate(d: string) {
   grid-template-columns: repeat(3, 1fr);
   gap: 32px;
 }
+.blog-mobile-layout { display: none; }
 
 /* ═══ CARD ═══ */
 .blog-card {
@@ -396,6 +485,82 @@ function formatDate(d: string) {
   .blog-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; }
 }
 @media (max-width: 600px) {
-  .blog-grid { grid-template-columns: 1fr; gap: 20px; }
+  .blog-grid-desktop { display: none; }
+  .blog-mobile-layout { display: block; }
+
+  /* Featured post */
+  .blog-card-featured { margin-bottom: 16px; }
+
+  /* Swipe carousel */
+  .blog-swipe-wrap {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    gap: 12px;
+    margin: 0 -20px;
+    padding: 0 20px 16px;
+  }
+  .blog-swipe-wrap::-webkit-scrollbar { display: none; }
+  .blog-swipe-card {
+    flex: 0 0 calc(50% - 6px);
+    min-width: 0;
+    scroll-snap-align: start;
+  }
+  .blog-swipe-card .bc-img-wrap { height: 140px; }
+  .blog-swipe-card .bc-img-placeholder { height: 140px; }
+  .blog-swipe-card .bc-body { padding: 14px 14px 18px; }
+  .blog-swipe-card .bc-title { font-size: .88rem; }
+
+  /* More posts grid (hidden until loaded) */
+  .blog-more-wrap {
+    display: none;
+  }
+  .blog-more-wrap.loaded {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-top: 12px;
+  }
+  .blog-more-wrap .bc-img-wrap { height: 140px; }
+  .blog-more-wrap .bc-img-placeholder { height: 140px; }
+  .blog-more-wrap .bc-body { padding: 14px 14px 18px; }
+  .blog-more-wrap .bc-title { font-size: .88rem; }
+
+  /* Load more button */
+  .blog-load-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 100%;
+    margin-top: 20px;
+    padding: .85rem 1.4rem;
+    background: var(--cream-2);
+    border: 1.5px solid var(--line-2);
+    border-radius: var(--r-sm);
+    font-size: .78rem;
+    font-weight: 700;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    cursor: pointer;
+    transition: border-color .2s, color .2s, background .2s;
+  }
+  .blog-load-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-soft); }
 }
 </style>
+
+<script is:inline>
+(function() {
+  var btn = document.getElementById('blog-load-btn');
+  var moreWrap = document.getElementById('blog-more-wrap');
+  if (!btn || !moreWrap) return;
+  btn.addEventListener('click', function() {
+    moreWrap.classList.add('loaded');
+    moreWrap.removeAttribute('aria-hidden');
+    btn.style.display = 'none';
+  });
+})();
+</script>

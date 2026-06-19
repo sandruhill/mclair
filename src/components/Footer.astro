@@ -182,9 +182,25 @@ const servicos = [
 
   @media (max-width:1024px) { .ft-grid { grid-template-columns:1fr 1fr; } .ft-brand { grid-column:1/-1; } }
   @media (max-width:600px) {
-    .ft-grid { grid-template-columns:1fr; }
+    .ft-grid { grid-template-columns:1fr 1fr; gap:32px 24px; }
+    .ft-brand {
+      grid-column:1/-1;
+      display:flex;flex-direction:column;align-items:center;text-align:center;
+    }
+    .ft-logo-link img { height:120px; }
+    .ft-tagline { text-align:center; max-width:100%; margin-left:auto; margin-right:auto; }
+    .ft-socials { justify-content:center; }
+    .ft-col:last-child {
+      grid-column:1/-1;
+      text-align:center;
+    }
+    .ft-col:last-child .ft-col-h { text-align:center; }
+    .ft-col:last-child .ft-contact-list {
+      flex-direction:row;flex-wrap:wrap;justify-content:center;gap:12px 24px;
+    }
+    .ft-col:last-child .ft-contact-list li { justify-content:center; }
     .ft-band-inner, .ft-bottom-inner { flex-direction:column; text-align:center; }
     .ft-band-actions { justify-content:center; }
-    .ft-socials { justify-content:center; }
+    .ft-bottom-inner { align-items:center; }
   }
 </style>

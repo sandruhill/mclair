@@ -14,14 +14,14 @@ const timeline = (sobreData?.timeline ?? []) as any[];
 ---
 
 <Layout
-  title="Sobre a Mclair — Agência de Marketing e Comunicação Estratégica desde 2017"
-  description="Conheça a Mclair: história, propósito, valores e equipe da agência especialista em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017."
+  title="Sobre a Mclair — Comunicação Estratégica desde 2017"
+  description="Agência fundada em 2017 por Kelly Pinheiro. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia e 1.734 publicações internacionais."
 >
 
 <!-- HERO -->
 <section class="page-hero">
   <div class="ph-photo-bg" aria-hidden="true">
-    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?w=1600&q=80&auto=format&fit=crop" alt="" class="ph-photo-img" />
+    <img src="/paginas/sobre-estrategia-comunicacao-mclair.jpg" alt="Sobre a Mclair — Agência de Comunicação Estratégica e Marketing de Autoridade em São Paulo" title="Sobre a Mclair: estratégia, comunicação e resultados desde 2017" class="ph-photo-img" />
     <div class="ph-photo-overlay"></div>
   </div>
   <div class="ph-bg" aria-hidden="true">
@@ -29,15 +29,14 @@ const timeline = (sobreData?.timeline ?? []) as any[];
   </div>
   <div class="container ph-inner">
     <p class="eyebrow" data-anim style="color:rgba(255,255,255,.5)">
-      <span style="background:rgba(255,255,255,.2);width:24px;height:2px;display:inline-block"></span>
       Quem somos
     </p>
     <h1 class="ph-title" data-anim data-delay="1">
-      Agência de Marketing Estratégico<br/>
-      <em>com foco em resultados duradouros</em>
+      Mclair: Comunicação Estratégica<br/>
+      <em>e Marketing de Autoridade desde 2017</em>
     </h1>
     <p class="ph-sub" data-anim data-delay="2">
-      Mais que uma agência, somos parceiros na construção do seu legado. A Mclair conecta marcas e pessoas através de Comunicação Estratégica com propósito e foco em Marketing de Autoridade.
+      A Mclair é uma agência de Comunicação Estratégica e Marketing de Autoridade fundada em São Paulo em 2017 por Kelly Pinheiro. Especializada em posicionar marcas e profissionais como referência reconhecida no seu mercado, atende 23 segmentos — de executivos a multinacionais — com equipes dedicadas de Assessoria de Imprensa, Branding e Marketing Digital.
     </p>
     <div class="ph-stats stagger-children" data-delay="3">
       <div class="phs-item">
@@ -72,40 +71,40 @@ const timeline = (sobreData?.timeline ?? []) as any[];
         Construir legados através da<br/><span>Comunicação com Propósito</span>
       </h2>
       <p class="section-lead" style="margin-top:16px">
-        Acreditamos em propósitos transformadores que geram engajamento e constroem relacionamentos. Nosso objetivo é traduzir o valor da sua marca em comunicação com propósito que fortalece sua reputação de marca e deixa um legado.
+        Em 8 anos de atuação, a Mclair construiu mais de 11.600 inserções na mídia nacional e 1.734 publicações internacionais para seus clientes. Cada projeto começa com um diagnóstico profundo da marca e termina com métricas claras — porque autoridade real precisa ser medida.
       </p>
       <p class="section-lead" style="margin-top:12px">
-        Somos formados por especialistas em Marketing de Autoridade, Comunicação Estratégica, Marketing Digital Integrado, Assessoria de Imprensa e Branding Estratégico — prontos para entregar resultados em comunicação que realmente importam.
+        Somos formados por jornalistas, estrategistas de marca e especialistas em performance digital. Nossa abordagem integrada cobre Marketing de Autoridade, Assessoria de Imprensa, Branding Estratégico e Marketing Digital — sempre com transparência total em relatórios e KPIs.
       </p>
       <div class="purpose-actions" style="margin-top:32px;display:flex;gap:12px;flex-wrap:wrap">
-        <a href="/contato" class="btn-primary">Conheça Nossos Valores</a>
+        <a href="#valores" class="btn-primary">Conheça Nossos Valores</a>
         <a href={WA} class="btn-outline" target="_blank" rel="noopener">Fale com a Equipe</a>
       </div>
     </div>
     <div class="purpose-pillars stagger-children" data-anim="right">
       <div class="pp-item">
-        <span class="pp-icon">◈</span>
+        <span class="pp-dot"></span>
         <div>
           <h3>Comunicação Estratégica</h3>
           <p>Toda mensagem planejada com dados e propósito claro</p>
         </div>
       </div>
       <div class="pp-item">
-        <span class="pp-icon pp-teal">◉</span>
+        <span class="pp-dot pp-dot-teal"></span>
         <div>
           <h3>Marketing de Autoridade</h3>
           <p>Construindo referências reconhecidas no mercado</p>
         </div>
       </div>
       <div class="pp-item">
-        <span class="pp-icon pp-orange">◆</span>
+        <span class="pp-dot pp-dot-orange"></span>
         <div>
           <h3>Resultados Duradouros</h3>
-          <p>Estratégias que perene, não apenas imediatas</p>
+          <p>Estratégias que permanecem, não apenas imediatas</p>
         </div>
       </div>
       <div class="pp-item">
-        <span class="pp-icon">◇</span>
+        <span class="pp-dot"></span>
         <div>
           <h3>Transparência Total</h3>
           <p>KPIs claros, relatórios honestos, evolução contínua</p>
@@ -141,7 +140,7 @@ const timeline = (sobreData?.timeline ?? []) as any[];
 </section>
 
 <!-- VALORES -->
-<section class="section valores-section">
+<section class="section valores-section" id="valores">
   <div class="container">
     <div class="section-header-center" data-anim>
       <p class="eyebrow" style="justify-content:center">Nossos valores</p>
@@ -150,7 +149,7 @@ const timeline = (sobreData?.timeline ?? []) as any[];
     <div class="valores-grid stagger-children">
       {valores.map(v => (
         <div class="valor-card">
-          <span class="vc-icon">{v.icon}</span>
+          <span class="vc-icon" set:html={v.icon}></span>
           <h3 class="vc-title">{v.title}</h3>
           <p class="vc-desc">{v.desc}</p>
         </div>
@@ -223,9 +222,17 @@ const timeline = (sobreData?.timeline ?? []) as any[];
   padding:20px 0; border-bottom:1px solid var(--line);
 }
 .pp-item:first-child { border-top:1px solid var(--line); }
-.pp-icon { font-size:1.2rem; color:var(--red); flex-shrink:0; margin-top:2px; }
-.pp-teal { color:var(--teal); }
-.pp-orange { color:var(--orange); }
+.pp-dot {
+  display:inline-block; width:9px; height:9px; border-radius:50%;
+  background:var(--red); flex-shrink:0; margin-top:4px;
+  animation:pp-pulse 2.2s ease-in-out infinite;
+  box-shadow:0 0 0 0 rgba(200,16,46,.5);
+}
+.pp-dot-teal { background:var(--teal); animation:pp-pulse-teal 2.2s ease-in-out infinite; }
+.pp-dot-orange { background:var(--orange); animation:pp-pulse-orange 2.2s ease-in-out infinite; }
+@keyframes pp-pulse { 0%,100%{box-shadow:0 0 0 0 rgba(200,16,46,.5)} 50%{box-shadow:0 0 0 6px rgba(200,16,46,0)} }
+@keyframes pp-pulse-teal { 0%,100%{box-shadow:0 0 0 0 rgba(27,138,118,.5)} 50%{box-shadow:0 0 0 6px rgba(27,138,118,0)} }
+@keyframes pp-pulse-orange { 0%,100%{box-shadow:0 0 0 0 rgba(212,97,27,.5)} 50%{box-shadow:0 0 0 6px rgba(212,97,27,0)} }
 .pp-item h3 { font-size:.92rem; font-weight:700; color:var(--ink); margin-bottom:4px; }
 .pp-item p { font-size:.82rem; color:var(--ink-3); font-weight:300; line-height:1.6; }
 
@@ -249,7 +256,13 @@ const timeline = (sobreData?.timeline ?? []) as any[];
   transition:border-color .25s, box-shadow .25s, transform .2s;
 }
 .valor-card:hover { border-color:var(--red); box-shadow:var(--shadow-md); transform:translateY(-3px); }
-.vc-icon { font-size:1.4rem; color:var(--red); display:block; margin-bottom:18px; }
+.vc-icon {
+  color:var(--red); display:block; margin-bottom:18px;
+  width:26px; height:26px;
+  transition:transform .25s cubic-bezier(.22,1,.36,1);
+}
+.vc-icon svg { width:100%; height:100%; stroke:currentColor; }
+.valor-card:hover .vc-icon { transform:scale(1.15); }
 .vc-title { font-size:.95rem; font-weight:700; color:var(--ink); margin-bottom:10px; }
 .vc-desc { font-size:.84rem; color:var(--ink-3); line-height:1.8; font-weight:300; }
 

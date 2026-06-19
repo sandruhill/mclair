@@ -206,5 +206,10 @@ const { s, others } = Astro.props;
 .os-card:hover .os-arrow { color: var(--red); transform: translate(2px,-2px); }
 
 @media (max-width: 900px) { .sh-inner { grid-template-columns: 1fr; } .sh-card { display: none; } .svc-content-grid { grid-template-columns: 1fr; } .sc-right { position: static; } .os-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .os-grid { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .os-grid { grid-template-columns: 1fr; }
+  .sh-actions { flex-direction: column; align-items: stretch; }
+  .sh-actions .btn-white,
+  .sh-actions .btn-ghost-white { width: 100%; justify-content: center; box-sizing: border-box; }
+}
 </style>

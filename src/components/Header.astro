@@ -1,16 +1,16 @@
 ---
 const caseLinks = [
-  { label:'Claudia Elisa', href:'/cases/claudia-elisa', tag:'Marca Pessoal' },
-  { label:'Fidalgo Leilões', href:'/cases/fidalgo', tag:'Assessoria de Imprensa' },
-  { label:'Alexandre Magno', href:'/cases/alexandre-magno', tag:'Gestão de Crise' },
-  { label:'Elemar Jr. — EximiaCo', href:'/cases/elemar-jr', tag:'Branding' },
-  { label:'BMS / ABIMAQ', href:'/cases/bms-abimaq', tag:'Internacional' },
-  { label:'Insight RH', href:'/cases/insight-rh', tag:'Rebranding & Naming' },
-  { label:'Diego Nogare', href:'/cases/diego-nogare', tag:'Dados & IA' },
-  { label:'Lambda3', href:'/cases/lambda3', tag:'Assessoria de Imprensa' },
-  { label:'Zbra', href:'/cases/zbra', tag:'Rebranding' },
-  { label:'Guiando / NexInvoice', href:'/cases/nexinvoice', tag:'Naming & Branding' },
-  { label:'Silene Chiconini', href:'/cases/silene-chiconini', tag:'Marca Pessoal' },
+  { label:'Claudia Elisa',       href:'/cases/claudia-elisa',    tag:'Marca Pessoal',          img:'/cases-img/claudia-elisa-marca-pessoal-lideranca.jpg' },
+  { label:'Fidalgo Leilões',     href:'/cases/fidalgo',          tag:'Assessoria de Imprensa', img:'/cases-img/fidalgo-leiloes-assessoria-imprensa.jpg' },
+  { label:'Alexandre Magno',     href:'/cases/alexandre-magno',  tag:'Gestão de Crise',        img:'/cases-img/alexandre-magno-gestao-crise-pr.jpg' },
+  { label:'Elemar Jr. / EximiaCo', href:'/cases/elemar-jr',      tag:'Branding',               img:'/cases-img/elemar-jr-branding-tecnologia-software.jpg' },
+  { label:'BMS / ABIMAQ',        href:'/cases/bms-abimaq',       tag:'Internacional',           img:'/cases-img/bms-abimaq-maquinario-industrial-exportacao.jpg' },
+  { label:'Insight RH',          href:'/cases/insight-rh',       tag:'Rebranding & Naming',    img:'/cases-img/insight-rh-lideranca-gestao-pessoas.jpg' },
+  { label:'Diego Nogare',        href:'/cases/diego-nogare',     tag:'Dados & IA',             img:'/cases-img/diego-nogare-inteligencia-artificial-dados.jpg' },
+  { label:'Lambda3',             href:'/cases/lambda3',          tag:'Assessoria de Imprensa', img:'/cases-img/lambda3-tecnologia-dados-comunicacao.jpg' },
+  { label:'Zbra',                href:'/cases/zbra',             tag:'Rebranding',             img:'/cases-img/zbra-rebranding-digital-tecnologia.jpg' },
+  { label:'Guiando / NexInvoice',href:'/cases/nexinvoice',       tag:'Naming & Branding',      img:'/cases-img/nexinvoice-fintech-branding-naming.jpg' },
+  { label:'Silene Chiconini',    href:'/cases/silene-chiconini', tag:'Marca Pessoal',          img:'/cases-img/silene-chiconini-consultoria-sustentabilidade.jpg' },
 ];
 
 const svcLinks = [
@@ -49,19 +49,41 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
         </div>
       </div>
 
-      <!-- Cases dropdown -->
-      <div class="nav-drop-wrap">
+      <!-- Cases mega menu -->
+      <div class="nav-drop-wrap" id="cases-drop-wrap">
         <a href="/cases" class="nav-link nav-parent">
           Cases
           <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
         </a>
-        <div class="nav-dropdown nd-wide">
-          {caseLinks.map(c => (
-            <a href={c.href} class="nd-item">
-              {c.label}
-              <span class="nd-tag">{c.tag}</span>
+        <div class="nav-dropdown nd-cases" id="cases-mega">
+          <!-- Preview image panel -->
+          <div class="nd-preview" aria-hidden="true">
+            <img id="case-preview-img" src={caseLinks[0].img} alt="" class="nd-preview-img" loading="eager" />
+            <div class="nd-preview-overlay">
+              <span class="nd-preview-tag">Case</span>
+              <strong id="case-preview-name">{caseLinks[0].label}</strong>
+            </div>
+          </div>
+          <!-- Links list -->
+          <div class="nd-cases-list">
+            <div class="nd-cases-grid">
+              {caseLinks.map((c, i) => (
+                <a
+                  href={c.href}
+                  class={`nd-item nd-case-item${i === 0 ? ' nd-case-active' : ''}`}
+                  data-img={c.img}
+                  data-name={c.label}
+                >
+                  <span class="nd-name">{c.label}</span>
+                  <span class="nd-tag">{c.tag}</span>
+                </a>
+              ))}
+            </div>
+            <a href="/cases" class="nd-all-cases">
+              Ver todos os cases
+              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-          ))}
+          </div>
         </div>
       </div>
 
@@ -88,7 +110,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-drawer">
     <div class="drawer-header">
-      <img src="/logos/logo-color.png" alt="Mclair" height="36" />
+      <img src="/logos/logo-icone-M.png" alt="Mclair" width="120" height="120" style="object-fit:contain" />
       <button class="drawer-close" id="drawer-close" aria-label="Fechar menu">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18M6 6l12 12"/></svg>
       </button>
@@ -127,7 +149,6 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 </div>
 
 <style>
-  /* ── HEADER: transparente no topo, frosted glass ao scrollar ── */
   #site-header {
     position: fixed; top:0; left:0; right:0; z-index:500;
     background: transparent;
@@ -135,11 +156,11 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     transition: background .4s ease, border-color .4s ease, box-shadow .4s ease;
   }
   #site-header.scrolled {
-    background: rgba(250,250,248,0.86);
-    backdrop-filter: blur(20px) saturate(170%);
-    -webkit-backdrop-filter: blur(20px) saturate(170%);
-    border-color: rgba(220,215,208,0.5);
-    box-shadow: 0 1px 32px rgba(0,0,0,.07);
+    background: linear-gradient(to bottom, rgba(250,250,248,0.94) 0%, rgba(250,250,248,0.7) 60%, transparent 100%);
+    backdrop-filter: blur(18px) saturate(160%);
+    -webkit-backdrop-filter: blur(18px) saturate(160%);
+    border-color: transparent;
+    box-shadow: none;
   }
 
   .header-inner {
@@ -155,23 +176,14 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   }
   #site-header.scrolled .header-inner { height: 72px; }
 
-  /* LOGO — sem card, apenas a imagem */
-  .logo-link {
-    display: flex; align-items: center;
-    text-decoration: none;
-    transition: opacity .2s;
-  }
+  .logo-link { display: flex; align-items: center; text-decoration: none; transition: opacity .2s; }
   .logo-link:hover { opacity: .85; }
-  /* Logo branco no topo (hero escuro), colorido ao scrollar */
-  .logo-default { height: 48px; width: auto; object-fit: contain; display: none; transition: opacity .3s; }
+  .logo-default { height: 48px; width: auto; object-fit: contain; display: none; }
   .logo-white   { height: 48px; width: auto; object-fit: contain; display: block; }
   #site-header.scrolled .logo-default { display: block; }
   #site-header.scrolled .logo-white   { display: none; }
 
-  /* NAV — branco no topo, escuro ao scrollar */
-  .nav {
-    display: flex; align-items: center; justify-content: center; gap: 0;
-  }
+  .nav { display: flex; align-items: center; justify-content: center; gap: 0; }
   .nav-link {
     display: flex; align-items: center; gap: 4px;
     font-size: .73rem; font-weight: 400;
@@ -197,9 +209,8 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   .nav-parent svg { opacity: .4; transition: transform .2s; }
   .nav-drop-wrap:hover .nav-parent svg { transform: rotate(180deg); }
 
-  /* DROPDOWN */
+  /* DROPDOWN BASE */
   .nav-drop-wrap { position: relative; }
-  /* Invisible bridge so the gap between link and dropdown doesn't close the menu */
   .nav-drop-wrap::after {
     content: ''; position: absolute;
     bottom: -12px; left: 0; right: 0; height: 12px;
@@ -215,23 +226,17 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     transition: opacity .22s ease, transform .22s ease, visibility .22s;
     z-index: 200;
   }
-  /* Cases dropdown: 2 columns for 11 items */
-  .nav-dropdown.nd-wide {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    min-width: 480px;
-    column-gap: 4px;
-  }
   .nav-drop-wrap:hover .nav-dropdown {
     opacity: 1; visibility: visible; pointer-events: auto;
     transform: translateX(-50%) translateY(0);
   }
   .nd-item {
-    display: flex; align-items: center; justify-content: space-between;
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
     padding: 9px 12px; border-radius: var(--r-md);
     font-size: .82rem; font-weight: 500; color: var(--ink-2);
     transition: background .15s, color .15s;
     text-decoration: none;
+    white-space: nowrap;
   }
   .nd-item:hover { background: var(--cream); color: var(--red); }
   .nd-tag {
@@ -242,9 +247,87 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   }
   .nd-item:hover .nd-tag { background: var(--red-soft); color: var(--red); }
 
-  .header-cta-wrap {
-    display: flex; align-items: center; gap: 12px;
+  /* ── CASES MEGA MENU ── */
+  .nd-cases {
+    display: flex;
+    min-width: 640px;
+    padding: 0;
+    overflow: hidden;
+    left: 50%;
+    transform: translateX(-50%) translateY(6px);
   }
+  .nav-drop-wrap:hover .nd-cases {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  /* Preview image panel */
+  .nd-preview {
+    width: 220px;
+    min-height: 240px;
+    flex-shrink: 0;
+    align-self: stretch;
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--r-lg) 0 0 var(--r-lg);
+    background: var(--dark);
+  }
+  .nd-preview-img {
+    position: absolute;
+    inset: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    object-position: center;
+    display: block;
+    transition: opacity .12s ease;
+  }
+  .nd-preview-img.fading { opacity: 0; }
+  .nd-preview-overlay {
+    position: absolute; bottom: 0; left: 0; right: 0;
+    background: linear-gradient(to top, rgba(15,12,10,.85) 0%, transparent 100%);
+    padding: 20px 16px 16px;
+    display: flex; flex-direction: column; gap: 4px;
+  }
+  .nd-preview-tag {
+    font-size: .55rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+    color: var(--red); display: block;
+  }
+  #case-preview-name {
+    font-size: .88rem; font-weight: 700; color: #fff; line-height: 1.2;
+  }
+
+  /* Links list */
+  .nd-cases-list {
+    flex: 1;
+    padding: 8px;
+    display: flex; flex-direction: column;
+  }
+  .nd-cases-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 4px;
+  }
+  .nd-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+  .nd-case-item.nd-case-active {
+    background: var(--cream);
+    color: var(--red);
+  }
+  .nd-case-item.nd-case-active .nd-tag {
+    background: var(--red-soft); color: var(--red);
+  }
+
+  .nd-all-cases {
+    display: flex; align-items: center; gap: 6px; justify-content: center;
+    margin-top: 4px; padding: 8px 12px;
+    font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+    color: var(--red); border-top: 1px solid var(--line);
+    text-decoration: none;
+    transition: gap .2s;
+  }
+  .nd-all-cases:hover { gap: 10px; }
+
+  /* ── HEADER CTA ── */
+  .header-cta-wrap { display: flex; align-items: center; gap: 12px; }
   .header-cta {
     display: inline-flex; align-items: center; gap: 8px;
     font-size: .72rem; font-weight: 700;
@@ -319,7 +402,8 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     .nav { display: none; }
     .header-cta { display: none; }
     .burger { display: flex; }
-    .header-inner { grid-template-columns: auto auto; }
+    .header-inner { grid-template-columns: auto 1fr; }
+    .header-cta-wrap { justify-self: end; }
   }
 </style>
 
@@ -342,5 +426,32 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   if (overlay) overlay.addEventListener('click', closeMenu);
   if (closeBtn) closeBtn.addEventListener('click', closeMenu);
   mNav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+
+  // Cases mega menu — image preview on hover
+  var previewImg  = document.getElementById('case-preview-img');
+  var previewName = document.getElementById('case-preview-name');
+  var caseItems   = document.querySelectorAll('.nd-case-item');
+  var fadeTimer;
+
+  caseItems.forEach(function(item) {
+    item.addEventListener('mouseenter', function() {
+      var newImg  = item.dataset.img;
+      var newName = item.dataset.name;
+
+      // Active state
+      caseItems.forEach(function(el) { el.classList.remove('nd-case-active'); });
+      item.classList.add('nd-case-active');
+
+      // Cross-fade image — pula se já é a mesma imagem
+      if (previewImg.getAttribute('src') === newImg) return;
+      clearTimeout(fadeTimer);
+      previewImg.classList.add('fading');
+      fadeTimer = setTimeout(function() {
+        previewImg.src = newImg;
+        previewName.textContent = newName;
+        previewImg.classList.remove('fading');
+      }, 60);
+    });
+  });
 })();
 </script>

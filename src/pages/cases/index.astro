@@ -44,8 +44,8 @@ const allCasesForSchema = sorted.map((c, i) => ({
 ---
 
 <Layout
-  title="Cases Mclair — Resultados Reais em Marketing de Autoridade e Comunicação Estratégica"
-  description="Cases de sucesso da Mclair: Claudia Elisa, Fidalgo (+11.600 inserções), BMS/ABIMAQ (+1.734 internacionais), Alexandre Magno, Elemar Jr., Insight RH e mais. Resultados que falam por si."
+  title="Cases Mclair — Resultados em Marketing de Autoridade"
+  description="Cases Mclair: Fidalgo (11.600+ inserções), BMS/ABIMAQ (1.734 internacionais), Claudia Elisa, Alexandre Magno, Elemar Jr. e mais."
   schema={{
     '@context': 'https://schema.org',
     '@type': 'ItemList',
@@ -59,7 +59,7 @@ const allCasesForSchema = sorted.map((c, i) => ({
 <!-- HERO -->
 <section class="page-hero">
   <div class="ph-photo-bg" aria-hidden="true">
-    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1600&q=80&auto=format&fit=crop" alt="" class="ph-photo-img" />
+    <img src="/paginas/cases-portfolio-comunicacao-mclair.jpg" alt="Cases Mclair — Portfólio de Resultados em Comunicação Estratégica e Marketing de Autoridade" title="Cases de sucesso Mclair: Assessoria de Imprensa, Branding e Marketing de Autoridade" class="ph-photo-img" />
     <div class="ph-photo-overlay"></div>
   </div>
   <div class="ph-bg" aria-hidden="true">
@@ -67,7 +67,6 @@ const allCasesForSchema = sorted.map((c, i) => ({
   </div>
   <div class="container ph-inner">
     <p class="eyebrow" data-anim style="color:rgba(255,255,255,.5)">
-      <span style="background:rgba(255,255,255,.2);width:24px;height:2px;display:inline-block"></span>
       Resultados reais
     </p>
     <h1 class="ph-title" data-anim data-delay="1">
@@ -107,7 +106,7 @@ const allCasesForSchema = sorted.map((c, i) => ({
           </div>
           {c.logo && (
             <div class="ci-logo-wrap">
-              <img src={c.logo} alt={c.client} class="ci-logo" loading="lazy" />
+              <img src={c.logo} alt={`Logo ${c.client} — Case Mclair`} title={`${c.client}: ${c.sector}`} class="ci-logo" loading="lazy" />
             </div>
           )}
           <h2 class="ci-client">{c.client}</h2>
