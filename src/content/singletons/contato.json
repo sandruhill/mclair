@@ -1,6 +1,8 @@
 {
-  "phone": "(11) 98860-0372",
-  "email": "kelly@mclair.com.br",
+  "contactInfo": {
+    "phone": "(11) 98860-0372",
+    "email": "kelly@mclair.com.br"
+  },
   "faqs": [
     {
       "q": "O que é Marketing de Autoridade e como a Mclair aplica?",

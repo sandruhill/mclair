@@ -59,7 +59,7 @@ export default config({
             icon: fields.text({ label: 'Ícone / Símbolo' }),
             title: fields.text({ label: 'Título' }),
             desc: fields.text({ label: 'Descrição', multiline: true }),
-          }),
+          }, { layout: [2, 4, 6] }),
           { label: 'Valores', itemLabel: (p) => p.fields.title.value }
         ),
         equipe: fields.array(
@@ -68,14 +68,14 @@ export default config({
             cargo: fields.text({ label: 'Cargo' }),
             initials: fields.text({ label: 'Iniciais (2 letras)' }),
             bio: fields.text({ label: 'Bio', multiline: true }),
-          }),
+          }, { layout: [4, 4, 4, 12] }),
           { label: 'Equipe', itemLabel: (p) => p.fields.nome.value }
         ),
         timeline: fields.array(
           fields.object({
             year: fields.text({ label: 'Ano' }),
             ev: fields.text({ label: 'Evento', multiline: true }),
-          }),
+          }, { layout: [3, 9] }),
           { label: 'Timeline', itemLabel: (p) => p.fields.year.value }
         ),
       },
@@ -90,14 +90,14 @@ export default config({
           fields.object({
             name: fields.text({ label: 'Nome do cliente' }),
             logo: fields.url({ label: 'Logo (URL)' }),
-          }),
+          }, { layout: [6, 6] }),
           { label: 'Clientes', itemLabel: (p) => p.fields.name.value || '(logo sem nome)' }
         ),
         stats: fields.array(
           fields.object({
             n: fields.text({ label: 'Número' }),
             label: fields.text({ label: 'Rótulo' }),
-          }),
+          }, { layout: [4, 8] }),
           { label: 'Estatísticas', itemLabel: (p) => p.fields.label.value }
         ),
       },
@@ -108,8 +108,10 @@ export default config({
       path: 'src/content/singletons/contato',
       format: { data: 'json' },
       schema: {
-        phone: fields.text({ label: 'Telefone / WhatsApp', defaultValue: '(11) 98860-0372' }),
-        email: fields.text({ label: 'E-mail', defaultValue: 'kelly@mclair.com.br' }),
+        contactInfo: fields.object({
+          phone: fields.text({ label: 'Telefone / WhatsApp', defaultValue: '(11) 98860-0372' }),
+          email: fields.text({ label: 'E-mail', defaultValue: 'kelly@mclair.com.br' }),
+        }, { layout: [6, 6] }),
         faqs: fields.array(
           fields.object({
             q: fields.text({ label: 'Pergunta' }),
@@ -130,7 +132,7 @@ export default config({
             n: fields.text({ label: 'Número' }),
             title: fields.text({ label: 'Título do nível' }),
             desc: fields.text({ label: 'Descrição', multiline: true }),
-          }),
+          }, { layout: [2, 4, 6] }),
           { label: 'Níveis — Mentoria Bolder', itemLabel: (p) => p.fields.title.value }
         ),
         bolderPressLevels: fields.array(
@@ -138,7 +140,7 @@ export default config({
             n: fields.text({ label: 'Número' }),
             title: fields.text({ label: 'Título do módulo' }),
             desc: fields.text({ label: 'Descrição', multiline: true }),
-          }),
+          }, { layout: [2, 4, 6] }),
           { label: 'Módulos — Bolder Press', itemLabel: (p) => p.fields.title.value }
         ),
       },
