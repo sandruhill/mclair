@@ -1,9 +1,14 @@
 import { defineMiddleware } from 'astro:middleware';
 
-// A página do Keystatic não tem <head></head> — é HTML mínimo.
-// Injetamos logo após o <!DOCTYPE html> para garantir que o script
-// rode antes de qualquer coisa da Astro/React/Emotion.
-const THEME_SCRIPT = `<script>(function(){
+// Keystar define as CSS vars em .kui-scheme--auto / .kui-scheme--light,
+// NÃO em :root. Então precisamos:
+// 1. Injetar <style> com !important visando essas classes
+// 2. Também setar via JS nos elementos ao vivo (para client-side navigation)
+const THEME_INJECT = `
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>
+<script>(function(){
 var V={
 "--kui-color-scale-indigo1":"#fefeff",
 "--kui-color-scale-indigo2":"#fdfcff",
@@ -25,17 +30,43 @@ var V={
 "--kui-size-radius-xlarge":"20px",
 "--kui-typography-font-family-base":"'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif"
 };
-function apply(){var r=document.documentElement;for(var k in V)r.style.setProperty(k,V[k]);}
-apply();
+
+// Injeta <style> com !important targeting .kui-scheme--auto
+function injectStyle(){
+  if(document.getElementById('kui-theme-override'))return;
+  var css=".kui-scheme--auto,.kui-scheme--light,.kui-scheme--dark{";
+  for(var k in V)css+=k+":"+V[k]+" !important;";
+  css+="}";
+  var s=document.createElement("style");
+  s.id="kui-theme-override";
+  s.textContent=css;
+  (document.head||document.documentElement).appendChild(s);
+}
+
+// Aplica via style.setProperty nos elementos .kui-scheme--* existentes
+function applyToSchemeEls(){
+  var els=document.querySelectorAll(".kui-scheme--auto,.kui-scheme--light,.kui-scheme--dark");
+  els.forEach(function(el){for(var k in V)el.style.setProperty(k,V[k]);});
+}
+
+// Tenta injetar o <style> imediatamente e nos eventos seguintes
+injectStyle();
+document.addEventListener("DOMContentLoaded",function(){injectStyle();applyToSchemeEls();});
+window.addEventListener("load",function(){injectStyle();applyToSchemeEls();});
+
+// MutationObserver: quando Emotion injeta <style> ou React adiciona elementos
 new MutationObserver(function(ms){
-ms.forEach(function(m){m.addedNodes.forEach(function(n){if(n.nodeName==="STYLE")apply();});});
+  var hasStyle=false,hasNode=false;
+  ms.forEach(function(m){
+    m.addedNodes.forEach(function(n){
+      if(n.nodeName==="STYLE")hasStyle=true;
+      if(n.nodeType===1)hasNode=true;
+    });
+  });
+  if(hasStyle)injectStyle();
+  if(hasNode)applyToSchemeEls();
 }).observe(document.documentElement,{childList:true,subtree:true});
-document.addEventListener("DOMContentLoaded",apply);
-window.addEventListener("load",apply);
-})();<\/script>
-<link rel="preconnect" href="https://fonts.googleapis.com"/>
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet"/>`;
+})();<\/script>`;
 
 export const onRequest = defineMiddleware(async (context, next) => {
   const response = await next();
@@ -47,8 +78,7 @@ export const onRequest = defineMiddleware(async (context, next) => {
 
   const html = await response.text();
 
-  // Injeta logo após o DOCTYPE (não existe </head> nesta página)
-  const themed = html.replace(/<!DOCTYPE html>/i, `<!DOCTYPE html>${THEME_SCRIPT}`);
+  const themed = html.replace(/<!DOCTYPE html>/i, `<!DOCTYPE html>${THEME_INJECT}`);
 
   return new Response(themed, {
     status: response.status,
