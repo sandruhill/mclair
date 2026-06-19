@@ -1,13 +1,12 @@
 import { config, collection, singleton, fields } from '@keystatic/core'
 
 export default config({
-  storage: process.env.KEYSTATIC_GITHUB_CLIENT_ID
-    ? {
+  storage: import.meta.env.DEV
+    ? { kind: 'local' as const }
+    : {
         kind: 'github' as const,
         repo: { owner: 'sandruhill', name: 'mclair' },
-        branchPrefix: 'keystatic/',
-      }
-    : { kind: 'local' as const },
+      },
 
   ui: {
     brand: { name: 'Mclair CMS' },
