@@ -54,16 +54,31 @@ const cases = (allCases as any[])
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero">
-  <!-- YouTube video background -->
-  <div class="hero-video-wrap" aria-hidden="true">
-    <iframe
-      src={`https://www.youtube.com/embed/${hpContent?.heroVideoId ?? 'SB26MowGMDM'}?autoplay=1&mute=1&loop=1&playlist=${hpContent?.heroVideoId ?? 'SB26MowGMDM'}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3`}
-      frameborder="0"
-      allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
-      allowfullscreen
-    ></iframe>
+  <!-- YouTube video background — carregado só depois que a página fica interativa -->
+  <div class="hero-video-wrap" aria-hidden="true" id="hero-video-wrap">
     <div class="hero-video-overlay"></div>
   </div>
+  <script is:inline define:vars={{ videoId: hpContent?.heroVideoId ?? 'SB26MowGMDM' }}>
+  (function() {
+    function loadHeroVideo() {
+      var wrap = document.getElementById('hero-video-wrap');
+      if (!wrap) return;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/' + videoId
+        + '?autoplay=1&mute=1&loop=1&playlist=' + videoId
+        + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
+      iframe.frameBorder = '0';
+      iframe.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+      iframe.allowFullscreen = true;
+      wrap.insertBefore(iframe, wrap.firstChild);
+    }
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadHeroVideo, { timeout: 2500 });
+    } else {
+      window.addEventListener('load', loadHeroVideo);
+    }
+  })();
+  </script>
 
   <!-- Animated top layer -->
   <div class="hero-bg" aria-hidden="true">

@@ -1,9 +1,7 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
-import keystatic from '@keystatic/astro';
 import vercel from '@astrojs/vercel';
-import react from '@astrojs/react';
 
 export default defineConfig({
   site: 'https://mclair.vercel.app',
@@ -34,7 +32,5 @@ export default defineConfig({
         'https://mclair.vercel.app/contato',
       ],
     }),
-    react(),
-    keystatic(),
   ],
 });
