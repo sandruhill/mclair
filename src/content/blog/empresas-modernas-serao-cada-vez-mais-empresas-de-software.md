@@ -1,7 +1,6 @@
 ---
 title: "Empresas modernas serão, cada vez mais, empresas de software"
-subtitle: "2020 acaba de começar e já dá sinais de que será um ano acelerado.
-A Tesla ultrapassou o valor de mercado das americanas GM e Ford juntas, fazendo, inclusive, com que o CEO de outra gigante"
+subtitle: "2020 acaba de começar e já dá sinais de que será um ano acelerado. A Tesla ultrapassou o valor de mercado das americanas GM e Ford juntas, fazendo com que o CEO de outra gigante se pronunciasse."
 metaDescription: ""
 date: 2025-04-08
 author: "Elemar Júnior"

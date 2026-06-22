@@ -1,7 +1,6 @@
 ---
 title: "Estética e saúde: dois conceitos aliados para garantia da qualidade de vida"
-subtitle: "Quando você pensa em tratamento estético, qual é a primeira coisa que vem à sua mente? Preocupação excessiva com a vaidade?
-Se a sua resposta foi esta,  saiba que é preciso mudar seu conceito"
+subtitle: "Quando você pensa em tratamento estético, qual é a primeira coisa que vem à sua mente? Preocupação excessiva com a vaidade? Se a sua resposta foi esta, saiba que é preciso mudar seu conceito."
 metaDescription: ""
 date: 2025-04-08
 author: "Mclair Comunicação"

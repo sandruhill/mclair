@@ -1,7 +1,6 @@
 ---
 title: "Data-driven video: Como aumentar seu awareness com dados"
-subtitle: "O audiovisual cresce a cada ano e se estabeleceu com um componente essencial para a marcas e empresas no mundo digital. 
-Cerca de 80% dos dados de tráfego na internet em 2021 serão vídeos"
+subtitle: "O audiovisual cresce a cada ano e se estabeleceu como um componente essencial para marcas e empresas no mundo digital. Cerca de 80% dos dados de tráfego na internet em 2021 serão vídeos."
 metaDescription: ""
 date: 2025-04-08
 author: "Abrolhos Filmes"
