@@ -3,13 +3,13 @@ export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
+import homepageJson from '../content/singletons/homepage.json';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 
 const reader = createReader(process.cwd(), keystaticConfig);
 
-const hp = await reader.singletons.homepage.read().catch(() => null);
-const hpContent = (hp as any)?.content;
+const hpContent = (homepageJson as any).content;
 const stats  = (hpContent?.stats ?? []);
 const testimonials = (hpContent?.testimonials ?? []);
 

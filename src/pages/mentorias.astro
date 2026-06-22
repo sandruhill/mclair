@@ -1,15 +1,12 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import mentoriasJson from '../content/singletons/mentorias.json';
 
 const WA_BOLDER = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder.%20Pode%20me%20contar%20mais%3F';
 const WA_PRESS  = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder%20Press.%20Pode%20me%20contar%20mais%3F';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const mentoriasData = await reader.singletons.mentorias.read().catch(() => null);
-const mentoriasContent = (mentoriasData as any)?.content;
+const mentoriasContent = (mentoriasJson as any).content;
 const bolderLevels     = (mentoriasContent?.bolderLevels      ?? []) as any[];
 const bolderPressLevels = (mentoriasContent?.bolderPressLevels ?? []) as any[];
 const seo = mentoriasContent?.seo ?? {};

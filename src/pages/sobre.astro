@@ -1,14 +1,11 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import sobreJson from '../content/singletons/sobre.json';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20falar%20com%20a%20equipe.';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const sobreData = await reader.singletons.sobre.read().catch(() => null);
-const sobreContent = (sobreData as any)?.content;
+const sobreContent = (sobreJson as any).content;
 const valores  = (sobreContent?.valores  ?? []) as any[];
 const equipe   = (sobreContent?.equipe   ?? []) as any[];
 const timeline = (sobreContent?.timeline ?? []) as any[];

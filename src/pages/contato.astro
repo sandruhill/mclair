@@ -1,14 +1,11 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import contatoJson from '../content/singletons/contato.json';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20consultoria.';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const contatoData = await reader.singletons.contato.read().catch(() => null);
-const contatoContent = (contatoData as any)?.content;
+const contatoContent = (contatoJson as any).content;
 const faqs    = (contatoContent?.faqs  ?? []) as any[];
 const phone   = contatoContent?.contactInfo?.phone ?? '(11) 98860-0372';
 const email   = contatoContent?.contactInfo?.email ?? 'kelly@mclair.com.br';

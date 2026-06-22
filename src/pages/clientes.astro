@@ -1,12 +1,9 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import clientesJson from '../content/singletons/clientes.json';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const clientesData = await reader.singletons.clientes.read().catch(() => null);
-const clientesContent = (clientesData as any)?.content;
+const clientesContent = (clientesJson as any).content;
 const clients = (clientesContent?.clients ?? []) as any[];
 const stats   = (clientesContent?.stats   ?? []) as any[];
 const seo = clientesContent?.seo ?? {};
