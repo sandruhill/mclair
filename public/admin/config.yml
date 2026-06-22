@@ -379,12 +379,9 @@ collections:
 
       - label: "llms.txt — Conteúdo para IAs (ChatGPT, Perplexity, Claude)"
         name: llms_txt
-        file: public/llms.txt
+        file: src/content/singletons/llms.json
         fields:
-          - { label: Conteúdo, name: body, widget: markdown, hint: "Texto que aparece quando IAs consultam seu site. Use Markdown." }
-
-      - label: robots.txt
-        name: robots_txt
-        file: public/robots.txt
-        fields:
-          - { label: Conteúdo, name: body, widget: code, default_language: text, hint: "Regras para crawlers. Cuidado ao editar." }
+          - label: Conteúdo
+            name: content
+            widget: text
+            hint: "Texto em Markdown servido em /llms.txt para ChatGPT, Perplexity, Claude e outros."
