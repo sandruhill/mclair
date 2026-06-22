@@ -67,6 +67,32 @@
   <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
 
   <script>
+    // Substitui "Sveltia CMS" por "Painel Mclair" em todo o DOM
+    function replaceBranding(root) {
+      const walker = document.createTreeWalker(root, NodeFilter.SHOW_TEXT);
+      let node;
+      while ((node = walker.nextNode())) {
+        if (node.textContent.includes('Sveltia')) {
+          node.textContent = node.textContent
+            .replace(/Sveltia\s*CMS/gi, 'Painel Mclair')
+            .replace(/Sveltia/gi, 'Painel Mclair');
+        }
+      }
+      // title da aba
+      if (document.title.toLowerCase().includes('sveltia')) {
+        document.title = document.title.replace(/Sveltia\s*CMS/gi, 'Painel Mclair').replace(/Sveltia/gi, 'Painel Mclair');
+      }
+    }
+    const brandObserver = new MutationObserver((mutations) => {
+      mutations.forEach((m) => m.addedNodes.forEach((n) => {
+        if (n.nodeType === 1) replaceBranding(n);
+      }));
+      replaceBranding(document.body);
+    });
+    brandObserver.observe(document.body, { childList: true, subtree: true });
+  </script>
+
+  <script>
     const splash = document.getElementById('mclair-splash');
     const observer = new MutationObserver(() => {
       // Sveltia renders a root element into body — when it appears, hide splash
