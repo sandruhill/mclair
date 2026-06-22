@@ -275,9 +275,10 @@ ul, ol { list-style:none; }
 }
 .line-center.in { transform: scaleX(1); }
 
-/* Mobile: scale up base font for readability */
+/* Mobile: increase content text, keep badges/tags unchanged */
 @media (max-width:640px) {
-  html { font-size: 17px; }
+  .section-lead { font-size: 1.05rem !important; line-height: 1.95; }
+  p { font-size: 1rem; line-height: 1.9; }
 }
 
 /* Page entrance */
