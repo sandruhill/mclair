@@ -7,8 +7,77 @@
   <title>Mclair — Admin</title>
   <link rel="icon" href="/favicon.ico" />
   <link rel="stylesheet" href="/admin/cms.css" />
+  <style>
+    #mclair-splash {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      background: #fff;
+      z-index: 99999;
+      transition: opacity .4s ease;
+    }
+    #mclair-splash.fade {
+      opacity: 0;
+      pointer-events: none;
+    }
+    #mclair-splash img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+    #mclair-splash p {
+      font-family: system-ui, sans-serif;
+      font-size: 14px;
+      color: #888;
+      margin: 0;
+      letter-spacing: .02em;
+    }
+    #mclair-splash .dot-loader {
+      display: flex;
+      gap: 6px;
+    }
+    #mclair-splash .dot-loader span {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: #C8102E;
+      animation: dot-bounce .9s infinite ease-in-out;
+    }
+    #mclair-splash .dot-loader span:nth-child(2) { animation-delay: .15s; }
+    #mclair-splash .dot-loader span:nth-child(3) { animation-delay: .30s; }
+    @keyframes dot-bounce {
+      0%, 80%, 100% { transform: scale(.6); opacity: .4; }
+      40%            { transform: scale(1);  opacity: 1;   }
+    }
+  </style>
 </head>
 <body>
+  <div id="mclair-splash">
+    <img src="/logos/logo-icone-M.png" alt="Mclair" />
+    <div class="dot-loader">
+      <span></span><span></span><span></span>
+    </div>
+    <p>Carregando painel da Mclair</p>
+  </div>
+
   <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js"></script>
+
+  <script>
+    const splash = document.getElementById('mclair-splash');
+    const observer = new MutationObserver(() => {
+      // Sveltia renders a root element into body — when it appears, hide splash
+      const ready = document.querySelector('body > *:not(#mclair-splash):not(script)');
+      if (ready) {
+        splash.classList.add('fade');
+        setTimeout(() => splash.remove(), 450);
+        observer.disconnect();
+      }
+    });
+    observer.observe(document.body, { childList: true });
+  </script>
 </body>
 </html>
