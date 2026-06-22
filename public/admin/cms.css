@@ -1,0 +1,94 @@
+/* ── Mclair CMS — Tema customizado ──────────────────────────────────────── */
+
+:root {
+  --primary-color: #C8102E;
+  --accent-color:  #C8102E;
+  --highlight-color: #C8102E;
+  --button-primary-background: #C8102E;
+  --button-primary-background-hover: #a00c24;
+  --link-color: #C8102E;
+}
+
+/* Botões primários */
+button[class*="primary"],
+[class*="PrimaryButton"],
+[class*="primary-button"],
+button[style*="background"][style*="C8102E"],
+.nc-button-primary,
+[data-testid="login-button"] {
+  background: #C8102E !important;
+  border-color: #C8102E !important;
+}
+
+button[class*="primary"]:hover,
+[class*="PrimaryButton"]:hover {
+  background: #a00c24 !important;
+  border-color: #a00c24 !important;
+}
+
+/* Header / toolbar */
+header,
+[class*="header"],
+[class*="Header"],
+nav[class*="top"],
+[class*="toolbar"],
+[class*="Toolbar"] {
+  background: #151210 !important;
+}
+
+/* Sidebar de navegação */
+[class*="sidebar"],
+[class*="Sidebar"],
+[class*="nav-list"],
+aside {
+  background: #1a1614 !important;
+}
+
+/* Item ativo no menu lateral */
+[class*="active"][class*="nav"],
+[class*="NavItem"][class*="active"],
+[aria-current="true"] {
+  background: rgba(200, 16, 46, 0.15) !important;
+  border-left: 3px solid #C8102E !important;
+  color: #C8102E !important;
+}
+
+/* Links de hover na sidebar */
+[class*="NavItem"]:hover,
+[class*="sidebar"] a:hover {
+  background: rgba(200, 16, 46, 0.08) !important;
+  color: #C8102E !important;
+}
+
+/* Foco / outline */
+*:focus-visible {
+  outline-color: #C8102E !important;
+}
+
+/* Toast / notificações de sucesso */
+[class*="toast"][class*="success"],
+[class*="notification"][class*="success"] {
+  background: #C8102E !important;
+}
+
+/* Barra de progresso / loading */
+[class*="progress"],
+[class*="Progress"] {
+  background: #C8102E !important;
+}
+
+/* Logo no header — aumentar levemente */
+[class*="logo"] img,
+header img {
+  max-height: 36px;
+  width: auto;
+}
+
+/* Inputs — border focus em vermelho */
+input:focus,
+textarea:focus,
+select:focus,
+[class*="editor"]:focus-within {
+  border-color: #C8102E !important;
+  box-shadow: 0 0 0 2px rgba(200, 16, 46, 0.15) !important;
+}

@@ -5,6 +5,7 @@ backend:
   base_url: https://mclair.vercel.app
   auth_endpoint: api/auth
 
+logo_url: /logos/logo-white-hd.png
 locale: pt
 site_url: https://mclair.vercel.app
 display_url: https://mclair.vercel.app
