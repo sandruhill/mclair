@@ -4,10 +4,10 @@
   "color": "var(--red)",
   "accent": "#C8102E",
   "bg": "var(--red-soft)",
-  "headline": "Construa sua referência e reputação de marca",
-  "intro": "Posicionamos sua marca como a referência reconhecida no seu setor. Através do Marketing de Autoridade, aplicamos estratégias que constroem credibilidade, confiança e uma reputação sólida de forma consistente.",
-  "desc": "O Marketing de Autoridade é a estratégia que transforma marcas e profissionais em referências reconhecidas pelo mercado. Na Mclair, desenvolvemos planos personalizados que combinam posicionamento de marca, criação de conteúdo estratégico e presença digital para construir autoridade duradoura.",
-  "homeDesc": "Posicionamos sua marca como líder reconhecida no mercado. Construímos sua autoridade através de estratégias de conteúdo, presença digital e comunicação estratégica.",
+  "headline": "Sua marca como primeira escolha do mercado",
+  "intro": "Construímos o posicionamento que faz decisores pensarem em você primeiro. Conteúdo estratégico, presença digital e narrativa de marca que geram credibilidade antes de qualquer reunião.",
+  "desc": "Marketing de Autoridade é saber onde aparecer, o que dizer e como ser lembrado. Na Mclair, mapeamos os canais que sua audiência usa, produzimos conteúdo com substância e monitoramos percepção de mercado. Sua marca ganha credibilidade antes de qualquer apresentação comercial.",
+  "homeDesc": "Seu nome como primeira escolha no setor. Produzimos conteúdo, gerenciamos presença digital e construímos a narrativa que faz decisores pensarem em você antes da concorrência.",
   "items": [
     "Mentoria em posicionamento digital e marca pessoal",
     "Estratégias de conteúdo para Marketing de Autoridade",
@@ -17,5 +17,5 @@
     "Monitoramento de reputação e percepção de mercado"
   ],
   "cta": "Solicitar Diagnóstico de Autoridade",
-  "metaDescription": "Construa sua autoridade de marca com a Mclair. Estratégias de Marketing de Autoridade para posicionar sua empresa como referência reconhecida no mercado."
+  "metaDescription": "Marketing de Autoridade com a Mclair. Posicionamos sua marca como primeira escolha do setor com conteúdo estratégico, presença digital e narrativa de marca."
 }

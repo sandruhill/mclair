@@ -18,7 +18,7 @@ const services = (allServicos as any[])
   .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
   .map(s => ({
     num:   s.entry.num ?? '',
-    title: s.entry.title.name,
+    title: String(s.entry.title),
     desc:  s.entry.homeDesc || s.entry.intro || '',
     color: s.entry.color || 'var(--red)',
     href:  `/servicos/${s.slug}`,
@@ -38,13 +38,15 @@ const cases = (allCases as any[])
 ---
 
 <Layout
-  title="Mclair | Comunicação Estratégica e Marketing de Autoridade"
-  description="Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2017."
+  title={hpContent?.seo?.title || 'Mclair | Comunicação Estratégica e Marketing de Autoridade'}
+  description={hpContent?.seo?.description || 'Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2004.'}
+  keywords={hpContent?.seo?.keywords}
+  ogImage={hpContent?.seo?.ogImage || undefined}
   schema={{
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
-    description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
+    description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2004.',
     url: 'https://mclair.vercel.app/',
     isPartOf: { '@id': 'https://mclair.vercel.app/#website' },
     about: { '@id': 'https://mclair.vercel.app/#organization' },
@@ -58,7 +60,7 @@ const cases = (allCases as any[])
   <div class="hero-video-wrap" aria-hidden="true" id="hero-video-wrap">
     <div class="hero-video-overlay"></div>
   </div>
-  <script is:inline define:vars={{ videoId: hpContent?.heroVideoId ?? 'SB26MowGMDM' }}>
+  <script is:inline define:vars={{ videoId: hpContent?.heroVideoId ?? '1eeqZNn-k0Y' }}>
   (function() {
     function loadHeroVideo() {
       var wrap = document.getElementById('hero-video-wrap');
@@ -66,10 +68,11 @@ const cases = (allCases as any[])
       var iframe = document.createElement('iframe');
       iframe.src = 'https://www.youtube.com/embed/' + videoId
         + '?autoplay=1&mute=1&loop=1&playlist=' + videoId
-        + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
+        + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&start=15';
       iframe.frameBorder = '0';
       iframe.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
       iframe.allowFullscreen = true;
+      iframe.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:max(100vw,177.78vh);height:max(100vh,56.25vw);min-width:100%;min-height:100%;pointer-events:none;opacity:.5;border:0;';
       wrap.insertBefore(iframe, wrap.firstChild);
     }
     if ('requestIdleCallback' in window) {
@@ -90,7 +93,7 @@ const cases = (allCases as any[])
   <div class="container hero-inner">
     <div class="hero-content">
       <div class="hero-eyebrow" data-anim="fade">
-        <span class="he-label">Agência de Marketing · São Paulo · Desde 2017</span>
+        <span class="he-label">Agência de Marketing · São Paulo · Desde 2004</span>
       </div>
 
       <h1 class="hero-title">
@@ -109,7 +112,7 @@ const cases = (allCases as any[])
       </h1>
 
       <p class="hero-sub" data-anim data-delay="4">
-        Em 8 anos e 200+ clientes atendidos, desenvolvemos a metodologia que une Comunicação Estratégica com Marketing de Autoridade para transformar marcas em referências reconhecidas no seu mercado.
+        22 anos, 200+ clientes, 11.600+ inserções na mídia. Posicionamos marcas como primeira escolha do mercado com Comunicação Estratégica e Marketing de Autoridade.
       </p>
 
       <div class="hero-actions" data-anim data-delay="5">
@@ -180,11 +183,11 @@ const cases = (allCases as any[])
       <div class="av-card av-card-3">
         <span class="av-agency-dot"></span>
         <strong>Agência Mclair</strong>
-        <span>São Paulo · Desde 2017</span>
+        <span>São Paulo · Desde 2004</span>
         <span class="av-exp">B2B &amp; B2C</span>
       </div>
       <div class="av-year-badge">
-        <span class="ayb-year">2017</span>
+        <span class="ayb-year">2004</span>
         <span class="ayb-label">Fundação</span>
       </div>
       <div class="av-bg-number" aria-hidden="true">8</div>
@@ -195,10 +198,10 @@ const cases = (allCases as any[])
         Transformamos sua<br/>comunicação em <span>legado</span>
       </h2>
       <p class="section-lead" data-anim data-delay="2">
-        Combinamos expertise multidisciplinar, dados e criatividade para desenvolver estratégias de comunicação B2B e B2C que engajam, geram valor tangível e fortalecem a reputação de marca no longo prazo.
+        Trabalhamos com Comunicação Estratégica em 23 segmentos, de startups a multinacionais. Cada projeto começa com diagnóstico, não com template.
       </p>
       <p class="section-lead" data-anim data-delay="3" style="margin-top:12px">
-        A Mclair atua em 23 segmentos de mercado, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro à frente, desenvolvemos estratégias que geram presença real: editorial, digital e de marca.
+        A Mclair atua em 23 segmentos, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro, geramos presença editorial, digital e de marca.
       </p>
       <div class="about-pills stagger-children" data-anim data-delay="3">
         <span class="pill">Comunicação Estratégica</span>
@@ -390,21 +393,15 @@ const cases = (allCases as any[])
 </section>
 
 <!-- ═══════════════ TESTIMONIALS ═══════════════ -->
-<section class="section testimonials-section">
-  <div class="container">
-    <div style="text-align:center;max-width:520px;margin:0 auto 64px">
-      <p class="eyebrow" data-anim style="justify-content:center">Depoimentos</p>
-      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
-        O que dizem nossos <span>clientes</span>
-      </h2>
-    </div>
-    <div class="testimonials-grid stagger-children">
-      {testimonials.map((t) => (
-        <div class="t-card">
+<section class="testimonials-ticker-section" aria-label="Depoimentos">
+  <div class="t-cards-marquee">
+    <div class="marquee-track" style="animation-duration:60s;gap:20px;padding:4px 0 8px;">
+      {[...testimonials, ...testimonials].map((t, i) => (
+        <div class="t-card" aria-hidden={i >= testimonials.length ? 'true' : undefined}>
           <div class="t-quote-mark">"</div>
           <p class="t-quote">{t.quote}</p>
           <div class="t-author">
-            <img src={t.photo} alt={`${t.name}, ${t.role} | Depoimento Mclair`} title={`${t.name}, ${t.role}`} class="t-avatar-img" loading="lazy" />
+            <img src={t.photo} alt={t.name} class="t-avatar-img" loading="lazy" />
             <div>
               <strong class="t-name">{t.name}</strong>
               <span class="t-role">{t.role}</span>
@@ -429,19 +426,6 @@ const cases = (allCases as any[])
       row.addEventListener('scroll', () => { hint.style.opacity = '0'; }, { once: true });
     }
 
-    // Testimonials auto-scroll on mobile
-    if (window.innerWidth <= 640) {
-      const tGrid = document.querySelector('.testimonials-grid') as HTMLElement;
-      if (tGrid) {
-        const cards = [...tGrid.querySelectorAll<HTMLElement>('.t-card')];
-        let ti = 0;
-        setInterval(() => {
-          ti = (ti + 1) % cards.length;
-          const cardW = cards[0].getBoundingClientRect().width + 16;
-          tGrid.scrollLeft = ti * cardW;
-        }, 3800);
-      }
-    }
   })();
 </script>
 
@@ -892,17 +876,16 @@ const cases = (allCases as any[])
 .mtkc-stats strong { font-size:1.3rem;font-weight:900;color:#fff; }
 .mtkc-stats span { font-size:.62rem;color:rgba(255,255,255,.55);font-weight:300; }
 
-/* ═══════════ TESTIMONIALS ═══════════ */
-.testimonials-section { background:#fff; }
-.testimonials-grid { display:grid;grid-template-columns:repeat(3,1fr);gap:24px; }
-.t-card { background:var(--cream);border:1px solid var(--line);border-radius:var(--r-lg);padding:36px 28px;transition:box-shadow .25s,transform .25s; }
-.t-card:hover { box-shadow:var(--shadow-md);transform:translateY(-3px); }
-.t-quote-mark { font-size:4rem;line-height:1;color:var(--red);opacity:.2;font-weight:900;height:32px;display:block; }
-.t-quote { font-size:.88rem;color:var(--ink-2);line-height:1.85;font-weight:300;font-style:italic;margin-bottom:24px; }
-.t-author { display:flex;align-items:center;gap:12px; }
-.t-avatar-img { width:44px;height:44px;border-radius:50%;object-fit:cover;flex-shrink:0;border:2px solid var(--line); }
-.t-name { display:block;font-size:.88rem;font-weight:700;color:var(--ink); }
-.t-role { display:block;font-size:.74rem;color:var(--ink-3);font-weight:300; }
+/* ═══════════ TESTIMONIALS MARQUEE ═══════════ */
+.testimonials-ticker-section { background:#fff; border-top:1px solid var(--line); border-bottom:1px solid var(--line); padding:32px 0; overflow:hidden; }
+.t-cards-marquee { overflow:hidden; }
+.t-card { background:var(--cream); border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 24px; width:340px; flex-shrink:0; }
+.t-quote-mark { font-size:3rem; line-height:1; color:var(--red); opacity:.2; font-weight:900; height:28px; display:block; }
+.t-quote { font-size:.83rem; color:var(--ink-2); line-height:1.8; font-weight:300; font-style:italic; margin-bottom:20px; }
+.t-author { display:flex; align-items:center; gap:12px; }
+.t-avatar-img { width:40px; height:40px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid var(--line); }
+.t-name { display:block; font-size:.85rem; font-weight:700; color:var(--ink); }
+.t-role { display:block; font-size:.72rem; color:var(--ink-3); font-weight:300; }
 
 /* ═══════════ MENTORIA SWIPE HINT ═══════════ */
 .mt-swipe-hint {
@@ -938,7 +921,6 @@ const cases = (allCases as any[])
   .about-visual { height:360px; }
   .av-bg-number { display:none; }
   .services-grid { grid-template-columns:repeat(2,1fr); }
-  .testimonials-grid { grid-template-columns:repeat(2,1fr); }
   .cases-grid { grid-template-columns:repeat(2,1fr); }
   .cases-banner-inner { flex-direction:column;align-items:flex-start;padding-bottom:40px; }
   .cib-stats { gap:24px; }
@@ -970,14 +952,6 @@ const cases = (allCases as any[])
   .case-client { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
   .case-result { grid-column:2; grid-row:2; margin-top:2px; }
   .case-cta { grid-column:2; grid-row:3; padding-top:6px; }
-  /* Testimonials mobile carousel */
-  .testimonials-grid {
-    display:flex; overflow-x:auto; scroll-snap-type:x mandatory;
-    scrollbar-width:none; -webkit-overflow-scrolling:touch;
-    gap:16px; scroll-behavior:smooth;
-  }
-  .testimonials-grid::-webkit-scrollbar { display:none; }
-  .t-card { flex:0 0 88%; scroll-snap-align:start; }
   .mt-cards-row {
     display:flex;flex-direction:row;
     overflow-x:auto;scroll-snap-type:x mandatory;

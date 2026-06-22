@@ -1,9 +1,9 @@
 {
   "content": {
-    "heroVideoId": "SB26MowGMDM",
+    "heroVideoId": "1eeqZNn-k0Y",
     "stats": [
       {
-        "n": "8",
+        "n": "22",
         "s": "+",
         "label": "Anos de mercado"
       },
@@ -54,6 +54,12 @@
         "role": "CEO, Ynusitado",
         "photo": "https://mclair.com.br/images/galeria/26-01-2021_1_e7408324dd0280fffa43e88331fee076.png"
       }
-    ]
+    ],
+    "seo": {
+      "title": "Mclair | Comunicação Estratégica e Marketing de Autoridade",
+      "description": "Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2004.",
+      "keywords": "agência comunicação estratégica, marketing de autoridade, assessoria de imprensa são paulo, branding estratégico, mclair",
+      "ogImage": ""
+    }
   }
 }

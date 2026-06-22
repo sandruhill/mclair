@@ -38,6 +38,12 @@
         "title": "Resultados e Inovação",
         "desc": "Mensuração e ROI em Assessoria. Tendências da Assessoria 4.0 incluindo uso de IA e tecnologia em PR."
       }
-    ]
+    ],
+    "seo": {
+      "title": "Mentorias Bolder & Bolder Press | Kelly Pinheiro | Mclair",
+      "description": "Mentorias exclusivas com Kelly Pinheiro. Bolder: posicione sua marca como autoridade. Bolder Press: domine a assessoria de imprensa moderna.",
+      "keywords": "mentoria comunicação estratégica, kelly pinheiro mentoria, bolder mentoria, bolder press, marketing de autoridade",
+      "ogImage": "https://mclair.vercel.app/mentoria/kelly-pinheiro-new.jpg"
+    }
   }
 }

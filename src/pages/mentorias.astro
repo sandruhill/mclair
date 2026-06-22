@@ -12,11 +12,14 @@ const mentoriasData = await reader.singletons.mentorias.read().catch(() => null)
 const mentoriasContent = (mentoriasData as any)?.content;
 const bolderLevels     = (mentoriasContent?.bolderLevels      ?? []) as any[];
 const bolderPressLevels = (mentoriasContent?.bolderPressLevels ?? []) as any[];
+const seo = mentoriasContent?.seo ?? {};
 ---
 
 <Layout
-  title="Mentorias Bolder e Bolder Press | Mclair: Kelly Pinheiro"
-  description="Bolder (3 níveis de Marca Pessoal) e Bolder Press (4 módulos de Assessoria de Imprensa). Conduzidas por Kelly Pinheiro, 20+ anos de experiência."
+  title={seo.title || 'Mentorias Bolder e Bolder Press | Mclair: Kelly Pinheiro'}
+  description={seo.description || 'Bolder (3 níveis de Marca Pessoal) e Bolder Press (4 módulos de Assessoria de Imprensa). Conduzidas por Kelly Pinheiro, 20+ anos de experiência.'}
+  ogImage={seo.ogImage || undefined}
+  keywords={seo.keywords}
   schema={{
     '@context': 'https://schema.org',
     '@type': 'ItemList',

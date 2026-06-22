@@ -18,7 +18,7 @@ export async function getStaticPaths() {
       color:       s.entry.color || 'var(--red)',
       accent:      s.entry.accent || '#C8102E',
       bg:          s.entry.bg || 'var(--red-soft)',
-      title:       s.entry.title.name,
+      title:       String(s.entry.title),
       headline:    s.entry.headline ?? '',
       intro:       s.entry.intro ?? '',
       desc:        s.entry.desc ?? '',
@@ -87,8 +87,8 @@ const { s, others } = Astro.props;
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
-      <h1 class="sh-title" data-anim data-delay="1"><span class="sh-num-prefix">{s.num}</span> {s.title}</h1>
-      <p class="sh-headline" data-anim data-delay="2">{s.headline}</p>
+      <span class="sh-num">{s.num}</span>
+      <h1 class="sh-title" data-anim data-delay="1">{s.title}</h1>
       <p class="sh-intro" data-anim data-delay="3">{s.intro}</p>
       <div class="sh-actions" data-anim data-delay="4">
         <a href={WA} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
@@ -98,7 +98,7 @@ const { s, others } = Astro.props;
     <div class="sh-card" data-anim="right" data-delay="2">
       <div class="sc-inner">
         <div class="sc-num-big" style={`color:${s.accent}`}>{s.num}</div>
-        <h3 class="sc-title">{s.title}</h3>
+        <h2 class="sc-title">{s.title}</h2>
         <div class="sc-divider"></div>
         <ul class="sc-items">
           {s.items.slice(0,4).map(item => (
@@ -186,10 +186,8 @@ const { s, others } = Astro.props;
 .sh-breadcrumb { display: flex; align-items: center; gap: 8px; font-size: .72rem; letter-spacing: .08em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 14px; }
 .sh-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
 .sh-breadcrumb a:hover { color: #fff; }
-.sh-num { font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 10px; }
-.sh-num-prefix { font-weight: 900; color: var(--accent); margin-right: 14px; letter-spacing: -.02em; }
-.sh-title { font-size: clamp(2.4rem,5vw,4rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 12px; }
-.sh-headline { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,.75); margin-bottom: 16px; }
+.sh-num { display: none; }
+.sh-title { font-size: clamp(2.4rem,5vw,4rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 20px; }
 .sh-intro { font-size: .94rem; font-weight: 300; color: rgba(255,255,255,.6); line-height: 1.85; margin-bottom: 32px; max-width: 520px; }
 .sh-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-white { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .88rem 1.8rem; border-radius: var(--r-sm); transition: opacity .2s, transform .15s; }
@@ -238,7 +236,7 @@ const { s, others } = Astro.props;
 .os-arrow { position: absolute; top: 20px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
 .os-card:hover .os-arrow { color: var(--red); transform: translate(2px,-2px); }
 
-@media (max-width: 900px) { .sh-inner { grid-template-columns: 1fr; } .sh-card { display: none; } .svc-content-grid { grid-template-columns: 1fr; } .sc-right { position: static; } .os-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 900px) { .sh-inner { grid-template-columns: 1fr; } .sh-card { display: none; } .sh-num { display: block; font-size: .9rem; font-weight: 700; letter-spacing: .04em; color: var(--accent); margin-bottom: 12px; } .svc-content-grid { grid-template-columns: 1fr; } .sc-right { position: static; } .os-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 600px) {
   .os-grid { grid-template-columns: 1fr; }
   .sh-actions { flex-direction: column; align-items: stretch; }

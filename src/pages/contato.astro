@@ -12,6 +12,7 @@ const contatoContent = (contatoData as any)?.content;
 const faqs    = (contatoContent?.faqs  ?? []) as any[];
 const phone   = contatoContent?.contactInfo?.phone ?? '(11) 98860-0372';
 const email   = contatoContent?.contactInfo?.email ?? 'kelly@mclair.com.br';
+const seo = contatoContent?.seo ?? {};
 
 const servicos = [
   'Marketing de Autoridade','Assessoria de Imprensa','Branding Estratégico',
@@ -20,8 +21,9 @@ const servicos = [
 ---
 
 <Layout
-  title="Contato Mclair | Marketing de Autoridade em São Paulo"
-  description="Fale com a Mclair. Solicite uma consultoria em Comunicação Estratégica ou Marketing de Autoridade. kelly@mclair.com.br | (11) 98860-0372."
+  title={seo.title || 'Contato Mclair | Marketing de Autoridade em São Paulo'}
+  description={seo.description || 'Fale com a Mclair. Solicite uma consultoria em Comunicação Estratégica ou Marketing de Autoridade. kelly@mclair.com.br | (11) 98860-0372.'}
+  keywords={seo.keywords}
   schema={{
     '@context': 'https://schema.org',
     '@type': 'FAQPage',

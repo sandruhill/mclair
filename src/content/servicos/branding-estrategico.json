@@ -4,10 +4,10 @@
   "color": "var(--orange)",
   "accent": "#D4611B",
   "bg": "rgba(212,97,27,.08)",
-  "headline": "Criando marcas fortes com propósito e coerência",
-  "intro": "Construímos e revitalizamos marcas através do Branding Estratégico, alinhando identidade, propósito e posicionamento para criar conexões duradouras com o público certo.",
-  "desc": "Uma marca forte vai muito além de um logo bonito. É a soma de cada experiência que o público tem com sua empresa. Na Mclair, desenvolvemos Branding Estratégico que conecta identidade visual, tom de voz, propósito e posicionamento de mercado — criando marcas que ficam na memória e geram valor tangível.",
-  "homeDesc": "Criamos e revitalizamos marcas com propósito e coerência. Da estratégia à identidade visual, desenvolvemos marcas que ficam na memória e se destacam no mercado.",
+  "headline": "Uma identidade que o mercado reconhece antes de você se apresentar",
+  "intro": "Criamos marcas com identidade visual, linguagem e posicionamento alinhados. Quando tudo faz sentido junto, sua empresa para de explicar o que faz e começa a ser escolhida.",
+  "desc": "Uma marca forte começa com clareza: quem você é, para quem fala e por que importa. Na Mclair, criamos identidade visual, linguagem e posicionamento como sistema integrado. Do logo ao manual de marca, cada elemento reforça o mesmo ponto.",
+  "homeDesc": "Da estratégia à identidade visual, criamos marcas com posicionamento claro. Quando tudo faz sentido junto, sua empresa para de explicar o que faz e começa a ser escolhida.",
   "items": [
     "Estratégia de marca e posicionamento de mercado",
     "Identidade visual e manual de marca completo",
@@ -16,6 +16,6 @@
     "Aplicações e materiais gráficos institucionais",
     "Brand guidelines e governança de marca"
   ],
-  "cta": "Transformar sua Marca",
-  "metaDescription": "Branding Estratégico com a Mclair. Construção e revitalização de marcas com propósito, identidade sólida e posicionamento de mercado claro."
+  "cta": "Fortalecer sua Marca",
+  "metaDescription": "Branding Estratégico com a Mclair. Identidade visual, posicionamento e linguagem de marca como sistema integrado para ser escolhida antes da concorrência."
 }

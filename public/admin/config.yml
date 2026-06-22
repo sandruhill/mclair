@@ -2,8 +2,8 @@ backend:
   name: github
   repo: sandruhill/mclair
   branch: main
-  auth_type: pkce
-  app_id: Ov23liFXNpqlMWtdssuS
+  base_url: https://mclair.vercel.app
+  auth_endpoint: api/auth
 
 locale: pt
 site_url: https://mclair.vercel.app
@@ -12,128 +12,379 @@ display_url: https://mclair.vercel.app
 media_folder: public/uploads
 public_folder: /uploads
 
-# ─── COLEÇÕES ────────────────────────────────────────────────────────────────
-
+# ─────────────────────────────────────────────────────────────────────────────
 collections:
 
-  # ── BLOG ──────────────────────────────────────────────────────────────────
-  - name: blog
-    label: Blog
-    label_singular: Post
-    folder: src/content/blog
+  # ═══════════════════════════════════════════════════════════════════════════
+  # PÁGINAS
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: paginas
+    label: Páginas
+    files:
+
+      # ── Homepage ────────────────────────────────────────────────────────────
+      - label: Homepage
+        name: homepage
+        file: src/content/singletons/homepage.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: SEO & GEO
+                name: seo
+                widget: object
+                collapsed: false
+                fields:
+                  - { label: Título da página, name: title, widget: string, hint: "Máx. 60 chars" }
+                  - { label: Meta description, name: description, widget: string, hint: "Máx. 160 chars" }
+                  - { label: Keywords, name: keywords, widget: string, required: false }
+                  - { label: Imagem OG (1200×630), name: ogImage, widget: image, required: false }
+              - { label: YouTube — ID do vídeo hero, name: heroVideoId, widget: string, hint: "Apenas o ID, ex: 1eeqZNn-k0Y" }
+              - label: Estatísticas (cards do hero)
+                name: stats
+                widget: list
+                fields:
+                  - { label: Número, name: n, widget: string }
+                  - { label: Sufixo, name: s, widget: string, required: false, hint: "Ex: +" }
+                  - { label: Rótulo, name: label, widget: string }
+              - label: Depoimentos
+                name: testimonials
+                widget: list
+                fields:
+                  - { label: Depoimento, name: quote, widget: text }
+                  - { label: Nome, name: name, widget: string }
+                  - { label: Cargo / Empresa, name: role, widget: string }
+                  - { label: Foto, name: photo, widget: image }
+
+      # ── Sobre ───────────────────────────────────────────────────────────────
+      - label: Sobre
+        name: sobre
+        file: src/content/singletons/sobre.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: SEO & GEO
+                name: seo
+                widget: object
+                collapsed: false
+                fields:
+                  - { label: Título da página, name: title, widget: string }
+                  - { label: Meta description, name: description, widget: string }
+                  - { label: Keywords, name: keywords, widget: string, required: false }
+                  - { label: Imagem OG (1200×630), name: ogImage, widget: image, required: false }
+              - label: Valores
+                name: valores
+                widget: list
+                fields:
+                  - { label: Ícone, name: icon, widget: string }
+                  - { label: Título, name: title, widget: string }
+                  - { label: Descrição, name: desc, widget: text }
+              - label: Equipe
+                name: equipe
+                widget: list
+                fields:
+                  - { label: Nome, name: nome, widget: string }
+                  - { label: Cargo, name: cargo, widget: string }
+                  - { label: Iniciais (2 letras), name: initials, widget: string }
+                  - { label: Bio, name: bio, widget: text }
+                  - { label: Foto, name: photo, widget: image, required: false }
+              - label: Timeline
+                name: timeline
+                widget: list
+                fields:
+                  - { label: Ano, name: year, widget: string }
+                  - { label: Evento, name: ev, widget: text }
+
+      # ── Clientes ────────────────────────────────────────────────────────────
+      - label: Clientes
+        name: clientes
+        file: src/content/singletons/clientes.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: SEO & GEO
+                name: seo
+                widget: object
+                collapsed: false
+                fields:
+                  - { label: Título da página, name: title, widget: string }
+                  - { label: Meta description, name: description, widget: string }
+                  - { label: Keywords, name: keywords, widget: string, required: false }
+                  - { label: Imagem OG (1200×630), name: ogImage, widget: image, required: false }
+              - label: Lista de Clientes
+                name: clients
+                widget: list
+                fields:
+                  - { label: Nome, name: name, widget: string }
+                  - { label: Logo, name: logo, widget: image }
+              - label: Estatísticas
+                name: stats
+                widget: list
+                fields:
+                  - { label: Número, name: n, widget: string }
+                  - { label: Rótulo, name: label, widget: string }
+
+      # ── Contato ─────────────────────────────────────────────────────────────
+      - label: Contato
+        name: contato
+        file: src/content/singletons/contato.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: SEO & GEO
+                name: seo
+                widget: object
+                collapsed: false
+                fields:
+                  - { label: Título da página, name: title, widget: string }
+                  - { label: Meta description, name: description, widget: string }
+                  - { label: Keywords, name: keywords, widget: string, required: false }
+              - label: Informações de Contato
+                name: contactInfo
+                widget: object
+                fields:
+                  - { label: Telefone / WhatsApp, name: phone, widget: string }
+                  - { label: E-mail, name: email, widget: string }
+              - label: Perguntas Frequentes (FAQ)
+                name: faqs
+                widget: list
+                fields:
+                  - { label: Pergunta, name: q, widget: string }
+                  - { label: Resposta, name: a, widget: text }
+
+      # ── Mentorias ───────────────────────────────────────────────────────────
+      - label: Mentorias
+        name: mentorias
+        file: src/content/singletons/mentorias.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: SEO & GEO
+                name: seo
+                widget: object
+                collapsed: false
+                fields:
+                  - { label: Título da página, name: title, widget: string }
+                  - { label: Meta description, name: description, widget: string }
+                  - { label: Keywords, name: keywords, widget: string, required: false }
+              - label: "Módulos — Bolder"
+                name: bolderLevels
+                widget: list
+                fields:
+                  - { label: Número, name: n, widget: string }
+                  - { label: Título, name: title, widget: string }
+                  - { label: Descrição, name: desc, widget: text }
+              - label: "Módulos — Bolder Press"
+                name: bolderPressLevels
+                widget: list
+                fields:
+                  - { label: Número, name: n, widget: string }
+                  - { label: Título, name: title, widget: string }
+                  - { label: Descrição, name: desc, widget: text }
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SERVIÇOS
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: servicos
+    label: Serviços
+    label_singular: Serviço
+    folder: src/content/servicos
     create: true
     delete: true
-    slug: "{{slug}}"
-    preview_path: "/blog/{{slug}}"
-    summary: "{{title}} — {{author}} ({{date}})"
-    sortable_fields: [date, title, author]
-    view_filters:
-      - label: Claudia Elisa Soares
-        field: author
-        pattern: Claudia Elisa Soares
-      - label: Elemar Júnior
-        field: author
-        pattern: Elemar Júnior
-      - label: Lambda3
-        field: author
-        pattern: Lambda3
+    extension: json
+    format: json
+    identifier_field: title
+    preview_path: "/servicos/{{slug}}"
+    summary: "{{num}} — {{title}}"
+    sortable_fields: [num, title]
     fields:
-      - { label: Título, name: title, widget: string, hint: "Máx. 70 caracteres para SEO ideal" }
-      - { label: Subtítulo, name: subtitle, widget: string, required: false, hint: "Aparece abaixo do título e é usado na meta description" }
-      - { label: Data, name: date, widget: datetime, date_format: DD/MM/YYYY, time_format: false, format: DD/MM/YYYY }
-      - { label: Autor, name: author, widget: string, default: "Mclair Comunicação" }
-      - label: Imagem de Capa
-        name: image
-        widget: image
+      - { label: Número (ordem), name: num, widget: string, hint: "01, 02, 03..." }
+      - { label: Título, name: title, widget: string }
+      - { label: Cor principal (CSS var), name: color, widget: string, default: "var(--red)", hint: "Ex: var(--red), var(--teal)" }
+      - { label: Cor de destaque (hex), name: accent, widget: string, default: "#C8102E" }
+      - { label: Cor de fundo (CSS), name: bg, widget: string, required: false }
+      - { label: Headline da página, name: headline, widget: string }
+      - { label: Introdução curta, name: intro, widget: text }
+      - { label: Descrição completa, name: desc, widget: markdown }
+      - { label: Descrição na Homepage (card), name: homeDesc, widget: text }
+      - label: O que inclui
+        name: items
+        widget: list
+        field: { label: Item, name: item, widget: string }
+      - { label: Imagem de destaque, name: image, widget: image, required: false }
+      - { label: Texto do botão CTA, name: cta, widget: string }
+      - label: SEO & GEO
+        name: seo_geo
+        widget: object
         required: false
-        hint: "Ideal 1200×630px. Usada no Open Graph (WhatsApp, LinkedIn, etc.)"
-      - label: Conteúdo
-        name: body
-        widget: markdown
-        hint: "Escreva o conteúdo do post aqui"
+        fields:
+          - { label: Meta description, name: metaDescription, widget: string, hint: "Máx. 160 chars" }
+          - { label: Keywords, name: keywords, widget: string, required: false }
 
-  # ── CASES ─────────────────────────────────────────────────────────────────
+  # ═══════════════════════════════════════════════════════════════════════════
+  # CASES
+  # ═══════════════════════════════════════════════════════════════════════════
   - name: cases
     label: Cases
     label_singular: Case
     folder: src/content/cases
     create: true
     delete: true
-    slug: "{{slug}}"
+    extension: json
+    format: json
+    identifier_field: client
     preview_path: "/cases/{{slug}}"
-    summary: "{{title}} — {{category}}"
+    summary: "{{num}} — {{client}}"
+    sortable_fields: [num, client]
     fields:
-      - { label: Nome do Cliente, name: title, widget: string }
-      - { label: Slug (URL), name: slug, widget: string, hint: "Ex: claudia-elisa (sem espaços, sem acentos)" }
-      - { label: Categoria, name: category, widget: string, hint: "Ex: Branding, Assessoria de Imprensa" }
-      - { label: Descrição curta, name: description, widget: string }
-      - { label: Texto completo, name: body, widget: markdown }
-      - label: Imagem principal
-        name: image
-        widget: image
-        required: false
-      - label: Galeria de imagens
+      - { label: Nome do Cliente, name: client, widget: string }
+      - { label: Número (ordem), name: num, widget: string }
+      - { label: Cor principal (CSS var), name: color, widget: string, default: "var(--red)" }
+      - { label: Cor de destaque (hex), name: accent, widget: string, default: "#C8102E" }
+      - { label: Setor / Tipo de trabalho, name: sector, widget: string }
+      - { label: Desafio, name: challenge, widget: markdown }
+      - { label: Solução, name: solution, widget: markdown }
+      - label: Resultados
+        name: results
+        widget: list
+        fields:
+          - { label: Valor, name: v, widget: string, hint: "Ex: 3×, 45%, 200+" }
+          - { label: Rótulo, name: l, widget: string }
+      - label: Tags
+        name: tags
+        widget: list
+        field: { label: Tag, name: tag, widget: string }
+      - { label: Imagem principal, name: img, widget: image, required: false }
+      - { label: Logo do cliente, name: logo, widget: image, required: false }
+      - label: Galeria
         name: gallery
         widget: list
         required: false
         fields:
           - { label: Imagem, name: src, widget: image }
           - { label: Legenda, name: caption, widget: string, required: false }
-      - label: Resultados / Métricas
-        name: results
-        widget: list
+      - { label: Resultado para Homepage, name: homeResult, widget: string }
+      - label: SEO & GEO
+        name: seo_geo
+        widget: object
         required: false
         fields:
-          - { label: Número, name: n, widget: string, hint: "Ex: 3×, 45%, 200+" }
-          - { label: Descrição, name: label, widget: string }
-      - label: Tags de serviços
-        name: tags
-        widget: list
-        required: false
-        field: { label: Tag, name: tag, widget: string }
+          - { label: Meta description, name: metaDescription, widget: string, hint: "Máx. 160 chars" }
+          - { label: Keywords, name: keywords, widget: string, required: false }
 
-  # ── CLIENTES ──────────────────────────────────────────────────────────────
-  - name: clientes
-    label: Clientes
-    label_singular: Cliente
-    folder: src/content/clientes
+  # ═══════════════════════════════════════════════════════════════════════════
+  # BLOG
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: blog
+    label: Blog
+    label_singular: Post
+    folder: src/content/blog
     create: true
     delete: true
-    slug: "{{name}}"
-    summary: "{{name}}"
+    extension: md
+    format: frontmatter
+    preview_path: "/blog/{{slug}}"
+    summary: "{{title}} — {{author}} ({{date}})"
+    sortable_fields: [date, title, author, category]
+    view_filters:
+      - { label: Kelly Pinheiro, field: author, pattern: Kelly Pinheiro }
+      - { label: Mclair Comunicação, field: author, pattern: Mclair }
     fields:
-      - { label: Nome, name: name, widget: string }
-      - label: Logo
-        name: logo
-        widget: image
+      - { label: Título, name: title, widget: string, hint: "Máx. 70 chars para SEO ideal" }
+      - { label: Subtítulo, name: subtitle, widget: string, required: false, hint: "Usado também como meta description padrão" }
+      - { label: Meta description (SEO), name: metaDescription, widget: string, required: false, hint: "Máx. 160 chars. Se vazio, usa o subtítulo." }
+      - { label: Data de publicação, name: date, widget: datetime, date_format: YYYY-MM-DD, time_format: false }
+      - { label: Autor, name: author, widget: string, default: "Mclair Comunicação" }
+      - label: Categoria
+        name: category
+        widget: select
+        default: geral
+        options:
+          - { label: Marketing de Autoridade, value: marketing-de-autoridade }
+          - { label: Assessoria de Imprensa, value: assessoria-de-imprensa }
+          - { label: Branding Estratégico, value: branding-estrategico }
+          - { label: Marketing Digital, value: marketing-digital }
+          - { label: Comunicação, value: comunicacao }
+          - { label: Marca Pessoal, value: marca-pessoal }
+          - { label: Negócios, value: negocios }
+          - { label: Geral, value: geral }
+      - { label: Imagem de capa, name: image, widget: image, required: false, hint: "Ideal 1200×630px (OG image)" }
+      - label: "Keywords SEO"
+        name: keywords
+        widget: list
         required: false
-        hint: "PNG com fundo transparente, ideal"
+        field: { label: Palavra-chave, name: keyword, widget: string }
+      - label: "Tópicos para IA (GEO — melhora citações no ChatGPT, Perplexity, Google AI)"
+        name: aboutTopics
+        widget: list
+        required: false
+        field: { label: Tópico / Entidade, name: topic, widget: string }
+      - label: "FAQ — Featured Snippets (rich results no Google + citações em IA)"
+        name: faqItems
+        widget: list
+        required: false
+        fields:
+          - { label: Pergunta, name: question, widget: string }
+          - { label: Resposta, name: answer, widget: text }
+      - { label: Conteúdo, name: body, widget: markdown }
 
-  # ── CONFIGURAÇÕES DAS PÁGINAS ──────────────────────────────────────────────
-  - name: pages
-    label: Páginas
+  # ═══════════════════════════════════════════════════════════════════════════
+  # CONFIGURAÇÕES GERAIS
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: configuracoes
+    label: Configurações
+    files:
+      - label: Configurações Gerais
+        name: configuracoes
+        file: src/content/singletons/configuracoes.json
+        fields:
+          - label: Conteúdo
+            name: content
+            widget: object
+            fields:
+              - label: Idioma do CMS
+                name: idioma
+                widget: select
+                default: pt-BR
+                hint: "Idioma padrão da interface de edição"
+                options:
+                  - { label: "Português (Brasil) — padrão", value: pt-BR }
+                  - { label: "English", value: en }
+                  - { label: "Español", value: es }
+                  - { label: "Français", value: fr }
+              - { label: Nome da Agência, name: nomeAgencia, widget: string }
+              - { label: "WhatsApp (só números, com DDI)", name: whatsapp, widget: string, hint: "Ex: 5511988600372" }
+              - { label: E-mail principal, name: email, widget: string }
+              - { label: "Instagram (sem @)", name: instagram, widget: string }
+              - { label: "LinkedIn (slug da empresa)", name: linkedin, widget: string }
+              - { label: URL do site, name: siteUrl, widget: string }
+              - { label: "Cor principal (hex)", name: corPrincipal, widget: string }
+              - { label: Ano de fundação, name: fundadoEm, widget: string }
+
+  # ═══════════════════════════════════════════════════════════════════════════
+  # SEO & GEO
+  # ═══════════════════════════════════════════════════════════════════════════
+  - name: seo_geo
+    label: SEO & GEO
     files:
 
-      - label: Página Inicial
-        name: home
-        file: src/data/pages/home.json
+      - label: "llms.txt — Conteúdo para IAs (ChatGPT, Perplexity, Claude)"
+        name: llms_txt
+        file: public/llms.txt
         fields:
-          - { label: Título principal (H1), name: hero_title, widget: string }
-          - { label: Subtítulo hero, name: hero_subtitle, widget: text }
-          - { label: Texto do botão CTA, name: hero_cta, widget: string }
+          - { label: Conteúdo, name: body, widget: markdown, hint: "Texto que aparece quando IAs consultam seu site. Use Markdown." }
 
-      - label: Sobre
-        name: sobre
-        file: src/data/pages/sobre.json
+      - label: robots.txt
+        name: robots_txt
+        file: public/robots.txt
         fields:
-          - { label: Título, name: title, widget: string }
-          - { label: Texto principal, name: body, widget: markdown }
-
-      - label: Mentorias
-        name: mentorias
-        file: src/data/pages/mentorias.json
-        fields:
-          - { label: Título Bolder, name: bolder_title, widget: string }
-          - { label: Descrição Bolder, name: bolder_desc, widget: markdown }
-          - { label: Título Bolder Press, name: press_title, widget: string }
-          - { label: Descrição Bolder Press, name: press_desc, widget: markdown }
+          - { label: Conteúdo, name: body, widget: code, default_language: text, hint: "Regras para crawlers. Cuidado ao editar." }

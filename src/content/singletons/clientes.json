@@ -107,6 +107,12 @@
         "n": "23+",
         "label": "Segmentos"
       }
-    ]
+    ],
+    "seo": {
+      "title": "Clientes | Mclair Comunicação Estratégica",
+      "description": "Mais de 200 marcas atendidas pela Mclair em 23+ segmentos. Comunicação Estratégica e Marketing de Autoridade com resultados mensuráveis.",
+      "keywords": "clientes mclair, marcas atendidas, agência comunicação estratégica",
+      "ogImage": "https://mclair.vercel.app/paginas/clientes-resultados-mclair.jpg"
+    }
   }
 }

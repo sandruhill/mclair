@@ -15,7 +15,7 @@ const services = (allServicos as any[])
     color:    s.entry.color || 'var(--red)',
     bg:       s.entry.bg || 'var(--red-soft)',
     slug:     s.slug,
-    title:    s.entry.title.name,
+    title:    String(s.entry.title),
     headline: s.entry.headline ?? '',
     desc:     s.entry.homeDesc || s.entry.intro || '',
     items:    (s.entry.items ?? []) as string[],

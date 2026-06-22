@@ -4,10 +4,10 @@
   "color": "var(--teal)",
   "accent": "#1B8A76",
   "bg": "rgba(27,138,118,.08)",
-  "headline": "Planejamento estratégico personalizado para resultados",
-  "intro": "Nossa Consultoria em Comunicação avalia sua situação atual, identifica oportunidades e desenvolve planos estratégicos focados em resultados concretos e posicionamento de marca sólido.",
-  "desc": "Antes de agir, é preciso pensar. Nossa Consultoria em Comunicação oferece uma visão externa e estratégica da sua comunicação — identificando gaps, oportunidades e os caminhos mais eficientes para alcançar seus objetivos. Com diagnósticos precisos e planos executáveis, transformamos insights em resultados.",
-  "homeDesc": "Diagnóstico preciso e planejamento personalizado. Avaliamos sua situação, identificamos oportunidades e desenvolvemos planos estratégicos focados em resultados duradouros.",
+  "headline": "Diagnóstico claro, plano de ação com prioridades reais",
+  "intro": "Avaliamos sua comunicação hoje, identificamos onde você perde presença e entregamos um plano de ação com prioridades. Sem diagnóstico genérico, sem solução de prateleira.",
+  "desc": "Nossa Consultoria mapeia sua comunicação atual, compara com concorrentes diretos, identifica gaps e entrega um plano com ações ordenadas por impacto. Você decide o que executar e quando.",
+  "homeDesc": "Diagnóstico de comunicação e plano de ação personalizado. Avaliamos onde você está, comparamos com o mercado e entregamos prioridades claras.",
   "items": [
     "Diagnóstico completo de comunicação corporativa",
     "Desenvolvimento de plano estratégico integrado",
@@ -17,5 +17,5 @@
     "Planejamento de comunicação anual"
   ],
   "cta": "Solicitar Consultoria Estratégica",
-  "metaDescription": "Consultoria em Comunicação Estratégica com a Mclair. Diagnóstico e planejamento personalizado para resultados em comunicação e posicionamento de marca."
+  "metaDescription": "Consultoria em Comunicação com a Mclair. Diagnóstico real, comparação com concorrentes e plano de ação com prioridades, sem genérico."
 }

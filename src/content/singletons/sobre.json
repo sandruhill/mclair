@@ -73,6 +73,12 @@
         "year": "2025",
         "ev": "Consolidação como referência em Marketing de Autoridade no Brasil"
       }
-    ]
+    ],
+    "seo": {
+      "title": "Sobre a Mclair | Comunicação Estratégica desde 2004",
+      "description": "Agência fundada em 2004 por Kelly Pinheiro. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia e 1.734 publicações internacionais.",
+      "keywords": "agência comunicação estratégica, marketing de autoridade São Paulo, assessoria de imprensa, Kelly Pinheiro, Mclair agência",
+      "ogImage": "https://mclair.vercel.app/sobre/equipe-mclair-comunicacao-estrategica.jpg"
+    }
   }
 }

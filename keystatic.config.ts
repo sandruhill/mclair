@@ -167,7 +167,7 @@ export default config({
       label: 'Blog',
       slugField: 'title',
       path: 'src/content/blog/*',
-      format: { contentField: 'content' },
+      format: { contentField: 'content', data: 'yaml' },
       entryLayout: 'content',
       previewUrl: 'https://mclair.vercel.app/blog/{slug}',
       schema: {

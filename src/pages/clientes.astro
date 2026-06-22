@@ -9,11 +9,14 @@ const clientesData = await reader.singletons.clientes.read().catch(() => null);
 const clientesContent = (clientesData as any)?.content;
 const clients = (clientesContent?.clients ?? []) as any[];
 const stats   = (clientesContent?.stats   ?? []) as any[];
+const seo = clientesContent?.seo ?? {};
 ---
 
 <Layout
-  title="Clientes Mclair | 200+ marcas atendidas desde 2017"
-  description="200+ empresas de 23 segmentos confiam na Mclair para Comunicação Estratégica, Marketing de Autoridade e Assessoria de Imprensa. São Paulo."
+  title={seo.title || 'Clientes | Mclair Comunicação Estratégica'}
+  description={seo.description || '200+ empresas de 23 segmentos confiam na Mclair para Comunicação Estratégica, Marketing de Autoridade e Assessoria de Imprensa. São Paulo.'}
+  ogImage={seo.ogImage || undefined}
+  keywords={seo.keywords}
 >
 
 <!-- HERO -->
