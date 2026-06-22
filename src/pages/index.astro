@@ -466,11 +466,12 @@ const cases = (allCases as any[])
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-  width: max(100%, calc(100vh * 1.778));
+  /* Cover: garante que o vídeo preenche toda a área em qualquer proporção */
+  width: max(100%, calc(100svh * 1.778));
   height: max(100%, calc(100vw * 0.5625));
   min-width: 100%; min-height: 100%;
   pointer-events: none;
-  opacity: 0.45;
+  opacity: 0.5;
 }
 .hero-video-overlay {
   position: absolute; inset: 0; z-index: 1;
@@ -946,12 +947,13 @@ const cases = (allCases as any[])
   .mt-kelly-card { flex-direction:column; }
 }
 @media (max-width:640px) {
+  .hero { height: 100svh; }
   .hero-eyebrow { display:none; }
   .hero-title-line { display:block; }
   .services-grid { grid-template-columns:1fr; }
   .section-header { flex-direction:column; }
   .clients-strip { flex-direction:column;gap:12px;align-items:flex-start; }
-  .hero-title { font-size: clamp(1.05rem, 4.5vw, 2.4rem); line-height: 1.18; }
+  .hero-title { font-size: clamp(1.15rem, 5.2vw, 2.4rem); line-height: 1.18; }
   .hero-scroll { left:auto; right:20px; transform:none; }
 
   .cases-grid { grid-template-columns:1fr; }
