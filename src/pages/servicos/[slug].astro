@@ -37,7 +37,7 @@ const { s, others } = Astro.props;
 ---
 
 <Layout
-  title={`${s.title} — Mclair | Agência de Comunicação Estratégica`}
+  title={`${s.title} | Mclair: Agência de Comunicação Estratégica`}
   description={s.description}
   keywords={`${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`}
   schema={[
@@ -54,7 +54,7 @@ const { s, others } = Astro.props;
       ...(s.items?.length ? {
         hasOfferCatalog: {
           '@type': 'OfferCatalog',
-          name: `O que inclui — ${s.title}`,
+          name: `O que inclui: ${s.title}`,
           itemListElement: s.items.map((item: string, i: number) => ({
             '@type': 'ListItem', position: i + 1,
             item: { '@type': 'Offer', itemOffered: { '@type': 'Service', name: item } },
@@ -87,8 +87,7 @@ const { s, others } = Astro.props;
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
-      <span class="sh-num" data-anim>{s.num}</span>
-      <h1 class="sh-title" data-anim data-delay="1">{s.title}</h1>
+      <h1 class="sh-title" data-anim data-delay="1"><span class="sh-num-prefix">{s.num}</span> {s.title}</h1>
       <p class="sh-headline" data-anim data-delay="2">{s.headline}</p>
       <p class="sh-intro" data-anim data-delay="3">{s.intro}</p>
       <div class="sh-actions" data-anim data-delay="4">
@@ -139,7 +138,7 @@ const { s, others } = Astro.props;
         <div class="scr-overlay"></div>
         <div class="scr-content">
           <p class="scr-quote">"Resultados que constroem legado."</p>
-          <span class="scr-by">— Mclair, desde 2017</span>
+          <span class="scr-by">Mclair, desde 2017</span>
         </div>
       </div>
       <div class="scr-cta-box">
@@ -188,9 +187,10 @@ const { s, others } = Astro.props;
 .sh-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
 .sh-breadcrumb a:hover { color: #fff; }
 .sh-num { font-size: .65rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); display: block; margin-bottom: 10px; }
+.sh-num-prefix { font-size: 0.28em; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; color: var(--accent); margin-right: .4em; vertical-align: middle; }
 .sh-title { font-size: clamp(2.4rem,5vw,4rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 12px; }
-.sh-headline { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,.6); margin-bottom: 16px; }
-.sh-intro { font-size: .94rem; font-weight: 300; color: rgba(255,255,255,.4); line-height: 1.85; margin-bottom: 32px; max-width: 520px; }
+.sh-headline { font-size: 1.1rem; font-weight: 300; color: rgba(255,255,255,.75); margin-bottom: 16px; }
+.sh-intro { font-size: .94rem; font-weight: 300; color: rgba(255,255,255,.6); line-height: 1.85; margin-bottom: 32px; max-width: 520px; }
 .sh-actions { display: flex; gap: 12px; flex-wrap: wrap; }
 .btn-white { display: inline-flex; align-items: center; gap: 8px; font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; padding: .88rem 1.8rem; border-radius: var(--r-sm); transition: opacity .2s, transform .15s; }
 .btn-white:hover { opacity: .9; transform: translateY(-2px); }

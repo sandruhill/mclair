@@ -12,14 +12,14 @@ const stats   = (clientesContent?.stats   ?? []) as any[];
 ---
 
 <Layout
-  title="Clientes Mclair — 200+ marcas atendidas desde 2017"
+  title="Clientes Mclair | 200+ marcas atendidas desde 2017"
   description="200+ empresas de 23 segmentos confiam na Mclair para Comunicação Estratégica, Marketing de Autoridade e Assessoria de Imprensa. São Paulo."
 >
 
 <!-- HERO -->
 <section class="clients-hero">
   <div class="ch-photo-bg" aria-hidden="true">
-    <img src="/paginas/clientes-resultados-mclair.jpg" alt="Clientes Mclair — Empresas que confiam em nossa Comunicação Estratégica" title="Portfólio de clientes Mclair: resultados em Marketing de Autoridade e Assessoria de Imprensa" class="ch-photo-img" />
+    <img src="/paginas/clientes-resultados-mclair.jpg" alt="Clientes Mclair: Empresas que confiam em nossa Comunicação Estratégica" title="Portfólio de clientes Mclair: resultados em Marketing de Autoridade e Assessoria de Imprensa" class="ch-photo-img" />
     <div class="ch-photo-overlay"></div>
   </div>
   <div class="ch-bg" aria-hidden="true">
@@ -36,7 +36,7 @@ const stats   = (clientesContent?.stats   ?? []) as any[];
         Nossos<br/><em>Clientes</em>
       </h1>
       <p class="ch-lead" data-anim data-delay="2">
-        Mais de 200 empresas e profissionais em 23 segmentos — de startups a multinacionais — já transformaram sua comunicação com a Mclair. 8 anos construindo marcas que lideram seus mercados.
+        Mais de 200 empresas e profissionais em 23 segmentos, de startups a multinacionais, já transformaram sua comunicação com a Mclair. 8 anos construindo marcas que lideram seus mercados.
       </p>
     </div>
     <div class="ch-stats" data-anim="right" data-delay="2">
@@ -63,7 +63,7 @@ const stats   = (clientesContent?.stats   ?? []) as any[];
     <div class="logos-grid stagger-children">
       {clients.map((c, i) => (
         <div class="logo-card" data-anim data-delay={((i % 4) + 1).toString()}>
-          <img src={c.logo} alt={c.name ? `${c.name} — Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
+          <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
             onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
           <span class="logo-name">{c.name || ''}</span>
         </div>
@@ -222,15 +222,15 @@ const stats   = (clientesContent?.stats   ?? []) as any[];
 }
 @media (max-width:640px) {
   .cta-inner { flex-direction:column;align-items:flex-start; }
-  .logos-grid { grid-template-columns:repeat(2,1fr); }
+  .logos-grid { grid-template-columns:repeat(3,1fr); }
   .logo-card { min-height:110px; padding:24px 16px; }
   .logo-card:nth-child(4n) { border-right:1px solid var(--line); }
-  .logo-card:nth-child(3n) { border-right:1px solid var(--line); }
-  .logo-card:nth-child(2n) { border-right:none; }
-  .logo-img { max-width:100px; max-height:52px; }
-  .ch-stats { gap:0; }
+  .logo-card:nth-child(2n) { border-right:1px solid var(--line); }
+  .logo-card:nth-child(3n) { border-right:none; }
+  .logo-img { max-width:80px; max-height:44px; }
+  .ch-stats { gap:0; flex-wrap:wrap; }
   .ch-inner { padding-top:48px; padding-bottom:48px; }
-  .ch-stats { flex-direction:column; width:100%; padding:16px 0; }
-  .chs-item { border-bottom:1px solid rgba(255,255,255,.08); border-right:none !important; padding:12px 0; }
+  .chs-item { border-bottom:none; border-right:1px solid rgba(255,255,255,.08); padding:0 14px; }
+  .chs-item:last-child { border:none; }
 }
 </style>

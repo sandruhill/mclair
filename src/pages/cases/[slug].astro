@@ -39,7 +39,7 @@ const { c, otherCases } = Astro.props;
 ---
 
 <Layout
-  title={`Case ${c.client} — Mclair | Marketing de Autoridade e Comunicação Estratégica`}
+  title={`Case ${c.client} | Mclair: Marketing de Autoridade e Comunicação Estratégica`}
   description={c.description}
   keywords={`case ${(c.client ?? '').toLowerCase()}, ${(c.sector ?? '').toLowerCase()}, marketing de autoridade, assessoria de imprensa, comunicação estratégica, mclair, resultados`}
   schema={[
@@ -47,7 +47,7 @@ const { c, otherCases } = Astro.props;
       '@context': 'https://schema.org',
       '@type': 'Article',
       '@id': `https://mclair.vercel.app/cases/${c.slug}#case`,
-      headline: `Case ${c.client} — Mclair`,
+      headline: `Case ${c.client}: Mclair`,
       description: c.description || c.challenge,
       articleSection: c.sector,
       inLanguage: 'pt-BR',
@@ -75,7 +75,7 @@ const { c, otherCases } = Astro.props;
 <!-- HERO -->
 <section class="case-hero" style={`--accent:${c.accent}`}>
   <div class="ch-img-wrap">
-    <img src={c.heroImg} alt={`${c.client} — ${c.sector} | Mclair`} title={`Case ${c.client}: ${c.sector}`} class="ch-img" />
+    <img src={c.heroImg} alt={`${c.client}: ${c.sector} | Mclair`} title={`Case ${c.client}: ${c.sector}`} class="ch-img" />
     <div class="ch-overlay"></div>
   </div>
   <div class="container ch-inner">

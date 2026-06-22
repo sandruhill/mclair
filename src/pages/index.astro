@@ -38,12 +38,12 @@ const cases = (allCases as any[])
 ---
 
 <Layout
-  title="Mclair — Comunicação Estratégica e Marketing de Autoridade"
+  title="Mclair | Comunicação Estratégica e Marketing de Autoridade"
   description="Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2017."
   schema={{
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    name: 'Mclair — Agência de Marketing e Comunicação Estratégica',
+    name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
     description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
     url: 'https://mclair.vercel.app/',
     isPartOf: { '@id': 'https://mclair.vercel.app/#website' },
@@ -113,8 +113,8 @@ const cases = (allCases as any[])
       </p>
 
       <div class="hero-actions" data-anim data-delay="5">
-        <a href="/servicos" class="btn-hero-primary">
-          Descubra Nossas Soluções
+        <a href="/cases" class="btn-hero-primary">
+          Cases de Sucesso
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
         <a href={WA} class="btn-hero-ghost" target="_blank" rel="noopener">
@@ -169,7 +169,7 @@ const cases = (allCases as any[])
     <div class="about-visual" data-anim="left">
       <!-- Real agency photo -->
       <div class="av-photo-wrap">
-        <img src="/sobre/equipe-mclair-comunicacao-estrategica.jpg" alt="Equipe Mclair — Agência de Comunicação Estratégica em São Paulo" title="Equipe Mclair: especialistas em Comunicação Estratégica e Marketing de Autoridade" class="av-photo" />
+        <img src="/sobre/equipe-mclair-comunicacao-estrategica.jpg" alt="Equipe Mclair: Agência de Comunicação Estratégica em São Paulo" title="Equipe Mclair: especialistas em Comunicação Estratégica e Marketing de Autoridade" class="av-photo" />
         <div class="av-photo-overlay"></div>
       </div>
       <!-- Floating cards -->
@@ -198,7 +198,7 @@ const cases = (allCases as any[])
         Combinamos expertise multidisciplinar, dados e criatividade para desenvolver estratégias de comunicação B2B e B2C que engajam, geram valor tangível e fortalecem a reputação de marca no longo prazo.
       </p>
       <p class="section-lead" data-anim data-delay="3" style="margin-top:12px">
-        A Mclair atua em 23 segmentos de mercado — de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro à frente, desenvolvemos estratégias que geram presença real: editorial, digital e de marca.
+        A Mclair atua em 23 segmentos de mercado, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro à frente, desenvolvemos estratégias que geram presença real: editorial, digital e de marca.
       </p>
       <div class="about-pills stagger-children" data-anim data-delay="3">
         <span class="pill">Comunicação Estratégica</span>
@@ -270,7 +270,7 @@ const cases = (allCases as any[])
         <div class="cib-stats">
           <div class="cibs"><strong>11.600+</strong><span>Inserções na mídia</span></div>
           <div class="cibs"><strong>1.734</strong><span>Publicações int'l</span></div>
-          <div class="cibs"><strong>5</strong><span>Cases</span></div>
+          <div class="cibs"><strong>{allCases.length}</strong><span>Cases</span></div>
         </div>
       </div>
     </div>
@@ -404,7 +404,7 @@ const cases = (allCases as any[])
           <div class="t-quote-mark">"</div>
           <p class="t-quote">{t.quote}</p>
           <div class="t-author">
-            <img src={t.photo} alt={`${t.name} — ${t.role} | Depoimento Mclair`} title={`${t.name}, ${t.role}`} class="t-avatar-img" loading="lazy" />
+            <img src={t.photo} alt={`${t.name}, ${t.role} | Depoimento Mclair`} title={`${t.name}, ${t.role}`} class="t-avatar-img" loading="lazy" />
             <div>
               <strong class="t-name">{t.name}</strong>
               <span class="t-role">{t.role}</span>
@@ -946,6 +946,8 @@ const cases = (allCases as any[])
   .mt-kelly-card { flex-direction:column; }
 }
 @media (max-width:640px) {
+  .hero-eyebrow { display:none; }
+  .hero-title-line { display:block; }
   .services-grid { grid-template-columns:1fr; }
   .section-header { flex-direction:column; }
   .clients-strip { flex-direction:column;gap:12px;align-items:flex-start; }

@@ -275,6 +275,11 @@ ul, ol { list-style:none; }
 }
 .line-center.in { transform: scaleX(1); }
 
+/* Mobile: scale up base font for readability */
+@media (max-width:640px) {
+  html { font-size: 17px; }
+}
+
 /* Page entrance */
 @keyframes page-in {
   from { opacity: 0; transform: translateY(16px); }

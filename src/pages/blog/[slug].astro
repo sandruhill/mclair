@@ -85,8 +85,8 @@ function stripHtml(html: string) {
 const plainText = stripHtml(post.content);
 const metaDesc  = (post.metaDescription || post.subtitle || plainText).slice(0, 160).trimEnd();
 const seoTitle  = post.title.length <= 52
-  ? `${post.title} — Blog Mclair`
-  : `${post.title.slice(0, 52).trimEnd()}… — Mclair`;
+  ? `${post.title} | Blog Mclair`
+  : `${post.title.slice(0, 52).trimEnd()}… | Mclair`;
 const dateISO   = isoDate(post.date);
 const ogImg     = post.image || `${BASE}/android-chrome-512x512.png`;
 
