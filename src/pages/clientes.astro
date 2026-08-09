@@ -62,11 +62,19 @@ const seo = clientesContent?.seo ?? {};
 
     <div class="logos-grid stagger-children">
       {clients.map((c, i) => (
-        <div class="logo-card" data-anim data-delay={((i % 4) + 1).toString()}>
-          <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
-            onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
-          <span class="logo-name">{c.name || ''}</span>
-        </div>
+        c.case ? (
+          <a class="logo-card" data-anim data-delay={((i % 4) + 1).toString()} href={c.case}>
+            <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
+              onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
+            <span class="logo-name">Ver case →</span>
+          </a>
+        ) : (
+          <div class="logo-card" data-anim data-delay={((i % 4) + 1).toString()}>
+            <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
+              onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
+            <span class="logo-name">{c.name || ''}</span>
+          </div>
+        )
       ))}
     </div>
   </div>
