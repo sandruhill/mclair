@@ -155,7 +155,7 @@ const seo = clientesContent?.seo ?? {};
 }
 .logo-card {
   display:flex; flex-direction:column; align-items:center; justify-content:center;
-  padding:32px 20px; background:transparent;
+  padding:14px 14px; background:transparent;
   border-bottom:1px solid var(--line); border-right:1px solid var(--line);
   min-height:130px; position:relative;
   transition:background .25s, transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, z-index 0s;
@@ -169,7 +169,7 @@ const seo = clientesContent?.seo ?? {};
   border-radius:var(--r-md);
 }
 .logo-img {
-  max-width:130px; max-height:60px;
+  max-width:100%; max-height:120px;
   width:auto; height:auto; object-fit:contain;
   filter:grayscale(100%); opacity:.45;
   transition:filter .3s, opacity .3s, transform .3s cubic-bezier(.22,1,.36,1);
@@ -180,12 +180,12 @@ const seo = clientesContent?.seo ?? {};
   transform:scale(1.06);
 }
 .logo-name {
-  display:block; margin-top:10px;
+  display:block; position:absolute; left:0; right:0; bottom:8px;
   font-size:.58rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
   color:var(--ink-3); text-align:center;
   opacity:0; transform:translateY(4px);
   transition:opacity .25s, transform .25s;
-  min-height:1em;
+  pointer-events:none;
 }
 .logo-card:hover .logo-name { opacity:1; transform:translateY(0); }
 
@@ -223,11 +223,11 @@ const seo = clientesContent?.seo ?? {};
 @media (max-width:640px) {
   .cta-inner { flex-direction:column;align-items:flex-start; }
   .logos-grid { grid-template-columns:repeat(3,1fr); }
-  .logo-card { min-height:110px; padding:24px 16px; }
+  .logo-card { min-height:110px; padding:12px 12px; }
   .logo-card:nth-child(4n) { border-right:1px solid var(--line); }
   .logo-card:nth-child(2n) { border-right:1px solid var(--line); }
   .logo-card:nth-child(3n) { border-right:none; }
-  .logo-img { max-width:80px; max-height:44px; }
+  .logo-img { max-width:100%; max-height:104px; }
   .ch-stats { gap:0; flex-wrap:wrap; }
   .ch-inner { padding-top:48px; padding-bottom:48px; }
   .chs-item { border-bottom:none; border-right:1px solid rgba(255,255,255,.08); padding:0 14px; }
