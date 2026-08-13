@@ -1,3 +1,5 @@
+import { checkAndIncrement } from './kv.ts';
+
 export function isValidMclairEmail(email: string): boolean {
   return /^[^\s@]+@mclair\.com\.br$/i.test(email.trim());
 }
@@ -7,44 +9,45 @@ export function generateCode(): string {
   return String(n);
 }
 
-const CODE_TTL_SECONDS = 15 * 60;
+const CODE_TTL_MS = 15 * 60 * 1000;
+const MAX_VERIFY_ATTEMPTS = 5;
 
-export async function storeCode(kv: KVNamespace, email: string, code: string): Promise<void> {
-  const normalized = email.toLowerCase();
-  await kv.put(`code:${normalized}`, code, { expirationTtl: CODE_TTL_SECONDS });
+function codeKey(email: string): Deno.KvKey {
+  return ['code', email.toLowerCase()];
+}
+
+function verifyAttemptsKey(email: string): Deno.KvKey {
+  return ['verify-attempts', email.toLowerCase()];
+}
+
+export async function storeCode(kv: Deno.Kv, email: string, code: string): Promise<void> {
+  await kv.set(codeKey(email), code, { expireIn: CODE_TTL_MS });
   // A fresh code means a fresh set of guesses — otherwise someone who legitimately
   // burns through the verify-attempt cap and requests a new code (as instructed)
   // would stay locked out until the old attempt counter's TTL expires on its own.
-  await kv.delete(`verify-attempts:${normalized}`);
+  await kv.delete(verifyAttemptsKey(email));
 }
 
-// Split from the old verifyAndConsumeCode: checking the code and consuming it are now
-// separate steps, so a caller can validate the code without burning it until every other
-// step of the flow (e.g. the GitHub username lookup) has also succeeded.
-export async function codeMatches(kv: KVNamespace, email: string, code: string): Promise<boolean> {
-  const stored = await kv.get(`code:${email.toLowerCase()}`);
-  return stored !== null && stored === code;
+// Checking the code and consuming it are separate steps, so a caller can
+// validate the code without burning it until every other step of the flow
+// (e.g. the GitHub username lookup) has also succeeded.
+export async function codeMatches(kv: Deno.Kv, email: string, code: string): Promise<boolean> {
+  const entry = await kv.get<string>(codeKey(email));
+  return entry.value !== null && entry.value === code;
 }
 
-export async function consumeCode(kv: KVNamespace, email: string): Promise<void> {
-  await kv.delete(`code:${email.toLowerCase()}`);
+export async function consumeCode(kv: Deno.Kv, email: string): Promise<void> {
+  await kv.delete(codeKey(email));
 }
 
-const MAX_VERIFY_ATTEMPTS = 5;
-
-// Same check-and-increment KV-counter pattern as ratelimit.ts's isRateLimited,
-// but scoped to /confirmar-codigo guesses instead of /solicitar-codigo requests.
-// Called once per request, before the submitted code is checked: if this email
-// already has MAX_VERIFY_ATTEMPTS on the books, block immediately (without even
-// looking at the code) and force-delete the stored code so a fresh one is required.
-export async function isVerifyAttemptLimited(kv: KVNamespace, email: string): Promise<boolean> {
-  const key = `verify-attempts:${email.toLowerCase()}`;
-  const current = await kv.get(key);
-  const count = current ? parseInt(current, 10) : 0;
-  if (count >= MAX_VERIFY_ATTEMPTS) {
-    await kv.delete(`code:${email.toLowerCase()}`);
+// Called once per confirm request, before the submitted code is even looked
+// at: if this email already has MAX_VERIFY_ATTEMPTS on the books, block
+// immediately and force-delete the stored code so a fresh one is required.
+export async function isVerifyAttemptLimited(kv: Deno.Kv, email: string): Promise<boolean> {
+  const allowed = await checkAndIncrement(kv, verifyAttemptsKey(email), MAX_VERIFY_ATTEMPTS, CODE_TTL_MS);
+  if (!allowed) {
+    await kv.delete(codeKey(email));
     return true;
   }
-  await kv.put(key, String(count + 1), { expirationTtl: CODE_TTL_SECONDS });
   return false;
 }

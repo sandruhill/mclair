@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { env } from 'cloudflare:test';
+import { assertEquals } from 'jsr:@std/assert';
+import { openKv } from '../src/kv.ts';
 import {
   isValidMclairEmail,
   generateCode,
@@ -7,101 +7,94 @@ import {
   codeMatches,
   consumeCode,
   isVerifyAttemptLimited,
-} from '../src/codes';
+} from '../src/codes.ts';
 
-describe('isValidMclairEmail', () => {
-  it('accepts a valid mclair.com.br address', () => {
-    expect(isValidMclairEmail('kelly@mclair.com.br')).toBe(true);
-  });
-
-  it('is case-insensitive on the domain', () => {
-    expect(isValidMclairEmail('kelly@MCLAIR.COM.BR')).toBe(true);
-  });
-
-  it('rejects other domains', () => {
-    expect(isValidMclairEmail('kelly@gmail.com')).toBe(false);
-  });
-
-  it('rejects malformed input', () => {
-    expect(isValidMclairEmail('not-an-email')).toBe(false);
-  });
+Deno.test('isValidMclairEmail accepts a valid mclair.com.br address', () => {
+  assertEquals(isValidMclairEmail('kelly@mclair.com.br'), true);
 });
 
-describe('generateCode', () => {
-  it('returns a 6-digit numeric string', () => {
-    expect(generateCode()).toMatch(/^\d{6}$/);
-  });
+Deno.test('isValidMclairEmail is case-insensitive on the domain', () => {
+  assertEquals(isValidMclairEmail('kelly@MCLAIR.COM.BR'), true);
 });
 
-describe('codeMatches', () => {
-  it('matches a code that was just stored', async () => {
-    await storeCode(env.CODES, 'kelly@mclair.com.br', '123456');
-    expect(await codeMatches(env.CODES, 'kelly@mclair.com.br', '123456')).toBe(true);
-  });
-
-  it('rejects a wrong code', async () => {
-    await storeCode(env.CODES, 'kelly2@mclair.com.br', '123456');
-    expect(await codeMatches(env.CODES, 'kelly2@mclair.com.br', '999999')).toBe(false);
-  });
-
-  it('does not consume the code — checking it twice still matches', async () => {
-    await storeCode(env.CODES, 'kelly3@mclair.com.br', '123456');
-    const first = await codeMatches(env.CODES, 'kelly3@mclair.com.br', '123456');
-    const second = await codeMatches(env.CODES, 'kelly3@mclair.com.br', '123456');
-    expect(first).toBe(true);
-    expect(second).toBe(true);
-  });
-
-  it('rejects when no code was ever stored for that email', async () => {
-    expect(await codeMatches(env.CODES, 'nunca-pediu@mclair.com.br', '123456')).toBe(false);
-  });
+Deno.test('isValidMclairEmail rejects other domains', () => {
+  assertEquals(isValidMclairEmail('kelly@gmail.com'), false);
 });
 
-describe('consumeCode', () => {
-  it('makes a subsequent codeMatches call return false — single-use guarantee', async () => {
-    const email = 'consome@mclair.com.br';
-    await storeCode(env.CODES, email, '123456');
-    expect(await codeMatches(env.CODES, email, '123456')).toBe(true);
-    await consumeCode(env.CODES, email);
-    expect(await codeMatches(env.CODES, email, '123456')).toBe(false);
-  });
-
-  it('is a no-op when no code was stored', async () => {
-    await expect(consumeCode(env.CODES, 'nunca-teve@mclair.com.br')).resolves.toBeUndefined();
-  });
+Deno.test('isValidMclairEmail rejects malformed input', () => {
+  assertEquals(isValidMclairEmail('not-an-email'), false);
 });
 
-describe('isVerifyAttemptLimited', () => {
-  it('allows the first 5 checks, blocks the 6th', async () => {
-    const email = 'tentativas@mclair.com.br';
-    for (let i = 0; i < 5; i++) {
-      expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(false);
-    }
-    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true);
-  });
+Deno.test('generateCode returns a 6-digit numeric string', () => {
+  assertEquals(/^\d{6}$/.test(generateCode()), true);
+});
 
-  it('force-deletes the stored code once the cap is hit', async () => {
-    const email = 'apagado@mclair.com.br';
-    await storeCode(env.CODES, email, '123456');
-    for (let i = 0; i < 5; i++) {
-      await isVerifyAttemptLimited(env.CODES, email);
-    }
-    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true);
-    // The code should be gone even though it was never actually guessed.
-    expect(await codeMatches(env.CODES, email, '123456')).toBe(false);
-  });
+Deno.test('codeMatches confirms a code that was just stored', async () => {
+  const kv = await openKv(':memory:');
+  await storeCode(kv, 'kelly@mclair.com.br', '123456');
+  assertEquals(await codeMatches(kv, 'kelly@mclair.com.br', '123456'), true);
+  kv.close();
+});
 
-  it('resets when a fresh code is issued, so a legitimate user is not stuck locked out', async () => {
-    const email = 'segunda-chance@mclair.com.br';
-    await storeCode(env.CODES, email, '111111');
-    for (let i = 0; i < 5; i++) {
-      await isVerifyAttemptLimited(env.CODES, email);
-    }
-    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true); // capped
+Deno.test('codeMatches rejects a wrong code', async () => {
+  const kv = await openKv(':memory:');
+  await storeCode(kv, 'kelly2@mclair.com.br', '123456');
+  assertEquals(await codeMatches(kv, 'kelly2@mclair.com.br', '999999'), false);
+  kv.close();
+});
 
-    // Person requests a new code, as the error message tells them to.
-    await storeCode(env.CODES, email, '222222');
-    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(false); // fresh budget
-    expect(await codeMatches(env.CODES, email, '222222')).toBe(true);
-  });
+Deno.test('codeMatches does not consume the code — it stays valid after checking', async () => {
+  const kv = await openKv(':memory:');
+  await storeCode(kv, 'kelly3@mclair.com.br', '123456');
+  await codeMatches(kv, 'kelly3@mclair.com.br', '123456');
+  assertEquals(await codeMatches(kv, 'kelly3@mclair.com.br', '123456'), true);
+  kv.close();
+});
+
+Deno.test('consumeCode makes a subsequent codeMatches call fail', async () => {
+  const kv = await openKv(':memory:');
+  await storeCode(kv, 'kelly4@mclair.com.br', '123456');
+  await consumeCode(kv, 'kelly4@mclair.com.br');
+  assertEquals(await codeMatches(kv, 'kelly4@mclair.com.br', '123456'), false);
+  kv.close();
+});
+
+Deno.test('codeMatches rejects when no code was ever stored for that email', async () => {
+  const kv = await openKv(':memory:');
+  assertEquals(await codeMatches(kv, 'nunca-pediu@mclair.com.br', '123456'), false);
+  kv.close();
+});
+
+Deno.test('isVerifyAttemptLimited allows the first 5 attempts', async () => {
+  const kv = await openKv(':memory:');
+  const email = 'tentativas@mclair.com.br';
+  for (let i = 0; i < 5; i++) {
+    assertEquals(await isVerifyAttemptLimited(kv, email), false);
+  }
+  kv.close();
+});
+
+Deno.test('isVerifyAttemptLimited blocks the 6th attempt and force-deletes the code', async () => {
+  const kv = await openKv(':memory:');
+  const email = 'travado@mclair.com.br';
+  await storeCode(kv, email, '123456');
+  for (let i = 0; i < 5; i++) {
+    await isVerifyAttemptLimited(kv, email);
+  }
+  assertEquals(await isVerifyAttemptLimited(kv, email), true);
+  assertEquals(await codeMatches(kv, email, '123456'), false);
+  kv.close();
+});
+
+Deno.test('storeCode resets the attempt counter so a fresh code gives a fresh budget', async () => {
+  const kv = await openKv(':memory:');
+  const email = 'segunda-chance@mclair.com.br';
+  await storeCode(kv, email, '111111');
+  for (let i = 0; i < 5; i++) {
+    await isVerifyAttemptLimited(kv, email);
+  }
+  assertEquals(await isVerifyAttemptLimited(kv, email), true); // capped
+  await storeCode(kv, email, '222222'); // fresh code issued
+  assertEquals(await isVerifyAttemptLimited(kv, email), false); // budget reset
+  kv.close();
 });
