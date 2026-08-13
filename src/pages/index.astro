@@ -29,7 +29,7 @@ const cases = (allCases as any[])
   .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
   .slice(0, 5)
   .map(c => ({
-    client: c.entry.client.name,
+    client: c.entry.client,
     sector: c.entry.sector ?? '',
     result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
     accent: c.entry.accent || '#C8102E',
@@ -39,14 +39,14 @@ const cases = (allCases as any[])
 
 <Layout
   title={hpContent?.seo?.title || 'Mclair | Comunicação Estratégica e Marketing de Autoridade'}
-  description={hpContent?.seo?.description || 'Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2004.'}
+  description={hpContent?.seo?.description || 'Agência especialista em Comunicação Estratégica e Marketing de Autoridade. 200+ marcas, 11.600+ inserções na mídia. São Paulo, desde 2017.'}
   keywords={hpContent?.seo?.keywords}
-  ogImage={hpContent?.seo?.ogImage || undefined}
+  ogImage={hpContent?.seo?.ogImage || 'https://mclair.vercel.app/cases-hero.jpg'}
   schema={{
     '@context': 'https://schema.org',
     '@type': 'WebPage',
     name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
-    description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2004.',
+    description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
     url: 'https://mclair.vercel.app/',
     isPartOf: { '@id': 'https://mclair.vercel.app/#website' },
     about: { '@id': 'https://mclair.vercel.app/#organization' },
@@ -93,7 +93,7 @@ const cases = (allCases as any[])
   <div class="container hero-inner">
     <div class="hero-content">
       <div class="hero-eyebrow" data-anim="fade">
-        <span class="he-label">Agência de Marketing · São Paulo · Desde 2004</span>
+        <span class="he-label">Agência de Marketing · São Paulo · Desde 2017</span>
       </div>
 
       <h1 class="hero-title">
@@ -112,7 +112,7 @@ const cases = (allCases as any[])
       </h1>
 
       <p class="hero-sub" data-anim data-delay="4">
-        22 anos, 200+ clientes, 11.600+ inserções na mídia. Posicionamos marcas como primeira escolha do mercado com Comunicação Estratégica e Marketing de Autoridade.
+        ~9 anos, 200+ clientes, 11.600+ inserções na mídia. Posicionamos marcas como primeira escolha do mercado com Comunicação Estratégica e Marketing de Autoridade.
       </p>
 
       <div class="hero-actions" data-anim data-delay="5">
@@ -159,7 +159,7 @@ const cases = (allCases as any[])
   <div class="clients-label">Empresas que confiam na Mclair</div>
   <div class="marquee-wrap" aria-hidden="true">
     <div class="marquee-track">
-      {['Fidalgo Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind','Fidalgo Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind'].map(c => (
+      {['Fidalgo Leilões','Globo Leilões','VIP Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind','Fidalgo Leilões','Globo Leilões','VIP Leilões','ABIMAQ','ApexBrasil','Claudia Elisa','Elemar Jr. · EximiaCo','Alexandre Magno','The Cynefin Co.','Automatiza Sistemas','Zoom Mind'].map(c => (
         <span class="marquee-item">{c}<span class="marquee-dot">◆</span></span>
       ))}
     </div>
@@ -183,14 +183,14 @@ const cases = (allCases as any[])
       <div class="av-card av-card-3">
         <span class="av-agency-dot"></span>
         <strong>Agência Mclair</strong>
-        <span>São Paulo · Desde 2004</span>
+        <span>São Paulo · Desde 2017</span>
         <span class="av-exp">B2B &amp; B2C</span>
       </div>
       <div class="av-year-badge">
-        <span class="ayb-year">2004</span>
+        <span class="ayb-year">2017</span>
         <span class="ayb-label">Fundação</span>
       </div>
-      <div class="av-bg-number" aria-hidden="true">8</div>
+      <div class="av-bg-number" aria-hidden="true">9</div>
     </div>
     <div class="about-text">
       <p class="eyebrow" data-anim>Quem somos</p>
@@ -198,10 +198,10 @@ const cases = (allCases as any[])
         Transformamos sua<br/>comunicação em <span>legado</span>
       </h2>
       <p class="section-lead" data-anim data-delay="2">
-        Trabalhamos com Comunicação Estratégica em 23 segmentos, de startups a multinacionais. Cada projeto começa com diagnóstico, não com template.
+        Trabalhamos com Comunicação Estratégica em 23+ segmentos, de startups a multinacionais. Cada projeto começa com diagnóstico, não com template.
       </p>
       <p class="section-lead" data-anim data-delay="3" style="margin-top:12px">
-        A Mclair atua em 23 segmentos, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro, geramos presença editorial, digital e de marca.
+        A Mclair atua em 23+ segmentos, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro, geramos presença editorial, digital e de marca.
       </p>
       <div class="about-pills stagger-children" data-anim data-delay="3">
         <span class="pill">Comunicação Estratégica</span>
@@ -373,7 +373,7 @@ const cases = (allCases as any[])
         <div class="mtkc-avatar">KP</div>
         <div class="mtkc-info">
           <strong>Kelly Pinheiro</strong>
-          <span>CEO & Fundadora · Mclair</span>
+          <span>CEO & Sócio-Fundadora · Mclair</span>
         </div>
         <blockquote class="mtkc-quote">
           "Minha missão é transformar profissionais em autoridades reconhecidas pelo mercado."
@@ -717,7 +717,7 @@ const cases = (allCases as any[])
   color:rgba(200,16,46,.1);line-height:1;
 }
 .case-row:hover .case-idx { color:var(--accent,var(--red)); transition:color .2s; }
-.case-sector { font-size:.6rem;display:block;margin-bottom:8px; }
+.case-sector { font-size:.6rem;display:block;margin-bottom:8px;margin-left:-.8rem; }
 .case-client { font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.2; }
 .case-result { font-size:.88rem;color:var(--ink-3);font-weight:300;line-height:1.65; }
 .case-cta {
