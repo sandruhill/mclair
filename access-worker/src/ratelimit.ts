@@ -36,19 +36,25 @@ export async function incrementDailyEmailCount(kv: KVNamespace): Promise<void> {
   await kv.put(key, String(count + 1), { expirationTtl: DAY_SECONDS });
 }
 
-const IP_WINDOW_SECONDS = 60 * 60;
 const IP_MAX_REQUESTS = 20;
+
+function ipRateLimitKey(ip: string): string {
+  const today = new Date().toISOString().slice(0, 10); // YYYY-MM-DD
+  return `ip-ratelimit:${ip}:${today}`;
+}
 
 // Per-IP counter on top of the per-email and global-daily limits above — an anonymous
 // caller only needs the @mclair.com.br domain suffix (not a real mailbox) to hit
 // /solicitar-codigo or /confirmar-codigo, so without this a single source can rotate
-// the email local-part to drain the shared daily cap alone. 20/hour is generous for a
-// legitimate signup but bounds how much of the 50/day global cap one IP can burn.
+// the email local-part to drain the shared daily cap alone. Day-keyed (not a rolling
+// hourly window) so a patient single IP can't just wait out repeated TTL resets to
+// eventually exhaust the 50/day global cap alone — exhausting it now genuinely needs
+// at least 3 distinct source IPs cooperating within the same UTC day.
 export async function isIpRateLimited(kv: KVNamespace, ip: string): Promise<boolean> {
-  const key = `ip-ratelimit:${ip}`;
+  const key = ipRateLimitKey(ip);
   const current = await kv.get(key);
   const count = current ? parseInt(current, 10) : 0;
   if (count >= IP_MAX_REQUESTS) return true;
-  await kv.put(key, String(count + 1), { expirationTtl: IP_WINDOW_SECONDS });
+  await kv.put(key, String(count + 1), { expirationTtl: DAY_SECONDS });
   return false;
 }
