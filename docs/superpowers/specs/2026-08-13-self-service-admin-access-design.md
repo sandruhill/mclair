@@ -30,8 +30,8 @@ existing admin manual) and keep logging in with their own Personal Access
 Token, exactly as documented today. What disappears is Sandru manually
 running `Settings → Collaborators → Add people` for each person. Instead:
 
-1. A small signup page (plain HTML/JS, no framework) asks for name, a
-   `@mclair.com.br` email address, and a GitHub username.
+1. A small signup page (plain HTML/JS, no framework) asks for a
+   `@mclair.com.br` email address and a GitHub username.
 2. A verification code is emailed to that address. The person enters it back
    on the page. This proves they actually control that inbox — a bare
    domain-suffix check on a text field proves nothing on its own, since
@@ -74,7 +74,7 @@ secret, never exposed to the browser.
 
 ## Endpoints
 
-- `POST /solicitar-codigo` — body: `{ name, email, githubUsername }`.
+- `POST /solicitar-codigo` — body: `{ email, githubUsername }`.
   Validates the email ends in `@mclair.com.br`, rate-limits repeat requests
   for the same email (KV counter), generates a 6-digit code, stores it in KV
   keyed by email with a short TTL, sends it via Resend. Returns a generic
