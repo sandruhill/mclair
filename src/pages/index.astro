@@ -34,6 +34,8 @@ const cases = (allCases as any[])
     result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
     accent: c.entry.accent || '#C8102E',
     slug:   c.slug,
+    img:    c.entry.img ?? '',
+    challenge: c.entry.challenge ?? '',
   }));
 ---
 
@@ -282,7 +284,7 @@ const cases = (allCases as any[])
   <div class="container" style="padding-top:64px;padding-bottom:80px">
     <div class="cases-list">
       {cases.map((c, i) => (
-        <a href={`/cases/${c.slug}`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()}>
+        <a href={`/cases/${c.slug}`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()} data-img={c.img} data-challenge={c.challenge}>
           <div class="case-row-inner">
             <span class="case-idx">0{i+1}</span>
             <div class="case-info">
@@ -299,6 +301,14 @@ const cases = (allCases as any[])
         </a>
       ))}
     </div>
+
+    <div id="case-tooltip" class="case-tooltip" aria-hidden="true">
+      <div class="case-tooltip-img-wrap">
+        <img class="case-tooltip-img" src="" alt="" />
+      </div>
+      <p class="case-tooltip-text"></p>
+    </div>
+
     <div class="cases-cta-row" data-anim>
       <a href="/cases" class="btn-teal">
         Ver todos os cases
@@ -726,6 +736,21 @@ const cases = (allCases as any[])
   color:var(--ink-4);transition:color .2s,gap .2s;
 }
 .case-row:hover .case-cta { color:var(--accent,var(--red));gap:10px; }
+
+.case-tooltip {
+  position:fixed;top:0;left:0;z-index:50;width:230px;
+  background:#fff;border:1px solid var(--line);border-radius:12px;
+  box-shadow:0 14px 34px rgba(0,0,0,.16);overflow:hidden;
+  opacity:0;visibility:hidden;pointer-events:none;
+  transition:opacity .15s ease;
+}
+.case-tooltip.is-visible { opacity:1;visibility:visible; }
+.case-tooltip-img-wrap { aspect-ratio:21/9;background:var(--cream-2); }
+.case-tooltip-img { width:100%;height:100%;object-fit:cover;display:block; }
+.case-tooltip-text {
+  margin:0;padding:10px 12px 12px;font-size:.78rem;line-height:1.5;color:var(--ink-3);
+  display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;
+}
 
 .cases-cta-row { text-align:center;margin-top:56px; }
 .btn-teal {
