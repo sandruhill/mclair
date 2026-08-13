@@ -3,6 +3,7 @@ export const SIGNUP_PAGE_HTML = `<!doctype html>
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta name="robots" content="noindex" />
 <title>Acesso ao Painel Mclair</title>
 <style>
   :root { --red: #C8102E; --ink: #1C1A17; --ink-3: #6B6560; --line: #E5E2DD; --cream: #FAFAF8; }
@@ -41,12 +42,14 @@ export const SIGNUP_PAGE_HTML = `<!doctype html>
   </form>
 
   <div id="msg"></div>
+  <a href="#" id="restart" style="display:none; margin-top: 12px; font-size: 0.85rem;">Recomeçar</a>
 </div>
 
 <script>
   const step1 = document.getElementById('step1');
   const step2 = document.getElementById('step2');
   const msg = document.getElementById('msg');
+  const restart = document.getElementById('restart');
   let email = '';
   let github = '';
 
@@ -55,23 +58,43 @@ export const SIGNUP_PAGE_HTML = `<!doctype html>
     msg.className = kind;
   }
 
+  function setButtonDisabled(form, disabled) {
+    form.querySelector('button').disabled = disabled;
+  }
+
+  restart.addEventListener('click', (e) => {
+    e.preventDefault();
+    document.getElementById('code').value = '';
+    restart.style.display = 'none';
+    showMsg('', '');
+    step2.style.display = 'none';
+    step1.style.display = '';
+  });
+
   step1.addEventListener('submit', async (e) => {
     e.preventDefault();
     email = document.getElementById('email').value.trim();
     github = document.getElementById('github').value.trim();
     showMsg('Enviando...', '');
-    const res = await fetch('/solicitar-codigo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, githubUsername: github }),
-    });
-    const data = await res.json();
-    if (data.ok) {
-      showMsg('Código enviado! Confere seu e-mail.', 'ok');
-      step1.style.display = 'none';
-      step2.style.display = 'block';
-    } else {
-      showMsg(data.error || 'Algo deu errado.', 'error');
+    setButtonDisabled(step1, true);
+    try {
+      const res = await fetch('/solicitar-codigo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, githubUsername: github }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showMsg('Código enviado! Confere seu e-mail.', 'ok');
+        step1.style.display = 'none';
+        step2.style.display = 'block';
+      } else {
+        showMsg(data.error || 'Algo deu errado.', 'error');
+      }
+    } catch (err) {
+      showMsg('Não consegui falar com o servidor. Tenta de novo.', 'error');
+    } finally {
+      setButtonDisabled(step1, false);
     }
   });
 
@@ -79,17 +102,27 @@ export const SIGNUP_PAGE_HTML = `<!doctype html>
     e.preventDefault();
     const code = document.getElementById('code').value.trim();
     showMsg('Confirmando...', '');
-    const res = await fetch('/confirmar-codigo', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email, code, githubUsername: github }),
-    });
-    const data = await res.json();
-    if (data.ok) {
-      showMsg(data.message || 'Acesso liberado!', 'ok');
-      step2.style.display = 'none';
-    } else {
-      showMsg(data.error || 'Algo deu errado.', 'error');
+    restart.style.display = 'none';
+    setButtonDisabled(step2, true);
+    try {
+      const res = await fetch('/confirmar-codigo', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code, githubUsername: github }),
+      });
+      const data = await res.json();
+      if (data.ok) {
+        showMsg(data.message || 'Acesso liberado!', 'ok');
+        step2.style.display = 'none';
+      } else {
+        showMsg(data.error || 'Algo deu errado.', 'error');
+        restart.style.display = 'block';
+      }
+    } catch (err) {
+      showMsg('Não consegui falar com o servidor. Tenta de novo.', 'error');
+      restart.style.display = 'block';
+    } finally {
+      setButtonDisabled(step2, false);
     }
   });
 </script>

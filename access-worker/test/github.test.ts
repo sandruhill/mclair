@@ -6,12 +6,21 @@ describe('githubUserExists', () => {
 
   it('returns true for a 200 response', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 200 })));
-    expect(await githubUserExists('kellypinheiro')).toBe(true);
+    expect(await githubUserExists('fake-token', 'kellypinheiro')).toBe(true);
   });
 
   it('returns false for a 404 response', async () => {
     vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 404 })));
-    expect(await githubUserExists('usuario-que-nao-existe')).toBe(false);
+    expect(await githubUserExists('fake-token', 'usuario-que-nao-existe')).toBe(false);
+  });
+
+  it('authenticates with the given admin token', async () => {
+    const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    await githubUserExists('minha-chave', 'kellypinheiro');
+    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
+    const headers = init.headers as Record<string, string>;
+    expect(headers.Authorization).toBe('Bearer minha-chave');
   });
 });
 

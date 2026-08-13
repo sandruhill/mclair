@@ -15,6 +15,7 @@ export async function sendVerificationCode(
       subject: `Seu código de acesso: ${code}`,
       html: `<p>Seu código de verificação é <strong>${code}</strong>. Ele expira em 15 minutos.</p>`,
     }),
+    signal: AbortSignal.timeout(10_000),
   });
   return res.ok;
 }

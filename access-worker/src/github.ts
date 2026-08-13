@@ -10,9 +10,10 @@ function githubHeaders(token: string): HeadersInit {
   };
 }
 
-export async function githubUserExists(username: string): Promise<boolean> {
+export async function githubUserExists(token: string, username: string): Promise<boolean> {
   const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}`, {
-    headers: { 'User-Agent': 'mclair-access-worker' },
+    headers: githubHeaders(token),
+    signal: AbortSignal.timeout(10_000),
   });
   return res.status === 200;
 }
@@ -20,7 +21,7 @@ export async function githubUserExists(username: string): Promise<boolean> {
 export async function isAlreadyCollaborator(token: string, username: string): Promise<boolean> {
   const res = await fetch(
     `https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/collaborators/${encodeURIComponent(username)}`,
-    { headers: githubHeaders(token) }
+    { headers: githubHeaders(token), signal: AbortSignal.timeout(10_000) }
   );
   return res.status === 204;
 }
@@ -32,6 +33,7 @@ export async function addCollaborator(token: string, username: string): Promise<
       method: 'PUT',
       headers: { ...githubHeaders(token), 'Content-Type': 'application/json' },
       body: JSON.stringify({ permission: 'push' }),
+      signal: AbortSignal.timeout(10_000),
     }
   );
   return res.status === 201 || res.status === 204;

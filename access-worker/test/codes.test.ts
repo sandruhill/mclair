@@ -1,6 +1,12 @@
 import { describe, it, expect } from 'vitest';
 import { env } from 'cloudflare:test';
-import { isValidMclairEmail, generateCode, storeCode, verifyAndConsumeCode } from '../src/codes';
+import {
+  isValidMclairEmail,
+  generateCode,
+  storeCode,
+  verifyAndConsumeCode,
+  isVerifyAttemptLimited,
+} from '../src/codes';
 
 describe('isValidMclairEmail', () => {
   it('accepts a valid mclair.com.br address', () => {
@@ -47,5 +53,40 @@ describe('storeCode / verifyAndConsumeCode', () => {
 
   it('rejects when no code was ever stored for that email', async () => {
     expect(await verifyAndConsumeCode(env.CODES, 'nunca-pediu@mclair.com.br', '123456')).toBe(false);
+  });
+});
+
+describe('isVerifyAttemptLimited', () => {
+  it('allows the first 5 checks, blocks the 6th', async () => {
+    const email = 'tentativas@mclair.com.br';
+    for (let i = 0; i < 5; i++) {
+      expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(false);
+    }
+    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true);
+  });
+
+  it('force-deletes the stored code once the cap is hit', async () => {
+    const email = 'apagado@mclair.com.br';
+    await storeCode(env.CODES, email, '123456');
+    for (let i = 0; i < 5; i++) {
+      await isVerifyAttemptLimited(env.CODES, email);
+    }
+    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true);
+    // The code should be gone even though it was never actually guessed.
+    expect(await verifyAndConsumeCode(env.CODES, email, '123456')).toBe(false);
+  });
+
+  it('resets when a fresh code is issued, so a legitimate user is not stuck locked out', async () => {
+    const email = 'segunda-chance@mclair.com.br';
+    await storeCode(env.CODES, email, '111111');
+    for (let i = 0; i < 5; i++) {
+      await isVerifyAttemptLimited(env.CODES, email);
+    }
+    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true); // capped
+
+    // Person requests a new code, as the error message tells them to.
+    await storeCode(env.CODES, email, '222222');
+    expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(false); // fresh budget
+    expect(await verifyAndConsumeCode(env.CODES, email, '222222')).toBe(true);
   });
 });
