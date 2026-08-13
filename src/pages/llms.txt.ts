@@ -1,4 +1,3 @@
-export const prerender = false;
 import type { APIRoute } from 'astro';
 import llmsData from '../content/singletons/llms.json';
 
