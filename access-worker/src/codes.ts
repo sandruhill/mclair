@@ -18,16 +18,16 @@ export async function storeCode(kv: KVNamespace, email: string, code: string): P
   await kv.delete(`verify-attempts:${normalized}`);
 }
 
-export async function verifyAndConsumeCode(
-  kv: KVNamespace,
-  email: string,
-  code: string
-): Promise<boolean> {
-  const key = `code:${email.toLowerCase()}`;
-  const stored = await kv.get(key);
-  if (stored === null || stored !== code) return false;
-  await kv.delete(key);
-  return true;
+// Split from the old verifyAndConsumeCode: checking the code and consuming it are now
+// separate steps, so a caller can validate the code without burning it until every other
+// step of the flow (e.g. the GitHub username lookup) has also succeeded.
+export async function codeMatches(kv: KVNamespace, email: string, code: string): Promise<boolean> {
+  const stored = await kv.get(`code:${email.toLowerCase()}`);
+  return stored !== null && stored === code;
+}
+
+export async function consumeCode(kv: KVNamespace, email: string): Promise<void> {
+  await kv.delete(`code:${email.toLowerCase()}`);
 }
 
 const MAX_VERIFY_ATTEMPTS = 5;

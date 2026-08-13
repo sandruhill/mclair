@@ -2,10 +2,16 @@ import {
   isValidMclairEmail,
   generateCode,
   storeCode,
-  verifyAndConsumeCode,
+  codeMatches,
+  consumeCode,
   isVerifyAttemptLimited,
 } from './codes';
-import { isRateLimited, isDailyEmailCapReached } from './ratelimit';
+import {
+  isRateLimited,
+  isDailyEmailCapReached,
+  incrementDailyEmailCount,
+  isIpRateLimited,
+} from './ratelimit';
 import { sendVerificationCode } from './email';
 import { githubUserExists, isAlreadyCollaborator, addCollaborator } from './github';
 import { SIGNUP_PAGE_HTML } from './signup-page';
@@ -24,8 +30,16 @@ function json(body: unknown, status = 200): Response {
 }
 
 const GENERIC_ERROR = { ok: false, error: 'Algo deu errado. Tenta de novo.' };
+const IP_RATE_LIMITED_ERROR = {
+  ok: false,
+  error: 'Muitas requisições desse endereço. Tenta de novo mais tarde.',
+};
 
-async function handleSolicitarCodigo(request: Request, env: Env): Promise<Response> {
+async function handleSolicitarCodigo(request: Request, env: Env, ip: string): Promise<Response> {
+  if (await isIpRateLimited(env.CODES, ip)) {
+    return json(IP_RATE_LIMITED_ERROR);
+  }
+
   const { email: rawEmail, githubUsername: rawGithubUsername } = await request.json<{
     email?: string;
     githubUsername?: string;
@@ -41,15 +55,17 @@ async function handleSolicitarCodigo(request: Request, env: Env): Promise<Respon
     return json({ ok: false, error: 'Informe seu usuário do GitHub.' });
   }
 
+  // Cheapest / most-global check first, so a request that's going to be refused
+  // by the shared daily cap never burns one of this email's hourly issuance slots.
+  if (await isDailyEmailCapReached(env.CODES)) {
+    return json({ ok: false, error: 'Tenta de novo mais tarde.' });
+  }
+
   if (await isRateLimited(env.CODES, email)) {
     return json({
       ok: false,
       error: 'Muitos pedidos de código pra esse e-mail. Tenta de novo daqui a pouco.',
     });
-  }
-
-  if (await isDailyEmailCapReached(env.CODES)) {
-    return json({ ok: false, error: 'Tenta de novo mais tarde.' });
   }
 
   const code = generateCode();
@@ -61,11 +77,18 @@ async function handleSolicitarCodigo(request: Request, env: Env): Promise<Respon
       500
     );
   }
+  // Only count against the shared daily quota once an email was actually sent —
+  // a Resend failure above must not burn quota for a code nobody received.
+  await incrementDailyEmailCount(env.CODES);
 
   return json({ ok: true });
 }
 
-async function handleConfirmarCodigo(request: Request, env: Env): Promise<Response> {
+async function handleConfirmarCodigo(request: Request, env: Env, ip: string): Promise<Response> {
+  if (await isIpRateLimited(env.CODES, ip)) {
+    return json(IP_RATE_LIMITED_ERROR);
+  }
+
   const {
     email: rawEmail,
     code,
@@ -87,8 +110,16 @@ async function handleConfirmarCodigo(request: Request, env: Env): Promise<Respon
     return json({ ok: false, error: 'Muitas tentativas. Pede um novo código.' });
   }
 
-  // Check the GitHub username before spending the code — a typo here is the most
-  // likely user error, and it shouldn't burn the (single-use) verification code.
+  // Check the code BEFORE touching the GitHub API — without this, anyone who knows
+  // (or guesses) an @mclair.com.br local-part can drive githubUserExists with no
+  // code at all, spending GITHUB_ADMIN_TOKEN's shared rate-limit budget. The code
+  // is not consumed yet, though: a subsequent username typo or a transient GitHub
+  // API failure must not burn it, so the person can retry with the same code.
+  const matches = await codeMatches(env.CODES, email, code);
+  if (!matches) {
+    return json({ ok: false, error: 'Código inválido ou expirado. Pede um novo.' });
+  }
+
   const userExists = await githubUserExists(env.GITHUB_ADMIN_TOKEN, githubUsername);
   if (!userExists) {
     return json({
@@ -97,13 +128,9 @@ async function handleConfirmarCodigo(request: Request, env: Env): Promise<Respon
     });
   }
 
-  const valid = await verifyAndConsumeCode(env.CODES, email, code);
-  if (!valid) {
-    return json({ ok: false, error: 'Código inválido ou expirado. Pede um novo.' });
-  }
-
   const already = await isAlreadyCollaborator(env.GITHUB_ADMIN_TOKEN, githubUsername);
   if (already) {
+    await consumeCode(env.CODES, email);
     return json({ ok: true, message: 'Você já tem acesso! Pode ir direto pro /admin/.' });
   }
 
@@ -115,6 +142,7 @@ async function handleConfirmarCodigo(request: Request, env: Env): Promise<Respon
     );
   }
 
+  await consumeCode(env.CODES, email);
   return json({
     ok: true,
     message:
@@ -125,6 +153,7 @@ async function handleConfirmarCodigo(request: Request, env: Env): Promise<Respon
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
+    const ip = request.headers.get('CF-Connecting-IP') ?? 'unknown';
 
     if (request.method === 'GET' && url.pathname === '/') {
       return new Response(SIGNUP_PAGE_HTML, {
@@ -134,16 +163,18 @@ export default {
 
     if (request.method === 'POST' && url.pathname === '/solicitar-codigo') {
       try {
-        return await handleSolicitarCodigo(request, env);
-      } catch {
+        return await handleSolicitarCodigo(request, env, ip);
+      } catch (err) {
+        console.error(err);
         return json(GENERIC_ERROR, 500);
       }
     }
 
     if (request.method === 'POST' && url.pathname === '/confirmar-codigo') {
       try {
-        return await handleConfirmarCodigo(request, env);
-      } catch {
+        return await handleConfirmarCodigo(request, env, ip);
+      } catch (err) {
+        console.error(err);
         return json(GENERIC_ERROR, 500);
       }
     }

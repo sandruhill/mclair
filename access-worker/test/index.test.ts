@@ -3,10 +3,10 @@ import { describe, it, expect, vi, afterEach } from 'vitest';
 import { env } from 'cloudflare:test';
 import worker from '../src/index';
 
-function postJson(path: string, body: unknown): Request {
+function postJson(path: string, body: unknown, extraHeaders?: Record<string, string>): Request {
   return new Request(`https://worker.test${path}`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...extraHeaders },
     body: JSON.stringify(body),
   });
 }
@@ -262,6 +262,26 @@ describe('worker fetch handler', () => {
     expect(data2.ok).toBe(false);
   });
 
+  // Small fix #3: the catch blocks must log the real exception, not swallow it silently —
+  // otherwise real bugs are invisible in wrangler tail / the dashboard.
+  it('logs the caught exception to console.error instead of swallowing it', async () => {
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    try {
+      const res = await worker.fetch(
+        new Request('https://worker.test/solicitar-codigo', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: '{not valid json',
+        }),
+        env
+      );
+      expect(res.status).toBe(500);
+      expect(errorSpy).toHaveBeenCalledTimes(1);
+    } finally {
+      errorSpy.mockRestore();
+    }
+  });
+
   it('does not consume the code on a nonexistent GitHub username — the same code still works afterward', async () => {
     let sentCode = '';
     let userLookupCount = 0;
@@ -310,5 +330,122 @@ describe('worker fetch handler', () => {
     );
     const fixedData = await fixedRes.json<{ ok: boolean }>();
     expect(fixedData.ok).toBe(true);
+  });
+
+  // Finding A: a wrong code must never reach the GitHub API at all — otherwise anyone
+  // who knows an @mclair.com.br local-part (no valid code needed) could drive
+  // githubUserExists and drain GITHUB_ADMIN_TOKEN's shared rate-limit budget.
+  it('never calls the GitHub API when the submitted code is wrong', async () => {
+    const fetchMock = vi.fn(async (_input: RequestInfo | URL, _init?: RequestInit) => new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+
+    const email = 'sem-github@mclair.com.br';
+    await worker.fetch(
+      postJson('/solicitar-codigo', { email, githubUsername: 'qualquer-um' }),
+      env
+    );
+
+    const res = await worker.fetch(
+      postJson('/confirmar-codigo', { email, code: '000000', githubUsername: 'qualquer-um' }),
+      env
+    );
+    const data = await res.json<{ ok: boolean }>();
+    expect(data.ok).toBe(false);
+
+    const githubCalls = fetchMock.mock.calls.filter(([input]) =>
+      input.toString().includes('api.github.com')
+    );
+    expect(githubCalls.length).toBe(0);
+  });
+
+  // Finding B: per-IP cap on /solicitar-codigo.
+  it('blocks /solicitar-codigo after 20 requests from the same IP', async () => {
+    const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const ip = '198.51.100.5';
+
+    for (let i = 0; i < 20; i++) {
+      await worker.fetch(
+        postJson('/solicitar-codigo', { email: `ip-teste${i}@mclair.com.br`, githubUsername: 'x' }, { 'CF-Connecting-IP': ip }),
+        env
+      );
+    }
+    const callsAfter20 = fetchMock.mock.calls.length;
+
+    const res = await worker.fetch(
+      postJson('/solicitar-codigo', { email: 'ip-teste-21@mclair.com.br', githubUsername: 'x' }, { 'CF-Connecting-IP': ip }),
+      env
+    );
+    const data = await res.json<{ ok: boolean; error?: string }>();
+    expect(data.ok).toBe(false);
+    expect(data.error).toContain('Muitas requisições');
+    // The 21st call must not have hit Resend (or anything else) at all.
+    expect(fetchMock.mock.calls.length).toBe(callsAfter20);
+  });
+
+  // Finding B: per-IP cap on /confirmar-codigo, shared with /solicitar-codigo's counter.
+  it('blocks /confirmar-codigo after 20 requests from the same IP', async () => {
+    const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
+    vi.stubGlobal('fetch', fetchMock);
+    const ip = '198.51.100.6';
+
+    for (let i = 0; i < 20; i++) {
+      await worker.fetch(
+        postJson(
+          '/confirmar-codigo',
+          { email: `ip-confirma${i}@mclair.com.br`, code: '000000', githubUsername: 'x' },
+          { 'CF-Connecting-IP': ip }
+        ),
+        env
+      );
+    }
+
+    const res = await worker.fetch(
+      postJson(
+        '/confirmar-codigo',
+        { email: 'ip-confirma-21@mclair.com.br', code: '000000', githubUsername: 'x' },
+        { 'CF-Connecting-IP': ip }
+      ),
+      env
+    );
+    const data = await res.json<{ ok: boolean; error?: string }>();
+    expect(data.ok).toBe(false);
+    expect(data.error).toContain('Muitas requisições');
+  });
+
+  // Small fix #1: the daily cap must be checked before the per-email rate limit is
+  // touched — otherwise a request refused by the global cap still burns one of this
+  // email's 3 hourly issuance slots for nothing.
+  it('does not consume the per-email rate-limit slot when blocked by the daily cap', async () => {
+    const today = new Date().toISOString().slice(0, 10);
+    await env.CODES.put(`daily-email-count:${today}`, '50');
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 200 })));
+
+    const email = 'cap-diario@mclair.com.br';
+    const res = await worker.fetch(
+      postJson('/solicitar-codigo', { email, githubUsername: 'x' }),
+      env
+    );
+    const data = await res.json<{ ok: boolean }>();
+    expect(data.ok).toBe(false);
+
+    // isRateLimited's key should be untouched — the daily-cap check must short-circuit
+    // before it ever runs.
+    expect(await env.CODES.get(`ratelimit:${email}`)).toBeNull();
+  });
+
+  // Small fix #2: the daily-cap counter must only increment after an email actually
+  // sends — a Resend failure must not burn shared quota for a code nobody received.
+  it('does not increment the daily cap counter when sendVerificationCode fails', async () => {
+    vi.stubGlobal('fetch', vi.fn(async () => new Response('erro', { status: 422 })));
+
+    const res = await worker.fetch(
+      postJson('/solicitar-codigo', { email: 'falha-resend@mclair.com.br', githubUsername: 'x' }),
+      env
+    );
+    expect(res.status).toBe(500);
+
+    const today = new Date().toISOString().slice(0, 10);
+    expect(await env.CODES.get(`daily-email-count:${today}`)).toBeNull();
   });
 });

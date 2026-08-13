@@ -4,7 +4,8 @@ import {
   isValidMclairEmail,
   generateCode,
   storeCode,
-  verifyAndConsumeCode,
+  codeMatches,
+  consumeCode,
   isVerifyAttemptLimited,
 } from '../src/codes';
 
@@ -32,27 +33,41 @@ describe('generateCode', () => {
   });
 });
 
-describe('storeCode / verifyAndConsumeCode', () => {
-  it('verifies a code that was just stored', async () => {
+describe('codeMatches', () => {
+  it('matches a code that was just stored', async () => {
     await storeCode(env.CODES, 'kelly@mclair.com.br', '123456');
-    expect(await verifyAndConsumeCode(env.CODES, 'kelly@mclair.com.br', '123456')).toBe(true);
+    expect(await codeMatches(env.CODES, 'kelly@mclair.com.br', '123456')).toBe(true);
   });
 
   it('rejects a wrong code', async () => {
     await storeCode(env.CODES, 'kelly2@mclair.com.br', '123456');
-    expect(await verifyAndConsumeCode(env.CODES, 'kelly2@mclair.com.br', '999999')).toBe(false);
+    expect(await codeMatches(env.CODES, 'kelly2@mclair.com.br', '999999')).toBe(false);
   });
 
-  it('is single-use — the same code cannot be verified twice', async () => {
+  it('does not consume the code — checking it twice still matches', async () => {
     await storeCode(env.CODES, 'kelly3@mclair.com.br', '123456');
-    const first = await verifyAndConsumeCode(env.CODES, 'kelly3@mclair.com.br', '123456');
-    const second = await verifyAndConsumeCode(env.CODES, 'kelly3@mclair.com.br', '123456');
+    const first = await codeMatches(env.CODES, 'kelly3@mclair.com.br', '123456');
+    const second = await codeMatches(env.CODES, 'kelly3@mclair.com.br', '123456');
     expect(first).toBe(true);
-    expect(second).toBe(false);
+    expect(second).toBe(true);
   });
 
   it('rejects when no code was ever stored for that email', async () => {
-    expect(await verifyAndConsumeCode(env.CODES, 'nunca-pediu@mclair.com.br', '123456')).toBe(false);
+    expect(await codeMatches(env.CODES, 'nunca-pediu@mclair.com.br', '123456')).toBe(false);
+  });
+});
+
+describe('consumeCode', () => {
+  it('makes a subsequent codeMatches call return false — single-use guarantee', async () => {
+    const email = 'consome@mclair.com.br';
+    await storeCode(env.CODES, email, '123456');
+    expect(await codeMatches(env.CODES, email, '123456')).toBe(true);
+    await consumeCode(env.CODES, email);
+    expect(await codeMatches(env.CODES, email, '123456')).toBe(false);
+  });
+
+  it('is a no-op when no code was stored', async () => {
+    await expect(consumeCode(env.CODES, 'nunca-teve@mclair.com.br')).resolves.toBeUndefined();
   });
 });
 
@@ -73,7 +88,7 @@ describe('isVerifyAttemptLimited', () => {
     }
     expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(true);
     // The code should be gone even though it was never actually guessed.
-    expect(await verifyAndConsumeCode(env.CODES, email, '123456')).toBe(false);
+    expect(await codeMatches(env.CODES, email, '123456')).toBe(false);
   });
 
   it('resets when a fresh code is issued, so a legitimate user is not stuck locked out', async () => {
@@ -87,6 +102,6 @@ describe('isVerifyAttemptLimited', () => {
     // Person requests a new code, as the error message tells them to.
     await storeCode(env.CODES, email, '222222');
     expect(await isVerifyAttemptLimited(env.CODES, email)).toBe(false); // fresh budget
-    expect(await verifyAndConsumeCode(env.CODES, email, '222222')).toBe(true);
+    expect(await codeMatches(env.CODES, email, '222222')).toBe(true);
   });
 });
