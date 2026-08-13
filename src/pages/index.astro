@@ -436,6 +436,41 @@ const cases = (allCases as any[])
       row.addEventListener('scroll', () => { hint.style.opacity = '0'; }, { once: true });
     }
 
+    // Cases hover tooltip — follows cursor, shows image + challenge text
+    const tooltip = document.getElementById('case-tooltip') as HTMLElement;
+    const tooltipImg = tooltip?.querySelector('.case-tooltip-img') as HTMLImageElement;
+    const tooltipText = tooltip?.querySelector('.case-tooltip-text') as HTMLElement;
+    const caseRows = document.querySelectorAll('.case-row');
+    const TOOLTIP_OFFSET = 20;
+    const TOOLTIP_WIDTH = 230;
+
+    if (tooltip && tooltipImg && tooltipText) {
+      caseRows.forEach((row) => {
+        const el = row as HTMLElement;
+
+        el.addEventListener('mouseenter', () => {
+          tooltipImg.src = el.dataset.img || '';
+          tooltipText.textContent = el.dataset.challenge || '';
+          tooltip.classList.add('is-visible');
+        });
+
+        el.addEventListener('mousemove', (e) => {
+          const evt = e as MouseEvent;
+          let x = evt.clientX + TOOLTIP_OFFSET;
+          const y = evt.clientY - TOOLTIP_OFFSET;
+          if (x + TOOLTIP_WIDTH > window.innerWidth) {
+            x = evt.clientX - TOOLTIP_OFFSET - TOOLTIP_WIDTH;
+          }
+          tooltip.style.left = x + 'px';
+          tooltip.style.top = y + 'px';
+        });
+
+        el.addEventListener('mouseleave', () => {
+          tooltip.classList.remove('is-visible');
+        });
+      });
+    }
+
   })();
 </script>
 
