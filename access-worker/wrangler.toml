@@ -1,0 +1,13 @@
+name = "mclair-access-worker"
+main = "src/index.ts"
+compatibility_date = "2026-08-13"
+compatibility_flags = ["nodejs_compat"]
+
+[[kv_namespaces]]
+binding = "CODES"
+id = "REPLACE_WITH_REAL_KV_ID"
+preview_id = "REPLACE_WITH_REAL_KV_ID"
+
+# Secrets — set via `wrangler secret put`, never written to this file:
+#   RESEND_API_KEY
+#   GITHUB_ADMIN_TOKEN
