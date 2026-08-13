@@ -446,13 +446,15 @@ const cases = (allCases as any[])
 
     if (tooltip && tooltipImg && tooltipText) {
       let tipH = 0;
+      let headerH = 0;
 
       const place = (clientX: number, clientY: number) => {
         let x = clientX + TOOLTIP_OFFSET;
         if (x + TOOLTIP_WIDTH > window.innerWidth) {
           x = clientX - TOOLTIP_OFFSET - TOOLTIP_WIDTH;
         }
-        const y = Math.max(8, Math.min(clientY - TOOLTIP_OFFSET, window.innerHeight - tipH - 8));
+        const topMargin = headerH + 8;
+        const y = Math.max(topMargin, Math.min(clientY - TOOLTIP_OFFSET, window.innerHeight - tipH - 8));
         tooltip.style.left = x + 'px';
         tooltip.style.top = y + 'px';
       };
@@ -466,6 +468,7 @@ const cases = (allCases as any[])
           tooltipText.textContent = el.dataset.challenge || '';
           tooltip.classList.add('is-visible');
           tipH = tooltip.offsetHeight;
+          headerH = document.getElementById('site-header')?.offsetHeight || 0;
           const evt = e as MouseEvent;
           place(evt.clientX, evt.clientY);
         });
