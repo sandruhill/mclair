@@ -445,24 +445,34 @@ const cases = (allCases as any[])
     const TOOLTIP_WIDTH = 230;
 
     if (tooltip && tooltipImg && tooltipText) {
-      caseRows.forEach((row) => {
-        const el = row as HTMLElement;
+      let tipH = 0;
 
-        el.addEventListener('mouseenter', () => {
-          tooltipImg.src = el.dataset.img || '';
+      const place = (clientX: number, clientY: number) => {
+        let x = clientX + TOOLTIP_OFFSET;
+        if (x + TOOLTIP_WIDTH > window.innerWidth) {
+          x = clientX - TOOLTIP_OFFSET - TOOLTIP_WIDTH;
+        }
+        const y = Math.max(8, Math.min(clientY - TOOLTIP_OFFSET, window.innerHeight - tipH - 8));
+        tooltip.style.left = x + 'px';
+        tooltip.style.top = y + 'px';
+      };
+
+      caseRows.forEach((caseRow) => {
+        const el = caseRow as HTMLElement;
+
+        el.addEventListener('mouseenter', (e) => {
+          if (!el.dataset.img) return;
+          tooltipImg.src = el.dataset.img;
           tooltipText.textContent = el.dataset.challenge || '';
           tooltip.classList.add('is-visible');
+          tipH = tooltip.offsetHeight;
+          const evt = e as MouseEvent;
+          place(evt.clientX, evt.clientY);
         });
 
         el.addEventListener('mousemove', (e) => {
           const evt = e as MouseEvent;
-          let x = evt.clientX + TOOLTIP_OFFSET;
-          const y = evt.clientY - TOOLTIP_OFFSET;
-          if (x + TOOLTIP_WIDTH > window.innerWidth) {
-            x = evt.clientX - TOOLTIP_OFFSET - TOOLTIP_WIDTH;
-          }
-          tooltip.style.left = x + 'px';
-          tooltip.style.top = y + 'px';
+          place(evt.clientX, evt.clientY);
         });
 
         el.addEventListener('mouseleave', () => {
