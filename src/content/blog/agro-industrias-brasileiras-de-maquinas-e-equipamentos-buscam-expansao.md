@@ -3,7 +3,7 @@ title: "AGRO: Indústrias brasileiras de máquinas e equipamentos buscam expans�
 subtitle: "Com o apoio do programa Brazil Machinery Solutions (BMS), 13 empresas nacionais  representarão o Brasil na Nampo Show 2023, evento que acontece na África do Sul"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_67196b87d22e27a84f15310b904fe5b6.jpg"
 category: "geral"
 keywords: []

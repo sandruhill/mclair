@@ -60,7 +60,7 @@ Seja por convicção, conveniência ou compliance, cada vez mais, a sociedade re
 
  
 
-****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e lideranças e conselheira em companhias abertas e familiares — Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem. *
+****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e lideranças e conselheira em companhias abertas e familiares: Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem. *
 
  
 

@@ -7,11 +7,26 @@ const clientesContent = (clientesJson as any).content;
 const clients = (clientesContent?.clients ?? []) as any[];
 const stats   = (clientesContent?.stats   ?? []) as any[];
 const seo = clientesContent?.seo ?? {};
+
+// Clientes que também têm um case de sucesso publicado: linka o logo para o case
+const caseBySlug: Record<string, string> = {
+  'Fidalgo Leilões': 'fidalgo',
+  'Globo Leilões': 'globo-leiloes',
+  'VIP Leilões': 'vip-leiloes',
+  'Claudia Elisa': 'claudia-elisa',
+  'BMS / ABIMAQ': 'bms-abimaq',
+  'EximiaCo': 'elemar-jr',
+  'Guiando': 'nexinvoice',
+  'Lambda3': 'lambda3',
+  'Silene Chiconini': 'silene-chiconini',
+  'Zbra': 'zbra',
+  'Insight RH': 'insight-rh',
+};
 ---
 
 <Layout
   title={seo.title || 'Clientes | Mclair Comunicação Estratégica'}
-  description={seo.description || '200+ empresas de 23 segmentos confiam na Mclair para Comunicação Estratégica, Marketing de Autoridade e Assessoria de Imprensa. São Paulo.'}
+  description={seo.description || '200+ empresas de 23+ segmentos confiam na Mclair para Comunicação Estratégica, Marketing de Autoridade e Assessoria de Imprensa. São Paulo.'}
   ogImage={seo.ogImage || undefined}
   keywords={seo.keywords}
 >
@@ -36,7 +51,7 @@ const seo = clientesContent?.seo ?? {};
         Nossos<br/><em>Clientes</em>
       </h1>
       <p class="ch-lead" data-anim data-delay="2">
-        Mais de 200 empresas e profissionais em 23 segmentos, de startups a multinacionais, já transformaram sua comunicação com a Mclair. 8 anos construindo marcas que lideram seus mercados.
+        Mais de 200 empresas e profissionais em 23+ segmentos, de startups a multinacionais, já transformaram sua comunicação com a Mclair. 9 anos construindo marcas que lideram seus mercados.
       </p>
     </div>
     <div class="ch-stats" data-anim="right" data-delay="2">
@@ -61,13 +76,18 @@ const seo = clientesContent?.seo ?? {};
     </div>
 
     <div class="logos-grid stagger-children">
-      {clients.map((c, i) => (
-        <div class="logo-card" data-anim data-delay={((i % 4) + 1).toString()}>
-          <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
-            onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
-          <span class="logo-name">{c.name || ''}</span>
-        </div>
-      ))}
+      {clients.map((c, i) => {
+        const caseSlug = c.name ? caseBySlug[c.name] : undefined;
+        const Tag = caseSlug ? 'a' : 'div';
+        const linkProps = caseSlug ? { href: `/cases/${caseSlug}` } : {};
+        return (
+          <Tag class="logo-card" data-anim data-delay={((i % 4) + 1).toString()} {...linkProps}>
+            <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
+              onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
+            <span class="logo-name">{caseSlug ? 'Ver case →' : (c.name || '')}</span>
+          </Tag>
+        );
+      })}
     </div>
   </div>
 </section>
@@ -77,7 +97,7 @@ const seo = clientesContent?.seo ?? {};
   <div class="container cta-inner">
     <div>
       <h2 class="cta-title">Sua marca pode ser a próxima.</h2>
-      <p class="cta-sub">Em 8 anos, ajudamos 200+ marcas a se tornarem referência no seu mercado. Sua pode ser a próxima.</p>
+      <p class="cta-sub">Em 9 anos, ajudamos 200+ marcas a se tornarem referência no seu mercado. Sua pode ser a próxima.</p>
     </div>
     <div class="cta-actions">
       <a href="/contato" class="btn-primary">
@@ -158,8 +178,10 @@ const seo = clientesContent?.seo ?? {};
   padding:32px 20px; background:transparent;
   border-bottom:1px solid var(--line); border-right:1px solid var(--line);
   min-height:130px; position:relative;
+  text-decoration:none; color:inherit;
   transition:background .25s, transform .3s cubic-bezier(.22,1,.36,1), box-shadow .3s, z-index 0s;
 }
+a.logo-card:hover .logo-name { color:var(--red); }
 .logo-card:nth-child(5n) { border-right:none; }
 .logo-card:hover {
   background:var(--cream);

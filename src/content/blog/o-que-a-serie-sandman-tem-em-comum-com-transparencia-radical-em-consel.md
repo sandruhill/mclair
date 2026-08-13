@@ -48,7 +48,7 @@ Ainda de acordo com Claudia Elisa, no processo de colocar todos os “pingos nos
 
  
 
-É especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares — Camil, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem
+É especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares: Camil, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem
 
  
 

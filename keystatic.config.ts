@@ -76,13 +76,6 @@ export default config({
             }, { layout: [4, 4, 4, 12] }),
             { label: 'Equipe', itemLabel: (p) => p.fields.nome.value }
           ),
-          timeline: fields.array(
-            fields.object({
-              year: fields.text({ label: 'Ano' }),
-              ev: fields.text({ label: 'Evento', multiline: true }),
-            }, { layout: [3, 9] }),
-            { label: 'Timeline', itemLabel: (p) => p.fields.year.value }
-          ),
         }, { layout: [6, 6, 12] }),
       },
     }),

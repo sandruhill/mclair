@@ -27,13 +27,17 @@
     "Comunicação Digital",
     "Tecnologia"
   ],
-  "img": "/cases-img/zbra.jpg",
+  "img": "/cases-img/zbra-2.webp",
   "gallery": [
     {
-      "src": "/cases-img/zbra.jpg",
-      "caption": "Rebranding Zbra: social media, assessoria de imprensa e posicionamento integrados ao novo visual"
+      "src": "/cases-img/zbra-1.webp",
+      "caption": "Mosaico de campanhas de redes sociais da Zbra, com a série ZTalks e cultura de equipe"
+    },
+    {
+      "src": "/cases-img/zbra-2.webp",
+      "caption": "Cobertura de imprensa do rebranding da Zbra Solutions no Grandes Nomes da Propaganda e na Exame"
     }
   ],
-  "homeResult": "Comunicação 360° alinhada ao rebranding — presença na comunidade tech",
-  "metaDescription": "Como a Mclair alinhou toda a comunicação da Zbra após seu rebranding — redes sociais, imprensa e posicionamento integrados."
+  "homeResult": "Comunicação 360° alinhada ao rebranding, presença na comunidade tech",
+  "metaDescription": "Como a Mclair alinhou toda a comunicação da Zbra após seu rebranding: redes sociais, imprensa e posicionamento integrados."
 }

@@ -3,7 +3,7 @@ title: "Brasil gera US$4,5 milhões durante a EIMA 2022"
 subtitle: "Programa BMS promoveu a participação de sete empresas brasileiras na feira italiana"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/25-04-2023_6_d3cc00e003e369b2dfac64c9bfc58640.jpg"
 category: "geral"
 keywords: []

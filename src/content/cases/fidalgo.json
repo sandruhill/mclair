@@ -3,12 +3,12 @@
   "num": "02",
   "color": "var(--teal)",
   "accent": "#1B8A76",
-  "sector": "Assessoria de Imprensa — Resultados Expressivos",
+  "sector": "Assessoria de Imprensa: Resultados Expressivos",
   "challenge": "Divulgação de leilões estratégicos (Caixa Econômica Federal, Justiça Federal, Correios) com necessidade de grande repercussão na mídia nacional e regional em prazos curtos e com alta assertividade. Cada leilão exigia cobertura específica e direcionada ao público-alvo correto.",
-  "solution": "Assessoria de Imprensa Estratégica com foco em geração de cobertura de alto alcance. Desenvolvimento de releases impactantes e diferenciados, relacionamento ativo e personalizado com redações, e posicionamento estratégico nos principais veículos de notícias do Brasil — do nacional ao regional.",
+  "solution": "Parceria com o Fidalgo Leilões desde janeiro de 2022, com Assessoria de Imprensa Estratégica focada em geração de cobertura de alto alcance. Desenvolvimento de releases impactantes e diferenciados, relacionamento ativo e personalizado com redações, e posicionamento estratégico nos principais veículos de notícias do Brasil, do nacional ao regional.",
   "results": [
     {
-      "v": "11.600+",
+      "v": "1.600+",
       "l": "Inserções totais na mídia"
     },
     {
@@ -29,10 +29,18 @@
   "img": "/cases-img/fidalgo.jpg",
   "gallery": [
     {
-      "src": "/cases-img/fidalgo.jpg",
-      "caption": "Cobertura na Folha de São Paulo, Band e veículos de grande alcance nacional"
+      "src": "/cases-img/fidalgo-press-1.webp",
+      "caption": "Folha de S.Paulo: cobertura dos leilões de imóveis da Caixa Econômica Federal"
+    },
+    {
+      "src": "/cases-img/fidalgo-press-2.webp",
+      "caption": "Mesma pauta replicada em Exame IN, O Povo, Bússola e outros grandes veículos"
+    },
+    {
+      "src": "/cases-img/fidalgo-press-3.webp",
+      "caption": "Matéria mais lida da Valor Investe e destaque no Globo.com no mesmo dia"
     }
   ],
-  "homeResult": "+11.600 inserções na mídia nacional e regional",
-  "metaDescription": "Como a Mclair garantiu mais de 11.600 inserções na mídia para o Fidalgo Leilões com cobertura nacional expressiva."
+  "homeResult": "+1.600 inserções na mídia nacional e regional",
+  "metaDescription": "Como a Mclair garantiu mais de 1.600 inserções na mídia para o Fidalgo Leilões com cobertura nacional expressiva."
 }

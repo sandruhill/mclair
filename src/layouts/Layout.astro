@@ -21,7 +21,7 @@ interface Props {
 const BASE = 'https://mclair.vercel.app';
 const {
   title,
-  description = 'Mclair — Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito desde 2017.',
+  description = 'Mclair: Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito desde 2017.',
   ogImage = `${BASE}/android-chrome-512x512.png`,
   ogType = 'website',
   articleAuthor,
@@ -55,7 +55,7 @@ const orgSchema = {
   founder: {
     '@type': 'Person',
     name: 'Kelly Pinheiro',
-    jobTitle: 'Fundadora & CEO',
+    jobTitle: 'CEO & Sócio-Fundadora',
     sameAs: ['https://instagram.com/mclair.com.br'],
   },
   address: {
@@ -119,7 +119,7 @@ const websiteSchema = {
   '@type': 'WebSite',
   '@id': `${BASE}/#website`,
   url: BASE,
-  name: 'Mclair — Agência de Marketing e Comunicação Estratégica',
+  name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
   description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
   publisher: { '@id': `${BASE}/#organization` },
   potentialAction: {
@@ -160,7 +160,7 @@ const websiteSchema = {
     <meta property="og:image:width"   content="1200" />
     <meta property="og:image:height"  content="630" />
     <meta property="og:locale"        content="pt_BR" />
-    <meta property="og:site_name"     content="Mclair — Agência de Marketing" />
+    <meta property="og:site_name"     content="Mclair: Agência de Marketing" />
     {ogType === 'article' && articlePublishedTime && (
       <meta property="article:published_time" content={articlePublishedTime} />
     )}
@@ -483,7 +483,7 @@ const websiteSchema = {
               <option>Marketing Digital</option>
               <option>Consultoria em Comunicação</option>
               <option>Mentoria Bolder ou Bolder Press</option>
-              <option>Não sei ainda — quero conversar</option>
+              <option>Não sei ainda, quero conversar</option>
             </select>
           </div>
           <button type="submit" class="wa-submit">

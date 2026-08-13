@@ -1,17 +1,17 @@
 ---
-const caseLinks = [
-  { label:'Claudia Elisa',       href:'/cases/claudia-elisa',    tag:'Marca Pessoal',          img:'/cases-img/claudia-elisa-marca-pessoal-lideranca.jpg' },
-  { label:'Fidalgo Leilões',     href:'/cases/fidalgo',          tag:'Assessoria de Imprensa', img:'/cases-img/fidalgo-leiloes-assessoria-imprensa.jpg' },
-  { label:'Alexandre Magno',     href:'/cases/alexandre-magno',  tag:'Gestão de Crise',        img:'/cases-img/alexandre-magno-gestao-crise-pr.jpg' },
-  { label:'Elemar Jr. / EximiaCo', href:'/cases/elemar-jr',      tag:'Branding',               img:'/cases-img/elemar-jr-branding-tecnologia-software.jpg' },
-  { label:'BMS / ABIMAQ',        href:'/cases/bms-abimaq',       tag:'Internacional',           img:'/cases-img/bms-abimaq-maquinario-industrial-exportacao.jpg' },
-  { label:'Insight RH',          href:'/cases/insight-rh',       tag:'Rebranding & Naming',    img:'/cases-img/insight-rh-lideranca-gestao-pessoas.jpg' },
-  { label:'Diego Nogare',        href:'/cases/diego-nogare',     tag:'Dados & IA',             img:'/cases-img/diego-nogare-inteligencia-artificial-dados.jpg' },
-  { label:'Lambda3',             href:'/cases/lambda3',          tag:'Assessoria de Imprensa', img:'/cases-img/lambda3-tecnologia-dados-comunicacao.jpg' },
-  { label:'Zbra',                href:'/cases/zbra',             tag:'Rebranding',             img:'/cases-img/zbra-rebranding-digital-tecnologia.jpg' },
-  { label:'Guiando / NexInvoice',href:'/cases/nexinvoice',       tag:'Naming & Branding',      img:'/cases-img/nexinvoice-fintech-branding-naming.jpg' },
-  { label:'Silene Chiconini',    href:'/cases/silene-chiconini', tag:'Marca Pessoal',          img:'/cases-img/silene-chiconini-consultoria-sustentabilidade.jpg' },
-];
+import { createReader } from '@keystatic/core/reader';
+import keystaticConfig from '../../keystatic.config';
+
+const reader = createReader(process.cwd(), keystaticConfig);
+const allCases = await reader.collections.cases.all().catch(() => []);
+const caseLinks = (allCases as any[])
+  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .map(c => ({
+    label: c.entry.client,
+    href:  `/cases/${c.slug}`,
+    tag:   c.entry.sector ?? '',
+    img:   c.entry.img ?? '',
+  }));
 
 const svcLinks = [
   { label:'Marketing de Autoridade', href:'/servicos/marketing-de-autoridade' },

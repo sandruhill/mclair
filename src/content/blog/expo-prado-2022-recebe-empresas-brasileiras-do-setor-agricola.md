@@ -3,7 +3,7 @@ title: "Expo Prado 2022 recebe empresas brasileiras do setor agrícola"
 subtitle: "Por meio do Programa Brazil Machinery Solutions (BMS), cinco empresas brasileiras participarão da feira; em 2021, Uruguai importou US$197,8 milhões em máquinas e equipamentos do Brasil"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_b472931441abf32212ac4e56e00d7a40.jpg"
 category: "geral"
 keywords: []

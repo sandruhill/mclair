@@ -8,13 +8,12 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20fa
 const sobreContent = (sobreJson as any).content;
 const valores  = (sobreContent?.valores  ?? []) as any[];
 const equipe   = (sobreContent?.equipe   ?? []) as any[];
-const timeline = (sobreContent?.timeline ?? []) as any[];
 const seo = sobreContent?.seo ?? {};
 ---
 
 <Layout
-  title={seo.title || 'Sobre a Mclair | Comunicação Estratégica desde 2004'}
-  description={seo.description || 'Agência fundada em 2004 por Kelly Pinheiro. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia e 1.734 publicações internacionais.'}
+  title={seo.title || 'Sobre a Mclair | Comunicação Estratégica desde 2017'}
+  description={seo.description || 'Agência fundada em 2017 por Kelly Pinheiro. 200+ clientes, 23+ segmentos, 11.600+ inserções na mídia e 1.734 publicações internacionais.'}
   ogImage={seo.ogImage || 'https://mclair.vercel.app/sobre/equipe-mclair-comunicacao-estrategica.jpg'}
   keywords={seo.keywords}
   keywords="agência comunicação estratégica, marketing de autoridade São Paulo, assessoria de imprensa, Kelly Pinheiro, Mclair agência, história Mclair, equipe Mclair, agência 2017"
@@ -24,7 +23,7 @@ const seo = sobreContent?.seo ?? {};
       '@type': 'AboutPage',
       '@id': 'https://mclair.vercel.app/sobre#page',
       name: 'Sobre a Mclair: Comunicação Estratégica desde 2017',
-      description: 'Conheça a Mclair: fundada em 2017 por Kelly Pinheiro, especializada em Comunicação Estratégica e Marketing de Autoridade. 200+ clientes, 23 segmentos, 11.600+ inserções na mídia.',
+      description: 'Conheça a Mclair: fundada em 2017 por Kelly Pinheiro, especializada em Comunicação Estratégica e Marketing de Autoridade. 200+ clientes, 23+ segmentos, 11.600+ inserções na mídia.',
       url: 'https://mclair.vercel.app/sobre',
       mainEntity: { '@id': 'https://mclair.vercel.app/#organization' },
       breadcrumb: {
@@ -40,9 +39,9 @@ const seo = sobreContent?.seo ?? {};
       '@type': 'Person',
       '@id': 'https://mclair.vercel.app/sobre#kelly',
       name: 'Kelly Pinheiro',
-      jobTitle: 'Fundadora & CEO',
+      jobTitle: 'CEO & Sócio-Fundadora',
       worksFor: { '@id': 'https://mclair.vercel.app/#organization' },
-      description: 'Fundadora e CEO da Mclair. Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência.',
+      description: 'CEO & Sócio-Fundadora da Mclair. Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência.',
       sameAs: ['https://instagram.com/mclair.com.br', 'https://linkedin.com/company/mclair-comunicacao'],
       knowsAbout: ['Marketing de Autoridade', 'Comunicação Estratégica', 'Assessoria de Imprensa', 'Branding', 'Marca Pessoal'],
     },
@@ -67,11 +66,11 @@ const seo = sobreContent?.seo ?? {};
       <em>e Marketing de Autoridade desde 2017</em>
     </h1>
     <p class="ph-sub" data-anim data-delay="2">
-      Fundada em 2017 por Kelly Pinheiro em São Paulo. Atende 23 segmentos, de executivos a multinacionais, com equipes de Assessoria de Imprensa, Branding e Marketing Digital. 200+ clientes, 11.600+ inserções na mídia.
+      Fundada em 2017 por Kelly Pinheiro em São Paulo. Atende 23+ segmentos, de executivos a multinacionais, com equipes de Assessoria de Imprensa, Branding e Marketing Digital. 200+ clientes, 11.600+ inserções na mídia.
     </p>
     <div class="ph-stats stagger-children" data-delay="3">
       <div class="phs-item">
-        <strong class="counter" data-target="8" data-suffix="+">0</strong>
+        <strong class="counter" data-target="9" data-suffix="+">0</strong>
         <span>Anos de mercado</span>
       </div>
       <div class="phs-sep"></div>
@@ -102,7 +101,7 @@ const seo = sobreContent?.seo ?? {};
         Construir legados através da<br/><span>Comunicação com Propósito</span>
       </h2>
       <p class="section-lead" style="margin-top:16px">
-        Em 8 anos de atuação, a Mclair construiu mais de 11.600 inserções na mídia nacional e 1.734 publicações internacionais para seus clientes. Cada projeto começa com um diagnóstico profundo da marca e termina com métricas claras, porque autoridade real precisa ser medida.
+        Em 9 anos de atuação, a Mclair construiu mais de 11.600 inserções na mídia nacional e 1.734 publicações internacionais para seus clientes. Cada projeto começa com um diagnóstico profundo da marca e termina com métricas claras, porque autoridade real precisa ser medida.
       </p>
       <p class="section-lead" style="margin-top:12px">
         Somos formados por jornalistas, estrategistas de marca e especialistas em performance digital. Nossa abordagem integrada cobre Marketing de Autoridade, Assessoria de Imprensa, Branding Estratégico e Marketing Digital, sempre com transparência total em relatórios e KPIs.
@@ -145,31 +144,6 @@ const seo = sobreContent?.seo ?? {};
   </div>
 </section>
 
-<!-- HISTÓRIA / TIMELINE -->
-<section class="section historia-section">
-  <div class="container">
-    <div style="text-align:center;max-width:520px;margin:0 auto 64px">
-      <p class="eyebrow" data-anim style="justify-content:center">Nossa história</p>
-      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
-        Paixão por Comunicação<br/>Estratégica <span>desde 2017</span>
-      </h2>
-    </div>
-    <div class="timeline">
-      {timeline.map((t,i) => (
-        <div class="tl-item" data-anim data-delay={(i%3+1).toString()}>
-          <div class="tl-year-wrap">
-            <span class="tl-year">{t.year}</span>
-            <div class="tl-dot"></div>
-          </div>
-          <div class="tl-card">
-            <p class="tl-text">{t.ev}</p>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
-
 <!-- VALORES -->
 <section class="section valores-section" id="valores">
   <div class="container">
@@ -189,17 +163,17 @@ const seo = sobreContent?.seo ?? {};
   </div>
 </section>
 
-<!-- EQUIPE -->
+<!-- LIDERANÇA -->
 <section class="section equipe-section">
   <div class="container">
     <div class="section-header-center" data-anim>
-      <p class="eyebrow" style="justify-content:center">Nossa equipe</p>
-      <h2 class="section-title" style="margin-top:14px">As pessoas por trás da <span>Mclair</span></h2>
+      <p class="eyebrow" style="justify-content:center">Liderança</p>
+      <h2 class="section-title" style="margin-top:14px">A frente da <span>Mclair</span></h2>
     </div>
     <div class="equipe-grid stagger-children">
-      {equipe.map((m,i) => (
+      {equipe.map((m) => (
         <div class="membro-card">
-          <div class="mc-avatar" style={`background:${['var(--red)','var(--teal)','var(--orange)','var(--red)'][i]}`}>
+          <div class="mc-avatar" style="background:var(--red)">
             {m.initials}
           </div>
           <h3 class="mc-nome">{m.nome}</h3>
@@ -267,17 +241,6 @@ const seo = sobreContent?.seo ?? {};
 .pp-item h3 { font-size:.92rem; font-weight:700; color:var(--ink); margin-bottom:4px; }
 .pp-item p { font-size:.82rem; color:var(--ink-3); font-weight:300; line-height:1.6; }
 
-/* TIMELINE */
-.historia-section { background:var(--cream-2); }
-.timeline { display:grid; grid-template-columns:repeat(3,1fr); gap:0; }
-.tl-item { padding:32px 28px; border-left:1px solid var(--line); }
-.tl-item:first-child { border-left:none; }
-.tl-year-wrap { display:flex; align-items:center; gap:12px; margin-bottom:16px; }
-.tl-year { font-size:.72rem; font-weight:700; letter-spacing:.12em; color:var(--red); background:var(--red-soft); padding:.3rem .8rem; border-radius:99px; }
-.tl-dot { width:6px; height:6px; border-radius:50%; background:var(--red); }
-.tl-card { }
-.tl-text { font-size:.88rem; color:var(--ink-2); line-height:1.75; font-weight:300; }
-
 /* VALORES */
 .valores-section { background:#fff; }
 .section-header-center { text-align:center; max-width:520px; margin:0 auto 56px; }
@@ -299,10 +262,10 @@ const seo = sobreContent?.seo ?? {};
 
 /* EQUIPE */
 .equipe-section { background:var(--cream-2); }
-.equipe-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+.equipe-grid { display:flex; justify-content:center; gap:20px; }
 .membro-card {
   background:#fff; border:1px solid var(--line); border-radius:var(--r-lg);
-  padding:32px 24px; text-align:center;
+  padding:32px 24px; text-align:center; max-width:340px;
   display:flex; flex-direction:column; align-items:center;
   transition:box-shadow .25s, transform .2s, border-color .2s;
 }
@@ -317,14 +280,11 @@ const seo = sobreContent?.seo ?? {};
 .mc-bio { font-size:.82rem; font-weight:300; color:var(--ink-3); line-height:1.75; }
 
 /* RESPONSIVE */
-@media (max-width:1024px) { .valores-grid { grid-template-columns:1fr 1fr; } .equipe-grid { grid-template-columns:1fr 1fr; } }
-@media (max-width:900px) { .purpose-grid { grid-template-columns:1fr; gap:48px; } .timeline { grid-template-columns:1fr 1fr; } }
+@media (max-width:1024px) { .valores-grid { grid-template-columns:1fr 1fr; } }
+@media (max-width:900px) { .purpose-grid { grid-template-columns:1fr; gap:48px; } }
 @media (max-width:640px) {
-  .timeline { grid-template-columns:1fr; }
-  .tl-item { border-left:none; border-top:1px solid var(--line); padding:24px 0; }
   .ph-stats { gap:20px; }
   .phs-sep { height:28px; }
   .valores-grid { grid-template-columns:1fr; }
-  .equipe-grid { grid-template-columns:1fr; }
 }
 </style>

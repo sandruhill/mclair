@@ -27,13 +27,17 @@
     "Tecnologia",
     "B2B"
   ],
-  "img": "/cases-img/lambda3.jpg",
+  "img": "/cases-img/lambda3-1.webp",
   "gallery": [
     {
-      "src": "/cases-img/lambda3.jpg",
-      "caption": "Cinco anos de parceria — eventos, infoprodutos, assessoria e comunicação digital integrada"
+      "src": "/cases-img/lambda3-1.webp",
+      "caption": "Lambda3 na mídia: entrevistas para SBT, Record TV, Band e Gazeta"
+    },
+    {
+      "src": "/cases-img/lambda3-2.webp",
+      "caption": "Mosaico de campanhas de redes sociais da Lambda3, com eventos e conteúdo de employer branding"
     }
   ],
-  "homeResult": "5 anos de parceria — referência consolidada em tecnologia e dados",
+  "homeResult": "5 anos de parceria, referência consolidada em tecnologia e dados",
   "metaDescription": "Cinco anos de parceria estratégica posicionando a Lambda3 como referência em tecnologia e dados no Brasil."
 }

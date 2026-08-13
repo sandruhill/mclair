@@ -11,7 +11,7 @@ aboutTopics: []
 faqItems: []
 ---
 
-Por muito tempo, a ideia de lucro a qualquer custo predominou nas organizações. Tudo isso era impulsionado por gestores que acreditavam que a maior missão dos negócios era alcançar uma ótima performance econômica — mesmo que colaboradores e consumidores, por exemplo, fossem usados como um meio.
+Por muito tempo, a ideia de lucro a qualquer custo predominou nas organizações. Tudo isso era impulsionado por gestores que acreditavam que a maior missão dos negócios era alcançar uma ótima performance econômica, mesmo que colaboradores e consumidores, por exemplo, fossem usados como um meio.
 
  
 

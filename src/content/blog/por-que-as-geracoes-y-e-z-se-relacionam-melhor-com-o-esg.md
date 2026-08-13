@@ -39,11 +39,11 @@ Uma coisa que certamente pode influenciar de forma positiva as empresas que quer
 
  
 
-Entrando nesse mérito, muitas personalidades que influenciam essa faixa etária estão, inclusive, criando seus próprios negócios sustentáveis. Recentemente, o príncipe Harry e a esposa Meghan Markle viraram parceiros de impacto da gestora de ativos Ethic — empresa que realiza investimentos sustentáveis ligados ao ESG. Segundo o casal, o objetivo é repensar a natureza do investimento para ajudar a resolver os problemas globais enfrentados pela população.
+Entrando nesse mérito, muitas personalidades que influenciam essa faixa etária estão, inclusive, criando seus próprios negócios sustentáveis. Recentemente, o príncipe Harry e a esposa Meghan Markle viraram parceiros de impacto da gestora de ativos Ethic, empresa que realiza investimentos sustentáveis ligados ao ESG. Segundo o casal, o objetivo é repensar a natureza do investimento para ajudar a resolver os problemas globais enfrentados pela população.
 
  
 
-Um outro aspecto interessante é que a presença de membros dessas gerações Y e Z em conselhos pode ser algo realmente impactante. O Instituto Brasileiro de Governança Corporativa (IBGC), do qual faço parte, fez um levantamento com sua base ativa de certificados, e identificou que pessoas com menos de 40 anos são ainda minoria — a média de idade é de 57 anos.
+Um outro aspecto interessante é que a presença de membros dessas gerações Y e Z em conselhos pode ser algo realmente impactante. O Instituto Brasileiro de Governança Corporativa (IBGC), do qual faço parte, fez um levantamento com sua base ativa de certificados, e identificou que pessoas com menos de 40 anos são ainda minoria: a média de idade é de 57 anos.
 
  
 
@@ -55,7 +55,7 @@ Por esses motivos e pela velocidade das mudanças que estamos presenciando, vale
 
  
 
-****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e lideranças e conselheira em companhias abertas e familiares — Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem.*
+****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e lideranças e conselheira em companhias abertas e familiares: Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem.*
 
  
 

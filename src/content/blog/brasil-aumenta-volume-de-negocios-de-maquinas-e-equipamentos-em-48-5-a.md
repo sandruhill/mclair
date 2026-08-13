@@ -3,7 +3,7 @@ title: "Brasil aumenta volume de negócios de máquinas e equipamentos em 48,5% 
 subtitle: "Resultado é fruto de negócios realizados durante a Colombiatex, ocorrida em Medellín, na Colômbia; ao todo, nove empresas brasileiras apresentaram máquinas e equipamentos com foco no mercado têxtil, por meio do Programa BMS"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_b8f2252ab2f99bc4871c2172a1098d25.jpg"
 category: "geral"
 keywords: []

@@ -59,7 +59,7 @@ Se a empresa está com dificuldades de alavancar o negócio e contribuir com a c
 
  
 
-****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares — Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem*
+****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares: Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem*
 
  
 

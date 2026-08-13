@@ -17,7 +17,7 @@ export async function getStaticPaths() {
       num:         c.entry.num ?? '',
       color:       c.entry.color || 'var(--red)',
       accent:      c.entry.accent || '#C8102E',
-      client:      c.entry.client.name,
+      client:      c.entry.client,
       sector:      c.entry.sector ?? '',
       challenge:   c.entry.challenge ?? '',
       solution:    c.entry.solution ?? '',
@@ -42,6 +42,7 @@ const { c, otherCases } = Astro.props;
   title={`Case ${c.client} | Mclair: Marketing de Autoridade e Comunicação Estratégica`}
   description={c.description}
   keywords={`case ${(c.client ?? '').toLowerCase()}, ${(c.sector ?? '').toLowerCase()}, marketing de autoridade, assessoria de imprensa, comunicação estratégica, mclair, resultados`}
+  ogImage={c.heroImg ? `https://mclair.vercel.app${c.heroImg}` : undefined}
   schema={[
     {
       '@context': 'https://schema.org',
@@ -49,6 +50,9 @@ const { c, otherCases } = Astro.props;
       '@id': `https://mclair.vercel.app/cases/${c.slug}#case`,
       headline: `Case ${c.client}: Mclair`,
       description: c.description || c.challenge,
+      image: [c.heroImg, ...c.gallery.map((g: { src: string }) => g.src)]
+        .filter(Boolean)
+        .map((src: string) => `https://mclair.vercel.app${src}`),
       articleSection: c.sector,
       inLanguage: 'pt-BR',
       author: { '@id': 'https://mclair.vercel.app/#organization' },
@@ -152,7 +156,7 @@ const { c, otherCases } = Astro.props;
           <div class="cg-item" data-anim data-delay={String(i)}>
             <button class="cg-img-wrap" data-src={img.src} data-caption={img.caption} data-idx={String(i)} aria-label={`Ampliar: ${img.caption}`}>
               <div class="cg-img-frame">
-                <img src={img.src} alt={img.caption} class="cg-img" loading="lazy" />
+                <img src={img.src} alt={img.caption} title={img.caption} class="cg-img" loading="lazy" />
               </div>
               <div class="cg-overlay" style={`background:linear-gradient(to top,${c.accent}dd 0%,transparent 55%)`}>
                 <p class="cg-caption">{img.caption}</p>
@@ -378,7 +382,7 @@ const { c, otherCases } = Astro.props;
 .cg-lightbox.is-open .cg-lb-img { transform: scale(1); }
 .cg-lb-img.cg-fade { opacity: 0; transform: scale(.96); }
 .cg-lb-caption {
-  font-size: .82rem; color: rgba(255,255,255,.55); text-align: center;
+  font-size: .95rem; font-weight: 500; color: rgba(255,255,255,.92); text-align: center;
   max-width: 680px; line-height: 1.6;
 }
 .cg-lb-dots {

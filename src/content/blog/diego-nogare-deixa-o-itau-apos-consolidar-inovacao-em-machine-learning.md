@@ -11,7 +11,7 @@ aboutTopics: []
 faqItems: []
 ---
 
-Após quatro anos liderando a área de Engenharia de Machine Learning no Itaú Unibanco, Diego Nogare deixa o banco em um dos momentos mais sólidos de sua carreira. A decisão marca o encerramento de um ciclo desafiador e bem-sucedido: Nogare esteve à frente da estruturação de uma das iniciativas mais ambiciosas do setor bancário brasileiro no campo da Inteligência Artificial (IA), ao modernizar todo o pipeline de Machine Learning (ML) da instituição — da experimentação ao deployment — com foco em escalabilidade, eficiência e autonomia das equipes de dados.
+Após quatro anos liderando a área de Engenharia de Machine Learning no Itaú Unibanco, Diego Nogare deixa o banco em um dos momentos mais sólidos de sua carreira. A decisão marca o encerramento de um ciclo desafiador e bem-sucedido: Nogare esteve à frente da estruturação de uma das iniciativas mais ambiciosas do setor bancário brasileiro no campo da Inteligência Artificial (IA), ao modernizar todo o pipeline de Machine Learning (ML) da instituição, da experimentação ao deployment, com foco em escalabilidade, eficiência e autonomia das equipes de dados.
 
  
 
@@ -23,7 +23,7 @@ Foi nesse contexto que Nogare assumiu a missão de liderar a transformação. Ju
 
  
 
-O resultado foi a redução drástica do tempo médio de desenvolvimento e entrega de modelos — com casos pontuais em que, a partir de iniciativas estratégicas e colaborativas, o processo foi reduzido de seis meses para apenas cinco dias. Mais de 3.000 colaboradores passaram a acessar a estrutura diretamente, com segurança, rastreabilidade e governança de ponta a ponta. Embora a AWS tenha divulgado, em 2024, o número de 3.200 usuários, até a saída de Diego, a base já superava 5.500 profissionais com acesso.
+O resultado foi a redução drástica do tempo médio de desenvolvimento e entrega de modelos, com casos pontuais em que, a partir de iniciativas estratégicas e colaborativas, o processo foi reduzido de seis meses para apenas cinco dias. Mais de 3.000 colaboradores passaram a acessar a estrutura diretamente, com segurança, rastreabilidade e governança de ponta a ponta. Embora a AWS tenha divulgado, em 2024, o número de 3.200 usuários, até a saída de Diego, a base já superava 5.500 profissionais com acesso.
 
  
 
@@ -39,7 +39,7 @@ Referência em implementação de IA e ML no Brasil. Ph.D. Candidate em IA, Micr
 
  
 
-Ao longo dos últimos anos, Nogare percebeu que muitos dos desafios que enfrentou no Itaú são compartilhados por outras companhias — desde bancos e seguradoras até indústrias, varejistas e startups que dependem de dados para tomar decisões estratégicas. Sua nova fase como consultor nasce da vontade de ajudar essas organizações a superarem barreiras técnicas e operacionais com mais velocidade, aplicando seu conhecimento diretamente em projetos diversos. Dessa forma, ele amplia seu impacto, adaptando soluções de alta performance a diferentes contextos e necessidades de mercado.
+Ao longo dos últimos anos, Nogare percebeu que muitos dos desafios que enfrentou no Itaú são compartilhados por outras companhias, desde bancos e seguradoras até indústrias, varejistas e startups que dependem de dados para tomar decisões estratégicas. Sua nova fase como consultor nasce da vontade de ajudar essas organizações a superarem barreiras técnicas e operacionais com mais velocidade, aplicando seu conhecimento diretamente em projetos diversos. Dessa forma, ele amplia seu impacto, adaptando soluções de alta performance a diferentes contextos e necessidades de mercado.
 
  
 
@@ -47,11 +47,11 @@ Ao longo dos últimos anos, Nogare percebeu que muitos dos desafios que enfrento
 
  
 
-A saída de Diego do Itaú marca o início de um novo posicionamento estratégico, em um momento em que a IA volta ao centro das discussões globais — agora com foco nas ferramentas generativas. Na avaliação dele, o que define vantagem competitiva hoje é a capacidade de lidar com a complexidade: tomar decisões orientadas por dados, conduzir times tecnicamente maduros e manter uma visão que vá além das soluções imediatas.
+A saída de Diego do Itaú marca o início de um novo posicionamento estratégico, em um momento em que a IA volta ao centro das discussões globais, agora com foco nas ferramentas generativas. Na avaliação dele, o que define vantagem competitiva hoje é a capacidade de lidar com a complexidade: tomar decisões orientadas por dados, conduzir times tecnicamente maduros e manter uma visão que vá além das soluções imediatas.
 
  
 
-Em um mercado saturado de discursos sobre inovação, Nogare aposta em resultados tangíveis como sua maior forma de autoridade — entregas que combinam profundidade técnica, impacto mensurável e consistência ao longo do tempo.
+Em um mercado saturado de discursos sobre inovação, Nogare aposta em resultados tangíveis como sua maior forma de autoridade: entregas que combinam profundidade técnica, impacto mensurável e consistência ao longo do tempo.
 
   
 

@@ -3,7 +3,7 @@ title: "Brasil apresenta nos EUA tendências em tecnologia para produção e pro
 subtitle: "Indústria brasileira participa da IPPE, maior exposição mundial do setor; Evento acontece em Atlanta, entre 24 e 26 de janeiro"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_b92d207612b7b56a57bf08c171f04021.jpg"
 category: "geral"
 keywords: []

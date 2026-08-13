@@ -1,5 +1,5 @@
 ---
-title: "Nexinvoice® é pioneiro em automação inteligente do Contas a Pagar"
+title: "nexinvoice® é pioneiro em automação inteligente do Contas a Pagar"
 subtitle: "Solução é lançada para eliminar cortes de serviços e promover transformação digital da jornada de pagamento de faturas; IBM, MRV, Grupo Boticário e Localiza já utilizam ferramenta que entrega em média 80% das faturas em até dois dias da data de emissão"
 metaDescription: ""
 date: 2025-04-08

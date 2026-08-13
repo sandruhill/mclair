@@ -3,7 +3,7 @@ title: "Brasil estima faturamento superior a US$100 MI para as exportações do 
 subtitle: "Setores como o agro, metal-mecânico, têxtil, alimentício, plásticos e de mineração receberam as últimas novidades e tendências em tecnologia e inovação desenvolvidas pelo mercado brasileiro, de acordo com as necessidades das demandas mundiais"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_46e986e3d14e953088b1fd0835c0700d.jpg"
 category: "geral"
 keywords: []

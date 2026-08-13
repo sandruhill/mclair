@@ -44,7 +44,7 @@ Não estamos certos de quais empresas farão essa associação ao ESG por convic
 
  
 
-****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares — Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem*
+****Claudia Elisa Soares ****é especialista em ESG e transformação de negócios e líderes e conselheira em companhias abertas e familiares: Camil, IBGC, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem*
 
  
 

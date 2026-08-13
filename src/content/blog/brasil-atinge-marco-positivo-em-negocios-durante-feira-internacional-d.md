@@ -3,7 +3,7 @@ title: "Brasil atinge marco positivo em negócios durante Feira Internacional de
 subtitle: "Empresas brasileiras somam US$670 mil em negociações por meio do Programa Brazil Machinery Solutions (BMS); estimativa para o próximo ano é de US$2,94 milhões"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_9eaf8de54333805f53f91a62cf436d3f.jpg"
 category: "geral"
 keywords: []

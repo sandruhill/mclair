@@ -3,7 +3,7 @@ title: "Empresas brasileiras marcam presença na ColombiaPlast 2022"
 subtitle: "17 companhias participam do evento por meio do Programa Brazil Machinery Solutions (BMS); Colômbia importou US$311,5 milhões em maquinários brasileiros em 2021"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_5da166d031b0a24fdae76cc107a0e872.jpeg"
 category: "geral"
 keywords: []

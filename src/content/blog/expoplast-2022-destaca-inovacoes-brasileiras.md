@@ -3,7 +3,7 @@ title: "Expoplast 2022 destaca inovações brasileiras"
 subtitle: "Nove empresas brasileiras terão oportunidade de apresentar inovações por meio do Programa Brazil Machinery Solutions (BMS) em evento que acontece no Peru, terceiro maior importador de maquinários brasileiros do setor em 2021"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_861e812538d2e7556a24395d4a89888f.jpg"
 category: "geral"
 keywords: []

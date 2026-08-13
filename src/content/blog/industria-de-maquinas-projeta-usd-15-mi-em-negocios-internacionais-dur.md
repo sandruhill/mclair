@@ -3,7 +3,7 @@ title: "Indústria de máquinas projeta USD 15 MI em negócios  internacionais d
 subtitle: "Evento receberá dinâmica específica, promovida pelo Programa Brazil Machinery Solutions (BMS), voltada à promoção da exportação; no total, 17 compradores, vindos de 11 países, se reunirão com mais de 60 empresas brasileiras participantes da Rodada Internacional de Negócios"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_21e19b00bddebac2b869123265c29204.jpg"
 category: "geral"
 keywords: []

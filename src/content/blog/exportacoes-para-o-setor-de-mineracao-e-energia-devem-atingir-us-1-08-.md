@@ -3,7 +3,7 @@ title: "Exportações para o setor de mineração e energia devem atingir US$1,0
 subtitle: "Estimativa tem como base companhias brasileiras que participaram da feira chilena apresentando inovações para o segmento, por meio do Programa Brazil Machinery Solutions (BMS); Brasil movimentou US$179,7 milhões em exportações de maquinário para mineração em 2021"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/21-07-2022_6_dcac54bf20fc1c241dc2603c218cdec8.jpg"
 category: "geral"
 keywords: []

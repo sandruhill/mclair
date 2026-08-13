@@ -5,7 +5,7 @@
   "accent": "#C8102E",
   "sector": "Gestão de Crise, PR & Marca Pessoal",
   "challenge": "Gerir a comunicação desafiadora e sensível da aquisição da Emergee pelo Banco Itaú e, posteriormente, consolidar a Marca Pessoal de Alexandre como consultor de transformação organizacional de alto nível no Brasil, criando autoridade e reputação em um nicho muito especializado.",
-  "solution": "Assessoria de Imprensa estratégica para a aquisição com foco em gestão de narrativa e proteção de reputação, Marketing de Autoridade intensivo para a marca pessoal e lançamento estratégico da The Cynefin Co. Brazil — referência em gestão de complexidade organizacional no país.",
+  "solution": "Assessoria de Imprensa estratégica para a aquisição com foco em gestão de narrativa e proteção de reputação, Marketing de Autoridade intensivo para a marca pessoal e lançamento estratégico da The Cynefin Co. Brazil, referência em gestão de complexidade organizacional no país.",
   "results": [
     {
       "v": "100%",
@@ -27,11 +27,15 @@
     "PR Estratégico",
     "Lançamento de Marca"
   ],
-  "img": "/cases-img/alexandre-magno.jpg",
+  "img": "/cases-img/alexandre-magno-1.webp",
   "gallery": [
     {
-      "src": "/cases-img/alexandre-magno.jpg",
-      "caption": "Alexandre Magno em destaque nos principais veículos nacionais e no lançamento da The Cynefin Co. Brazil"
+      "src": "/cases-img/alexandre-magno-1.webp",
+      "caption": "Assessoria de imprensa de Alexandre Magno: cobertura da chegada da The Cynefin Co ao Brasil na HSM Management e no Observatório do Terceiro Setor"
+    },
+    {
+      "src": "/cases-img/alexandre-magno-2.webp",
+      "caption": "Alexandre Magno em entrevista ao MIT Sloan Review Brasil e no podcast InFINItas Ideias, com depoimento sobre a parceria com a Mclair"
     }
   ],
   "homeResult": "Comunicação da aquisição Emergee/Itaú e lançamento The Cynefin Co.",

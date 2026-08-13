@@ -3,7 +3,7 @@ title: "Indústria brasileira apresenta soluções em sustentabilidade e economi
 subtitle: "Empresas apresentarão na Colombiatex máquinas e equipamentos capazes de reduzir significativamente o consumo de combustível, emissão de CO2 e fumaça, aumentando a produtividade"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_a072596c5e498085e576af0216deb250.jpg"
 category: "geral"
 keywords: []

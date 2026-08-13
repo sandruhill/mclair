@@ -300,4 +300,4 @@ ul, ol { list-style:none; }
   transition: transform 0.9s cubic-bezier(.25,.46,.45,.94);
 }
 .clients-hero:hover .ch-photo-img { transform: scale(1.06); }
-.page-content { animation: page-in .5s cubic-bezier(.22,1,.36,1) both; }
+.page-content { animation: page-in .5s cubic-bezier(.22,1,.36,1) backwards; }

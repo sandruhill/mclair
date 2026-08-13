@@ -114,7 +114,7 @@ Sobre Claudia Elisa Soares
 
  
 
-É especialista em ESG, transformação de negócios e líderes e conselheira em companhias abertas e familiares — Camil, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem.
+É especialista em ESG, transformação de negócios e líderes e conselheira em companhias abertas e familiares: Camil, Tupy, Even, Grupo Cassol, Bernoulli Educação e Gouvêa Ecosystem.
 
  
 

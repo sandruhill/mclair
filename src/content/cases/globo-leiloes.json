@@ -1,0 +1,54 @@
+{
+  "client": "Globo Leilões",
+  "num": "12",
+  "color": "var(--red)",
+  "accent": "#C8102E",
+  "sector": "Assessoria de Imprensa & Growth Digital",
+  "challenge": "A Globo Leilões, leiloeira parceira de instituições financeiras como a Caixa Econômica Federal, precisava de visibilidade constante para seus leilões de imóveis retomados e, ao mesmo tempo, de uma base digital aquecida que convertesse alcance em cadastros e lances reais — não apenas curtidas.",
+  "solution": "Assessoria de imprensa ativa com pauta focada em cada novo leilão, relacionamento direto com editores de economia e mercado imobiliário, somada a um plano de conteúdo semanal em Reels e Stories para aquecer a base antes de cada praça, além de e-mail marketing para nutrir os contatos captados.",
+  "results": [
+    {
+      "v": "685",
+      "l": "Inserções na mídia"
+    },
+    {
+      "v": "5,7 MI",
+      "l": "Visualizações no Instagram e TikTok"
+    },
+    {
+      "v": "+31 MI",
+      "l": "Cliques gerados para o site"
+    },
+    {
+      "v": "963 mil",
+      "l": "Contas alcançadas em média por mês"
+    }
+  ],
+  "tags": [
+    "Assessoria de Imprensa",
+    "Growth Digital",
+    "Redes Sociais",
+    "E-mail Marketing"
+  ],
+  "img": "/cases-img/globo-leiloes-3.webp",
+  "gallery": [
+    {
+      "src": "/cases-img/globo-leiloes-1.webp",
+      "caption": "Cobertura simultânea em Extra, IstoÉ Dinheiro, Folha Vitória e Exame"
+    },
+    {
+      "src": "/cases-img/globo-leiloes-2.webp",
+      "caption": "Conteúdo semanal em Reels e Stories para aquecer a base antes de cada leilão"
+    },
+    {
+      "src": "/cases-img/globo-leiloes-3.webp",
+      "caption": "Resultado consolidado: de inserções na mídia a cliques gerados para o site"
+    },
+    {
+      "src": "/cases-img/globo-leiloes-4.webp",
+      "caption": "Reposicionamento de marca: do logo antigo ao novo posicionamento Globo Leilões"
+    }
+  ],
+  "homeResult": "685 inserções na mídia e +31 milhões de cliques para o site",
+  "metaDescription": "Como a Mclair gerou 685 inserções na mídia, 5,7 milhões de visualizações e mais de 31 milhões de cliques para a Globo Leilões."
+}

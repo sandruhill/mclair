@@ -1,0 +1,837 @@
+---
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import fidalgoCase from '../content/cases/fidalgo.json';
+import globoCase from '../content/cases/globo-leiloes.json';
+import vipCase from '../content/cases/vip-leiloes.json';
+
+const CASES_BG_VIDEO_ID = 'ZsbxCdWN-7Q';
+
+const WA_NUMBER = '5511988600372';
+const WA_TEXT = 'Olá! Vim pela página da Mclair e quero entender como vocês podem aumentar as disputas por lance no meu leilão.';
+const WA = `https://wa.me/${WA_NUMBER}?text=${encodeURIComponent(WA_TEXT)}`;
+
+const logos = [
+  { name: 'Fidalgo Leilões', logo: '/clientes/fidalgo-leiloes-logo.webp', slug: 'fidalgo' },
+  { name: 'Globo Leilões',   logo: '/clientes/globo-leiloes-logo.webp',   slug: 'globo-leiloes' },
+  { name: 'VIP Leilões',     logo: '/clientes/vip-leiloes-logo.webp',     slug: 'vip-leiloes' },
+  { name: 'Ribeiro Leilões', logo: '/clientes/ribeiro-leiloes-logo.webp', slug: null },
+  { name: 'Balbino Leilões', logo: '/clientes/balbino-leiloes-logo.webp', slug: null },
+];
+
+const bigNumbers = [
+  { v: '3.000+', label: 'Inserções na mídia em veículos como Valor, Globo, G1, Folha, CNN, Extra, Band, SBT, A Tarde e O Povo' },
+  { v: '5,7 milhões', label: 'Visualizações geradas em redes sociais' },
+  { v: '+31 milhões', label: 'Cliques gerados para o site do leiloeiro' },
+  { v: 'R$ 157 milhões', label: 'Um imóvel da carteira vendido, após 4 tentativas frustradas de outras empresas' },
+];
+
+const servicos = [
+  {
+    title: 'Assessoria de imprensa especializada',
+    desc: 'Pauta e relacionamento direto com jornalistas e veículos que cobrem o mercado de leilões.',
+  },
+  {
+    title: 'Redes sociais',
+    desc: 'Conteúdo que educa, aquece a base e aumenta o engajamento antes de cada praça.',
+  },
+  {
+    title: 'Growth e performance',
+    desc: 'Campanhas em Google, Meta e YouTube com foco em geração de lead qualificado, não só alcance.',
+  },
+  {
+    title: 'E-mail marketing e inbound',
+    desc: 'Nutrição da sua base para que ela chegue aquecida em cada novo leilão.',
+  },
+  {
+    title: 'Branding e reposicionamento',
+    desc: 'Para leiloeiros que precisam de uma marca à altura do resultado que já entregam.',
+  },
+];
+
+const cardImages: Record<string, string> = {
+  fidalgo: '/cases-img/fidalgo-press-1.webp',
+  'globo-leiloes': '/cases-img/globo-leiloes-1.webp',
+  'vip-leiloes': '/cases-img/vip-leiloes-5.webp',
+};
+
+const cases = ([
+  { slug: 'fidalgo', data: fidalgoCase },
+  { slug: 'globo-leiloes', data: globoCase },
+  { slug: 'vip-leiloes', data: vipCase },
+] as any[]).map(({ slug, data }) => ({
+  slug,
+  client: data.client as string,
+  accent: data.accent as string,
+  sector: data.sector as string,
+  img: cardImages[slug],
+  challenge: data.challenge as string,
+  solution: data.solution as string,
+  results: data.results as { v: string; l: string }[],
+  tags: data.tags as string[],
+}));
+
+const faqs = [
+  {
+    q: 'Já invisto em tráfego pago. Preciso de assessoria de imprensa também?',
+    a: 'Sim, e são complementares. Tráfego pago alcança quem já está navegando. Assessoria de imprensa alcança quem ainda está decidindo em quem confiar. Juntas, aumentam tanto o alcance quanto a taxa de conversão em lance.',
+  },
+  {
+    q: 'Quanto tempo até ver resultado?',
+    a: 'Os primeiros movimentos aparecem já nas primeiras semanas, com pauta ativa e presença em veículos do setor. Resultados consistentes de autoridade e recorrência de imprensa costumam se consolidar em poucos meses, como mostram os cases de Fidalgo, Vip e Globo Leilões.',
+  },
+  {
+    q: 'A Mclair atende só leilões da Caixa?',
+    a: 'Não. Atendemos leilões judiciais, extrajudiciais, de alienação fiduciária e parcerias com instituições financeiras como Caixa, Bradesco, Itaú, Santander, Correios e TRT.',
+  },
+  {
+    q: 'Como funciona o primeiro contato?',
+    a: 'Você preenche o formulário abaixo ou chama no WhatsApp. Entendemos o momento do seu leilão e propomos o formato de atuação mais adequado.',
+  },
+];
+
+const desafios = [
+  'Pouca visibilidade na mídia',
+  'Poucos lances por leilão',
+  'Dependência só de tráfego pago',
+  'Quero reposicionar minha marca',
+];
+---
+
+<Layout
+  title="Marketing para Leiloeiros | Mclair Assessoria de Imprensa e Growth"
+  description="Comunicação especializada para o mercado de leilões: assessoria de imprensa, growth e conteúdo que transformam visibilidade em arrematantes reais. Cases: Fidalgo, Globo e VIP Leilões."
+  keywords="assessoria de imprensa para leiloeiros, marketing para leilões, comunicação para leiloeiros, mclair leilões, growth para leilões"
+  ogImage="https://mclair.vercel.app/paginas/marketing-para-leiloeiros-mclair.webp"
+  schema={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      '@id': 'https://mclair.vercel.app/marketing-para-leiloeiros#webpage',
+      name: 'Marketing para Leiloeiros: Assessoria de Imprensa e Growth para Leilões, por Mclair',
+      description: 'Comunicação especializada para o mercado de leilões: assessoria de imprensa, growth e conteúdo que transformam visibilidade em arrematantes reais.',
+      url: 'https://mclair.vercel.app/marketing-para-leiloeiros',
+      isPartOf: { '@id': 'https://mclair.vercel.app/#website' },
+      about: { '@id': 'https://mclair.vercel.app/#organization' },
+      inLanguage: 'pt-BR',
+      speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.lh-title', '.section-title'] },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.vercel.app' },
+        { '@type': 'ListItem', position: 2, name: 'Leiloeiros', item: 'https://mclair.vercel.app/marketing-para-leiloeiros' },
+      ],
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Service',
+      name: 'Comunicação Estratégica para Leiloeiros',
+      provider: { '@id': 'https://mclair.vercel.app/#organization' },
+      areaServed: { '@type': 'Country', name: 'Brasil' },
+      description: 'Assessoria de imprensa, growth e conteúdo especializados no mercado de leilões, para leiloeiros que querem transformar visibilidade em arrematantes reais.',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: faqs.map(f => ({
+        '@type': 'Question',
+        name: f.q,
+        acceptedAnswer: { '@type': 'Answer', text: f.a },
+      })),
+    },
+  ]}
+>
+
+<!-- ═══════════════ HERO ═══════════════ -->
+<section class="lh-hero">
+  <div class="lh-hero-photo" aria-hidden="true">
+    <img src="/paginas/marketing-para-leiloeiros-mclair.webp" alt="" />
+  </div>
+  <div class="lh-hero-bg" aria-hidden="true">
+    <div class="lh-grid"></div>
+    <div class="lh-blob lh-blob-1"></div>
+    <div class="lh-blob lh-blob-2"></div>
+  </div>
+  <div class="container lh-hero-inner">
+    <p class="eyebrow eyebrow-light" data-anim style="justify-content:flex-start">
+      Marketing para Leiloeiros · por Mclair
+    </p>
+    <h1 class="lh-title" data-anim data-delay="1">
+      Seu leilão merece<br/>
+      mais que curtidas.<br/>
+      Merece <em>disputa por lance.</em>
+    </h1>
+    <p class="lh-sub" data-anim data-delay="2">
+      A Mclair é especialista em comunicação para o mercado de leilões. Unimos assessoria de imprensa, growth e conteúdo para transformar visibilidade em arrematantes reais.
+    </p>
+    <div class="lh-actions" data-anim data-delay="3">
+      <a href="#form" class="btn-primary">
+        Quero atrair mais arrematantes
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <a href={WA} class="btn-hero-ghost" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Falar agora no WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ LOGOS ═══════════════ -->
+<section class="lh-logos-strip">
+  <p class="lh-logos-label container" data-anim>Leiloeiros que confiam na Mclair para chegar até quem está pronto para dar lance</p>
+  <div class="lh-logos-marquee" data-anim data-delay="1">
+    <div class="lh-logos-track">
+      {[...logos, ...logos].map((l, i) => {
+        const Tag = l.slug ? 'a' : 'div';
+        const linkProps = l.slug ? { href: `/cases/${l.slug}` } : {};
+        return (
+          <Tag class="lh-logo-item" aria-hidden={i >= logos.length ? 'true' : undefined} tabindex={i >= logos.length ? -1 : undefined} {...linkProps}>
+            <img src={l.logo} alt={l.name} title={l.name} loading="lazy" />
+          </Tag>
+        );
+      })}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ BIG NUMBERS ═══════════════ -->
+<section class="section lh-numbers-section">
+  <div class="container">
+    <div style="text-align:center;max-width:640px;margin:0 auto 56px">
+      <p class="eyebrow" data-anim style="justify-content:center">Resultado, não achismo</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+        Resultado que aparece no seu <span>extrato</span>, não só no seu feed
+      </h2>
+    </div>
+    <div class="lh-numbers-grid stagger-children" data-anim data-delay="1">
+      {bigNumbers.map(n => (
+        <div class="lh-number-card">
+          <strong class="lh-number-val">{n.v}</strong>
+          <span class="lh-number-label">{n.label}</span>
+        </div>
+      ))}
+    </div>
+    <p class="lh-numbers-close" data-anim data-delay="2">Números que vêm de estratégia, não de sorte.</p>
+  </div>
+</section>
+
+<!-- ═══════════════ DIFERENCIAL ═══════════════ -->
+<section class="lh-diff-section">
+  <div class="container lh-diff-grid">
+    <div class="lh-diff-video-wrap" data-anim="left" data-hover-video data-video-id="OgcjD1P_JfQ">
+      <img src="https://i.ytimg.com/vi/OgcjD1P_JfQ/hqdefault.jpg" alt="" loading="lazy" class="lh-diff-video-thumb" />
+      <div class="lh-diff-video-play" aria-hidden="true">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+      </div>
+    </div>
+    <div data-anim="right" data-delay="1">
+      <p class="eyebrow" data-anim style="justify-content:flex-start">O diferencial</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+        Tráfego pago traz clique.<br/>Assessoria de imprensa traz <span>autoridade.</span>
+      </h2>
+      <p class="lh-diff-text" style="margin-top:24px">
+        Você já deve ter sentido isso: investe em impulsionamento, o alcance sobe, mas o número de lances não acompanha. Isso acontece porque quem decide arrematar não se convence só com anúncio. Se convence com autoridade.
+      </p>
+      <p class="lh-diff-text">
+        Quando o seu leilão aparece nos veículos que o seu público já confia, você não está comprando atenção. Está construindo credibilidade. E é credibilidade que faz um comprador em dúvida se cadastrar e dar o primeiro lance.
+      </p>
+      <p class="lh-diff-text">
+        A Mclair trabalha há anos dentro do mercado de leilões. Conhece o que motiva um editor a publicar, o que faz um arrematante confiar e o que faz um leilão virar notícia recorrente, não só um post patrocinado.
+      </p>
+    </div>
+  </div>
+</section>
+
+<script>
+  document.querySelectorAll('[data-hover-video]').forEach((wrap) => {
+    const videoId = wrap.getAttribute('data-video-id');
+    let iframe: HTMLIFrameElement | null = null;
+
+    wrap.addEventListener('mouseenter', () => {
+      if (iframe) return;
+      const rect = wrap.getBoundingClientRect();
+      iframe = document.createElement('iframe');
+      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3`;
+      iframe.title = '';
+      iframe.frameBorder = '0';
+      iframe.width = String(Math.round(rect.width));
+      iframe.height = String(Math.round(rect.height));
+      iframe.allow = 'autoplay; encrypted-media; playsinline';
+      iframe.className = 'lh-diff-video-iframe';
+      wrap.appendChild(iframe);
+      wrap.classList.add('is-playing');
+    });
+
+    wrap.addEventListener('mouseleave', () => {
+      if (!iframe) return;
+      iframe.remove();
+      iframe = null;
+      wrap.classList.remove('is-playing');
+    });
+  });
+</script>
+
+<!-- ═══════════════ O QUE FAZEMOS ═══════════════ -->
+<section class="section lh-servicos-section">
+  <div class="container">
+    <div style="text-align:center;max-width:640px;margin:0 auto 56px">
+      <p class="eyebrow" data-anim style="justify-content:center">O que fazemos por você</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+        Comunicação completa para o seu leilão, do <span>primeiro clique</span> ao lance vencedor
+      </h2>
+    </div>
+    <div class="lh-servicos-grid stagger-children" data-anim data-delay="1">
+      {servicos.map((s, i) => (
+        <div class="lh-servico-card">
+          <span class="lh-servico-num">0{i + 1}</span>
+          <h3 class="lh-servico-title">{s.title}</h3>
+          <p class="lh-servico-desc">{s.desc}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CASES EM DESTAQUE ═══════════════ -->
+<section class="lh-cases-section">
+  <div class="lh-cases-video-wrap" aria-hidden="true" id="lh-cases-video-wrap">
+    <div class="lh-cases-video-overlay"></div>
+  </div>
+  <div class="container lh-cases-container">
+    <div style="text-align:center;max-width:640px;margin:0 auto 56px">
+      <p class="eyebrow eyebrow-light" data-anim style="justify-content:center">Prova, não promessa</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px;color:#fff">
+        Resultados que já aconteceram com leiloeiros como você
+      </h2>
+    </div>
+    <div class="lh-cases-grid stagger-children" data-anim data-delay="1">
+      {cases.map(c => (
+        <button type="button" class="lh-case-card" data-open-case={c.slug} style={`--accent:${c.accent}`}>
+          <div class="lh-case-img-wrap">
+            <img src={c.img} alt={c.client} loading="lazy" class="lh-case-img" />
+          </div>
+          <div class="lh-case-body">
+            <h3 class="lh-case-client">{c.client}</h3>
+            <span class="lh-case-tag" style={`color:${c.accent}`}>{c.sector}</span>
+            <strong class="lh-case-result" style={`color:${c.accent}`}>{c.results[0].v}</strong>
+            <span class="lh-case-label">{c.results[0].l}</span>
+            <div class="lh-case-mini-stats">
+              {c.results.slice(1, 3).map(s => (
+                <div class="lh-case-mini-stat">
+                  <strong>{s.v}</strong>
+                  <span>{s.l}</span>
+                </div>
+              ))}
+            </div>
+            <span class="lh-case-cta">
+              Ver resultados
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </span>
+          </div>
+        </button>
+      ))}
+    </div>
+    <div class="lh-cases-all-link-wrap">
+      <a href="/cases" class="btn-text lh-cases-all-link">
+        Ver todos os cases de clientes
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ MODAL DE CASE ═══════════════ -->
+<div id="lh-case-modal" class="lh-modal" role="dialog" aria-modal="true" aria-label="Detalhes do case">
+  <div class="lh-modal-backdrop" data-modal-close></div>
+  <div class="lh-modal-panel">
+    <button class="lh-modal-close" data-modal-close aria-label="Fechar">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    </button>
+    {cases.map(c => (
+      <div class="lh-modal-content" data-case-content={c.slug} style={`--accent:${c.accent}`}>
+        <span class="lh-modal-tag" style={`color:${c.accent};border-color:${c.accent}40`}>{c.sector}</span>
+        <h3 class="lh-modal-client">{c.client}</h3>
+        <div class="lh-modal-grid">
+          <div>
+            <h4>O desafio</h4>
+            <p>{c.challenge}</p>
+          </div>
+          <div>
+            <h4>A solução Mclair</h4>
+            <p>{c.solution}</p>
+          </div>
+        </div>
+        <div class="lh-modal-results">
+          {c.results.map(r => (
+            <div class="lh-modal-result">
+              <strong style={`color:${c.accent}`}>{r.v}</strong>
+              <span>{r.l}</span>
+            </div>
+          ))}
+        </div>
+        <div class="lh-modal-tags">
+          {c.tags.map(t => <span class="lh-modal-tag-pill">{t}</span>)}
+        </div>
+        <a href={`/cases/${c.slug}`} class="btn-outline lh-modal-link">
+          Ver case completo na página
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+        </a>
+      </div>
+    ))}
+  </div>
+</div>
+
+<!-- ═══════════════ FAQ ═══════════════ -->
+<section class="section faq-section">
+  <div class="container">
+    <div class="faq-header" data-anim>
+      <p class="eyebrow" style="justify-content:center">Antes de falar com a gente</p>
+      <h2 class="section-title" style="margin-top:14px;text-align:center">
+        Perguntas frequentes de <span>leiloeiros</span>
+      </h2>
+    </div>
+    <div class="faq-list">
+      {faqs.map((f, i) => (
+        <div class="faq-item" data-anim data-delay={(i % 2 + 1).toString()}>
+          <h3 class="faq-q">{f.q}</h3>
+          <p class="faq-a">{f.a}</p>
+        </div>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ CTA FINAL ═══════════════ -->
+<section class="lh-cta-final">
+  <div class="container lh-cta-final-inner">
+    <div>
+      <h2 class="lh-cta-title" data-anim>Pronto para transformar visibilidade em lance?</h2>
+      <p class="lh-cta-sub" data-anim data-delay="1">
+        Fale com quem já colocou leiloeiros nos principais veículos do país e ajudou a construir o resultado comercial que aparece no extrato, não só no relatório de alcance.
+      </p>
+    </div>
+    <div data-anim="right" data-delay="1">
+      <a href="#form" class="btn-white">
+        Quero minha proposta
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <span class="lh-cta-support">Resposta em até 2 horas úteis</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════════ FORMULÁRIO ═══════════════ -->
+<section class="section lh-form-section" id="form">
+  <div class="container lh-form-wrap">
+    <div class="lh-form-intro" data-anim="left">
+      <p class="eyebrow" data-anim style="justify-content:flex-start">Vamos falar sobre o seu leilão</p>
+      <h2 class="section-title" data-anim data-delay="1" style="margin-top:14px">
+        Conte seu momento.<br/>A gente propõe o caminho.
+      </h2>
+      <p class="section-lead" data-anim data-delay="2">
+        Preencha o formulário e entraremos em contato em até 2 horas úteis, ou chame direto no WhatsApp.
+      </p>
+      <a href={WA} class="btn-outline" target="_blank" rel="noopener" data-anim data-delay="3" style="margin-top:24px">
+        Falar no WhatsApp agora
+      </a>
+    </div>
+
+    <form class="contact-form lh-form" id="leiloes-form" novalidate data-anim="right" data-delay="1">
+      <div class="form-row">
+        <div class="field">
+          <label for="lf-nome">Nome *</label>
+          <input type="text" id="lf-nome" name="nome" placeholder="Seu nome completo" required />
+        </div>
+        <div class="field">
+          <label for="lf-empresa">Empresa / leiloeiro *</label>
+          <input type="text" id="lf-empresa" name="empresa" placeholder="Nome do leiloeiro" required />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="field">
+          <label for="lf-whats">WhatsApp *</label>
+          <input type="tel" id="lf-whats" name="whatsapp" placeholder="(11) 98860-0372" required />
+        </div>
+        <div class="field">
+          <label for="lf-email">E-mail *</label>
+          <input type="email" id="lf-email" name="email" placeholder="seu@email.com.br" required />
+        </div>
+      </div>
+      <div class="field">
+        <label for="lf-desafio">Qual é o principal desafio hoje?</label>
+        <select id="lf-desafio" name="desafio">
+          {desafios.map(d => <option value={d}>{d}</option>)}
+        </select>
+      </div>
+      <button type="submit" class="btn-primary" style="width:100%;justify-content:center">
+        Enviar e falar com a Mclair
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </button>
+    </form>
+  </div>
+</section>
+
+<script is:inline define:vars={{ WA_NUMBER }}>
+(function () {
+  var form = document.getElementById('leiloes-form');
+  if (!form) return;
+
+  function setError(id, msg) {
+    var el = document.getElementById(id);
+    el.classList.add('field-error');
+    var err = el.parentElement.querySelector('.err-msg');
+    if (!err) {
+      err = document.createElement('span');
+      err.className = 'err-msg';
+      el.parentElement.appendChild(err);
+    }
+    err.textContent = msg;
+  }
+  function clearError(id) {
+    var el = document.getElementById(id);
+    el.classList.remove('field-error');
+    var err = el.parentElement.querySelector('.err-msg');
+    if (err) err.textContent = '';
+  }
+  function isValidEmail(v) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v.trim()); }
+
+  ['lf-nome', 'lf-empresa', 'lf-whats', 'lf-email'].forEach(function (id) {
+    var el = document.getElementById(id);
+    el.addEventListener('input', function () { clearError(id); });
+  });
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var nome = document.getElementById('lf-nome').value.trim();
+    var empresa = document.getElementById('lf-empresa').value.trim();
+    var whats = document.getElementById('lf-whats').value.trim();
+    var email = document.getElementById('lf-email').value.trim();
+    var desafio = document.getElementById('lf-desafio').value;
+
+    var valid = true;
+    ['lf-nome', 'lf-empresa', 'lf-whats', 'lf-email'].forEach(clearError);
+    if (!nome) { setError('lf-nome', 'Informe seu nome.'); valid = false; }
+    if (!empresa) { setError('lf-empresa', 'Informe o nome do leiloeiro.'); valid = false; }
+    if (!whats) { setError('lf-whats', 'Informe seu WhatsApp.'); valid = false; }
+    if (!email) { setError('lf-email', 'Informe seu e-mail.'); valid = false; }
+    else if (!isValidEmail(email)) { setError('lf-email', 'E-mail inválido.'); valid = false; }
+
+    if (!valid) {
+      var first = form.querySelector('.field-error');
+      if (first) first.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    var text = 'Olá Mclair! Me chamo ' + nome + ', do leiloeiro ' + empresa
+      + '.\n\n*Principal desafio hoje:* ' + desafio
+      + '\n\n*E-mail:* ' + email
+      + '\n\n*WhatsApp:* ' + whats;
+    window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text), '_blank');
+  });
+})();
+</script>
+
+<script is:inline define:vars={{ CASES_BG_VIDEO_ID }}>
+(function () {
+  // Vídeo de fundo da seção de cases — carrega só quando a seção entra na tela
+  var wrap = document.getElementById('lh-cases-video-wrap');
+  if (wrap) {
+    var loaded = false;
+    function loadCasesVideo() {
+      if (loaded) return;
+      loaded = true;
+      var iframe = document.createElement('iframe');
+      iframe.src = 'https://www.youtube.com/embed/' + CASES_BG_VIDEO_ID
+        + '?autoplay=1&mute=1&loop=1&playlist=' + CASES_BG_VIDEO_ID
+        + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
+      iframe.title = '';
+      iframe.frameBorder = '0';
+      iframe.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
+      iframe.allowFullscreen = true;
+      iframe.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:max(100%,calc(100vh * 1.778));height:max(100%,calc(100vw * 0.5625));min-width:100%;min-height:100%;pointer-events:none;opacity:0;transition:opacity 1.2s ease;border:0;';
+      wrap.insertBefore(iframe, wrap.firstChild);
+      // Espera o player estabilizar (esconde o card de título/marca do YouTube) antes de revelar
+      setTimeout(function () { iframe.style.opacity = '.24'; }, 2200);
+    }
+    if ('IntersectionObserver' in window) {
+      var vidObs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) { loadCasesVideo(); vidObs.disconnect(); }
+        });
+      }, { rootMargin: '400px' });
+      vidObs.observe(wrap);
+    } else {
+      loadCasesVideo();
+    }
+  }
+
+  // Modal de case
+  var modal = document.getElementById('lh-case-modal');
+  if (modal) {
+    var contents = modal.querySelectorAll('[data-case-content]');
+    var closeEls = modal.querySelectorAll('[data-modal-close]');
+    var triggers = document.querySelectorAll('[data-open-case]');
+
+    function openModal(slug) {
+      contents.forEach(function (el) {
+        el.classList.toggle('is-active', el.getAttribute('data-case-content') === slug);
+      });
+      modal.classList.add('is-open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeModal() {
+      modal.classList.remove('is-open');
+      document.body.style.overflow = '';
+    }
+    triggers.forEach(function (btn) {
+      btn.addEventListener('click', function () { openModal(btn.getAttribute('data-open-case')); });
+    });
+    closeEls.forEach(function (el) { el.addEventListener('click', closeModal); });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    });
+  }
+})();
+</script>
+
+</Layout>
+
+<style>
+/* ═══════════ HERO ═══════════ */
+.lh-hero { background: var(--dark); position: relative; overflow: hidden; padding-top: 88px; }
+.lh-hero-photo { position: absolute; inset: 0; z-index: 0; }
+.lh-hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 30%; opacity: .34; }
+.lh-hero-photo::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(100deg, rgba(21,18,16,.98) 0%, rgba(21,18,16,.92) 38%, rgba(21,18,16,.55) 78%, rgba(21,18,16,.3) 100%),
+              linear-gradient(to top, rgba(21,18,16,.95) 0%, transparent 30%);
+}
+.lh-hero-bg { position: absolute; inset: 0; z-index: 1; pointer-events: none; }
+.lh-grid {
+  position: absolute; inset: 0;
+  background-image: linear-gradient(rgba(200,16,46,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,16,46,.06) 1px, transparent 1px);
+  background-size: 72px 72px;
+}
+.lh-blob { position: absolute; border-radius: 50%; filter: blur(90px); animation: blob-float 8s ease-in-out infinite; }
+.lh-blob-1 { width: 500px; height: 500px; top: -100px; right: -100px; background: radial-gradient(circle, rgba(200,16,46,.14) 0%, transparent 70%); }
+.lh-blob-2 { width: 320px; height: 320px; bottom: -80px; left: -60px; background: radial-gradient(circle, rgba(27,138,118,.08) 0%, transparent 70%); animation-delay: -4s; }
+@keyframes blob-float { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.03); } }
+
+.lh-hero-inner { position: relative; z-index: 2; padding-top: 88px; padding-bottom: 88px; max-width: 860px; }
+.eyebrow-light { color: rgba(255,255,255,.5) !important; }
+.eyebrow-light::before { background: rgba(255,255,255,.5) !important; }
+
+.lh-title {
+  font-size: clamp(2rem, 4.2vw, 3.6rem); font-weight: 900; line-height: 1.15;
+  letter-spacing: -.03em; color: #fff; margin: 18px 0 22px;
+}
+.lh-title em { color: var(--red); font-style: normal; }
+.lh-sub { font-size: clamp(1rem, 1.4vw, 1.1rem); font-weight: 300; color: rgba(255,255,255,.6); line-height: 1.85; max-width: 560px; }
+.lh-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 32px; }
+.btn-hero-ghost {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 1rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: rgba(255,255,255,.75); border: 1.5px solid rgba(255,255,255,.2);
+  padding: .87rem 1.7rem; border-radius: var(--r-sm);
+  transition: border-color .2s, color .2s;
+}
+.btn-hero-ghost:hover { border-color: rgba(255,255,255,.5); color: #fff; }
+
+/* ═══════════ LOGOS ═══════════ */
+.lh-logos-strip { background: #fff; border-bottom: 1px solid var(--line); padding: 52px 0; overflow: hidden; }
+.lh-logos-label { text-align: center; font-size: 1rem; color: var(--ink-3); font-weight: 300; margin: 0 auto 36px; max-width: 560px; }
+.lh-logos-marquee {
+  position: relative; overflow: hidden;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+}
+.lh-logos-track {
+  display: flex; align-items: center; width: max-content;
+  gap: clamp(56px, 7vw, 100px);
+  animation: lh-logos-scroll 30s linear infinite;
+}
+.lh-logos-marquee:hover .lh-logos-track { animation-play-state: paused; }
+@keyframes lh-logos-scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+.lh-logo-item { display: block; flex-shrink: 0; }
+.lh-logo-item img { max-width: 220px; max-height: 90px; width: auto; height: auto; object-fit: contain; filter: grayscale(100%); opacity: .6; transition: filter .3s, opacity .3s, transform .3s; }
+.lh-logo-item:hover img { filter: grayscale(0%); opacity: 1; transform: scale(1.06); }
+
+/* ═══════════ BIG NUMBERS ═══════════ */
+.lh-numbers-section { background: var(--cream-2); }
+.lh-numbers-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+.lh-number-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px 24px; text-align: center; display: flex; flex-direction: column; gap: 12px; }
+.lh-number-val { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; color: var(--red); line-height: 1; }
+.lh-number-label { font-size: 1rem; color: var(--ink-3); font-weight: 300; line-height: 1.6; }
+.lh-numbers-close { text-align: center; margin-top: 40px; font-size: 1rem; font-weight: 700; color: var(--ink); }
+
+/* ═══════════ DIFERENCIAL ═══════════ */
+.lh-diff-section { background: #fff; padding-block: clamp(64px, 8vw, 120px); }
+.lh-diff-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; align-items: center; }
+.lh-diff-text { font-size: 1rem; color: var(--ink-3); font-weight: 300; line-height: 1.9; margin-bottom: 20px; }
+.lh-diff-text:last-child { margin-bottom: 0; }
+.lh-diff-video-wrap {
+  position: relative; width: 100%; max-width: 340px; aspect-ratio: 9 / 16;
+  border-radius: var(--r-xl); overflow: hidden; background: #000; cursor: pointer;
+  margin-inline: auto; box-shadow: 0 40px 80px -20px rgba(0,0,0,.35), 0 0 100px rgba(0,0,0,.12);
+}
+.lh-diff-video-thumb { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: opacity .3s ease; }
+.lh-diff-video-wrap.is-playing .lh-diff-video-thumb { opacity: 0; }
+.lh-diff-video-play {
+  position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+  width: 56px; height: 56px; border-radius: 50%; background: rgba(0,0,0,.55);
+  color: #fff; display: flex; align-items: center; justify-content: center;
+  transition: opacity .3s ease; pointer-events: none;
+}
+.lh-diff-video-wrap.is-playing .lh-diff-video-play { opacity: 0; }
+.lh-diff-video-iframe {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; pointer-events: none;
+}
+
+/* ═══════════ SERVIÇOS ═══════════ */
+.lh-servicos-section { background: var(--cream-2); }
+.lh-servicos-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+.lh-servico-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 32px 26px; transition: transform .3s, box-shadow .3s, border-color .3s; }
+.lh-servico-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-md); border-color: transparent; }
+.lh-servico-num { font-size: 1rem; font-weight: 700; letter-spacing: .18em; color: var(--red); display: block; margin-bottom: 16px; }
+.lh-servico-title { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 10px; line-height: 1.3; }
+.lh-servico-desc { font-size: 1rem; color: var(--ink-3); font-weight: 300; line-height: 1.75; }
+
+/* ═══════════ CASES ═══════════ */
+.lh-cases-section { position: relative; overflow: hidden; background: var(--dark-2); padding-block: clamp(64px, 8vw, 120px); }
+.lh-cases-video-wrap { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
+.lh-cases-video-overlay { position: absolute; inset: 0; z-index: 1; background: linear-gradient(180deg, rgba(30,27,24,.9) 0%, rgba(30,27,24,.8) 45%, rgba(30,27,24,.94) 100%); }
+.lh-cases-container { position: relative; z-index: 2; }
+.lh-cases-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+.lh-case-card {
+  display: flex; flex-direction: column; justify-content: flex-start; align-items: stretch;
+  width: 100%; margin: 0; padding: 0; text-align: left; font-family: inherit; color: inherit; cursor: pointer;
+  appearance: none; -webkit-appearance: none;
+  border-radius: var(--r-xl); overflow: hidden;
+  background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.1);
+  transition: border-color .35s, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s;
+}
+.lh-case-card:hover { border-color: var(--accent); transform: translateY(-6px); box-shadow: 0 24px 56px rgba(0,0,0,.4); }
+.lh-case-img-wrap { position: relative; height: 200px; overflow: hidden; }
+.lh-case-img { width: 100%; height: 100%; object-fit: cover; object-position: top center; transition: transform .6s cubic-bezier(.22,1,.36,1); }
+.lh-case-card:hover .lh-case-img { transform: scale(1.08); }
+.lh-case-body { padding: 26px 26px 30px; display: flex; flex-direction: column; gap: 8px; }
+.lh-case-tag { display: inline-block; align-self: flex-start; font-size: 1rem; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin-top: 2px; }
+.lh-case-client { font-size: 1.2rem; font-weight: 700; color: #fff; }
+.lh-case-result { font-size: 2.2rem; font-weight: 900; line-height: 1; margin-top: 4px; }
+.lh-case-label { font-size: 1rem; color: rgba(255,255,255,.45); font-weight: 300; line-height: 1.5; }
+.lh-case-mini-stats { display: flex; gap: 20px; margin-top: 14px; padding-top: 14px; border-top: 1px solid rgba(255,255,255,.1); }
+.lh-case-mini-stat { display: flex; flex-direction: column; gap: 2px; }
+.lh-case-mini-stat strong { font-size: 1rem; font-weight: 700; color: #fff; }
+.lh-case-mini-stat span { font-size: 1rem; color: rgba(255,255,255,.4); font-weight: 300; line-height: 1.4; }
+.lh-case-cta { display: inline-flex; align-items: center; gap: 6px; margin-top: 18px; font-size: 1rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); transition: gap .2s; }
+.lh-case-card:hover .lh-case-cta { gap: 10px; }
+.lh-cases-all-link-wrap { text-align: center; margin-top: 48px; }
+.lh-cases-all-link { color: rgba(255,255,255,.65); }
+.lh-cases-all-link:hover { color: #fff; }
+
+/* ═══════════ MODAL DE CASE ═══════════ */
+.lh-modal {
+  position: fixed; inset: 0; z-index: 9999;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s;
+}
+.lh-modal.is-open { opacity: 1; pointer-events: all; }
+.lh-modal-backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.72); backdrop-filter: blur(4px); }
+.lh-modal-panel {
+  position: relative; z-index: 1;
+  background: #fff; border-radius: var(--r-xl);
+  max-width: 720px; width: 100%; max-height: 86vh; overflow-y: auto;
+  padding: clamp(28px, 4vw, 48px);
+  transform: scale(.96); transition: transform .3s cubic-bezier(.22,1,.36,1);
+}
+.lh-modal.is-open .lh-modal-panel { transform: scale(1); }
+.lh-modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 38px; height: 38px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: var(--cream-2); color: var(--ink-3);
+  transition: background .2s, color .2s;
+}
+.lh-modal-close:hover { background: var(--cream-3); color: var(--ink); }
+.lh-modal-content { display: none; }
+.lh-modal-content.is-active { display: block; }
+.lh-modal-tag { display: inline-block; font-size: 1rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; margin-bottom: 14px; }
+.lh-modal-client { font-size: clamp(1.4rem, 3vw, 1.9rem); font-weight: 900; color: var(--ink); letter-spacing: -.02em; margin-bottom: 24px; }
+.lh-modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px; }
+.lh-modal-grid h4 { font-size: 1rem; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 10px; }
+.lh-modal-grid p { font-size: 1rem; color: var(--ink-3); font-weight: 300; line-height: 1.75; }
+.lh-modal-results { display: flex; flex-wrap: wrap; gap: 24px; background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px; margin-bottom: 20px; }
+.lh-modal-result { display: flex; flex-direction: column; gap: 2px; }
+.lh-modal-result strong { font-size: 1.3rem; font-weight: 900; line-height: 1; }
+.lh-modal-result span { font-size: 1rem; color: var(--ink-3); font-weight: 300; max-width: 160px; line-height: 1.4; }
+.lh-modal-tags { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+.lh-modal-tag-pill { font-size: 1rem; font-weight: 700; letter-spacing: .02em; color: var(--ink-4); background: var(--cream-2); padding: .3rem .8rem; border-radius: 99px; }
+.lh-modal-link { width: 100%; justify-content: center; }
+
+/* ═══════════ FAQ ═══════════ */
+.faq-section { background: var(--cream-2); }
+.faq-header { text-align: center; max-width: 520px; margin: 0 auto 56px; }
+.faq-list { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.faq-item { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 24px; transition: border-color .2s, box-shadow .2s; }
+.faq-item:hover { border-color: var(--red); box-shadow: var(--shadow-sm); }
+.faq-q { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 12px; line-height: 1.4; }
+.faq-a { font-size: 1rem; color: var(--ink-3); font-weight: 300; line-height: 1.8; }
+
+/* ═══════════ CTA FINAL ═══════════ */
+.lh-cta-final { background: var(--red); padding: 72px 0; }
+.lh-cta-final-inner { display: flex; align-items: center; justify-content: space-between; gap: 40px; flex-wrap: wrap; }
+.lh-cta-title { font-size: clamp(1.7rem, 3vw, 2.4rem); font-weight: 900; color: #fff; letter-spacing: -.02em; max-width: 520px; }
+.lh-cta-sub { font-size: 1rem; color: rgba(255,255,255,.8); font-weight: 300; margin-top: 12px; max-width: 480px; line-height: 1.7; }
+.lh-cta-final-inner .btn-white { display: inline-flex; align-items: center; gap: 8px; font-size: 1rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; background: #fff; color: var(--red); padding: .9rem 2rem; border-radius: var(--r-sm); transition: transform .2s; }
+.lh-cta-final-inner .btn-white:hover { transform: translateY(-2px); }
+.lh-cta-support { display: block; text-align: center; margin-top: 12px; font-size: 1rem; color: rgba(255,255,255,.75); font-weight: 300; }
+
+/* ═══════════ FORM ═══════════ */
+.lh-form-section { background: #fff; }
+.lh-form-wrap { display: grid; grid-template-columns: 1fr 1fr; gap: 64px; align-items: start; }
+.lh-form { display: flex; flex-direction: column; gap: 18px; background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-xl); padding: 32px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 7px; }
+.field label { font-size: 1rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink-3); }
+.field input, .field select {
+  border: 1.5px solid var(--line-2); border-radius: var(--r-md);
+  padding: 11px 14px; font-size: 1rem; font-family: inherit; color: var(--ink);
+  background: #fff; outline: none;
+  transition: border-color .2s, box-shadow .2s;
+}
+.field input:focus, .field select:focus { border-color: var(--teal); box-shadow: 0 0 0 3px rgba(27,138,118,.08); }
+.field input.field-error { border-color: #e53e3e; box-shadow: 0 0 0 3px rgba(229,62,62,.08); }
+.err-msg { font-size: 1rem; font-weight: 600; color: #e53e3e; min-height: 1em; display: block; }
+
+/* ═══════════ CTA — verde Mclair para contraste ═══════════ */
+.btn-primary { background: var(--teal); }
+.btn-primary:hover { background: #157a68; box-shadow: 0 8px 24px rgba(27,138,118,.3); }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 900px) {
+  .lh-numbers-grid { grid-template-columns: repeat(2, 1fr); }
+  .lh-diff-grid { grid-template-columns: 1fr; gap: 32px; }
+  .lh-servicos-grid { grid-template-columns: repeat(2, 1fr); }
+  .lh-cases-grid { grid-template-columns: 1fr; }
+  .lh-form-wrap { grid-template-columns: 1fr; }
+  .faq-list { grid-template-columns: 1fr; }
+  .lh-modal-grid { grid-template-columns: 1fr; gap: 20px; }
+}
+@media (max-width: 640px) {
+  .lh-title { font-size: clamp(1.5rem, 7.2vw, 2.1rem); line-height: 1.24; }
+  .lh-numbers-grid { grid-template-columns: 1fr; }
+  .lh-servicos-grid { grid-template-columns: 1fr; }
+  .lh-logos-track { gap: 40px; }
+  .lh-logo-item img { max-width: 130px; max-height: 56px; }
+  .form-row { grid-template-columns: 1fr; }
+  .lh-cta-final-inner { flex-direction: column; align-items: flex-start; }
+  .lh-form { padding: 22px; }
+  .lh-modal-panel { padding: 24px 20px; max-height: 90vh; }
+  .lh-modal-results { gap: 16px; }
+}
+</style>

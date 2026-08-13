@@ -1,9 +1,10 @@
 User-agent: *
 Allow: /
 
+# Bloquear áreas administrativas e sensíveis dos crawlers
+Disallow: /admin/
+Disallow: /keystatic/
+
 # Sitemaps
 Sitemap: https://mclair.vercel.app/sitemap-index.xml
 Sitemap: https://mclair.vercel.app/sitemap-0.xml
-
-# Crawl-delay for respectful crawling
-Crawl-delay: 1

@@ -27,20 +27,32 @@
     "Social Media",
     "Marketing de Autoridade"
   ],
-  "img": "/cases-img/claudia-elisa.jpg",
-  "logo": "https://mclair.com.br/images/galeria/25-01-2021_1_495c6167ed709eba2b282411b6ab37bd.png",
+  "img": "/cases-img/claudia-elisa-1.webp",
+  "logo": "/clientes/claudia-elisa-logo.png",
   "gallery": [
     {
-      "src": "/cases-img/claudia-elisa-logos.jpg",
-      "caption": "Três marcas criadas: Claudia Elisa, Liderança em Pauta e Mentoria Sharp"
+      "src": "/cases-img/claudia-elisa-1.webp",
+      "caption": "Claudia Elisa Soares: conselheira, mentora e palestrante, apresentação de sua trajetória e atuação"
     },
     {
-      "src": "/cases-img/claudia-elisa.jpg",
-      "caption": "Identidade visual e materiais de marca Mentoria Sharp"
+      "src": "/cases-img/claudia-elisa-2.webp",
+      "caption": "Mosaico de conteúdos e campanhas de redes sociais de Claudia Elisa, incluindo a série Mulheres ESG"
     },
     {
-      "src": "/cases-img/claudia-elisa-social.jpg",
-      "caption": "Presença digital multiplataforma e cobertura na imprensa"
+      "src": "/cases-img/claudia-elisa-3.webp",
+      "caption": "Claudia Elisa em entrevista de TV sobre empresas familiares no Brasil"
+    },
+    {
+      "src": "/cases-img/claudia-elisa-4.webp",
+      "caption": "Artigo de Claudia Elisa na Exame sobre as gerações Y e Z e o ESG"
+    },
+    {
+      "src": "/cases-img/claudia-elisa-5.webp",
+      "caption": "Marcas Claudia Elisa: podcast Liderança em Pauta e Mentoria Sharp"
+    },
+    {
+      "src": "/cases-img/claudia-elisa-6.webp",
+      "caption": "Identidade visual completa de Claudia Elisa: papelaria, site, embalagens e brindes da Mentoria Sharp"
     }
   ],
   "homeResult": "+3 marcas construídas, autoridade consolidada em liderança",

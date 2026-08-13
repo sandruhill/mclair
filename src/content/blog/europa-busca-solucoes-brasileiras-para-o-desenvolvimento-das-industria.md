@@ -3,7 +3,7 @@ title: "Europa busca soluções brasileiras para o desenvolvimento das indústri
 subtitle: "Com o apoio do Programa Brazil Machinery Solutions (BMS), sete companhias nacionais apresentarão máquinas e equipamentos durante a Interpack 2023; feira alemã trará as principais tendências em tecnologia e inovação para os setores de  alimentos, bebidas, farmacêutico, industrial, entre outros"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_cf1cebe7f241374dc0ee435e53e21a27.png"
 category: "geral"
 keywords: []

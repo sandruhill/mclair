@@ -20,11 +20,15 @@
 			"dest": "_render"
 		},
 		{
-			"src": "^/api/keystatic(?:/(.*?))?/?$",
+			"src": "^/api/auth/?$",
 			"dest": "_render"
 		},
 		{
-			"src": "^/keystatic(?:/(.*?))?/?$",
+			"src": "^/api/callback/?$",
+			"dest": "_render"
+		},
+		{
+			"src": "^/llms\\.txt$",
 			"dest": "_render"
 		},
 		{

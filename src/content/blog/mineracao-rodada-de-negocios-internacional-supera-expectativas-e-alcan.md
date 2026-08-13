@@ -3,7 +3,7 @@ title: "Mineração: rodada de negócios internacional supera expectativas e alc
 subtitle: "Segundo o Programa Brazil Machinery Solutions (BMS), empresas participantes totalizaram USD 3,7 milhões em negócios internacionais realizados e estimam mais USD 10,9 milhões em faturamento ao longo do ano"
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_3392aba810aba03b722e1493601dd1cd.jpg"
 category: "geral"
 keywords: []

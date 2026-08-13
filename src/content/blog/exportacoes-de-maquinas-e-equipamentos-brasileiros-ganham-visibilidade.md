@@ -3,7 +3,7 @@ title: "Exportações de máquinas e equipamentos brasileiros ganham visibilidad
 subtitle: "A terceira edição da Plástico Brasil aconteceu entre os dias 27 e 31 de março de 2023, no pavilhão de exposições São Paulo Expo."
 metaDescription: ""
 date: 2025-04-08
-author: "BMS — Brazil Machinery Solutions"
+author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_bbed2b8fb57f719b153d412503b5c172.jpg"
 category: "geral"
 keywords: []
