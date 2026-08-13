@@ -3,15 +3,18 @@
     "clients": [
       {
         "name": "Fidalgo Leilões",
-        "logo": "/clientes/fidalgo-leiloes-logo.webp"
+        "logo": "/clientes/fidalgo-leiloes-logo.webp",
+        "case": "/cases/fidalgo"
       },
       {
         "name": "Globo Leilões",
-        "logo": "/clientes/globo-leiloes-logo.webp"
+        "logo": "/clientes/globo-leiloes-logo.webp",
+        "case": "/cases/globo-leiloes"
       },
       {
         "name": "VIP Leilões",
-        "logo": "/clientes/vip-leiloes-logo.webp"
+        "logo": "/clientes/vip-leiloes-logo.webp",
+        "case": "/cases/vip-leiloes"
       },
       {
         "name": "Ribeiro Leilões",
@@ -23,35 +26,43 @@
       },
       {
         "name": "Insight RH",
-        "logo": "/clientes/insight-rh-logo.webp"
+        "logo": "/clientes/insight-rh-logo.webp",
+        "case": "/cases/insight-rh"
       },
       {
         "name": "Claudia Elisa",
-        "logo": "/clientes/claudia-elisa-logo.webp"
+        "logo": "/clientes/claudia-elisa-logo.webp",
+        "case": "/cases/claudia-elisa"
       },
       {
         "name": "BMS / ABIMAQ",
-        "logo": "/clientes/bms-abimaq-logo.jpg"
+        "logo": "/clientes/bms-abimaq-logo.jpg",
+        "case": "/cases/bms-abimaq"
       },
       {
         "name": "EximiaCo",
-        "logo": "/clientes/eximiaco-logo.webp"
+        "logo": "/clientes/eximiaco-logo.webp",
+        "case": "/cases/elemar-jr"
       },
       {
         "name": "Guiando",
-        "logo": "/clientes/guiando-logo.webp"
+        "logo": "/clientes/guiando-logo.webp",
+        "case": "/cases/nexinvoice"
       },
       {
         "name": "Lambda3",
-        "logo": "/clientes/lambda3-logo.webp"
+        "logo": "/clientes/lambda3-logo.webp",
+        "case": "/cases/lambda3"
       },
       {
         "name": "Silene Chiconini",
-        "logo": "/clientes/silene-chiconini-logo.webp"
+        "logo": "/clientes/silene-chiconini-logo.webp",
+        "case": "/cases/silene-chiconini"
       },
       {
         "name": "Zbra",
-        "logo": "/clientes/zbra-logo.webp"
+        "logo": "/clientes/zbra-logo.webp",
+        "case": "/cases/zbra"
       },
       {
         "name": "ABIMAPI",
@@ -258,7 +269,7 @@
         "logo": "/clientes/ssp-sp-logo.jpg"
       },
       {
-        "name": "nexinvoice",
+        "name": "NexInvoice",
         "logo": "/clientes/nexinvoice-logo.png"
       },
       {
@@ -270,7 +281,7 @@
         "logo": "/clientes/trinta-tres-tattoo-logo.jpg"
       },
       {
-        "name": "YNus Itá Digital",
+        "name": "Ynusitado",
         "logo": "/clientes/ynus-ita-digital-logo.png"
       }
     ],
@@ -280,19 +291,13 @@
         "label": "Clientes atendidos"
       },
       {
-        "n": "9+",
+        "n": "8+",
         "label": "Anos de mercado"
       },
       {
         "n": "23+",
         "label": "Segmentos"
       }
-    ],
-    "seo": {
-      "title": "Clientes | Mclair Comunicação Estratégica",
-      "description": "Mais de 200 marcas atendidas pela Mclair em 23+ segmentos. Comunicação Estratégica e Marketing de Autoridade com resultados mensuráveis.",
-      "keywords": "clientes mclair, marcas atendidas, agência comunicação estratégica",
-      "ogImage": "https://mclair.vercel.app/paginas/clientes-resultados-mclair.jpg"
-    }
+    ]
   }
 }
