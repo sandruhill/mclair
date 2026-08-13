@@ -46,7 +46,7 @@ description) and needs visual truncation.
   ponytail: only the right-edge case is handled; add top/bottom clamping if a
   future layout puts rows near the viewport edges.
 - Shown on `mouseenter` of a `.case-row`, hidden on `mouseleave`.
-- Image: 16:9 crop, `object-fit:cover`.
+- Image: 21:9 crop (wide/horizontal banner, not 16:9), `object-fit:cover`.
 - Text: `challenge` field, clamped to 3 lines via CSS `-webkit-line-clamp`
   (no JS truncation).
 - Not shown on touch/mobile — no hover event fires there, which matches
