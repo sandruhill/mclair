@@ -18,7 +18,7 @@ import { SIGNUP_PAGE_HTML } from './signup-page.ts';
 import { openKv } from './kv.ts';
 
 export interface Secrets {
-  resendApiKey: string;
+  mailRelaySecret: string;
   githubAdminToken: string;
 }
 
@@ -97,7 +97,7 @@ async function handleSolicitarCodigo(
 
   const code = generateCode();
   await storeCode(kv, email, code);
-  const sent = await sendVerificationCode(secrets.resendApiKey, email, code);
+  const sent = await sendVerificationCode(secrets.mailRelaySecret, email, code);
   if (!sent) {
     return json(
       { ok: false, error: 'Não consegui mandar o e-mail agora. Tenta de novo em alguns minutos.' },
@@ -105,7 +105,7 @@ async function handleSolicitarCodigo(
     );
   }
   // Only count against the shared daily quota once an email was actually sent —
-  // a Resend failure above must not burn quota for a code nobody received.
+  // a relay failure above must not burn quota for a code nobody received.
   await incrementDailyEmailCount(kv);
 
   return json({ ok: true });
@@ -221,13 +221,13 @@ export function makeHandler(kv: Deno.Kv, secrets: Secrets): (request: Request) =
 // against an in-memory KV instance instead of hitting this module-scope side effect.
 if (import.meta.main) {
   const kv = await openKv();
-  const resendApiKey = Deno.env.get('RESEND_API_KEY') ?? '';
+  const mailRelaySecret = Deno.env.get('MAIL_RELAY_SECRET') ?? '';
   const githubAdminToken = Deno.env.get('GITHUB_ADMIN_TOKEN') ?? '';
-  if (!resendApiKey || !githubAdminToken) {
+  if (!mailRelaySecret || !githubAdminToken) {
     throw new Error(
-      'RESEND_API_KEY and GITHUB_ADMIN_TOKEN must both be set as environment variables/secrets before starting.'
+      'MAIL_RELAY_SECRET and GITHUB_ADMIN_TOKEN must both be set as environment variables/secrets before starting.'
     );
   }
-  const secrets: Secrets = { resendApiKey, githubAdminToken };
+  const secrets: Secrets = { mailRelaySecret, githubAdminToken };
   Deno.serve(makeHandler(kv, secrets));
 }

@@ -2,6 +2,8 @@ import { assertEquals, assertStringIncludes } from 'jsr:@std/assert';
 import { openKv } from '../src/kv.ts';
 import { makeHandler } from '../src/main.ts';
 
+const RELAY_URL = 'https://olive-gnat-658393.hostingersite.com/mail-relay/send.php';
+
 function postJson(path: string, body: unknown, ip = '198.51.100.1'): Request {
   return new Request(`https://worker.test${path}`, {
     method: 'POST',
@@ -12,7 +14,7 @@ function postJson(path: string, body: unknown, ip = '198.51.100.1'): Request {
 
 async function freshHandler() {
   const kv = await openKv(':memory:');
-  const handler = makeHandler(kv, { resendApiKey: 'fake-resend-key', githubAdminToken: 'fake-github-token' });
+  const handler = makeHandler(kv, { mailRelaySecret: 'fake-relay-secret', githubAdminToken: 'fake-github-token' });
   return { kv, handler };
 }
 
@@ -45,11 +47,10 @@ Deno.test('completes the full signup flow: request code, confirm, add collaborat
   let sentCode = '';
   globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
     const url = input.toString();
-    if (url.includes('api.resend.com')) {
+    if (url === RELAY_URL) {
       const body = JSON.parse((init?.body as string) ?? '{}');
-      const match = /(\d{6})/.exec(body.html);
-      sentCode = match ? match[1] : '';
-      return Promise.resolve(new Response('{}', { status: 200 }));
+      sentCode = body.code ?? '';
+      return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     }
     if (url.includes('/users/')) return Promise.resolve(new Response('{}', { status: 200 }));
     if (url.includes('/collaborators/')) {
@@ -81,9 +82,9 @@ Deno.test('a wrong code never reaches the GitHub API', async () => {
   const { kv, handler } = await freshHandler();
   const original = globalThis.fetch;
   let githubCalls = 0;
-  globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
+  globalThis.fetch = (input: string | URL | Request) => {
     const url = input.toString();
-    if (url.includes('api.resend.com')) return Promise.resolve(new Response('{}', { status: 200 }));
+    if (url === RELAY_URL) return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     if (url.includes('api.github.com')) {
       githubCalls++;
       return Promise.resolve(new Response('{}', { status: 200 }));
@@ -111,11 +112,10 @@ Deno.test('does not consume the code on a nonexistent GitHub username — the sa
   let userShouldExist = false;
   globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
     const url = input.toString();
-    if (url.includes('api.resend.com')) {
+    if (url === RELAY_URL) {
       const body = JSON.parse((init?.body as string) ?? '{}');
-      const match = /(\d{6})/.exec(body.html);
-      sentCode = match ? match[1] : '';
-      return Promise.resolve(new Response('{}', { status: 200 }));
+      sentCode = body.code ?? '';
+      return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     }
     if (url.includes('/users/')) {
       return Promise.resolve(new Response('{}', { status: userShouldExist ? 200 : 404 }));
@@ -144,24 +144,24 @@ Deno.test('does not consume the code on a nonexistent GitHub username — the sa
   }
 });
 
-Deno.test('rejects a 4th /solicitar-codigo request in the same hour and never calls Resend for it', async () => {
+Deno.test('rejects a 4th /solicitar-codigo request in the same hour and never calls the mail relay for it', async () => {
   const { kv, handler } = await freshHandler();
   const original = globalThis.fetch;
-  let resendCalls = 0;
+  let relayCalls = 0;
   globalThis.fetch = (input: string | URL | Request) => {
-    if (input.toString().includes('api.resend.com')) resendCalls++;
-    return Promise.resolve(new Response('{}', { status: 200 }));
+    if (input.toString() === RELAY_URL) relayCalls++;
+    return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
   };
   try {
     for (let i = 0; i < 3; i++) {
       await handler(postJson('/solicitar-codigo', { email: 'quatro@mclair.com.br', githubUsername: 'quatro' }));
     }
-    assertEquals(resendCalls, 3);
+    assertEquals(relayCalls, 3);
     const res = await handler(
       postJson('/solicitar-codigo', { email: 'quatro@mclair.com.br', githubUsername: 'quatro' })
     );
     assertEquals(((await res.json()) as { ok: boolean }).ok, false);
-    assertEquals(resendCalls, 3);
+    assertEquals(relayCalls, 3);
   } finally {
     globalThis.fetch = original;
     kv.close();
@@ -174,11 +174,10 @@ Deno.test('blocks /confirmar-codigo after too many wrong-code guesses and force-
   let sentCode = '';
   globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
     const url = input.toString();
-    if (url.includes('api.resend.com')) {
+    if (url === RELAY_URL) {
       const body = JSON.parse((init?.body as string) ?? '{}');
-      const match = /(\d{6})/.exec(body.html);
-      sentCode = match ? match[1] : '';
-      return Promise.resolve(new Response('{}', { status: 200 }));
+      sentCode = body.code ?? '';
+      return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     }
     return Promise.resolve(new Response('{}', { status: 200 }));
   };
@@ -221,7 +220,7 @@ Deno.test('returns a clean 500 JSON error for a malformed JSON body, not an unha
 Deno.test('blocks a 21st request from the same IP, sharing one bucket across /solicitar-codigo and /confirmar-codigo', async () => {
   const { kv, handler } = await freshHandler();
   const original = globalThis.fetch;
-  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 200 }));
+  globalThis.fetch = () => Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
   const ip = '198.51.100.99';
   try {
     for (let i = 0; i < 10; i++) {
@@ -249,11 +248,10 @@ Deno.test('a code cannot be reused for a second /confirmar-codigo call after a s
   let sentCode = '';
   globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
     const url = input.toString();
-    if (url.includes('api.resend.com')) {
+    if (url === RELAY_URL) {
       const body = JSON.parse((init?.body as string) ?? '{}');
-      const match = /(\d{6})/.exec(body.html);
-      sentCode = match ? match[1] : '';
-      return Promise.resolve(new Response('{}', { status: 200 }));
+      sentCode = body.code ?? '';
+      return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
     }
     if (url.includes('/users/')) return Promise.resolve(new Response('{}', { status: 200 }));
     if (url.includes('/collaborators/')) {
@@ -282,10 +280,10 @@ Deno.test('a code cannot be reused for a second /confirmar-codigo call after a s
 Deno.test('the global daily email cap is checked before the per-email rate limit is touched', async () => {
   const { kv, handler } = await freshHandler();
   const original = globalThis.fetch;
-  let resendCalls = 0;
+  let relayCalls = 0;
   globalThis.fetch = (input: string | URL | Request) => {
-    if (input.toString().includes('api.resend.com')) resendCalls++;
-    return Promise.resolve(new Response('{}', { status: 200 }));
+    if (input.toString() === RELAY_URL) relayCalls++;
+    return Promise.resolve(new Response(JSON.stringify({ ok: true }), { status: 200 }));
   };
   try {
     // Exhaust the global daily cap (50) using distinct emails so the per-email
@@ -295,7 +293,7 @@ Deno.test('the global daily email cap is checked before the per-email rate limit
         postJson('/solicitar-codigo', { email: `pessoa${i}@mclair.com.br`, githubUsername: 'x' }, `10.0.0.${i % 250}`)
       );
     }
-    assertEquals(resendCalls, 50);
+    assertEquals(relayCalls, 50);
 
     const res = await handler(
       postJson('/solicitar-codigo', { email: 'depois-do-limite@mclair.com.br', githubUsername: 'x' }, '10.0.1.1')
@@ -303,7 +301,7 @@ Deno.test('the global daily email cap is checked before the per-email rate limit
     const data = (await res.json()) as { ok: boolean; error: string };
     assertEquals(data.ok, false);
     assertEquals(data.error, 'Tenta de novo mais tarde.');
-    assertEquals(resendCalls, 50); // the 51st request must not have reached Resend
+    assertEquals(relayCalls, 50); // the 51st request must not have reached the mail relay
   } finally {
     globalThis.fetch = original;
     kv.close();
