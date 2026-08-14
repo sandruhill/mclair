@@ -1,70 +1,113 @@
-import { describe, it, expect, vi, afterEach } from 'vitest';
-import { githubUserExists, isAlreadyCollaborator, addCollaborator } from '../src/github';
+import { assertEquals, assertStringIncludes } from 'jsr:@std/assert';
+import { githubUserExists, isAlreadyCollaborator, addCollaborator } from '../src/github.ts';
 
-describe('githubUserExists', () => {
-  afterEach(() => vi.unstubAllGlobals());
+Deno.test('githubUserExists returns true for a 200 response', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 200 }));
+  try {
+    assertEquals(await githubUserExists('fake-token', 'kellypinheiro'), true);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('returns true for a 200 response', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 200 })));
-    expect(await githubUserExists('fake-token', 'kellypinheiro')).toBe(true);
-  });
+Deno.test('githubUserExists returns false for a 404 response', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 404 }));
+  try {
+    assertEquals(await githubUserExists('fake-token', 'usuario-que-nao-existe'), false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('returns false for a 404 response', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 404 })));
-    expect(await githubUserExists('fake-token', 'usuario-que-nao-existe')).toBe(false);
-  });
-
-  it('authenticates with the given admin token', async () => {
-    const fetchMock = vi.fn(async () => new Response('{}', { status: 200 }));
-    vi.stubGlobal('fetch', fetchMock);
+Deno.test('githubUserExists authenticates with the given token', async () => {
+  const original = globalThis.fetch;
+  let capturedAuth = '';
+  globalThis.fetch = (_input: string | URL | Request, init?: RequestInit) => {
+    const headers = init?.headers as Record<string, string>;
+    capturedAuth = headers.Authorization ?? '';
+    return Promise.resolve(new Response('{}', { status: 200 }));
+  };
+  try {
     await githubUserExists('minha-chave', 'kellypinheiro');
-    const [, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    const headers = init.headers as Record<string, string>;
-    expect(headers.Authorization).toBe('Bearer minha-chave');
-  });
+    assertEquals(capturedAuth, 'Bearer minha-chave');
+  } finally {
+    globalThis.fetch = original;
+  }
 });
 
-describe('isAlreadyCollaborator', () => {
-  afterEach(() => vi.unstubAllGlobals());
-
-  it('returns true for a 204 response', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })));
-    expect(await isAlreadyCollaborator('fake-token', 'kellypinheiro')).toBe(true);
-  });
-
-  it('returns false for a 404 response', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 404 })));
-    expect(await isAlreadyCollaborator('fake-token', 'kellypinheiro')).toBe(false);
-  });
+Deno.test('isAlreadyCollaborator returns true for a 204 response', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response(null, { status: 204 }));
+  try {
+    assertEquals(await isAlreadyCollaborator('fake-token', 'kellypinheiro'), true);
+  } finally {
+    globalThis.fetch = original;
+  }
 });
 
-describe('addCollaborator', () => {
-  afterEach(() => vi.unstubAllGlobals());
+Deno.test('isAlreadyCollaborator returns false for a 404 response', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 404 }));
+  try {
+    assertEquals(await isAlreadyCollaborator('fake-token', 'kellypinheiro'), false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('returns true when GitHub creates a new invite (201)', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 201 })));
-    expect(await addCollaborator('fake-token', 'kellypinheiro')).toBe(true);
-  });
+Deno.test('addCollaborator returns true when GitHub creates a new invite (201)', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 201 }));
+  try {
+    assertEquals(await addCollaborator('fake-token', 'kellypinheiro'), true);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('returns true when the user already had access (204)', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response(null, { status: 204 })));
-    expect(await addCollaborator('fake-token', 'kellypinheiro')).toBe(true);
-  });
+Deno.test('addCollaborator returns true when the user already had access (204)', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response(null, { status: 204 }));
+  try {
+    assertEquals(await addCollaborator('fake-token', 'kellypinheiro'), true);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('returns false when GitHub rejects the request', async () => {
-    vi.stubGlobal('fetch', vi.fn(async () => new Response('{}', { status: 403 })));
-    expect(await addCollaborator('fake-token', 'kellypinheiro')).toBe(false);
-  });
+Deno.test('addCollaborator returns false when GitHub rejects the request', async () => {
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 403 }));
+  try {
+    assertEquals(await addCollaborator('fake-token', 'kellypinheiro'), false);
+  } finally {
+    globalThis.fetch = original;
+  }
+});
 
-  it('sends push permission and bearer auth', async () => {
-    const fetchMock = vi.fn(async () => new Response('{}', { status: 201 }));
-    vi.stubGlobal('fetch', fetchMock);
+Deno.test('addCollaborator sends push permission and bearer auth to the right URL', async () => {
+  const original = globalThis.fetch;
+  let capturedUrl = '';
+  let capturedMethod = '';
+  let capturedAuth = '';
+  let capturedBody = '';
+  globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
+    capturedUrl = input.toString();
+    capturedMethod = init?.method ?? '';
+    const headers = init?.headers as Record<string, string>;
+    capturedAuth = headers.Authorization ?? '';
+    capturedBody = (init?.body as string) ?? '';
+    return Promise.resolve(new Response('{}', { status: 201 }));
+  };
+  try {
     await addCollaborator('minha-chave', 'kellypinheiro');
-    const [url, init] = fetchMock.mock.calls[0] as [string, RequestInit];
-    expect(url).toContain('/repos/sandruhill/mclair/collaborators/kellypinheiro');
-    expect(init.method).toBe('PUT');
-    const headers = init.headers as Record<string, string>;
-    expect(headers.Authorization).toBe('Bearer minha-chave');
-    expect(JSON.parse(init.body as string)).toEqual({ permission: 'push' });
-  });
+    assertStringIncludes(capturedUrl, '/repos/sandruhill/mclair/collaborators/kellypinheiro');
+    assertEquals(capturedMethod, 'PUT');
+    assertEquals(capturedAuth, 'Bearer minha-chave');
+    assertEquals(JSON.parse(capturedBody), { permission: 'push' });
+  } finally {
+    globalThis.fetch = original;
+  }
 });
