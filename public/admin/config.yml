@@ -2,8 +2,8 @@ backend:
   name: github
   repo: sandruhill/mclair
   branch: main
-  base_url: https://mclair.vercel.app
-  auth_endpoint: api/auth
+  base_url: https://mclair-access-worker.sandruhill.deno.net
+  auth_endpoint: auth
 
 logo_url: /logos/logo-icone-M.png
 locale: pt
