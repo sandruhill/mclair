@@ -49,6 +49,14 @@ export async function checkAndIncrement(
 // `increment` (currently: the daily-email-count key in ratelimit.ts) — never
 // on a key also written via `checkAndIncrement`'s plain-number `.set()`,
 // which would corrupt this reader.
+//
+// Upgrade path: if a future redeploy ever needs to run this `sum`-based
+// `increment` against a Deno KV that already has an OLDER build's
+// plain-number value at the same key, `sum` throws (TypeError: non-U64
+// value). Since `daily-email-count` keys are date-scoped and this project
+// has no persistent KV in production yet, this can't happen on first
+// deploy — but if it ever matters, delete the stale key once before
+// cutover, or seed it as a `Deno.KvU64` ahead of time.
 export async function currentCount(kv: Deno.Kv, key: Deno.KvKey): Promise<number> {
   const entry = await kv.get<Deno.KvU64>(key);
   return entry.value ? Number(entry.value.value) : 0;
