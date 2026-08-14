@@ -3,5 +3,13 @@
   "tasks": {
     "dev": "deno run --allow-net --allow-env --unstable-kv --watch src/main.ts",
     "test": "deno test --allow-net --allow-env --unstable-kv"
+  },
+  "deploy": {
+    "org": "sandruhill",
+    "app": "mclair-access-worker"
   }
 }
+
+
+
+
