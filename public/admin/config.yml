@@ -6,9 +6,8 @@ backend:
   auth_endpoint: auth
 
 logo_url: /logos/logo-icone-M.png
-locale: pt
-site_url: https://mclair.vercel.app
-display_url: https://mclair.vercel.app
+site_url: https://olive-gnat-658393.hostingersite.com
+display_url: https://olive-gnat-658393.hostingersite.com
 
 media_folder: public/uploads
 public_folder: /uploads
