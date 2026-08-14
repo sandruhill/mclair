@@ -16,10 +16,21 @@ import { sendVerificationCode } from './email.ts';
 import { githubUserExists, isAlreadyCollaborator, addCollaborator } from './github.ts';
 import { SIGNUP_PAGE_HTML } from './signup-page.ts';
 import { openKv } from './kv.ts';
+import {
+  generateState,
+  storeState,
+  consumeState,
+  buildAuthorizeUrl,
+  exchangeCodeForToken,
+  successPage,
+  errorPage,
+} from './oauth.ts';
 
 export interface Secrets {
   mailRelaySecret: string;
   githubAdminToken: string;
+  githubOAuthClientId: string;
+  githubOAuthClientSecret: string;
 }
 
 function json(body: unknown, status = 200): Response {
@@ -184,6 +195,46 @@ async function handleConfirmarCodigo(
   });
 }
 
+function html(body: string, status = 200): Response {
+  return new Response(body, { status, headers: { 'Content-Type': 'text/html; charset=utf-8' } });
+}
+
+// Sveltia CMS's "Sign In with GitHub" button opens a popup at /auth. This
+// redirects it straight to GitHub's own authorize screen — the state param
+// is what /callback later checks to make sure the code it receives came
+// from a redirect this server actually issued, not a replayed/forged URL.
+async function handleAuth(request: Request, kv: Deno.Kv, secrets: Secrets): Promise<Response> {
+  const state = generateState();
+  await storeState(kv, state);
+  const redirectUri = new URL('/callback', request.url).toString();
+  const authorizeUrl = buildAuthorizeUrl(secrets.githubOAuthClientId, redirectUri, state);
+  return new Response(null, { status: 302, headers: { Location: authorizeUrl } });
+}
+
+// GitHub redirects the popup here after the user authorizes (or denies)
+// the app. Either way this returns an HTML page that hands the result back
+// to the CMS admin page (the popup's opener) via the postMessage handshake
+// Sveltia expects — the popup never navigates the admin tab itself.
+async function handleCallback(request: Request, kv: Deno.Kv, secrets: Secrets): Promise<Response> {
+  const url = new URL(request.url);
+  const code = url.searchParams.get('code');
+  const state = url.searchParams.get('state');
+
+  if (!state || !(await consumeState(kv, state))) {
+    return html(errorPage('Sessão de login expirada ou inválida. Tenta de novo.'));
+  }
+  if (!code) {
+    return html(errorPage('O GitHub não retornou um código de autorização.'));
+  }
+
+  const token = await exchangeCodeForToken(secrets.githubOAuthClientId, secrets.githubOAuthClientSecret, code);
+  if (!token) {
+    return html(errorPage('Não consegui confirmar o login com o GitHub. Tenta de novo.'));
+  }
+
+  return html(successPage(token));
+}
+
 export function makeHandler(kv: Deno.Kv, secrets: Secrets): (request: Request) => Promise<Response> {
   return async (request: Request): Promise<Response> => {
     const url = new URL(request.url);
@@ -213,6 +264,24 @@ export function makeHandler(kv: Deno.Kv, secrets: Secrets): (request: Request) =
       }
     }
 
+    if (request.method === 'GET' && url.pathname === '/auth') {
+      try {
+        return await handleAuth(request, kv, secrets);
+      } catch (err) {
+        console.error(err);
+        return html(errorPage('Algo deu errado. Tenta de novo.'), 500);
+      }
+    }
+
+    if (request.method === 'GET' && url.pathname === '/callback') {
+      try {
+        return await handleCallback(request, kv, secrets);
+      } catch (err) {
+        console.error(err);
+        return html(errorPage('Algo deu errado. Tenta de novo.'), 500);
+      }
+    }
+
     return new Response('Not found', { status: 404 });
   };
 }
@@ -223,11 +292,13 @@ if (import.meta.main) {
   const kv = await openKv();
   const mailRelaySecret = Deno.env.get('MAIL_RELAY_SECRET') ?? '';
   const githubAdminToken = Deno.env.get('GITHUB_ADMIN_TOKEN') ?? '';
-  if (!mailRelaySecret || !githubAdminToken) {
+  const githubOAuthClientId = Deno.env.get('GITHUB_OAUTH_CLIENT_ID') ?? '';
+  const githubOAuthClientSecret = Deno.env.get('GITHUB_OAUTH_CLIENT_SECRET') ?? '';
+  if (!mailRelaySecret || !githubAdminToken || !githubOAuthClientId || !githubOAuthClientSecret) {
     throw new Error(
-      'MAIL_RELAY_SECRET and GITHUB_ADMIN_TOKEN must both be set as environment variables/secrets before starting.'
+      'MAIL_RELAY_SECRET, GITHUB_ADMIN_TOKEN, GITHUB_OAUTH_CLIENT_ID and GITHUB_OAUTH_CLIENT_SECRET must all be set as environment variables/secrets before starting.'
     );
   }
-  const secrets: Secrets = { mailRelaySecret, githubAdminToken };
+  const secrets: Secrets = { mailRelaySecret, githubAdminToken, githubOAuthClientId, githubOAuthClientSecret };
   Deno.serve(makeHandler(kv, secrets));
 }

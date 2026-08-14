@@ -14,7 +14,12 @@ function postJson(path: string, body: unknown, ip = '198.51.100.1'): Request {
 
 async function freshHandler() {
   const kv = await openKv(':memory:');
-  const handler = makeHandler(kv, { mailRelaySecret: 'fake-relay-secret', githubAdminToken: 'fake-github-token' });
+  const handler = makeHandler(kv, {
+    mailRelaySecret: 'fake-relay-secret',
+    githubAdminToken: 'fake-github-token',
+    githubOAuthClientId: 'fake-oauth-client-id',
+    githubOAuthClientSecret: 'fake-oauth-client-secret',
+  });
   return { kv, handler };
 }
 
@@ -302,6 +307,69 @@ Deno.test('the global daily email cap is checked before the per-email rate limit
     assertEquals(data.ok, false);
     assertEquals(data.error, 'Tenta de novo mais tarde.');
     assertEquals(relayCalls, 50); // the 51st request must not have reached the mail relay
+  } finally {
+    globalThis.fetch = original;
+    kv.close();
+  }
+});
+
+Deno.test('GET /auth redirects to GitHub with a client id, redirect_uri and state', async () => {
+  const { kv, handler } = await freshHandler();
+  const res = await handler(new Request('https://worker.test/auth', { redirect: 'manual' }));
+  assertEquals(res.status, 302);
+  const location = new URL(res.headers.get('Location') ?? '');
+  assertEquals(location.origin + location.pathname, 'https://github.com/login/oauth/authorize');
+  assertEquals(location.searchParams.get('client_id'), 'fake-oauth-client-id');
+  assertEquals(location.searchParams.get('redirect_uri'), 'https://worker.test/callback');
+  assertEquals(typeof location.searchParams.get('state'), 'string');
+  kv.close();
+});
+
+Deno.test('GET /callback with a valid code and state posts a success message back', async () => {
+  const { kv, handler } = await freshHandler();
+  const original = globalThis.fetch;
+  globalThis.fetch = () =>
+    Promise.resolve(new Response(JSON.stringify({ access_token: 'gho_abc123' }), { status: 200 }));
+  try {
+    const authRes = await handler(new Request('https://worker.test/auth', { redirect: 'manual' }));
+    const state = new URL(authRes.headers.get('Location') ?? '').searchParams.get('state');
+
+    const callbackRes = await handler(
+      new Request(`https://worker.test/callback?code=some-code&state=${state}`)
+    );
+    assertEquals(callbackRes.status, 200);
+    const body = await callbackRes.text();
+    assertStringIncludes(body, 'authorization:github:success:');
+    assertStringIncludes(body, 'gho_abc123');
+  } finally {
+    globalThis.fetch = original;
+    kv.close();
+  }
+});
+
+Deno.test('GET /callback rejects a state it never issued', async () => {
+  const { kv, handler } = await freshHandler();
+  const res = await handler(new Request('https://worker.test/callback?code=some-code&state=forged'));
+  assertEquals(res.status, 200);
+  const body = await res.text();
+  assertStringIncludes(body, 'authorization:github:error:');
+  kv.close();
+});
+
+Deno.test('GET /callback rejects reusing the same state twice', async () => {
+  const { kv, handler } = await freshHandler();
+  const original = globalThis.fetch;
+  globalThis.fetch = () =>
+    Promise.resolve(new Response(JSON.stringify({ access_token: 'gho_abc123' }), { status: 200 }));
+  try {
+    const authRes = await handler(new Request('https://worker.test/auth', { redirect: 'manual' }));
+    const state = new URL(authRes.headers.get('Location') ?? '').searchParams.get('state');
+
+    const first = await handler(new Request(`https://worker.test/callback?code=some-code&state=${state}`));
+    assertStringIncludes(await first.text(), 'authorization:github:success:');
+
+    const second = await handler(new Request(`https://worker.test/callback?code=some-code&state=${state}`));
+    assertStringIncludes(await second.text(), 'authorization:github:error:');
   } finally {
     globalThis.fetch = original;
     kv.close();
