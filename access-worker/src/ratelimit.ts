@@ -27,7 +27,7 @@ export async function isDailyEmailCapReached(kv: Deno.Kv): Promise<boolean> {
 }
 
 export function incrementDailyEmailCount(kv: Deno.Kv): Promise<void> {
-  return increment(kv, dailyEmailCountKey(), DAY_MS);
+  return increment(kv, dailyEmailCountKey());
 }
 
 const IP_MAX_REQUESTS = 20;

@@ -218,15 +218,94 @@ Deno.test('returns a clean 500 JSON error for a malformed JSON body, not an unha
   kv.close();
 });
 
-Deno.test('blocks a 21st request from the same IP across both routes', async () => {
+Deno.test('blocks a 21st request from the same IP, sharing one bucket across /solicitar-codigo and /confirmar-codigo', async () => {
   const { kv, handler } = await freshHandler();
+  const original = globalThis.fetch;
+  globalThis.fetch = () => Promise.resolve(new Response('{}', { status: 200 }));
   const ip = '198.51.100.99';
-  for (let i = 0; i < 20; i++) {
-    await handler(postJson('/solicitar-codigo', { email: `pessoa${i}@mclair.com.br`, githubUsername: 'x' }, ip));
+  try {
+    for (let i = 0; i < 10; i++) {
+      await handler(postJson('/solicitar-codigo', { email: `pessoa${i}@mclair.com.br`, githubUsername: 'x' }, ip));
+    }
+    for (let i = 0; i < 10; i++) {
+      await handler(
+        postJson('/confirmar-codigo', { email: `pessoa${i}@mclair.com.br`, code: '000000', githubUsername: 'x' }, ip)
+      );
+    }
+    // 20 total across both routes so far — the 21st, on either route, must be blocked.
+    const res = await handler(postJson('/solicitar-codigo', { email: 'mais-uma@mclair.com.br', githubUsername: 'x' }, ip));
+    const data = (await res.json()) as { ok: boolean; error: string };
+    assertEquals(data.ok, false);
+    assertStringIncludes(data.error, 'Muitas requisições');
+  } finally {
+    globalThis.fetch = original;
+    kv.close();
   }
-  const res = await handler(postJson('/solicitar-codigo', { email: 'mais-uma@mclair.com.br', githubUsername: 'x' }, ip));
-  const data = (await res.json()) as { ok: boolean; error: string };
-  assertEquals(data.ok, false);
-  assertStringIncludes(data.error, 'Muitas requisições');
-  kv.close();
+});
+
+Deno.test('a code cannot be reused for a second /confirmar-codigo call after a successful grant', async () => {
+  const { kv, handler } = await freshHandler();
+  const original = globalThis.fetch;
+  let sentCode = '';
+  globalThis.fetch = (input: string | URL | Request, init?: RequestInit) => {
+    const url = input.toString();
+    if (url.includes('api.resend.com')) {
+      const body = JSON.parse((init?.body as string) ?? '{}');
+      const match = /(\d{6})/.exec(body.html);
+      sentCode = match ? match[1] : '';
+      return Promise.resolve(new Response('{}', { status: 200 }));
+    }
+    if (url.includes('/users/')) return Promise.resolve(new Response('{}', { status: 200 }));
+    if (url.includes('/collaborators/')) {
+      if (init?.method === 'PUT') return Promise.resolve(new Response('{}', { status: 201 }));
+      return Promise.resolve(new Response('{}', { status: 404 }));
+    }
+    return Promise.resolve(new Response('unexpected url in test', { status: 500 }));
+  };
+  try {
+    await handler(postJson('/solicitar-codigo', { email: 'reuso@mclair.com.br', githubUsername: 'reuso' }));
+    const first = await handler(
+      postJson('/confirmar-codigo', { email: 'reuso@mclair.com.br', code: sentCode, githubUsername: 'reuso' })
+    );
+    assertEquals(((await first.json()) as { ok: boolean }).ok, true);
+
+    const second = await handler(
+      postJson('/confirmar-codigo', { email: 'reuso@mclair.com.br', code: sentCode, githubUsername: 'reuso' })
+    );
+    assertEquals(((await second.json()) as { ok: boolean }).ok, false);
+  } finally {
+    globalThis.fetch = original;
+    kv.close();
+  }
+});
+
+Deno.test('the global daily email cap is checked before the per-email rate limit is touched', async () => {
+  const { kv, handler } = await freshHandler();
+  const original = globalThis.fetch;
+  let resendCalls = 0;
+  globalThis.fetch = (input: string | URL | Request) => {
+    if (input.toString().includes('api.resend.com')) resendCalls++;
+    return Promise.resolve(new Response('{}', { status: 200 }));
+  };
+  try {
+    // Exhaust the global daily cap (50) using distinct emails so the per-email
+    // limiter never itself becomes the blocker.
+    for (let i = 0; i < 50; i++) {
+      await handler(
+        postJson('/solicitar-codigo', { email: `pessoa${i}@mclair.com.br`, githubUsername: 'x' }, `10.0.0.${i % 250}`)
+      );
+    }
+    assertEquals(resendCalls, 50);
+
+    const res = await handler(
+      postJson('/solicitar-codigo', { email: 'depois-do-limite@mclair.com.br', githubUsername: 'x' }, '10.0.1.1')
+    );
+    const data = (await res.json()) as { ok: boolean; error: string };
+    assertEquals(data.ok, false);
+    assertEquals(data.error, 'Tenta de novo mais tarde.');
+    assertEquals(resendCalls, 50); // the 51st request must not have reached Resend
+  } finally {
+    globalThis.fetch = original;
+    kv.close();
+  }
 });

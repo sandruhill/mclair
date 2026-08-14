@@ -35,13 +35,26 @@ const IP_RATE_LIMITED_ERROR = {
   error: 'Muitas requisições desse endereço. Tenta de novo mais tarde.',
 };
 
+// X-Forwarded-For is a header proxies APPEND to as a request passes through
+// them, not a header the original client fully controls the meaning of — but
+// the LEFTMOST entry is exactly what the original client claimed, which is
+// fully attacker-forgeable (anyone can send `X-Forwarded-For: 1.2.3.4`
+// themselves). Nothing sits between Deno Deploy's edge and this handler, so
+// the RIGHTMOST entry is the one appended by Deploy's own edge proxy — the
+// only entry in the list an attacker cannot forge. Reading the leftmost value
+// here would let an attacker mint a fresh per-IP rate-limit bucket on every
+// request just by varying that header, defeating the per-IP daily cap.
 function clientIp(request: Request): string {
   const forwarded = request.headers.get('x-forwarded-for');
   if (forwarded) {
-    const first = forwarded.split(',')[0]?.trim();
-    if (first) return first;
+    const parts = forwarded.split(',');
+    const last = parts[parts.length - 1]?.trim();
+    if (last) return last;
   }
-  return request.headers.get('x-real-ip') ?? 'unknown';
+  const realIp = request.headers.get('x-real-ip');
+  if (realIp) return realIp;
+  console.warn('client IP could not be determined, falling back to shared bucket');
+  return 'unknown';
 }
 
 async function handleSolicitarCodigo(
@@ -150,6 +163,7 @@ async function handleConfirmarCodigo(
   const already = await isAlreadyCollaborator(secrets.githubAdminToken, githubUsername);
   if (already) {
     await consumeCode(kv, email);
+    console.log(`access granted (already had access): ${email} -> ${githubUsername}`);
     return json({ ok: true, message: 'Você já tem acesso! Pode ir direto pro /admin/.' });
   }
 
@@ -162,6 +176,7 @@ async function handleConfirmarCodigo(
   }
 
   await consumeCode(kv, email);
+  console.log(`access granted: ${email} -> ${githubUsername}`);
   return json({
     ok: true,
     message:
@@ -206,9 +221,13 @@ export function makeHandler(kv: Deno.Kv, secrets: Secrets): (request: Request) =
 // against an in-memory KV instance instead of hitting this module-scope side effect.
 if (import.meta.main) {
   const kv = await openKv();
-  const secrets: Secrets = {
-    resendApiKey: Deno.env.get('RESEND_API_KEY') ?? '',
-    githubAdminToken: Deno.env.get('GITHUB_ADMIN_TOKEN') ?? '',
-  };
+  const resendApiKey = Deno.env.get('RESEND_API_KEY') ?? '';
+  const githubAdminToken = Deno.env.get('GITHUB_ADMIN_TOKEN') ?? '';
+  if (!resendApiKey || !githubAdminToken) {
+    throw new Error(
+      'RESEND_API_KEY and GITHUB_ADMIN_TOKEN must both be set as environment variables/secrets before starting.'
+    );
+  }
+  const secrets: Secrets = { resendApiKey, githubAdminToken };
   Deno.serve(makeHandler(kv, secrets));
 }
