@@ -1,6 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
+import HomeBlog from '../components/HomeBlog.astro';
 import { createReader } from '@keystatic/core/reader';
 import keystaticConfig from '../../keystatic.config';
 import homepageJson from '../content/singletons/homepage.json';
@@ -422,6 +423,9 @@ const cases = (allCases as any[])
     </div>
   </div>
 </section>
+
+<!-- ═══════════════ BLOG ═══════════════ -->
+<HomeBlog />
 
 <script>
   (function () {

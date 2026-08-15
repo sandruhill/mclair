@@ -1,0 +1,166 @@
+---
+import { getLatestPosts, formatDate } from '../utils/blogPosts';
+
+const posts = await getLatestPosts(3);
+---
+
+{posts.length > 0 && (
+  <section class="section hb-section">
+    <div class="container">
+      <div class="hb-header" data-anim>
+        <p class="eyebrow" style="justify-content:center">Nosso blog</p>
+        <h2 class="section-title" data-anim data-delay="1" style="text-align:center;margin-top:14px">
+          Conteúdo que constrói <span>autoridade</span>
+        </h2>
+        <p class="section-lead" data-anim data-delay="2" style="text-align:center;margin-inline:auto">
+          Artigos e análises sobre marketing, comunicação estratégica e branding para quem quer se
+          posicionar como referência.
+        </p>
+      </div>
+
+      <div class="hb-grid stagger-children">
+        {posts.map((post) => (
+          <a href={`/blog/${post.slug}`} class="hb-card" data-anim>
+            <div class="hb-thumb">
+              {post.image ? (
+                <img
+                  src={post.image}
+                  alt={post.title}
+                  class="hb-img"
+                  loading="lazy"
+                  onerror="this.parentElement.style.display='none'"
+                />
+              ) : (
+                <div class="hb-placeholder">
+                  <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3">
+                    <rect x="3" y="3" width="18" height="18" rx="2" />
+                    <circle cx="8.5" cy="8.5" r="1.5" />
+                    <path d="M21 15l-5-5L5 21" />
+                  </svg>
+                </div>
+              )}
+              <div class="hb-overlay">
+                <span class="hb-pill">Ler mais</span>
+              </div>
+            </div>
+            <div class="hb-body">
+              <h3 class="hb-title">{post.title}</h3>
+              <div class="hb-divider"></div>
+              <div class="hb-meta">
+                <span class="hb-author">
+                  <span class="hb-avatar">{post.author.trim().charAt(0)}</span>
+                  {post.author}
+                </span>
+                <time class="hb-date">{formatDate(post.date)}</time>
+              </div>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
+
+<style>
+  .hb-section { background: var(--cream); }
+  .hb-header { max-width: 640px; margin: 0 auto 56px; text-align: center; }
+
+  .hb-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  @media (min-width: 768px) {
+    .hb-grid { grid-template-columns: repeat(3, 1fr); }
+  }
+
+  .hb-card {
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    border: 1.5px solid var(--line);
+    border-radius: var(--r-lg);
+    padding: 16px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow .5s ease, border-color .3s ease;
+  }
+  .hb-card:hover {
+    box-shadow: 0 20px 40px rgba(0,0,0,.08);
+    border-color: var(--line-2);
+  }
+
+  .hb-thumb {
+    position: relative;
+    aspect-ratio: 380 / 270;
+    overflow: hidden;
+    border-radius: var(--r-md);
+    margin-bottom: 14px;
+    background: var(--cream-2);
+  }
+  .hb-img {
+    width: 100%; height: 100%;
+    object-fit: cover;
+    transition: transform .7s cubic-bezier(.22,1,.36,1);
+  }
+  .hb-card:hover .hb-img { transform: scale(1.1); }
+  .hb-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  .hb-overlay {
+    position: absolute; inset: 0;
+    background: rgba(21,18,16,.35);
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0;
+    transition: opacity .3s ease;
+  }
+  .hb-card:hover .hb-overlay { opacity: 1; }
+  .hb-pill {
+    background: var(--red);
+    color: #fff;
+    padding: .6rem 1.4rem;
+    border-radius: 999px;
+    font-size: .7rem; font-weight: 700;
+    letter-spacing: .08em; text-transform: uppercase;
+    box-shadow: var(--shadow-lg);
+    transform: translateY(16px);
+    transition: transform .3s ease;
+  }
+  .hb-card:hover .hb-pill { transform: none; }
+
+  .hb-body { display: flex; flex-direction: column; flex: 1; padding: 0 4px 4px; }
+  .hb-title {
+    font-size: 1.1rem; font-weight: 800; line-height: 1.32;
+    color: var(--ink); letter-spacing: -.01em;
+    min-height: 48px;
+    margin-bottom: 14px;
+    transition: color .3s ease;
+    text-wrap: balance;
+  }
+  .hb-card:hover .hb-title { color: var(--red); }
+
+  .hb-divider {
+    border-top: 1px dotted var(--line-2);
+    margin-bottom: 14px;
+  }
+
+  .hb-meta {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 8px;
+    margin-top: auto;
+  }
+  .hb-author {
+    display: flex; align-items: center; gap: 8px;
+    font-size: .78rem; font-weight: 700; color: var(--ink);
+  }
+  .hb-avatar {
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--red);
+    color: #fff; font-size: .68rem; font-weight: 700;
+  }
+  .hb-date { font-size: .72rem; color: var(--ink-3); flex-shrink: 0; }
+</style>
