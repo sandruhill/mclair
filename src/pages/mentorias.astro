@@ -217,6 +217,11 @@ const seo = mentoriasContent?.seo ?? {};
     <div class="bento-item bg-h" data-lb="7"><img src="/mentoria/mentoria_02.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
     <div class="bento-item bg-i" data-lb="8"><img src="/mentoria/mentoria_03.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
     <div class="bento-item bg-j" data-lb="9"><img src="/mentoria/mentoria_13.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-k" data-lb="10"><img src="/mentoria/mentoria_14.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-l" data-lb="11"><img src="/mentoria/mentoria_15.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-m" data-lb="12"><img src="/mentoria/mentoria_16.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-n" data-lb="13"><img src="/mentoria/mentoria_17.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
+    <div class="bento-item bg-o" data-lb="14"><img src="/mentoria/mentoria_18.jpg" alt="Mentoria Bolder" loading="lazy" /></div>
   </div>
 
   <!-- LIGHTBOX -->
@@ -401,12 +406,14 @@ const seo = mentoriasContent?.seo ?? {};
 .bento-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 240px);
+  grid-template-rows: repeat(6, 240px);
   grid-template-areas:
     "a a b c"
     "a a d c"
     "e f f g"
-    "h h i j";
+    "h h i j"
+    "k k l m"
+    "n n o o";
   gap: 4px;
 }
 .bento-item { overflow:hidden; position:relative; background:var(--dark-2); }
@@ -428,11 +435,17 @@ const seo = mentoriasContent?.seo ?? {};
 .bg-h { grid-area: h; }
 .bg-i { grid-area: i; }
 .bg-j { grid-area: j; }
+.bg-k { grid-area: k; }
+.bg-l { grid-area: l; }
+.bg-m { grid-area: m; }
+.bg-n { grid-area: n; }
+.bg-o { grid-area: o; }
+.bg-o img { object-position: top; }
 
 @media (max-width:900px) {
   .bento-grid {
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: repeat(7, 200px);
+    grid-template-rows: repeat(11, 200px);
     grid-template-areas:
       "a a"
       "a a"
@@ -440,20 +453,28 @@ const seo = mentoriasContent?.seo ?? {};
       "d e"
       "f f"
       "g h"
-      "i j";
+      "i j"
+      "k k"
+      "l m"
+      "n n"
+      "o o";
   }
 }
 @media (max-width:600px) {
   .bento-grid {
     grid-template-columns: 1fr 1fr;
-    grid-template-rows: repeat(6, 180px);
+    grid-template-rows: repeat(10, 180px);
     grid-template-areas:
       "a a"
       "b c"
       "d e"
       "f f"
       "g h"
-      "i j";
+      "i j"
+      "k k"
+      "l m"
+      "n n"
+      "o o";
   }
 }
 
@@ -531,6 +552,11 @@ const seo = mentoriasContent?.seo ?? {};
     '/mentoria/mentoria_02.jpg',
     '/mentoria/mentoria_03.jpg',
     '/mentoria/mentoria_13.jpg',
+    '/mentoria/mentoria_14.jpg',
+    '/mentoria/mentoria_15.jpg',
+    '/mentoria/mentoria_16.jpg',
+    '/mentoria/mentoria_17.jpg',
+    '/mentoria/mentoria_18.jpg',
   ];
 
   let cur = 0;
