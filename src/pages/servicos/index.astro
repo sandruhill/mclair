@@ -92,7 +92,6 @@ const services = (allServicos as any[])
     <div class="ph-grid-visual stagger-children" data-anim="right" data-delay="2">
       {services.slice(0,3).map(s => (
         <div class="phgv-item">
-          <span class="phgv-num" style={`color:${s.color}`}>{s.num}</span>
           <span class="phgv-title">{s.title}</span>
         </div>
       ))}
@@ -106,7 +105,6 @@ const services = (allServicos as any[])
     <section class={`svc-block ${i % 2 !== 0 ? 'svc-block-alt' : ''}`}>
       <div class="container svc-inner">
         <div class="svc-meta" data-anim="left">
-          <span class="sm-num" style={`color:${s.color}`}>{s.num}</span>
           <div class="sm-accent" style={`background:${s.color}`}></div>
         </div>
         <div class="svc-content" data-anim data-delay="1">
@@ -187,7 +185,6 @@ const services = (allServicos as any[])
   background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.07);
   border-radius:var(--r-md);
 }
-.phgv-num { font-size:.65rem; font-weight:700; letter-spacing:.15em; flex-shrink:0; }
 .phgv-title { font-size:.9rem; font-weight:700; color:rgba(255,255,255,.7); }
 
 /* SERVICES */
@@ -195,8 +192,7 @@ const services = (allServicos as any[])
 .svc-block-alt { background:var(--cream); }
 .svc-inner { display:grid; grid-template-columns:120px 1fr; gap:60px; align-items:start; }
 .svc-meta { padding-top:6px; }
-.sm-num { font-size:6rem; font-weight:900; line-height:1; letter-spacing:-.05em; display:block; opacity:.08; }
-.sm-accent { width:40px; height:3px; border-radius:99px; margin-top:12px; }
+.sm-accent { width:40px; height:3px; border-radius:99px; }
 
 .sc-tag {
   display:inline-block; font-size:.65rem; font-weight:700; letter-spacing:.15em; text-transform:uppercase;
@@ -224,7 +220,6 @@ const services = (allServicos as any[])
   .ph-inner { grid-template-columns:1fr; }
   .ph-grid-visual { display:none; }
   .svc-inner { grid-template-columns:1fr; gap:28px; }
-  .sm-num { font-size:4rem; }
 }
 @media (max-width:600px) {
   .sc-items { grid-template-columns:1fr; }

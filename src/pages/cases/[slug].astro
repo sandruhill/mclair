@@ -94,7 +94,6 @@ const { c, otherCases } = Astro.props;
       {c.tags.map(t => <span class="ch-tag">{t}</span>)}
     </div>
   </div>
-  <div class="ch-num" aria-hidden="true">{c.num}</div>
 </section>
 
 <!-- BODY -->
@@ -198,7 +197,6 @@ const { c, otherCases } = Astro.props;
     <div class="oc-grid stagger-children">
       {otherCases.slice(0,3).map(oc => (
         <a href={`/cases/${oc.slug}`} class="oc-card">
-          <span class="oc-num" style={`color:${oc.accent}`}>{oc.num}</span>
           <h3 class="oc-client">{oc.client}</h3>
           <span class="oc-sector">{oc.sector}</span>
           <span class="oc-arrow">
@@ -245,12 +243,6 @@ const { c, otherCases } = Astro.props;
   color: rgba(255,255,255,.6); border: 1px solid rgba(255,255,255,.2);
   padding: .25rem .7rem; border-radius: 99px;
 }
-.ch-num {
-  position: absolute; bottom: -20px; right: 5vw; z-index: 1;
-  font-size: 22rem; font-weight: 900; letter-spacing: -.05em; line-height: 1;
-  color: rgba(255,255,255,.03); pointer-events: none; user-select: none;
-}
-
 /* BODY */
 .case-body-section { background: #fff; padding: clamp(64px,8vw,100px) 0; }
 .cb-grid { display: grid; grid-template-columns: 1fr 1fr 300px; gap: 48px; align-items: start; }
@@ -410,14 +402,13 @@ const { c, otherCases } = Astro.props;
   transition: border-color .2s, box-shadow .2s, transform .2s;
 }
 .oc-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.oc-num { font-size: .65rem; font-weight: 700; letter-spacing: .15em; }
 .oc-client { font-size: 1rem; font-weight: 700; color: var(--ink); }
 .oc-sector { font-size: .78rem; color: var(--ink-4); font-weight: 300; }
 .oc-arrow { position: absolute; top: 20px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
 .oc-card:hover .oc-arrow { color: var(--red); transform: translate(2px,-2px); }
 
 @media (max-width: 900px) { .cb-grid { grid-template-columns: 1fr; } .oc-grid { grid-template-columns: 1fr 1fr; } }
-@media (max-width: 600px) { .oc-grid { grid-template-columns: 1fr; } .ch-num { display: none; } }
+@media (max-width: 600px) { .oc-grid { grid-template-columns: 1fr; } }
 </style>
 
 <script is:inline>

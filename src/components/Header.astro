@@ -115,24 +115,24 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
       </button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" style="--i:0"><span class="dl-num">01</span>Início</a>
-      <a href="/sobre" class="drawer-link" style="--i:1"><span class="dl-num">02</span>Sobre</a>
+      <a href="/" class="drawer-link" style="--i:0">Início</a>
+      <a href="/sobre" class="drawer-link" style="--i:1">Sobre</a>
       <div class="drawer-group" style="--i:2">
-        <a href="/servicos" class="drawer-link"><span class="dl-num">03</span>Serviços</a>
+        <a href="/servicos" class="drawer-link">Serviços</a>
         <div class="drawer-sub">
           {svcLinks.map(s => <a href={s.href} class="drawer-sub-link">{s.label}</a>)}
         </div>
       </div>
       <div class="drawer-group" style="--i:3">
-        <a href="/cases" class="drawer-link"><span class="dl-num">04</span>Cases</a>
+        <a href="/cases" class="drawer-link">Cases</a>
         <div class="drawer-sub">
           {caseLinks.map(c => <a href={c.href} class="drawer-sub-link">{c.label}</a>)}
         </div>
       </div>
-      <a href="/clientes" class="drawer-link" style="--i:4"><span class="dl-num">05</span>Clientes</a>
-      <a href="/blog" class="drawer-link" style="--i:5"><span class="dl-num">06</span>Blog</a>
-      <a href="/mentorias" class="drawer-link" style="--i:6"><span class="dl-num">07</span>Mentorias</a>
-      <a href="/contato" class="drawer-link" style="--i:7"><span class="dl-num">08</span>Contato</a>
+      <a href="/clientes" class="drawer-link" style="--i:4">Clientes</a>
+      <a href="/blog" class="drawer-link" style="--i:5">Blog</a>
+      <a href="/mentorias" class="drawer-link" style="--i:6">Mentorias</a>
+      <a href="/contato" class="drawer-link" style="--i:7">Contato</a>
     </nav>
     <div class="drawer-footer">
       <a href={WA} class="btn-primary" target="_blank" rel="noopener">
@@ -386,7 +386,6 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
   }
   .mobile-nav.open .drawer-link { opacity:1;transform:none; }
   .drawer-link:hover { color:var(--red); }
-  .dl-num { font-size:.6rem;letter-spacing:.2em;color:var(--red);width:20px;flex-shrink:0; }
   .drawer-group .drawer-link { border-bottom:none;padding-bottom:8px; }
   .drawer-sub { display:flex;flex-direction:column;gap:0;border-bottom:1px solid var(--line);padding-bottom:12px;padding-left:34px; }
   .drawer-sub-link { font-size:.82rem;color:var(--ink-3);padding:6px 0;transition:color .15s;text-decoration:none; }

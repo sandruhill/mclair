@@ -102,7 +102,6 @@ const allCasesForSchema = sorted.map((c, i) => ({
       <div class="container case-inner">
         <div class="case-intro" data-anim>
           <div class="ci-top">
-            <span class="ci-num" style={`color:${c.color}`}>{c.num}</span>
             <span class="ci-sector tag" style={`color:${c.accent};border-color:${c.accent}30`}>{c.sector}</span>
           </div>
           {c.logo && (
@@ -170,10 +169,9 @@ const allCasesForSchema = sorted.map((c, i) => ({
       </h2>
     </div>
     <div class="compact-grid">
-      {compactCases.map((c, i) => (
+      {compactCases.map((c) => (
         <a href={`/cases/${c.slug}`} class="compact-card" data-anim style={`--acc:${c.accent}`}>
           <div class="cc-head">
-            <span class="cc-num" style={`color:${c.accent}`}>0{i+7}</span>
             <span class="cc-sector">{c.sector}</span>
           </div>
           <h3 class="cc-client">{c.client}</h3>
@@ -222,7 +220,6 @@ const allCasesForSchema = sorted.map((c, i) => ({
 .ci-logo { max-height:40px; max-width:160px; object-fit:contain; object-position:left; filter:grayscale(100%) opacity(.5); transition:filter .3s; }
 .case-block:hover .ci-logo { filter:grayscale(0%) opacity(1); }
 .ci-top { display:flex; align-items:center; gap:16px; margin-bottom:16px; }
-.ci-num { font-size:.65rem; font-weight:700; letter-spacing:.18em; }
 .ci-sector { font-size:.62rem; }
 .ci-client { font-size:clamp(2rem,4vw,3.4rem); font-weight:900; color:var(--ink); letter-spacing:-.03em; line-height:1.05; }
 .ci-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
@@ -302,7 +299,6 @@ const allCasesForSchema = sorted.map((c, i) => ({
 }
 .compact-card:hover { border-color:var(--acc); box-shadow:var(--shadow-md); transform:translateY(-4px); }
 .cc-head { display:flex; align-items:center; justify-content:space-between; }
-.cc-num { font-size:.65rem; font-weight:700; letter-spacing:.18em; }
 .cc-sector { font-size:.6rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-4); }
 .cc-client { font-size:1.45rem; font-weight:900; color:var(--ink); letter-spacing:-.02em; line-height:1.1; }
 .cc-result { font-size:.86rem; color:var(--ink-3); line-height:1.7; font-weight:300; flex:1; }

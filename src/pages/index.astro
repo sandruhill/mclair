@@ -241,7 +241,6 @@ const cases = (allCases as any[])
         <a href={s.href} class="svc-card" style={`--accent:${s.color}`}>
           <div class="svc-glow" aria-hidden="true"></div>
           <div class="svc-top">
-            <span class="svc-num">{s.num}</span>
             <span class="svc-arrow">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
             </span>
@@ -287,7 +286,6 @@ const cases = (allCases as any[])
       {cases.map((c, i) => (
         <a href={`/cases/${c.slug}`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()} data-img={c.img} data-challenge={c.challenge}>
           <div class="case-row-inner">
-            <span class="case-idx">0{i+1}</span>
             <div class="case-info">
               <span class="case-sector tag" style={`color:${c.accent};border-color:${c.accent}28`}>{c.sector}</span>
               <h3 class="case-client">{c.client}</h3>
@@ -706,8 +704,7 @@ const cases = (allCases as any[])
 }
 .svc-card:hover { transform:translateY(-6px);box-shadow:0 16px 40px rgba(0,0,0,.1);border-color:transparent; }
 .svc-card:hover .svc-glow { opacity:.06; }
-.svc-top { display:flex;align-items:center;justify-content:space-between;margin-bottom:20px; }
-.svc-num { font-size:.65rem;font-weight:700;letter-spacing:.18em;color:var(--accent, var(--red)); }
+.svc-top { display:flex;align-items:center;justify-content:flex-end;margin-bottom:20px; }
 .svc-arrow {
   width:32px;height:32px;border-radius:50%;
   display:flex;align-items:center;justify-content:center;
@@ -764,7 +761,7 @@ const cases = (allCases as any[])
 }
 .case-row:hover { background:var(--cream); }
 .case-row-inner {
-  display:grid;grid-template-columns:72px 1fr 1fr auto;
+  display:grid;grid-template-columns:1fr 1fr auto;
   align-items:center;gap:32px;
   padding:36px 0;
 }
@@ -774,11 +771,6 @@ const cases = (allCases as any[])
   transition:width .5s cubic-bezier(.22,1,.36,1);
 }
 .case-row:hover .case-line { width:100%; }
-.case-idx {
-  font-size:2.2rem;font-weight:900;letter-spacing:-.04em;
-  color:rgba(200,16,46,.1);line-height:1;
-}
-.case-row:hover .case-idx { color:var(--accent,var(--red)); transition:color .2s; }
 .case-sector { font-size:.6rem;display:block;margin-bottom:8px;margin-left:-.8rem; }
 .case-client { font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.2; }
 .case-result { font-size:.88rem;color:var(--ink-3);font-weight:300;line-height:1.65; }
@@ -1018,17 +1010,16 @@ const cases = (allCases as any[])
   .cases-grid { grid-template-columns:1fr; }
   /* Cases list mobile */
   .case-row-inner {
-    grid-template-columns: 44px 1fr;
-    grid-template-rows: auto auto auto auto;
-    gap: 4px 12px;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto;
+    gap: 4px;
     padding: 20px 0;
   }
-  .case-idx { grid-column:1; grid-row:1/5; font-size:1.6rem; align-self:start; }
-  .case-info { grid-column:2; grid-row:1; }
+  .case-info { grid-column:1; grid-row:1; }
   .case-sector { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; margin-left:-.8rem; }
   .case-client { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:100%; }
-  .case-result { grid-column:2; grid-row:2; margin-top:2px; }
-  .case-cta { grid-column:2; grid-row:3; padding-top:6px; }
+  .case-result { grid-column:1; grid-row:2; margin-top:2px; }
+  .case-cta { grid-column:1; grid-row:3; padding-top:6px; }
   .mt-cards-row {
     display:flex;flex-direction:row;
     overflow-x:auto;scroll-snap-type:x mandatory;

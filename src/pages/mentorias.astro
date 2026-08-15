@@ -135,7 +135,6 @@ const seo = mentoriasContent?.seo ?? {};
     <div class="levels-grid stagger-children" style="margin-top:56px">
       {bolderLevels.map(l => (
         <div class="level-card level-red">
-          <span class="level-num">{l.n}</span>
           <h3 class="level-title">{l.title}</h3>
           <p class="level-desc">{l.desc}</p>
         </div>
@@ -183,7 +182,6 @@ const seo = mentoriasContent?.seo ?? {};
     <div class="levels-grid levels-4 stagger-children" style="margin-top:56px">
       {bolderPressLevels.map(l => (
         <div class="level-card level-teal">
-          <span class="level-num">{l.n}</span>
           <h3 class="level-title">{l.title}</h3>
           <p class="level-desc">{l.desc}</p>
         </div>
@@ -356,9 +354,6 @@ const seo = mentoriasContent?.seo ?? {};
 .level-teal { border-color:rgba(27,138,118,.18); box-shadow:0 -4px 24px rgba(27,138,118,.1), 0 4px 20px rgba(0,0,0,.04); }
 .bolder-section .level-card { background:var(--cream); }
 .press-section .level-card { background:#fff; }
-.level-num { font-size:.65rem; font-weight:700; letter-spacing:.18em; display:block; margin-bottom:16px; }
-.level-red .level-num { color:var(--red); }
-.level-teal .level-num { color:var(--teal); }
 .level-title { font-size:1rem; font-weight:700; color:var(--ink); margin-bottom:10px; }
 .level-desc { font-size:.84rem; color:var(--ink-3); line-height:1.75; font-weight:300; }
 
