@@ -88,7 +88,7 @@ export async function getStaticPaths({ paginate }) {
 }
 
 const { page } = Astro.props;
-const BASE = 'https://mclair.vercel.app';
+const BASE = Astro.site ? Astro.site.origin : 'https://olive-gnat-658393.hostingersite.com';
 
 // ── Blog index JSON-LD ────────────────────────────────────────
 const blogSchema = {
@@ -141,7 +141,7 @@ function formatDate(d: string) {
 <Layout
   title={`Blog${page.currentPage > 1 ? ` | Página ${page.currentPage}` : ''} | Mclair`}
   description="Artigos, insights e conteúdos sobre marketing, comunicação e branding da equipe Mclair."
-  ogImage="https://mclair.vercel.app/paginas/sobre-estrategia-comunicacao-mclair.jpg"
+  ogImage="https://olive-gnat-658393.hostingersite.com/paginas/sobre-estrategia-comunicacao-mclair.jpg"
   prevUrl={page.url.prev || undefined}
   nextUrl={page.url.next || undefined}
   schema={blogSchema}

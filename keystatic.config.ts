@@ -23,7 +23,7 @@ export default config({
       label: 'Homepage',
       path: 'src/content/singletons/homepage',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/',
       schema: {
         content: fields.object({
           heroVideoId: fields.text({
@@ -56,7 +56,7 @@ export default config({
       label: 'Sobre',
       path: 'src/content/singletons/sobre',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/sobre',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/sobre',
       schema: {
         content: fields.object({
           valores: fields.array(
@@ -84,7 +84,7 @@ export default config({
       label: 'Clientes',
       path: 'src/content/singletons/clientes',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/clientes',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/clientes',
       schema: {
         content: fields.object({
           clients: fields.array(
@@ -109,7 +109,7 @@ export default config({
       label: 'Contato',
       path: 'src/content/singletons/contato',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/contato',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/contato',
       schema: {
         content: fields.object({
           contactInfo: fields.object({
@@ -131,7 +131,7 @@ export default config({
       label: 'Mentorias',
       path: 'src/content/singletons/mentorias',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/mentorias',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/mentorias',
       schema: {
         content: fields.object({
           bolderLevels: fields.array(
@@ -162,7 +162,7 @@ export default config({
       path: 'src/content/blog/*',
       format: { contentField: 'content', data: 'yaml' },
       entryLayout: 'content',
-      previewUrl: 'https://mclair.vercel.app/blog/{slug}',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/blog/{slug}',
       schema: {
         title: fields.slug({
           name: {
@@ -278,7 +278,7 @@ export default config({
       slugField: 'title',
       path: 'src/content/servicos/*',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/servicos/{slug}',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/servicos/{slug}',
       schema: {
         title: fields.slug({ name: { label: 'Título do Serviço' } }),
         num: fields.text({ label: 'Número (01, 02...)' }),
@@ -317,7 +317,7 @@ export default config({
       slugField: 'client',
       path: 'src/content/cases/*',
       format: { data: 'json' },
-      previewUrl: 'https://mclair.vercel.app/cases/{slug}',
+      previewUrl: 'https://olive-gnat-658393.hostingersite.com/cases/{slug}',
       schema: {
         client: fields.slug({ name: { label: 'Nome do cliente' } }),
         num: fields.text({ label: 'Número (01, 02...)' }),

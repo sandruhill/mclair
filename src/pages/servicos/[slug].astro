@@ -40,16 +40,16 @@ const { s, others } = Astro.props;
   title={`${s.title} | Mclair: Agência de Comunicação Estratégica`}
   description={s.description}
   keywords={`${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`}
-  ogImage="https://mclair.vercel.app/paginas/servicos-marketing-autoridade-mclair.jpg"
+  ogImage="https://olive-gnat-658393.hostingersite.com/paginas/servicos-marketing-autoridade-mclair.jpg"
   schema={[
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      '@id': `https://mclair.vercel.app/servicos/${s.slug}#service`,
+      '@id': `https://olive-gnat-658393.hostingersite.com/servicos/${s.slug}#service`,
       name: s.title,
       description: s.description || s.intro || s.headline,
-      provider: { '@id': 'https://mclair.vercel.app/#organization' },
-      url: `https://mclair.vercel.app/servicos/${s.slug}`,
+      provider: { '@id': 'https://olive-gnat-658393.hostingersite.com/#organization' },
+      url: `https://olive-gnat-658393.hostingersite.com/servicos/${s.slug}`,
       areaServed: { '@type': 'Country', name: 'Brasil' },
       inLanguage: 'pt-BR',
       ...(s.items?.length ? {
@@ -67,9 +67,9 @@ const { s, others } = Astro.props;
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.vercel.app' },
-        { '@type': 'ListItem', position: 2, name: 'Serviços', item: 'https://mclair.vercel.app/servicos' },
-        { '@type': 'ListItem', position: 3, name: s.title, item: `https://mclair.vercel.app/servicos/${s.slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://olive-gnat-658393.hostingersite.com' },
+        { '@type': 'ListItem', position: 2, name: 'Serviços', item: 'https://olive-gnat-658393.hostingersite.com/servicos' },
+        { '@type': 'ListItem', position: 3, name: s.title, item: `https://olive-gnat-658393.hostingersite.com/servicos/${s.slug}` },
       ],
     },
   ]}

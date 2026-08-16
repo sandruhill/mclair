@@ -19,7 +19,7 @@ interface Props {
   schema?: object | object[];
 }
 
-const BASE = 'https://mclair.vercel.app';
+const BASE = Astro.site ? Astro.site.origin : 'https://olive-gnat-658393.hostingersite.com';
 const {
   title,
   description = 'Mclair: Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito desde 2017.',

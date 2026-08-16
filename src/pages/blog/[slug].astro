@@ -55,7 +55,7 @@ export async function getStaticPaths() {
 }
 
 const { post, source } = Astro.props;
-const BASE = 'https://mclair.vercel.app';
+const BASE = Astro.site ? Astro.site.origin : 'https://olive-gnat-658393.hostingersite.com';
 const canonicalURL = `${BASE}/blog/${post.slug}`;
 
 function formatDate(d: string) {
