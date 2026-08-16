@@ -8,6 +8,7 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  ogImageAlt?: string;
   ogType?: string;
   articleAuthor?: string;
   articlePublishedTime?: string;
@@ -24,6 +25,7 @@ const {
   title,
   description = 'Mclair: Agência de Marketing especialista em Comunicação Estratégica e Marketing de Autoridade. Construa uma marca forte e com propósito desde 2017.',
   ogImage = `${BASE}/android-chrome-512x512.png`,
+  ogImageAlt = title,
   ogType = 'website',
   articleAuthor,
   articlePublishedTime,
@@ -39,7 +41,7 @@ const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
 
 const orgSchema = {
   '@context': 'https://schema.org',
-  '@type': 'MarketingAgency',
+  '@type': ['AdvertisingAgency', 'ProfessionalService'],
   '@id': `${BASE}/#organization`,
   name: 'Mclair Comunicação Estratégica',
   alternateName: ['Mclair', 'Mclair Agência', 'Mclair Marketing'],
@@ -64,6 +66,11 @@ const orgSchema = {
     addressLocality: 'São Paulo',
     addressRegion: 'SP',
     addressCountry: 'BR',
+  },
+  geo: {
+    '@type': 'GeoCoordinates',
+    latitude: -23.5505,
+    longitude: -46.6333,
   },
   contactPoint: [
     {
@@ -160,6 +167,7 @@ const websiteSchema = {
     <meta property="og:image"         content={ogImage} />
     <meta property="og:image:width"   content="1200" />
     <meta property="og:image:height"  content="630" />
+    <meta property="og:image:alt"     content={ogImageAlt} />
     <meta property="og:locale"        content="pt_BR" />
     <meta property="og:site_name"     content="Mclair: Agência de Marketing" />
     {ogType === 'article' && articlePublishedTime && (
@@ -180,6 +188,7 @@ const websiteSchema = {
     <meta name="twitter:title"        content={title} />
     <meta name="twitter:description"  content={description} />
     <meta name="twitter:image"        content={ogImage} />
+    <meta name="twitter:image:alt"    content={ogImageAlt} />
     <meta name="twitter:site"         content="@mclaircomunicacao" />
     {articleAuthor && <meta name="twitter:creator" content={`@${articleAuthor.toLowerCase().replace(/\s+/g,'')}`} />}
 
