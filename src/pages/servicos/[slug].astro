@@ -158,8 +158,7 @@ const { s, others } = Astro.props;
     <div class="os-grid stagger-children">
       {others.map(os => (
         <a href={`/servicos/${os.slug}`} class="os-card">
-          <div class="os-accent-bar" style={`background:${os.accent}`}></div>
-          <h3 class="os-title-inner">{os.title}</h3>
+          <h3 class="os-title-inner" style={`color:${os.accent}`}>{os.title}</h3>
           <p class="os-desc">{os.headline}</p>
           <span class="os-arrow">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
@@ -224,10 +223,8 @@ const { s, others } = Astro.props;
 .os-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
 .os-card { background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); padding: 28px 24px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; position: relative; overflow: hidden; transition: border-color .2s, box-shadow .2s, transform .2s; }
 .os-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-3px); }
-.os-accent-bar { width: 32px; height: 3px; border-radius: 99px; margin: 4px 0; transition: width .3s; }
-.os-card:hover .os-accent-bar { width: 52px; }
-.os-title-inner { font-size: .98rem; font-weight: 700; color: var(--ink); }
-.os-desc { font-size: .78rem; color: var(--ink-4); font-weight: 300; line-height: 1.5; }
+.os-title-inner { font-size: 1.25rem; font-weight: 700; line-height: 1.25; }
+.os-desc { font-size: .95rem; color: var(--ink-3); font-weight: 300; line-height: 1.65; margin-top: 6px; }
 .os-arrow { position: absolute; top: 20px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
 .os-card:hover .os-arrow { color: var(--red); transform: translate(2px,-2px); }
 

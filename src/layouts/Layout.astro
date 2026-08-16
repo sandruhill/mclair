@@ -1,4 +1,5 @@
 ---
+import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
@@ -209,6 +210,7 @@ const websiteSchema = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet" />
+    <ClientRouter />
   </head>
   <body>
     <!-- Custom cursor -->
@@ -225,93 +227,128 @@ const websiteSchema = {
 
     <script is:inline>
     (function() {
-      // ── Intersection Observer for [data-anim] ──
-      var animObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            animObs.unobserve(e.target);
-          }
+      // Guards against duplicate listener registration if this inline script
+      // re-executes across client-side transitions (ClientRouter re-runs
+      // non-module inline scripts on navigation) — window survives navigation,
+      // so the flag persists even though the DOM around it gets swapped.
+      if (window.__mclairLayoutBooted) return;
+      window.__mclairLayoutBooted = true;
+
+      // Runs on every page — initial load AND every client-side transition,
+      // since [data-anim]/[data-parallax]/etc. are swapped in with new content.
+      function initPageEffects() {
+        // ── Intersection Observer for [data-anim] ──
+        var animObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              animObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
+
+        document.querySelectorAll('[data-anim]').forEach(function(el) {
+          animObs.observe(el);
         });
-      }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
 
-      document.querySelectorAll('[data-anim]').forEach(function(el) {
-        animObs.observe(el);
-      });
+        // ── Stagger containers ──
+        var staggerObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              staggerObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.05 });
 
-      // ── Stagger containers ──
-      var staggerObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            staggerObs.unobserve(e.target);
-          }
+        document.querySelectorAll('.stagger-children').forEach(function(el) {
+          staggerObs.observe(el);
         });
-      }, { threshold: 0.05 });
 
-      document.querySelectorAll('.stagger-children').forEach(function(el) {
-        staggerObs.observe(el);
-      });
+        // ── Word reveal ──
+        var wordObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              wordObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.2 });
 
-      // ── Word reveal ──
-      var wordObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            wordObs.unobserve(e.target);
-          }
+        document.querySelectorAll('.word-reveal').forEach(function(el) {
+          wordObs.observe(el);
         });
-      }, { threshold: 0.2 });
 
-      document.querySelectorAll('.word-reveal').forEach(function(el) {
-        wordObs.observe(el);
-      });
+        // ── Line grow ──
+        var lineObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              e.target.classList.add('in');
+              lineObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.5 });
 
-      // ── Line grow ──
-      var lineObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('in');
-            lineObs.unobserve(e.target);
-          }
+        document.querySelectorAll('.line-grow, .line-center').forEach(function(el) {
+          lineObs.observe(el);
         });
-      }, { threshold: 0.5 });
 
-      document.querySelectorAll('.line-grow, .line-center').forEach(function(el) {
-        lineObs.observe(el);
-      });
-
-      // ── Number counters ──
-      function animateCounter(el) {
-        var target = parseInt(el.getAttribute('data-target') || '0');
-        var prefix = el.getAttribute('data-prefix') || '';
-        var suffix = el.getAttribute('data-suffix') || '';
-        var duration = 2000;
-        var start = performance.now();
-        function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
-        function tick(now) {
-          var p = Math.min((now - start) / duration, 1);
-          var val = Math.round(easeOut(p) * target);
-          el.textContent = prefix + val.toLocaleString('pt-BR') + suffix;
-          if (p < 1) requestAnimationFrame(tick);
+        // ── Number counters ──
+        function animateCounter(el) {
+          var target = parseInt(el.getAttribute('data-target') || '0');
+          var prefix = el.getAttribute('data-prefix') || '';
+          var suffix = el.getAttribute('data-suffix') || '';
+          var duration = 2000;
+          var start = performance.now();
+          function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+          function tick(now) {
+            var p = Math.min((now - start) / duration, 1);
+            var val = Math.round(easeOut(p) * target);
+            el.textContent = prefix + val.toLocaleString('pt-BR') + suffix;
+            if (p < 1) requestAnimationFrame(tick);
+          }
+          requestAnimationFrame(tick);
         }
-        requestAnimationFrame(tick);
+
+        var counterObs = new IntersectionObserver(function(entries) {
+          entries.forEach(function(e) {
+            if (e.isIntersecting) {
+              animateCounter(e.target);
+              counterObs.unobserve(e.target);
+            }
+          });
+        }, { threshold: 0.5 });
+
+        document.querySelectorAll('[data-target]').forEach(function(el) {
+          counterObs.observe(el);
+        });
+
+        // ── Custom cursor hover targets (new links/buttons on each page) ──
+        var ring = document.getElementById('cursor-ring');
+        if (ring) {
+          document.querySelectorAll('a, button, [role="button"]').forEach(function(el) {
+            el.addEventListener('mouseenter', function() { ring.classList.add('expand'); });
+            el.addEventListener('mouseleave', function() { ring.classList.remove('expand'); });
+          });
+        }
+
+        // ── Parallax on hero shapes ──
+        var parallaxEls = document.querySelectorAll('[data-parallax]');
+        if (parallaxEls.length) {
+          window.addEventListener('scroll', onParallaxScroll, { passive: true });
+          function onParallaxScroll() {
+            var sy = window.scrollY;
+            parallaxEls.forEach(function(el) {
+              var speed = parseFloat(el.getAttribute('data-parallax') || '0.15');
+              el.style.transform = 'translateY(' + (sy * speed) + 'px)';
+            });
+          }
+        }
       }
 
-      var counterObs = new IntersectionObserver(function(entries) {
-        entries.forEach(function(e) {
-          if (e.isIntersecting) {
-            animateCounter(e.target);
-            counterObs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.5 });
+      document.addEventListener('astro:page-load', initPageEffects);
 
-      document.querySelectorAll('[data-target]').forEach(function(el) {
-        counterObs.observe(el);
-      });
-
-      // ── Custom cursor ──
+      // ── Custom cursor dot/ring — set up once, the elements persist across transitions ──
       var cursor = document.getElementById('cursor');
       var dot = document.getElementById('cursor-dot');
       var ring = document.getElementById('cursor-ring');
@@ -329,23 +366,6 @@ const websiteSchema = {
           requestAnimationFrame(animRing);
         }
         animRing();
-
-        document.querySelectorAll('a, button, [role="button"]').forEach(function(el) {
-          el.addEventListener('mouseenter', function() { ring.classList.add('expand'); });
-          el.addEventListener('mouseleave', function() { ring.classList.remove('expand'); });
-        });
-      }
-
-      // ── Parallax on hero shapes ──
-      var parallaxEls = document.querySelectorAll('[data-parallax]');
-      if (parallaxEls.length) {
-        window.addEventListener('scroll', function() {
-          var sy = window.scrollY;
-          parallaxEls.forEach(function(el) {
-            var speed = parseFloat(el.getAttribute('data-parallax') || '0.15');
-            el.style.transform = 'translateY(' + (sy * speed) + 'px)';
-          });
-        }, { passive: true });
       }
     })();
     </script>
@@ -515,13 +535,20 @@ const websiteSchema = {
         document.body.style.overflow = '';
       }
 
-      // Intercept all WA links
-      document.querySelectorAll('[href*="wa.me"]').forEach(function(link) {
-        link.addEventListener('click', function(e) {
-          e.preventDefault();
-          openModal();
+      // Intercept all WA links — re-run on every page since [slot] content
+      // (including its WA links) is swapped in on each client-side transition.
+      function bindWaLinks() {
+        document.querySelectorAll('[href*="wa.me"]').forEach(function(link) {
+          if (link.dataset.waBound) return;
+          link.dataset.waBound = 'true';
+          link.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal();
+          });
         });
-      });
+      }
+      bindWaLinks();
+      document.addEventListener('astro:page-load', bindWaLinks);
 
       xBtn && xBtn.addEventListener('click', closeModal);
       modal && modal.addEventListener('click', function(e) {

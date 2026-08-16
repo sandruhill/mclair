@@ -212,11 +212,11 @@ const seo = sobreContent?.seo ?? {};
 }
 .ph-title em { font-weight:300; font-style:italic; color:rgba(255,255,255,.5); }
 .ph-sub { font-size:1rem; font-weight:300; color:rgba(255,255,255,.75); line-height:1.85; max-width:600px; }
-.ph-stats { display:flex; align-items:center; gap:36px; flex-wrap:wrap; margin-top:52px; }
-.phs-item { text-align:left; }
-.phs-item strong { display:block; font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900; color:var(--red); line-height:1; }
+.ph-stats { display:flex; align-items:center; gap:36px; flex-wrap:nowrap; margin-top:52px; }
+.phs-item { text-align:left; flex-shrink:1; min-width:0; }
+.phs-item strong { display:block; font-size:clamp(1.8rem,3.5vw,2.8rem); font-weight:900; color:var(--red); line-height:1; white-space:nowrap; }
 .phs-item span { font-size:.65rem; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.3); display:block; margin-top:6px; }
-.phs-sep { width:1px; height:48px; background:rgba(255,255,255,.08); }
+.phs-sep { width:1px; height:48px; background:rgba(255,255,255,.08); flex-shrink:0; }
 
 /* PURPOSE */
 .purpose-section { background:#fff; }
@@ -283,7 +283,9 @@ const seo = sobreContent?.seo ?? {};
 @media (max-width:1024px) { .valores-grid { grid-template-columns:1fr 1fr; } }
 @media (max-width:900px) { .purpose-grid { grid-template-columns:1fr; gap:48px; } }
 @media (max-width:640px) {
-  .ph-stats { gap:20px; }
+  .ph-stats { gap:12px; }
+  .phs-item strong { font-size:clamp(1.1rem,4.5vw,1.8rem); }
+  .phs-item span { font-size:.52rem; letter-spacing:.06em; }
   .phs-sep { height:28px; }
   .valores-grid { grid-template-columns:1fr; }
 }
