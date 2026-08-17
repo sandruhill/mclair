@@ -2,7 +2,7 @@
 title: "3 setores beneficiados pelo audiovisual em 2021"
 subtitle: "Enquanto vivemos a expectativa da retomada do trabalho presencial, crucial para alguns mercados, as mudanças estratégicas seguem como solução."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-06
 author: "Rafael Lage"
 image: "https://mclair.com.br/images/galeria/06-08-2021_6_81b26faa3c3286816c70219f579812c0.jpg"
 category: "geral"

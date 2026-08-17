@@ -2,7 +2,7 @@
 title: "Sua marca quer ser notícia?"
 subtitle: "Acertar o enfoque é determinante para o sucesso da comunicação"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-12-06
 author: "Kelly Pinheiro"
 image: "https://mclair.com.br/images/galeria/06-12-2021_6_72589e762972444790a84e0f39e943e5.png"
 category: "geral"

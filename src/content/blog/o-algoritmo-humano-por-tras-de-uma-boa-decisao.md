@@ -2,7 +2,7 @@
 title: "O algoritmo humano por trás de uma boa decisão"
 subtitle: "Um frio na espinha, tensão nos ombros, o enrijecimento dos músculos. As sensações no corpo de quem precisa tomar uma grande decisão costumam ser parecidas para todos."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_6300ada38cfdf5ea6226e8ee076adf33.jpg"
 category: "geral"

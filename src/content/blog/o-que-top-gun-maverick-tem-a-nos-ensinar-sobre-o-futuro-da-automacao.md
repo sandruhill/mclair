@@ -2,7 +2,7 @@
 title: "O que \"Top Gun - Maverick\" tem a nos ensinar sobre o futuro da automação?"
 subtitle: "Em meio a uma onda de remakes e continuações duvidosas que marcaram época no cinema, o filme Top Gun  Maverick está de volta."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_67121ee86ed3b017026eab231b4a383e.png"
 category: "geral"

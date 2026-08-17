@@ -2,7 +2,7 @@
 title: "Oportunidade de capacitação em TI: Lambda3 apresenta palestras no TDC Business"
 subtitle: "Entre 22 e 24 de agosto, acontece o The Developer\"s Conference (TDC Business), maior evento brasileiro sobre desenvolvimento de software."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_b2e32f3de507785dc293b7a5c8521d1a.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Guiando está entre as melhores empresas para trabalhar em MG, segundo GPTW"
 subtitle: "Para CEO Rodrigo Schittini, conquista é resultado de quase dois anos de reestruturação, com foco em comunicação e people first; empresa aparece pela primeira vez no ranking"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_edeba2bc869cdc3c3cde83133c5ac016.png"
 category: "geral"

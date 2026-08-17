@@ -2,7 +2,7 @@
 title: "Lensa: quanto vale a imagem do usuário?"
 subtitle: "Especialistas apontam que aplicativo queridinho do momento pode custar muito mais que os R$10,90 cobrados por imagens"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-25
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/25-04-2023_6_75858ad9f7f25da34868298cda116b57.png"
 category: "geral"

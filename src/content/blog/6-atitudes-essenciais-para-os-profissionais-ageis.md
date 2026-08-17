@@ -2,7 +2,7 @@
 title: "6 atitudes essenciais para os profissionais ágeis"
 subtitle: "Enquanto diversos setores discutem a retomada da economia e as formas de voltarem a prosperar em seus negócios, é importante avaliar alguns pontos que nos trouxeram até a era acelerada da transformação digital."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Alexandre Magno"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_75f0fdf9b69e190704088b8249b16b48.jpg"
 category: "geral"

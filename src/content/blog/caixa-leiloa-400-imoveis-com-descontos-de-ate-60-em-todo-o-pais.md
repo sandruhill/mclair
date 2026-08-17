@@ -2,7 +2,7 @@
 title: "Caixa leiloa 400 imóveis com descontos de até 60% em todo o país"
 subtitle: "Em parceria com a Fidalgo Leilões, banco líder do mercado imobiliário realiza negociações com lance inicial a partir de R$ 27,9 mil"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/19-07-2022_6_604de84cbb3e81586d73cc77f2da94f1.jpeg"
 category: "geral"

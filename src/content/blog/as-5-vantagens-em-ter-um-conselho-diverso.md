@@ -2,7 +2,7 @@
 title: "As 5 vantagens em ter um Conselho diverso"
 subtitle: "B3 e Nasdaq instituíram regras para aumento da diversidade nas empresas listadas na Bolsa de Valores; pauta não é mais opcional"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_3363d73c31e212a8262b8b62c58dc67e.jpg"
 category: "geral"

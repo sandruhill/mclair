@@ -2,7 +2,7 @@
 title: "Transformação digital impulsiona busca por metodologias ágeis"
 subtitle: "Especialistas explicam vantagens, processos, pontos de atenção e de que forma aplicar princípios ágeis nas empresas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_a592dbb6d1a9e20c50083c432cd462e8.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "RH e o futuro do trabalho: quais as tendências para os próximos 10 anos?"
 subtitle: "Peter Drucker disse certa vez que a melhor maneira de prever o futuro é criá-lo."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-23
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/23-06-2023_6_12c73057278a003baec8b65912d3f212.png"
 category: "geral"

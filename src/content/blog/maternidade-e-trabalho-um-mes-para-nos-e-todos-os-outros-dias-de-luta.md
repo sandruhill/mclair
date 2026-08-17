@@ -2,7 +2,7 @@
 title: "Maternidade e trabalho: um mês para nós e todos os outros dias de luta"
 subtitle: "Estamos no mês das mães. Mais especificamente em uma semana na qual flores serão distribuídas e as redes sociais inundadas por mensagens corporativas de felicitação. Um clichê para época e para a maternidade."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Bruna Coelho"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_f1220e872192d0fec7e396ac24a24bf9.jpg"
 category: "geral"

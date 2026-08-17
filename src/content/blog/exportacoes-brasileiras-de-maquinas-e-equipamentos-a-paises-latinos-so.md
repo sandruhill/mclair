@@ -2,7 +2,7 @@
 title: "Exportações brasileiras de máquinas e equipamentos a países latinos somam US$747,5 milhões no 1º semestre"
 subtitle: "México, Colômbia e Paraguai são os principais destinos, com importações de maquinários rodoviários, agrícolas, alimentícios, entre outros; volume de exportações para o mercado colombiano cresceu 61,8%"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_f3ba28fe21ae2ea2b2b179b2257ace6a.jpg"
 category: "geral"

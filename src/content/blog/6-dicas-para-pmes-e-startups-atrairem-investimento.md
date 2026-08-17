@@ -2,7 +2,7 @@
 title: "6 dicas para PMEs e startups atraírem investimento"
 subtitle: "Planejamento e pitch deck estão entre os destaques de Leonardo Brasil, sócio fundador da StartupHero"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_1cd4b9bfc8b5d690bc33ccad1a285709.jpg"
 category: "geral"

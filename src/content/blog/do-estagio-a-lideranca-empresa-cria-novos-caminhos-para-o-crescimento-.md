@@ -2,7 +2,7 @@
 title: "Do estágio à liderança: empresa cria novos caminhos para o crescimento de profissionais"
 subtitle: "Colaboradores ganham Kindle e acesso a cursos custeados pela empresa"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_df28f0cf3351c4cde2e533fad48730d4.jpg"
 category: "geral"

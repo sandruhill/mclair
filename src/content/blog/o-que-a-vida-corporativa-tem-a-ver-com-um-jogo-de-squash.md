@@ -2,7 +2,7 @@
 title: "O que a vida corporativa tem a ver com um jogo de squash?"
 subtitle: "Na quadra de squash, a missão do jogador é uma só: fazer uma bolinha de borracha bater na parede e cair em algum lugar da quadra fora do alcance do adversário."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_12ba2eec9d935660c1d3c7b9c867cd02.jpg"
 category: "geral"

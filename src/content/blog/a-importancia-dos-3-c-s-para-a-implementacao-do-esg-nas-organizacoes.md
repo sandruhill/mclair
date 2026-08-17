@@ -2,7 +2,7 @@
 title: "A importância dos 3 C\"s para a implementação do ESG nas organizações"
 subtitle: "O ESG segue como uma das prioridades estratégicas para as organizações."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_b6f543f61402c59288edc9f3801d3dbf.png"
 category: "geral"

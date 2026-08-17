@@ -2,7 +2,7 @@
 title: "A experiência, o Marketing Digital e os festivais de música"
 subtitle: "O Marketing Digital bem feito pode garantir visibilidade e atrair público para qualquer evento, principalmente em festivais de música."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_02a0c692290cb0826d0d4f8942c5021c.jpg"
 category: "geral"

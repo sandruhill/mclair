@@ -2,7 +2,7 @@
 title: "7 tendências de video content para 2021"
 subtitle: "Em 2020, os vídeos tornaram-se uma escapatória do isolamento social, seja para fins de entretenimento, educação ou trabalho. Essa mudança brusca de comportamento do consumidor forçou as marcas a reinventarem suas estratégias"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_fdebebec075a314cf2aefa9b29889f4c.png"
 category: "geral"

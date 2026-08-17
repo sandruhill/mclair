@@ -2,7 +2,7 @@
 title: "Diversidade Etária: Por que a geração 40+ é essencial para o mercado de trabalho"
 subtitle: "Diversidade Etária: Por que a geração 40+ é essencial para o mercado de trabalho"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "Patrícia Kost"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_ba57fc75d8828fedc640102055db96b4.jpg"
 category: "geral"

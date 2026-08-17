@@ -2,7 +2,7 @@
 title: "Liderando no novo mundo: quais os desafios das empresas no pós-Covid-19?"
 subtitle: "Olhe para o calendário. Como o tempo voou! Já estamos às vésperas do último trimestre do ano e, no Brasil, há seis meses experimentamos a vida em isolamento"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_84b0c3318ce5b8adb411fb64e2ca24e8.jpg"
 category: "geral"

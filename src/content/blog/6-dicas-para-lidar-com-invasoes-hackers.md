@@ -2,7 +2,7 @@
 title: "6 dicas para lidar com invasões hackers"
 subtitle: "Enquanto a tecnologia avança com ferramentas e recursos modernos, os crimes cibernéticos crescem em uma proporção sem precedentes."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/19-07-2022_6_37682d69e51c35c62a1eb5c056d3741b.jpg"
 category: "geral"

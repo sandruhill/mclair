@@ -2,7 +2,7 @@
 title: "Como as fraudes online afetam o mercado brasileiro"
 subtitle: "O famoso jeitinho brasileiro - resultado da resiliência e criatividade de uma sociedade que utiliza do improviso para superar as adversidades - é cultural."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Giovanni Bassi"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_b3cab9939943a1d1e0dff884be54165b.jpg"
 category: "geral"

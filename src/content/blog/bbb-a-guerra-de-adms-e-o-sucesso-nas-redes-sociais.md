@@ -2,7 +2,7 @@
 title: "BBB: a guerra de ADMs e o sucesso nas redes sociais"
 subtitle: "O BBB 23 acabou! E, além da vitória da sister Amanda Meirelles, que embolsou o prêmio de R$2,88 milhões, a exposição no reality show trouxe outros números que podem fazer a diferença para o futuro financeiro e dos negócios para as participantes finalistas."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-23
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/23-06-2023_6_06c5a39d35bae38087a8bfe71de8a427.jpg"
 category: "geral"

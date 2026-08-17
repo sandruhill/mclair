@@ -2,7 +2,7 @@
 title: "Desapegue do retrovisor: Conselho Administrativo também precisa discutir futuro e inovação"
 subtitle: "Consulte a pauta de reunião de Conselho de uma empresa de capital aberto. Não importa qual o setor, nem quem são os conselheiros:"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_50550289dfebc564d6b207a47a4b491f.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "5 passos para tornar as práticas de ESG uma realidade em sua empresa"
 subtitle: "Nos portais de notícias, redes sociais, webinários e nas pautas de grandes empresas preocupadas com seus valores e reputação, a sigla ESG, que significa Environmental, Social and Corporate Governance"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_1663d2a03aaf415d2ac9f6a776c96d8f.jpg"
 category: "geral"

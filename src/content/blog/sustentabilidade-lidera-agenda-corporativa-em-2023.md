@@ -2,7 +2,7 @@
 title: "Sustentabilidade lidera agenda corporativa em 2023"
 subtitle: "A aproximação de 2023 tem servido de combustível para que diversos setores do mercado se movimentem com planejamentos, metas e organização."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-25
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/25-04-2023_6_cb00927bcb17a42de8c5316f3f283c33.png"
 category: "geral"

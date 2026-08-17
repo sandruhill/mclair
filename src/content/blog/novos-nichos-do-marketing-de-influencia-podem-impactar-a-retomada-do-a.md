@@ -2,7 +2,7 @@
 title: "Novos nichos do marketing de influência podem impactar a retomada do audiovisual"
 subtitle: "De olho em um mercado que estima crescimento de 71% em 2021, profissionais do audiovisual enxergam parcerias com influencers como fator estratégico para ganharem fôlego financeiro"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Trilha 91"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_1f85ce310b9c2aa135fb56302df756f0.jpg"
 category: "geral"

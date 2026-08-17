@@ -2,7 +2,7 @@
 title: "Largar tudo nem sempre é solução para os cansados do mundo corporativo"
 subtitle: "A história é muito parecida e eu a vi se repetir dezenas de vezes. Homens e mulheres com carreiras em grandes companhias, desistindo de tudo para se tornarem empreendedores de suas startups"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-15
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/15-03-2021_6_882b5a92642757785a4da0dc3f165698.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Abrolhos Filmes lança vídeo manifesto para reforçar posicionamento"
 subtitle: "Filme institucional apresenta pilares da produtora, que une arte, narrativas e inovação tecnológica"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_8390f1f37d2c18ca0af7b8afc6dc8b6e.jpg"
 category: "geral"

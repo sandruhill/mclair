@@ -2,7 +2,7 @@
 title: "Agrishow 2022: Projeto Imagem promove a indústria brasileira de máquinas e equipamentos ao mercado internacional"
 subtitle: "Agrishow 2022: Projeto Imagem promove a indústria brasileira de máquinas e equipamentos ao mercado internacional"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_125b8589853e12498a40d53e3d749923.jpeg"
 category: "geral"

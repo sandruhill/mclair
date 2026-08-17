@@ -2,7 +2,7 @@
 title: "3 soluções para a transformação digital da construção civil"
 subtitle: "Do projeto até entrega do empreendimento, a tecnologia já é uma realidade nas construtoras"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_1581fef6360d182ed27592c7f3753a2e.jpg"
 category: "geral"

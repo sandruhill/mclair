@@ -2,7 +2,7 @@
 title: "Tecnologia brasileira para o setor de mineração e energia é destaque na Exponor"
 subtitle: "Empresas apresentam inovações na feira, que acontece entre 13 e 16 de junho no Chile, com apoio de projeto setorial; País movimentou US$19,9 milhões em importações de maquinários brasileiros para mineração em 2021"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-21
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/21-07-2022_6_7788b76e947550b6ca24bfc528d71d6c.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Itaú Unibanco incorpora startup Emergee, especializada em métodos para agilidade nos negócios"
 subtitle: "Com aquisição, banco intensifica e acelera frente de trabalho voltada à transformação digital de processos, com time dedicado dentro da área de Pessoas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Emergee"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_c8bbe17d1e936946442a323c62688810.jpg"
 category: "geral"

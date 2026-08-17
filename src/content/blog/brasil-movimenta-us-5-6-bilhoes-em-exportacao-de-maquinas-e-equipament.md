@@ -2,7 +2,7 @@
 title: "Brasil movimenta US$5,6 bilhões em exportação de máquinas e equipamentos no primeiro semestre de 2022"
 subtitle: "Um crescimento de 29% em relação ao mesmo período de 2021; somente em negociações para os Estados Unidos, o fluxo comercial nos seis primeiros meses do ano foi de US$1,4 bilhão."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_652a60ddf066f1e12aaef63fd7acf834.jpg"
 category: "geral"

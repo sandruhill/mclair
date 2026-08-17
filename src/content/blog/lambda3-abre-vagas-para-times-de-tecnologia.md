@@ -2,7 +2,7 @@
 title: "Lambda3 abre vagas para times de tecnologia"
 subtitle: "Empresa visa a contratação de profissionais de BI, Ciência e Engenharia de Dados, além de ampliar a equipe de Pessoas Desenvolvedoras"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_eaa137e1979d13e1836bf6f220533337.jpg"
 category: "geral"

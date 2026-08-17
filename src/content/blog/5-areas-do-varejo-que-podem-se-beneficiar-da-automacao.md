@@ -2,7 +2,7 @@
 title: "5 áreas do varejo que podem se beneficiar da automação"
 subtitle: "Com pandemia, lojas virtuais crescem 75%; especialista indica quais áreas do setor precisam passar por processo de digitalização"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_4983545f22f34f97d9e41dbf9420ad4a.jpg"
 category: "geral"

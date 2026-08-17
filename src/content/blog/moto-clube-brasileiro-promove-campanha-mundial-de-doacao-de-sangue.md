@@ -2,7 +2,7 @@
 title: "Moto clube brasileiro promove campanha mundial de doação de sangue"
 subtitle: "Com estimativa de ultrapassar 10 mil litros de sangue doados, Insanos MC promove campanha solidária dia 25 de junho; ação deve beneficiar 180 hemocentros em todo Brasil"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-21
 author: "Insanos MC"
 image: "https://mclair.com.br/images/galeria/21-07-2022_6_25ec3b0107a9fd68446c97a1fa925c75.jpg"
 category: "geral"

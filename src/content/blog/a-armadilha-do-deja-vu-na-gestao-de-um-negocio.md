@@ -2,7 +2,7 @@
 title: "A armadilha do déjà vu na gestão de um negócio"
 subtitle: "Sabemos que experiência é importante para a administração de uma empresa. A \"bagagem\" (vivências e conhecimento tácito) que acumulamos ao longo da carreira"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_63a3652026af97afc121c190fdca9c97.jpg"
 category: "geral"

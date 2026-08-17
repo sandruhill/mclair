@@ -2,7 +2,7 @@
 title: "5 passos para ter sucesso na venda de uma PME"
 subtitle: "Valuation é fator primordial na negociação de empresas, que também exige transparência na documentação e estratégia na busca de compradores"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_306a2362175b545a19df47cb19af3c64.jpg"
 category: "geral"

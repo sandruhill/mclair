@@ -2,7 +2,7 @@
 title: "Os melhores talentos estão cansados do mundo corporativo"
 subtitle: "Das muitas lives que marcaram meu ano de 2020, uma me tocou de forma especial e me fez refletir sobre a liderança que precisamos construir em 2021 no mundo corporativo"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-15
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/15-03-2021_6_8ec410899ff5672ca30c12d9ac0b0f3e.png"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Empresas brasileiras movimentam US$4,7 milhões durante a Argenplás"
 subtitle: "Em edição marcada por inovações com foco em meio ambiente e economia circular no evento, companhias brasileiras estimam faturar US$8,7 milhões em negócios nos próximos 12 meses"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-21
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/21-07-2022_6_bf87f445036f6ace02a7fe48e9e0260c.jpg"
 category: "geral"

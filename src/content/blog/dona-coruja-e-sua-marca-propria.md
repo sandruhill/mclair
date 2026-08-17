@@ -2,7 +2,7 @@
 title: "Dona Coruja e sua marca própria"
 subtitle: "Você já ouviu falar na historinha da coruja e seus filhotes?"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Rafael Nanis"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_a899c28ad79da6d8562a75da437fe190.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "5 dicas para criar um conselho para sua startup"
 subtitle: "O impacto econômico das startups no Brasil é expressivo."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_bddff4529a8cb4f9280a19e5bf5d6166.png"
 category: "geral"

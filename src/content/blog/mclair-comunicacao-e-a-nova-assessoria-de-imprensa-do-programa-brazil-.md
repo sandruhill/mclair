@@ -2,7 +2,7 @@
 title: "Mclair Comunicação é a nova assessoria de imprensa do Programa Brazil Machinery Solutions"
 subtitle: "A agência Mclair Comunicação é a nova assessoria de imprensa do Programa Brazil Machinery Solutions (BMS), criado em parceria entre a Associação Brasileira da Indústria de Máquinas e Equipamentos"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_545d2ebbd950cdc727d5e0eac2ebef6e.jpeg"
 category: "geral"

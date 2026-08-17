@@ -2,7 +2,7 @@
 title: "ZBRA anuncia mudanças na diretoria e plano de expansão"
 subtitle: "Com foco na ampliação dos negócios, especialmente nos EUA, e triplicação do faturamento nos próximos três anos, companhia terá Alexandre Cunha como CEO, enquanto Gustavo Ayres e Milton Terra serão, respectivamente, os novos CIO e COO"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_2cbacda4d8dab9e043fcdff0fd69bd0c.jpg"
 category: "geral"

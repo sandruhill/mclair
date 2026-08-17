@@ -2,7 +2,7 @@
 title: "A era da automação e os impactos para os negócios e consumidores"
 subtitle: "O último ano tem sido de mudanças de hábitos dos consumidores e suas demandas. De uma hora para outra, passamos a fazer tudo em casa e online: estudo, trabalho, alimentação"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_1233eca1c54c2c29a95ef84406f2d171.jpg"
 category: "geral"

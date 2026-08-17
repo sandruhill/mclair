@@ -2,7 +2,7 @@
 title: "O que as empresas de TI devem fazer para superar o déficit de profissionais"
 subtitle: "Cultura organizacional e inclusão são essenciais para reduzir o déficit de profissionais do mercado de TI"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_6005ff88222390333a46b211a47b343b.jpg"
 category: "geral"

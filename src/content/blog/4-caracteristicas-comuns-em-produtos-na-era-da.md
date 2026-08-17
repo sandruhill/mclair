@@ -2,7 +2,7 @@
 title: "4 características comuns em produtos na era da"
 subtitle: "A transformação digital tem modificado a forma como as empresas operam e, principalmente, os produtos oferecidos ao mercado. Apoiadas no crescimento exponencial das capacidades de processamento"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Elemar Júnior"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_8da362c61624ed6c6dfa9e4b75bd897f.jpg"
 category: "geral"

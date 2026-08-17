@@ -2,7 +2,7 @@
 title: "4 erros comuns ao implementar produtos digitais"
 subtitle: "Acompanhar a velocidade das transformações digitais e de outras mudanças são os principais desafios atuais para 89% das companhias brasileiras; especialistas debatem pontos relevantes e principais falhas de lideranças ao tentar implementar produtos digitais nas organizações"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-25
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/25-04-2023_6_91db601a92dd10a9e06cf7a9cfefd5c5.jpg"
 category: "geral"

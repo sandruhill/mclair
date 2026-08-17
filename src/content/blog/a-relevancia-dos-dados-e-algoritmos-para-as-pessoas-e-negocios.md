@@ -2,7 +2,7 @@
 title: "A relevância dos dados e algoritmos para as pessoas e negócios"
 subtitle: "Com boa parte das pessoas em casa há um ano, os hábitos de consumo têm passado por transformações, quase sempre associadas à tecnologia."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-15
 author: "Ahirton Lopes"
 image: "https://mclair.com.br/images/galeria/15-03-2021_6_52edb9d95a73af2709c66be64d80feda.jpg"
 category: "geral"

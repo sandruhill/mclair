@@ -2,7 +2,7 @@
 title: "Comunicação não tem receita infalível"
 subtitle: "Você já tentou reproduzir uma receita da internet ou do velho caderninho da sua avó?"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-11
 author: "Kelly Pinheiro"
 image: "https://mclair.com.br/images/galeria/11-08-2021_6_86c09116009676b6dc4e2959644e754f.jpeg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Como entender melhor e liderar a Geração Z?"
 subtitle: "O futuro do mercado de trabalho está mais ligado ao presente do que as organizações imaginam."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_9e4506a7ce11b16a9d4247009189cc22.jpg"
 category: "geral"

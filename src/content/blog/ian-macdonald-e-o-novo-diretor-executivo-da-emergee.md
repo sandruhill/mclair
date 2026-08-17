@@ -2,7 +2,7 @@
 title: "Ian Macdonald é o novo diretor-executivo da Emergee"
 subtitle: "Ian Macdonald, executivo com passagem por empresas como Cognitive Edge, Chie e o Metrô de SP, acaba de se integrar à equipe da Emergee."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Emergee"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_bbd598fd41260010174f31a4c9dea73e.png"
 category: "geral"

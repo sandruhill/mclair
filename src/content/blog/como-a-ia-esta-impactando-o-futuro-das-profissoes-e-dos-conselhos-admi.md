@@ -2,7 +2,7 @@
 title: "Como a IA está impactando o futuro das profissões e dos conselhos administrativos"
 subtitle: "Estamos no momento em que a transformação é potencializada pela Inteligência Artificial (IA), com ferramentas como o ChatGPT na vanguarda desta renovação."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_348fa8e3e64b530d1ef7c09846ab815b.png"
 category: "geral"

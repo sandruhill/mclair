@@ -2,7 +2,7 @@
 title: "Insatisfeita, Geração Z não quer trabalhar mais do mesmo jeito"
 subtitle: "Adolescentes e jovens adultos nascidos entre 1997 e 2012 estão menos satisfeitos em seus empregos, em comparação com outras gerações."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_84900243ab80053a687365c5c1f003f7.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Entre Perfis e Curtidas, por que alguém seria fiel à sua marca?"
 subtitle: "A velha e boa discussão quantidade versus qualidade parece nunca sair de moda e o avanço das mídias sociais só fez crescer o debate."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-09-09
 author: "Kelly Pinheiro"
 image: "https://mclair.com.br/images/galeria/09-09-2021_6_dc303c2e93d96cd83410fb24c230a102.png"
 category: "geral"

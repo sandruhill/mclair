@@ -2,7 +2,7 @@
 title: "Cinema é o elixir do novo marketing?"
 subtitle: "Se há algumas décadas jingles e textos de propaganda de TV prendiam facilmente a atenção do público e tornavam-se memoráveis, hoje é comum pagar para não ver ads na internet. Em tempos de Youtube e Netflix, serviços que transformaram a relação das pessoas com o audiovisual, é cada vez mais latente a intersecção entre publicidade e entretenimento. A pandemia de 2020 aprofundou ainda mais essa mudança, com a urgência de pautas sociais e a menor disponibilidade de recursos para construir produções que pecam pelo excesso."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_b43782f4aae20c9b3a1629b8b89a07c1.jpg"
 category: "geral"

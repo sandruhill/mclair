@@ -2,7 +2,7 @@
 title: "5 tecnologias  que se consolidaram na pandemia"
 subtitle: "Entre as ferramentas tecnológicas listadas por especialista em Transformação Digital estão o chatbot e surpresas com o PIX, que se popularizaram entre consumidores e empresas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_edc091f076a363db7a72c0e953096121.jpg"
 category: "geral"

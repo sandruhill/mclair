@@ -2,7 +2,7 @@
 title: "54% das empresas que passam por transformação digital pretendem aderir ao Outsourcing no futuro"
 subtitle: "A Emergee, empresa referência em Business Agility recém adquirida pelo Itaú Unibanco, elaborou uma pesquisa para entender a experiência das empresas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "Emergee"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_e75ee068a5e6aad544c3bbc7228240ae.jpg"
 category: "geral"

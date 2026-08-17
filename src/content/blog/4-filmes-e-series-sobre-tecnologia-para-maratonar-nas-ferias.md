@@ -2,7 +2,7 @@
 title: "4 filmes e séries sobre tecnologia para maratonar nas férias"
 subtitle: "Maratonar filmes e séries tornou-se um hábito dos brasileiros."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_f3e14f6010bdadd064637223fe117eba.jpg"
 category: "geral"

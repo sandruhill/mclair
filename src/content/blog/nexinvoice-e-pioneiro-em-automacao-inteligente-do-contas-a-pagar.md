@@ -2,7 +2,7 @@
 title: "nexinvoice® é pioneiro em automação inteligente do Contas a Pagar"
 subtitle: "Solução é lançada para eliminar cortes de serviços e promover transformação digital da jornada de pagamento de faturas; IBM, MRV, Grupo Boticário e Localiza já utilizam ferramenta que entrega em média 80% das faturas em até dois dias da data de emissão"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-02-02
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/02-02-2021_6_8beb7e7bb1fc3867f98b817262e49c8a.jpeg"
 category: "geral"

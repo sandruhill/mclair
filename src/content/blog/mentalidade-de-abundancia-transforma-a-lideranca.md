@@ -2,7 +2,7 @@
 title: "Mentalidade de abundância transforma a liderança"
 subtitle: "Não há dúvidas de que 2020 foi um ano desafiador e com muitas perdas. Perdas de milhares de vidas, de empregos, de receita. Perda da liberdade de andar na rua tranquilamente"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-02-02
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/02-02-2021_6_5ef54206d3d6031b6bef6acf140ede5f.jpg"
 category: "geral"

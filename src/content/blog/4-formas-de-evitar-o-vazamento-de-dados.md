@@ -2,7 +2,7 @@
 title: "4 formas de evitar o vazamento de dados"
 subtitle: "O vazamento de dados é uma das atuais fraudes virtuais mais temidas no mundo, mas nem todas as pessoas têm conhecimentos suficientes para lidar com os riscos."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_d184039101c2caf15bfaecb6c3ab6ff3.jpg"
 category: "geral"

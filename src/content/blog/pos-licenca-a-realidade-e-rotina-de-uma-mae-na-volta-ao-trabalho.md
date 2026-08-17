@@ -2,7 +2,7 @@
 title: "Pós-Licença: a realidade e rotina de uma mãe na volta ao trabalho"
 subtitle: "Tornar-se mãe é ser apresentada a uma realidade paralela. Hoje em dia, grande parte das mulheres tendem a protelar a decisão da maternidade"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_d8f4743bbcb872c93f0d96764a34dabd.png"
 category: "geral"

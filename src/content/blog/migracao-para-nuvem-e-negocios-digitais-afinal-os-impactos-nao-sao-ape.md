@@ -2,7 +2,7 @@
 title: "Migração para nuvem e negócios digitais: afinal, os impactos não são apenas tecnológicos"
 subtitle: "As tendências capazes de direcionar o futuro do mercado da tecnologia são sempre discutidas neste período do ano."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Leticia Kawakami"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_8b42ab84dd6138329e838d4cb76a93f3.jpg"
 category: "geral"

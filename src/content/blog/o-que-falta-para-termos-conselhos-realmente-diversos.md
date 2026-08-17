@@ -2,7 +2,7 @@
 title: "O que falta para termos conselhos realmente diversos?"
 subtitle: "Os executivos da alta liderança correm para implantar processos capazes de entender a diversidade na empresa e aperfeiçoá-la com programas de inclusão e práticas modernas no RH."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_a42a97c828e426ac9961e6df5f4ee695.jpg"
 category: "geral"

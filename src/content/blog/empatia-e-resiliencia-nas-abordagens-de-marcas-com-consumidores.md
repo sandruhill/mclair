@@ -2,7 +2,7 @@
 title: "Empatia e resiliência nas abordagens de marcas com consumidores"
 subtitle: "Em 2020, a pandemia do novo coronavírus virou de cabeça para baixo os planos de marketing das marcas, que foram obrigadas a rever cronogramas e remodelar estratégias."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_791041c5bbcd6d679207b58b4873c2c3.jpg"
 category: "geral"

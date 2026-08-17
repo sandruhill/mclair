@@ -2,7 +2,7 @@
 title: "ChatGPT: conheça a IA que tem assombrado os programadores"
 subtitle: "Com 1 milhão de usuários em poucos dias, chatbot viabiliza conteúdos longos e certeiros; no entanto, especialistas alertam sobre os riscos trazidos pelo recurso e vantagens tiradas por pessoas mal intencionadas"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-25
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/25-04-2023_6_69b932f089f1719ee4f2332eea0d0436.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "GALERIA CONSIGAZ busca talentos brasileiros da arte urbana"
 subtitle: "Evento chega à 3ª edição com a missão de incentivar e valorizar a arte urbana brasileira; iniciativa destaca artistas emergentes a exibirem seu trabalho e ganharem visibilidade nacional, com premiação de R$10 mil ao projeto vencedor"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Consigaz"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_4fea433d087ad3d93e392220b21bbfa3.jpeg"
 category: "geral"

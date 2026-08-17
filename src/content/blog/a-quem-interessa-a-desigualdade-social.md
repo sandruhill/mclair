@@ -2,7 +2,7 @@
 title: "A quem interessa a desigualdade social?"
 subtitle: "Se alguém não tinha ideia do tamanho da desigualdade que assola o Brasil, a pandemia deixou tudo muito às claras. De março de 2020 para cá, estatísticas que povoam os jornais se materializaram na nossa frente"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_7b9bbcb12a59c2064d8fe1ba5168857b.jpg"
 category: "geral"

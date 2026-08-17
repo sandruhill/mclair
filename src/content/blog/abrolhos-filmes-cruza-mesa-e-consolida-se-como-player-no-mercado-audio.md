@@ -2,7 +2,7 @@
 title: "Abrolhos Filmes cruza mesa e consolida-se como player no mercado audiovisual"
 subtitle: "Ao selecionar projetos no IV Rota Festival, Primeiro Tratamento e NPA Curitiba, produtora paulistana ocupa assento de quem escolhe"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_b23367bea6f220e5ed82b2db14cec1ac.png"
 category: "geral"

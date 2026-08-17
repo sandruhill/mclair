@@ -2,7 +2,7 @@
 title: "Audiovisual: os desafios e o impacto das redes sociais para a publicidade"
 subtitle: "Especialista indica as tendências do setor por meio de plataformas que viraram febre entre usuários e influenciadores digitais"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Trilha 91"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_2ac86449f4d9cf5394b1d7201ac17dd3.png"
 category: "geral"

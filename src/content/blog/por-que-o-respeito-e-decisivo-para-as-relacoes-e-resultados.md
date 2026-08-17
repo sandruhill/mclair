@@ -2,7 +2,7 @@
 title: "Por que o respeito é decisivo para as relações e resultados"
 subtitle: "Vivemos na era da exposição. A antiga dupla voyerismo/exibicionismo atingiu o grau máximo a partir das redes sociais."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Lúcio Agberto"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_6fa43ee240613a89e087f9278a59a587.jpeg"
 category: "geral"

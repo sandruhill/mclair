@@ -2,7 +2,7 @@
 title: "Sem G, não dá!"
 subtitle: "Na última quinta-feira, no Latam Retail Show, fui mediadora e participei do debate sobre a importância da governança no ESG ao lado dos grandes líderes e amigos"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_262e60ed3ffda6f6faff6aa2f62d89ee.jpg"
 category: "geral"

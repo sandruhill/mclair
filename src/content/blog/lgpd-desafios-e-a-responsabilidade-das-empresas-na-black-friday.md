@@ -2,7 +2,7 @@
 title: "LGPD, desafios e a responsabilidade das empresas na Black Friday"
 subtitle: "As expectativas em torno da chegada da Black Friday estão altas. De um lado, consumidores já fazem as contas para aproveitarem as melhores promoções."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Ahirton Lopes"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_adf7f85db3eddca8ee2141b3282c94ed.jpg"
 category: "geral"

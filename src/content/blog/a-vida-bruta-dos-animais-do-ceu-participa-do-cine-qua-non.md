@@ -2,7 +2,7 @@
 title: "\"A Vida Bruta dos Animais do Céu\" participa do Cine Qua Non"
 subtitle: "Laboratório de desenvolvimento traz novos caminhos para roteiro de Guilherme Zanella, com direção de Beatriz Seigner (Los Silencios) e produção da Abrolhos Filmes"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_f7b7f437771e780c4a9ecad269872352.jpg"
 category: "geral"

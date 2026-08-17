@@ -2,7 +2,7 @@
 title: "Perceber nuances: o \"superpoder\" que todo líder precisa ter"
 subtitle: "O ser humano está perdendo a capacidade de perceber nuances. A frase é de Mayim Bialik, a neurocientista na vida real e na série The Big Bang Theory, onde interpreta a personagem Amy Farrah Fowler."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_dab62246fd19a76b9ae8535de60efbbc.jpg"
 category: "geral"

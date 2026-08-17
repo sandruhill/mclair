@@ -2,7 +2,7 @@
 title: "Não caia na armadilha da massificação da Inteligência Artificial"
 subtitle: "Sem dúvidas, um dos principais assuntos dos últimos tempos, que ultrapassou o mundo da tecnologia, foi o ChatGPT."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-23
 author: "Denis Zanini Lima & Kelly Pinheiro"
 image: "https://mclair.com.br/images/galeria/23-06-2023_6_2c1020d08a6ab6941a938799b85587fc.png"
 category: "geral"

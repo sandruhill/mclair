@@ -2,7 +2,7 @@
 title: "Os desafios e impactos do 5G para o mercado"
 subtitle: "Enquanto o mercado segue na expectativa pela chegada do 5G, alguns setores vêm se destacando, mesmo sem a presença da rede no país."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_edb46ef1221d07ddab7a6b98beca4beb.jpg"
 category: "geral"

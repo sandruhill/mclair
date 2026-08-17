@@ -2,7 +2,7 @@
 title: "Referência mundial em tecnologia para o campo, Brasil apresenta máquinas e implementos agrícolas ao mercado colombiano"
 subtitle: "Com o apoio do Programa Brazil Machinery Solutions (BMS), nove empresas brasileiras estarão como expositoras na Agroexpo, em Bogotá;  Se juntam a este grupo outras seis companhias, para participação de uma Rodada Internacional de Negócios inédita no país"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_91e44ce7c11406d7dd770a54c0444a8d.jpeg"
 category: "geral"

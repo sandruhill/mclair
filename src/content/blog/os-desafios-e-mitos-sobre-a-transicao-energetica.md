@@ -2,7 +2,7 @@
 title: "Os desafios e mitos sobre a transição energética"
 subtitle: "O superaquecimento do planeta é uma das pautas climáticas mais debatidas nos últimos anos, e o Acordo de Paris, assinado na COP21, em 2015, foi um marco na jornada de conscientização sobre o tema."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_fa32189529ac897fa7c8ab7b8fe31469.jpg"
 category: "geral"

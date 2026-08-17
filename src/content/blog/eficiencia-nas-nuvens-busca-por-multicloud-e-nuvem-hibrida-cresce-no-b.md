@@ -2,7 +2,7 @@
 title: "Eficiência nas nuvens: busca por multicloud e nuvem híbrida cresce no Brasil"
 subtitle: "Aceleração da transformação digital e melhoria de processos são alguns dos fatores decisivos usados por lideranças para os negócios que buscam soluções na nuvem"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_e05fba27a76d5ce5b679fb149904b64c.png"
 category: "geral"

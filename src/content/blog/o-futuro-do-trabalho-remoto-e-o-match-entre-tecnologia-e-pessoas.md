@@ -2,7 +2,7 @@
 title: "O futuro do trabalho remoto e o match entre tecnologia e pessoas"
 subtitle: "O futuro do trabalho é híbrido, flexível, remoto e conectado. Há exatamente um ano, no início da pandemia, o cenário era incerto e nos deparávamos  com companhias"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-18
 author: "Patrícia Kost"
 image: "https://mclair.com.br/images/galeria/18-05-2021_6_1c5f2074b3a2d021124206f3047e49da.jpg"
 category: "geral"

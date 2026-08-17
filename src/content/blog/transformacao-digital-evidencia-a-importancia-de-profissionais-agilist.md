@@ -2,7 +2,7 @@
 title: "Transformação digital evidencia a importância de profissionais agilistas"
 subtitle: "A transformação digital está em alta. Nos últimos meses, seja para manter a competitividade ou pela própria sobrevivência, as empresas têm investido na adaptação de modelos de negócios"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Victor Hugo Germano"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_410e9f37310ef058b1a2a4ba27f79843.jpg"
 category: "geral"

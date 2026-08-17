@@ -2,7 +2,7 @@
 title: "Emergee e TIVIT lançam o programa \"Agility Drops\""
 subtitle: "Iniciativa propõe conteúdos simples e diretos para quem se interessa por agilidade"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-06
 author: "Emergee"
 image: "https://mclair.com.br/images/galeria/06-08-2021_6_c442e40a62e529a96bd71b7b3889f382.jpeg"
 category: "geral"

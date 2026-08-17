@@ -2,7 +2,7 @@
 title: "Cotas para streaming na França realça atraso do Brasil na regulamentação de VoD"
 subtitle: "Com avanço da tecnologia, virada de chave do poder público é essencial para acompanhar novos moldes da indústria audiovisual"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-06
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/06-08-2021_6_1d06cedf5a040b90a36bfa13ab311f29.jpg"
 category: "geral"

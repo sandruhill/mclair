@@ -2,7 +2,7 @@
 title: "Experiência do usuário se torna recurso imprescindível para vendas de Natal"
 subtitle: "A chegada do Natal é aguardada por setores de diversos segmentos. No comércio varejista a expectativa é alta, pois o setor deve movimentar R$ 34,3 bilhões"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_7490f64cb3f9d75edf4e6c931fbf8aa7.jpg"
 category: "geral"

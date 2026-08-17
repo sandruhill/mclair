@@ -2,7 +2,7 @@
 title: "Startup carioca cresce 400% na pandemia com serviço de valuation via WhatsApp para PMEs"
 subtitle: "Com atendimento personalizado e digitalizado, StartupHero atende mensalmente cerca de 60 clientes, de padarias a canais do youtube"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_db781cee8f2680c7528b459f187f4be3.png"
 category: "geral"

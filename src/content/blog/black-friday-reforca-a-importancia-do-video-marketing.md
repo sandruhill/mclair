@@ -2,7 +2,7 @@
 title: "Black Friday reforça a importância do Vídeo Marketing"
 subtitle: "A chegada da Black Friday tem gerado expectativas em diversos setores da economia. Afinal, estima-se que 71% dos brasileiros façam compras nesta época, segundo um estudo da Méliuz, fazendo com que empresas e marcas buscam estratégias para diferenciar seus produtos em busca de um maior volume de vendas."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Rafael Lage"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_89c83710df24ab1bc5b7da226470d861.jpg"
 category: "geral"

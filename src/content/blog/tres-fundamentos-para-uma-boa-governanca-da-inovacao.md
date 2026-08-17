@@ -2,7 +2,7 @@
 title: "Três fundamentos para uma boa governança da inovação"
 subtitle: "Você já foi invadido por uma agonia pela inovação? Sabe aquele sentimento de ansiedade, ao ver tantas tecnologias, negócios e gadgets novos?"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_fcf877371c7d39568c394c33c39b2a67.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Como evitar o comércio milionário de ataques cibernéticos"
 subtitle: "Os crimes virtuais tornaram-se um negócio. E com eles as frentes de atuação na web se multiplicam dia a dia."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Giovanni Bassi"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_c7cd83e3d69e844451b1413c6641979a.jpg"
 category: "geral"

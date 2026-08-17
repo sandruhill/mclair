@@ -2,7 +2,7 @@
 title: "Expansão do IoT impulsiona demanda por soluções de gestão"
 subtitle: "Internet das Coisas deve atingir 25 bilhões de dispositivos conectados até 2025; otimização do controle de linhas é essencial para reduzir custos"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-06
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/06-08-2021_6_2e16b3d270988d64f21564729d4bafba.png"
 category: "geral"

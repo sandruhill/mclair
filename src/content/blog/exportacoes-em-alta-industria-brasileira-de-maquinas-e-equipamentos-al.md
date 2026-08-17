@@ -2,7 +2,7 @@
 title: "Exportações em alta: indústria brasileira de máquinas e equipamentos alcança US$25 MI na estreia da agenda internacional 2023"
 subtitle: "Segundo o Programa Brazil Machinery Solutions (BMS), empresas expositoras totalizam US$16,2 milhões em negócios realizados e estima mais US$9,2 milhões em faturamento ao longo do ano após Feira Internacional de Produção e Processamento de Proteína Animal, ocorrida em Atlanta (EUA)"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_58cf8bfd09a1d73a88f703f64c010d30.jpg"
 category: "geral"

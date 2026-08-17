@@ -2,7 +2,7 @@
 title: "Avanço da LGPD é essencial para sucesso do 5G no Brasil"
 subtitle: "A chegada do 5G segue aguardada pelos brasileiros, principalmente por conta das facilidades e recursos que a tecnologia agregará ao mercado nacional e às pessoas."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Thiago Padilha"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_e975d43f8c50650bb6caeb528e58071b.jpg"
 category: "geral"

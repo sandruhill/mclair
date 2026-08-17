@@ -2,7 +2,7 @@
 title: "Claudia Elisa passa a integrar Conselho da Tupy"
 subtitle: "No início de 2021, a advisor já havia assumido a presidência do Conselho do Grupo Roldão; liderança, inovação, gestão, cultura e diversidade estão entre suas pautas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-18
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/18-05-2021_6_126777f5202f5a9963d12bb8a095091a.jpg"
 category: "geral"

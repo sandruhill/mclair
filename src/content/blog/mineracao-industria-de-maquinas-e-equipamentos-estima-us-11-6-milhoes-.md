@@ -2,7 +2,7 @@
 title: "Mineração: indústria de máquinas e equipamentos estima US$11,6 milhões em exportações"
 subtitle: "Projeção é otimista após participação brasileira em evento chileno voltado para o setor; cerca de US$1,5 milhões são de negócios realizados durante a feira e outros US$10,1 milhões são estimados em negociações para os próximos 12 meses"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_358143756f04f2939c7376f9296ff8db.jpg"
 category: "geral"

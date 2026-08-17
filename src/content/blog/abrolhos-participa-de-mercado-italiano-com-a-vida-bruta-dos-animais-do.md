@@ -2,7 +2,7 @@
 title: "Abrolhos participa de mercado italiano com \"A Vida Bruta dos Animais do Céu\""
 subtitle: "Entre os dias 14 e 18 de outubro, a Abrolhos Filmes levará ao mercado italiano MIA o roteiro de A Vida Bruta dos Animais do Céu. O longa-metragem de ficção tem autoria de Guilherme Zanella"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_0cc1d9eb1dbf6d9362c898e302a71cd1.png"
 category: "geral"

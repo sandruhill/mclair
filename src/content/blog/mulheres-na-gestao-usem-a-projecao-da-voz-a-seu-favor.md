@@ -2,7 +2,7 @@
 title: "Mulheres na gestão: usem a projeção da voz a seu favor"
 subtitle: "Você pode não conhecer muito de teoria musical, mas certamente consegue identificar alguns cantores só de ouvir um trechinho de sua música."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-02-02
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/02-02-2021_6_c0b332ed093d4203f24bb6331ebca0bf.jpg"
 category: "geral"

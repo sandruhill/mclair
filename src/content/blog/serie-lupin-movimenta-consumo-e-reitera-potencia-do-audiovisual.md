@@ -2,7 +2,7 @@
 title: "Série Lupin movimenta consumo e reitera potência do audiovisual"
 subtitle: "Hoje, o que mede o sucesso de um produto de entretenimento não é só o prestígio da audiência ou aclamação da crítica, mas também o seu impacto no comportamento de quem o consome e no mercado."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_09d257b9aaa0cbd550fcd477847ce9b2.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Mclair anuncia spin-off para desenvolvimento web e tecnológico"
 subtitle: "Além da parceria com a G20 Digital, agência de Comunicação Integrada acaba de lançar seu rebranding,"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-24
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/24-03-2021_6_d3850caf73e3ef80a616b9e856a60600.jpg"
 category: "geral"

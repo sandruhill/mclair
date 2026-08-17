@@ -2,7 +2,7 @@
 title: "Pirataria sai do controle com streaming e isolamento social"
 subtitle: "Combate ao audiovisual ilegal envolve ação conjunta de poder público e privado e novas tecnologias, como o blockchain, mas principalmente a tomada de consciência do consumidor"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_7fda84de2a7f5f315817bcfbdb46014e.png"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Brasil apresenta soluções para a indústria latinoamericana de mineração"
 subtitle: "Com o apoio do Programa Brazil Machinery Solutions, 12 empresas brasileiras participarão da Expomin, que acontece entre os dias 24 e 27 de abril, em Santiago, no Chile; no último ano, as exportações de máquinas e equipamentos brasileiros com destino aos países da América Latina aumentaram 36%"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_5e46e65401a3daf7ac0da8c7a0f143c9.jpg"
 category: "geral"

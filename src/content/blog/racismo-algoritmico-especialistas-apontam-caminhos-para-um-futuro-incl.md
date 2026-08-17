@@ -2,7 +2,7 @@
 title: "Racismo algorítmico: especialistas apontam caminhos para um futuro inclusivo"
 subtitle: "Profissionais abordam a importância do combate ao viés racial e discriminação na Inteligência Artificial e sociedade; métricas mais confiáveis e considerar a diversidade em profissionais da tecnologia estão entre as soluções apontadas"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_9c40679bac8153bc40caf6466a807151.jpg"
 category: "geral"

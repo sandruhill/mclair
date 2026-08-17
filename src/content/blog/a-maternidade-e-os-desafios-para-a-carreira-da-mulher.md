@@ -2,7 +2,7 @@
 title: "A maternidade e os desafios para a carreira da mulher"
 subtitle: "Ao longo da carreira, as mulheres passam por inúmeros desafios em busca do seu lugar ao sol no mercado de trabalho. Eles são ainda maiores quando o desejo da maternidade coincide com a idade mais produtiva e bem-sucedida da mulher."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_d7fe5a05b89fdac3cf4118efc99cd4d4.jpg"
 category: "geral"

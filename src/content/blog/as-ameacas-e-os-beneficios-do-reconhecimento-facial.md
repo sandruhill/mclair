@@ -2,7 +2,7 @@
 title: "As ameaças e os benefícios do reconhecimento facial"
 subtitle: "O reconhecimento facial está em todos os lugares, inclusive nos mais inimagináveis. O recurso já é realidade para a maioria da sociedade, seja para diversão via aplicativo"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Victor Hugo Germano"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_41110653ff6c0ad2d06dc19b4e34a307.jpg"
 category: "geral"

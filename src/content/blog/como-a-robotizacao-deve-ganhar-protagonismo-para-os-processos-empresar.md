@@ -2,7 +2,7 @@
 title: "Como a robotização deve ganhar protagonismo para os processos empresariais em 2022"
 subtitle: "Benefícios e impactos para o mercado"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_164b98d63302bffc7fada6c6879e066c.jpg"
 category: "geral"

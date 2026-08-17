@@ -2,7 +2,7 @@
 title: "Diversidade nas lideranças é fundamental para as ações de ESG"
 subtitle: "Organizações só conseguirão concretizar iniciativas sociais, ambientais e de governança quando tiverem uma equipe de gestão realmente diversa"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_c81259735aa382d89355ac1b9692d4ee.jpeg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Há futuro para o mercado de tecnologia sem cultura organizacional diversa?"
 subtitle: "A tecnologia move o mundo. Essa é uma das frases mais emblemáticas de Steve Jobs e segue atemporal."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Patrícia Kost"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_17d8a8357e78962efafa610bb0af433d.jpg"
 category: "geral"

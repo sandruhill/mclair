@@ -2,7 +2,7 @@
 title: "MIS recebe exposição de arte urbana no dia 4"
 subtitle: "Aberta ao público, a 3ª edição da Galeria Consigaz busca novos talentos artísticos, que aplicarão suas técnicas em botijão de gás durante evento ao vivo, com direito a palestra de Eduardo Kobra"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Consigaz"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_2892607bd2626ded9f1941bd6c543991.jpeg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Marketing Digital: 4 séries da Netflix para maratonar nas férias"
 subtitle: "A chegada das férias, para muitos, é o momento ideal para relaxar a mente."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_557830f74d3704c69a8fbd4938b1bef7.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Comunicação com propósito é a base para uma reputação de autoridade"
 subtitle: "Passe sua mensagem para o seu consumidor e exponha seus valores"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-23
 author: "Kelly Pinheiro"
 image: "https://mclair.com.br/images/galeria/23-06-2023_6_5811b97e063d8850e6e31f6c192871e3.png"
 category: "geral"

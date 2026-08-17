@@ -2,7 +2,7 @@
 title: "\"Copa do Mundo\" supera buscas sobre \"eleições\" e \"Black Friday\" no Google e desafia mídias"
 subtitle: "O último trimestre do ano tem marcado um período atípico para os profissionais do comércio e marketing no Brasil, isso porque grandes eventos estão acontecendo com pouco intervalo de tempo entre eles. \""
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_d10e67ba4afa8c46d5861d46859e834e.jpg"
 category: "geral"

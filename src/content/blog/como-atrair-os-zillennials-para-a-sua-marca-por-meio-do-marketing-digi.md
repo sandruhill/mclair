@@ -2,7 +2,7 @@
 title: "Como atrair os Zillennials para a sua marca por meio do marketing digital"
 subtitle: "Entender características geracionais é fundamental para saber utilizar a estratégia certa no marketing digital e atrair um público específico para a marca."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_ce3e7dfd421b2069fdd50e9dd23e830c.jpg"
 category: "geral"

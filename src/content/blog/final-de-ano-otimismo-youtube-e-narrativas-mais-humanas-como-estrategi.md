@@ -2,7 +2,7 @@
 title: "Final de ano: Otimismo, Youtube e narrativas mais humanas como estratégia de marca"
 subtitle: "Em ano de pandemia, campanhas de marketing para datas festivas e promocionais pedem responsabilidade e empatia com público"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_75013556c54e64fa8f744fcf945f7acc.png"
 category: "geral"

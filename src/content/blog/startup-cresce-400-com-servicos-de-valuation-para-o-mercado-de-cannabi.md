@@ -2,7 +2,7 @@
 title: "Startup cresce 400% com serviços de valuation para o mercado de cannabis"
 subtitle: "Fundada pelos sócios Leonardo Brasil e Leonardo Machado, a startup começou com um projeto que não deu certo: era uma plataforma de educação para empreendedores, em setembro de 2019."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_aaa5883179c20e56b14d8e86db6a33f5.jpg"
 category: "geral"

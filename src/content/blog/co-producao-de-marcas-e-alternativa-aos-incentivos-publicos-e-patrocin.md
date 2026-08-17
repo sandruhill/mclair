@@ -2,7 +2,7 @@
 title: "Co-produção de marcas é alternativa aos incentivos públicos e patrocínio para entretenimento"
 subtitle: "contrar patrocinadores para o audiovisual não tem sido tarefa fácil para produtoras independentes. E isso não é só uma implicação da pandemia do coronavírus."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_4de5ba3b7242adb24e1cfeb09f1b707d.png"
 category: "geral"

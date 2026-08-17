@@ -2,7 +2,7 @@
 title: "Três lugares e um ponto"
 subtitle: "Saiba o que Jony Ive, Michael Jordan e um chef de cozinha tem em comum, junto ao sucesso de um time !"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-10-17
 author: "Gustavo de Ribeiro Silva"
 image: "https://mclair.com.br/images/galeria/17-10-2022_6_893b9ad42c22cf32efc607076696ccff.png"
 category: "geral"

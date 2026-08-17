@@ -2,7 +2,7 @@
 title: "\"Round 6\", \"Seinfield\" e as dinâmicas do mercado de streaming"
 subtitle: "Ao longo das últimas semanas, destacou-se no universo do entretenimento o sucesso de Round 6, da Netflix, que se tornou a série mais assistida em 90 países, no início de outubro."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "André Sobral"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_74fdbadc8f3cdcd1fce2c22a7807ee1a.jpg"
 category: "geral"

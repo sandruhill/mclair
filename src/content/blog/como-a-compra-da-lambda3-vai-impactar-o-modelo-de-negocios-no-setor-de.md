@@ -2,7 +2,7 @@
 title: "Como a compra da Lambda3 vai impactar o modelo de negócios no setor de TI no Brasil"
 subtitle: "Integração da empresa na TIVIT Ventures reforça reconhecimento do mercado em companhias que priorizam pessoas e diversidade, com modelo de gestão colaborativa"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_6f82df14969a87905660d3bb7d585e54.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Estrutura organizacional: um predador da estratégia"
 subtitle: "Quando o assunto é cultura, ninguém duvida do seu poder no ambiente organizacional. A famosa frase de Peter Drucker mostra isso de forma escancarada: a cultura come a estratégia no café da manhã"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_0acfae461c2690e34c7de1c37712bab1.jpg"
 category: "geral"

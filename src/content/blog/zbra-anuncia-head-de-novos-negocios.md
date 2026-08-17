@@ -2,7 +2,7 @@
 title: "ZBRA anuncia Head de Novos Negócios"
 subtitle: "Marcos Lemes assume o posto após passagens por empresas como Getup, Maplink e Geograph; profissional visa a liderança comercial e chega com o desafio de estruturar a área da empresa"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_cd8b935e2bb7b92df83a618fd8e1f4b0.jpeg"
 category: "geral"

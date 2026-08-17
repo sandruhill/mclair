@@ -2,7 +2,7 @@
 title: "Como a tecnologia ajuda aumentar a confiança do cliente"
 subtitle: "Implementar inovações nas áreas internas é a chave para aumentar fidelidade e encontrar novos públicos"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_50d1cc56899378346c45e771d6ed4f54.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Desenvolvimento de software moldará o futuro das carreiras e empresas"
 subtitle: "O futuro das profissões está na programação. Nos últimos anos, em diversas oportunidades esta afirmação foi proferida por algum profissional da tecnologia."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Elemar Júnior"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_c5c5b67017a1182977e7b25e9e990f17.jpg"
 category: "geral"

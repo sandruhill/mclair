@@ -2,7 +2,7 @@
 title: "14/09 - Lambda3 completa 12 anos e lança podcast com olhar sobre negócios no contexto nacional"
 subtitle: "Farol Lambda3 é uma série de conversas especiais voltadas para tomadores de decisões"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_562d79c2f64a1692353d68925d47d492.jpg"
 category: "geral"

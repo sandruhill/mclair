@@ -2,7 +2,7 @@
 title: "Exportação: indústria de máquinas e equipamentos estima faturamento de US$31 MI após eventos internacionais"
 subtitle: "Projeção do Programa Brazil Machinery Solutions se deve principalmente às negociações realizadas com o 2º maior mercado consumidor de proteína animal do mundo, bem como com o 5º principal destino das exportações de máquinas e equipamentos têxteis brasileiros, durante ações em feiras internacionais em janeiro"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_6ddb6f72d219feca60cdaae191d1ee34.jpg"
 category: "geral"

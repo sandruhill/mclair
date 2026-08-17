@@ -2,7 +2,7 @@
 title: "Empresas familiares exigem flexibilidade e comunicação empática do executivo"
 subtitle: "Mesmo com representatividade de 65% no PIB, índices de sobrevivência de companhias comandadas por famílias é de apenas 5%"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_9783bbf297ab02fe297ce83044880743.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "O elo entre os C-Levels e a tecnologia na retomada do varejo"
 subtitle: "O setor de varejo tem passado por transformações intensas. Antes mesmo da pandemia, a concorrência com empresas de atuação global já era desafiadora. Então, durante a crise"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Elemar Júnior"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_98fb6edc96d3c16dd3f19e6e69db3fbd.jpg"
 category: "geral"

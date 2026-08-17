@@ -2,7 +2,7 @@
 title: "Projeto Zé Conecta amplia inclusão digital a alunos em situação vulnerável"
 subtitle: "Com o objetivo de atrair empresas engajadas na causa da educação, primeira fase da ação já conta com 240 doações"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-06
 author: "Projeto Zé Conecta"
 image: "https://mclair.com.br/images/galeria/06-08-2021_6_cff63b3181e124c9a1ba1c89cd633644.jpeg"
 category: "geral"

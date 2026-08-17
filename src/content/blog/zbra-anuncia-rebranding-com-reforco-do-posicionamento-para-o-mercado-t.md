@@ -2,7 +2,7 @@
 title: "ZBRA anuncia rebranding com reforço do posicionamento para o mercado Tech"
 subtitle: "Nova marca explora o potencial de negócios da empresa e coincide com momento de crescimento estratégico da companhia, com a conquista de novos clientes e expansão do time"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_ef075bb4032b87a1cb326f90cde76dd7.jpeg"
 category: "geral"

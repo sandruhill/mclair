@@ -2,7 +2,7 @@
 title: "O que mudou na busca pelo líder de RH?"
 subtitle: "Os anos passam, e as incertezas no mundo corporativo parecem só aumentar. E uma pergunta recorrente quase sempre vem à tona: o que as lideranças enxergam como desafios para os próximos anos?"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_a5fafa6500b1b70b30530cd60c518a78.jpg"
 category: "geral"

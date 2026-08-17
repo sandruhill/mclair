@@ -2,7 +2,7 @@
 title: "Lambda3 consolida as unidades negócios de Produtos Digitais do ecossistema TIVIT"
 subtitle: "Em movimentação estratégica, a Lambda3, empresa da TIVIT Ventures, incorpora clientes e operações para alavancar as oportunidades de crescimento e expansão do mercado de serviços digitais"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_4682f2d6dcb42b2383f49f3ce17cab4a.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Você sabia que área de TI será uma das mais impactadas pela LGPD?"
 subtitle: "A Lei Geral de Proteção de Dados - LGPD (nº 13.709/2018) é tema recorrente em discussões sobre o aumento da fiscalização e privacidade de dados pessoais"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_d4fef9b90d4cb91490e214772b6470cb.jpg"
 category: "geral"

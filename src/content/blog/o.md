@@ -2,7 +2,7 @@
 title: "O"
 subtitle: "Se 30 anos atrás alguém me contasse que estaríamos vivendo um período em que empresas que lucram estão associadas a uma atuação social e ambiental, seria difícil acreditar."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_4015e330186ac2de975df26418da7dd2.jpg"
 category: "geral"

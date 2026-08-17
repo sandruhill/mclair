@@ -2,7 +2,7 @@
 title: "Transforme subjetividade em método: sua missão ficará mais fácil"
 subtitle: "Quantas vezes você já ouviu falar que para alguma coisa dar certo a receita é 10% de inspiração e 90% de transpiração?"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_fa5f17255028e82a0b7d7084a83dc1db.jpg"
 category: "geral"

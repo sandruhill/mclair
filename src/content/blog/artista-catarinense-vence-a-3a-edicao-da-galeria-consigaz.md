@@ -2,7 +2,7 @@
 title: "Artista catarinense vence a 3ª edição da Galeria Consigaz"
 subtitle: "Bruno Alvarez desbanca mais de 3 mil artistas inscritos e leva prêmio de R$10 mil"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Consigaz"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_d6cfc32e99a45235716a17faf4064179.png"
 category: "geral"

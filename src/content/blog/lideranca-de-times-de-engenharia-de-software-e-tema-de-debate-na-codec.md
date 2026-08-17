@@ -2,7 +2,7 @@
 title: "Liderança de times de engenharia de software é tema de debate na Codecon"
 subtitle: "Ahirton Lopes, CDO da Lambda3, abordará tópicos como gerenciamento de novas equipes, diversidade, oportunidades para novos profissionais, Learning Organization, entre outros"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_dfb07b05f61227aeb86b84c3bf657aac.jpg"
 category: "geral"

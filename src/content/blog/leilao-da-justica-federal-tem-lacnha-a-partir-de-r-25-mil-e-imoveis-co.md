@@ -2,7 +2,7 @@
 title: "Leilão da Justiça Federal tem lacnha a partir de R$ 25 mil e imóveis com até 50% de desconto"
 subtitle: "Lances virtuais acontecem por meio do site da Fidalgo Leilões nos dias 12 e 19 de junho"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_5669edc432389e42492c615132cb3610.jpg"
 category: "geral"

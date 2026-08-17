@@ -2,7 +2,7 @@
 title: "GPTW: Lambda3 é uma das melhores empresas de T.I para trabalhar"
 subtitle: "Empresa recentemente adquirida pela Tivit é reconhecida pelo 5º ano consecutivo"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_0178adec1fd653f9aceaf375a23790bc.png"
 category: "geral"

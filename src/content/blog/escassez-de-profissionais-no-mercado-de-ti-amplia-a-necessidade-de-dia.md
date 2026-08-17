@@ -2,7 +2,7 @@
 title: "Escassez de profissionais no mercado de TI amplia a necessidade de diálogo sobre diversidade e inclusão"
 subtitle: "Segundo especialistas da Lambda3, apesar dos benefícios, companhias do setor devem se atentar aos desafios e ir além das contratações para promover um ambiente inclusivo"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_84716596e32598d61e3de6d310f75b3a.jpg"
 category: "geral"

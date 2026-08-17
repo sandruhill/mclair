@@ -2,7 +2,7 @@
 title: "Abrolhos Filmes indica 15 produções de 2020"
 subtitle: "O que não faltou em 2020 foi tempo para consumir todo tipo de conteúdo audiovisual de entretenimento. Para a equipe da Abrolhos Filmes, que está sempre de olho nas novidades do mercado, não foi diferente."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_50c559fe057a67da7f06bb92b0493b8b.jpg"
 category: "geral"

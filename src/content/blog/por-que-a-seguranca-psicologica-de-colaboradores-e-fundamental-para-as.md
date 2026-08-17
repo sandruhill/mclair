@@ -2,7 +2,7 @@
 title: "Por que a segurança psicológica de colaboradores é fundamental para as organizações"
 subtitle: "Oferecer e manter um ambiente de trabalho saudável. Os últimos anos evidenciaram o quão relevante tem sido essa questão para as organizações,"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_80bb27942ffc49b6cea915f9a83d7571.jpg"
 category: "geral"

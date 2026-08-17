@@ -2,7 +2,7 @@
 title: "Fintech mineira é a vencedora do Ranking 100 Open Startups"
 subtitle: "Guiando alcança a 11º posição no quadro geral de empresas; regularidade e investimentos são fatores fundamentais para manter a empresa em evidência, segundo CEO"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_4071fa627c8737a8d2d63cdde9055ce7.png"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "5 filmes e séries para inspirar os amantes da comunicação"
 subtitle: "A comunicação corporativa é essencial para o mercado."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_e1a6a8b75017fdb8a592dec11ba06078.jpg"
 category: "geral"

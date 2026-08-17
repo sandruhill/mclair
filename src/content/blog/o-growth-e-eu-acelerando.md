@@ -2,7 +2,7 @@
 title: "O Growth e eu: Acelerando!"
 subtitle: "Oi, eu sou o Rafa Nanis! Marketing & Growth Head da MClair Comunicação."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-09-27
 author: "Rafael Nanis"
 image: "https://mclair.com.br/images/galeria/27-09-2021_6_2e04430d60ea4c80224ec5de8c68f910.png"
 category: "geral"

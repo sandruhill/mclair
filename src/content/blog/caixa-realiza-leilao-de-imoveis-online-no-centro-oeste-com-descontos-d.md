@@ -2,7 +2,7 @@
 title: "Caixa realiza leilão de imóveis online no Centro-Oeste com descontos de até 60%"
 subtitle: "Em parceria com a Fidalgo Leilões, banco líder do mercado imobiliário disponibiliza 20 imóveis em todos os estados da região"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_79a0765c5b1165d6e75c84dc4ea35443.jpg"
 category: "geral"

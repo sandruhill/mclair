@@ -2,7 +2,7 @@
 title: "BH recebe delegação internacional interessada na tecnologia brasileira para a indústria de mineração"
 subtitle: "Iniciativa inédita no setor, a rodada internacional de negócios promovida pelo programa Brazil Machinery Solutions reunirá empresas nacionais com compradores argentinos, chilenos e colombianos"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Brazil Machinery Solutions (BMS)"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_256aa7d0f98c0c8cf24014d3341faa2b.jpg"
 category: "geral"

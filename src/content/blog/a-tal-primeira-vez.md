@@ -2,7 +2,7 @@
 title: "A tal primeira vez"
 subtitle: "Impossível não me emocionar assistindo à final de Roland Garros no último domingo (13/jun) entre Stefanos Tsitsipas e Novak Djokovic."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_8e130586fced2e636f56060b4c8765a3.jpg"
 category: "geral"

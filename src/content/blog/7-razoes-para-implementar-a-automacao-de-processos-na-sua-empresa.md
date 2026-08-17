@@ -2,7 +2,7 @@
 title: "7 razões para implementar a automação de processos na sua empresa"
 subtitle: "Melhora na eficiência, agilidade de processos, integração e redução de custos estão entre os benefícios conquistados por companhias que adotam um sistema de automação inteligente de contas a pagar"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/19-07-2022_6_f637c398fa7988f6eea93f4f1f92390d.png"
 category: "geral"

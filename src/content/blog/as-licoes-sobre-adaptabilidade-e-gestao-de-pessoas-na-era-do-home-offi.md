@@ -2,7 +2,7 @@
 title: "As lições sobre adaptabilidade e gestão de pessoas na era do home office"
 subtitle: "Até 2020, o home office era uma tendência que crescia gradualmente no mercado. Porém, tudo mudou de forma acelerada com a pandemia, quando subitamente trabalhar em casa passou a ser obrigatório."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-15
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/15-03-2021_6_ada9cad6415164cf48db58ed3141678f.png"
 category: "geral"

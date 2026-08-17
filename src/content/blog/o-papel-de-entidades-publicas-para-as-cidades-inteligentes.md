@@ -2,7 +2,7 @@
 title: "O papel de entidades públicas para as Cidades Inteligentes"
 subtitle: "Foi divulgado ontem (4/10), no Centro de Convenções Frei Caneca, na capital paulista, as vencedoras do Ranking Connected Smart Cities 2022, estudo que está em sua oitava edição."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_6fe5e5bd6f79255d277f56d43e3e5f91.jpg"
 category: "geral"

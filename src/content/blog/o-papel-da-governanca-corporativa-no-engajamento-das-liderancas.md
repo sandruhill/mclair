@@ -2,7 +2,7 @@
 title: "O papel da governança corporativa no engajamento das lideranças"
 subtitle: "Confundir engajamento com motivação é um dos erros mais comuns cometidos pelas lideranças; para especialista, o ato de engajar é um aspecto mais cognitivo do que emocional"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_082acbbd8fe5526e9d05853fff4f658f.jpeg"
 category: "geral"

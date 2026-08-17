@@ -2,7 +2,7 @@
 title: "Boa gestão de pessoas ajuda a reduzir o déficit de profissionais de TI"
 subtitle: "O desequilíbrio entre oferta e demanda de profissionais de tecnologia tem movimentado o mercado. Isso vem sendo potencializado, principalmente, pela aceleração da transformação digital nas empresas durante a pandemia."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "Rodrigo Schittini"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_97de3e98303bbfffce45a3177d1f1585.jpg"
 category: "geral"

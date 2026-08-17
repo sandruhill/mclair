@@ -2,7 +2,7 @@
 title: "Guiando abre novas vagas para TI e outras áreas"
 subtitle: "Após entrar para o Ranking GPTW em Minas Gerais, empresa especializada em automação inteligente de faturas oferece posições 100% remotas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-09
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/09-08-2021_6_1e9fd37c84ff8c21d976b04df10833a7.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Empresa de tecnologia adota home-office e cresce 40%"
 subtitle: "Em meio a impasses de companhias brasileiras sobre manter ou interromper o modelo remoto, Lambda3 também adota estratégia de contratações para aumentar o quadro colaborativo"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_7bb3c8506a3c4944f250dd3839f3701a.jpg"
 category: "geral"

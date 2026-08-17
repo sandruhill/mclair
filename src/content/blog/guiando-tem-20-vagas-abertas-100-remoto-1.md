@@ -2,7 +2,7 @@
 title: "Guiando tem 20 vagas abertas 100% remoto"
 subtitle: "A Guiando, empresa especialista em desenvolvimento de tecnologias inteligentes para T.E.M. (Telecom Expense Management) e automação para pagamento de faturas, está com 20 vagas abertas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_3b56a011c7dde01756c551d7ea884b50.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Por que as gerações Y e Z se relacionam melhor com o ESG?"
 subtitle: "Cerca de 70 milhões de brasileiros pertencem às gerações Y (nascidos entre 1981 e 1996) e Z (nascidos entre 1997 e 2012), sendo que 46% deste grupo é economicamente ativo no Brasil, segundo o Instituto de Pesquisa Econômica Aplicada (Ipea)."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_56d44d5736338a388b4bb946e76c3b1b.png"
 category: "geral"

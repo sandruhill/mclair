@@ -2,7 +2,7 @@
 title: "Sem essa de copo meio vazio: pessoas são copo inteiro!"
 subtitle: "Você certamente já ouviu a metáfora do copo meio cheio ou meio vazio. Ou quem sabe aquela sobre os óculos com lentes cor-de-rosa. O que não faltam são figuras ilustrativas"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-02-02
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/02-02-2021_6_0a3669e846510ae521073fbb3f6df101.jpg"
 category: "geral"

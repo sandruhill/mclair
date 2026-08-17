@@ -2,7 +2,7 @@
 title: "Missão Angola:  Como a Quinto Andar me ajudou a vender milho na África"
 subtitle: "Diz a sabedoria popular que as palavras comovem e o exemplo arrasta. Então eu queria contar pra vocês o meu primeiro processo de Growth Marketing."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-29
 author: "Rafael Nanis"
 image: "https://mclair.com.br/images/galeria/29-11-2021_6_13e25ec8f999bc1f7d97e9cce83002bb.jpeg"
 category: "geral"

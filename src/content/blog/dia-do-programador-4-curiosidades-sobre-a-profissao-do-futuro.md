@@ -2,7 +2,7 @@
 title: "Dia do Programador: 4 curiosidades sobre a profissão do futuro"
 subtitle: "Segundo especialista, até o setor de RH passou a crescer por conta da demanda em TI"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Zbra"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_164449553f2d2393c53b7b12c393a957.jpg"
 category: "geral"

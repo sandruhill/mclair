@@ -2,7 +2,7 @@
 title: "Os desafios para a Gestão de Pessoas e o êxito organizacional"
 subtitle: "A área de Gestão de Pessoas tem lidado com mudanças aceleradas, principalmente nos últimos dois anos."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Elaine Couri"
 image: "https://mclair.com.br/images/galeria/19-07-2022_1_e09fd065d902c7b48c9431dd8c35cb63.png"
 category: "geral"

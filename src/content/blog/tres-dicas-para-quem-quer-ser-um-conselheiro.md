@@ -2,7 +2,7 @@
 title: "Três dicas para quem quer ser um Conselheiro"
 subtitle: "Expandir o networking, trabalhar novas habilidades e revisar a narrativa profissional ajudam na transição para a carreira"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_7b31b4ec960358be86d4329354d7965e.jpg"
 category: "geral"

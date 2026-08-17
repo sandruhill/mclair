@@ -2,7 +2,7 @@
 title: "Fidalgo amplia portfólio de negócios com novos segmentos de leilões"
 subtitle: "Após investir em tecnologia e logística, empresa organizadora de leilões passa a focar também em ofertas dedicadas exclusivamente a motos; evento online com motocicletas acontece no dia 18 de maio"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_add125472767c9299ff14a967db8e11e.jpeg"
 category: "geral"

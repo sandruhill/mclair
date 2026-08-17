@@ -2,7 +2,7 @@
 title: "O que assistir depois de O Dilema das Redes"
 subtitle: "Com estreia na Netflix brasileira em setembro, o documentário O Dilema das Redes (2020) foi muito comentado na internet durante todo o mês. Partindo da premissa de que o usuário é o grande produto"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_043990b7bc94e11344ab14af53aa5ac2.jpg"
 category: "geral"

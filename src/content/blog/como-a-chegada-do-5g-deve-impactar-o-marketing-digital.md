@@ -2,7 +2,7 @@
 title: "Como a chegada do 5G deve impactar o Marketing Digital"
 subtitle: "A chegada do 5G tem sido um dos temas do momento.  Prevista para chegar às principais capitais brasileiras em 2022, após leilão realizado pela Anatel nas últimas semanas, a tecnologia deve mudar os rumos do consumo e, também, as formas como trabalhamos, tendo impacto sobre os mais variados setores do mercado nacional."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_24c4fb118962d966b91836f9a42a4a59.jpg"
 category: "geral"

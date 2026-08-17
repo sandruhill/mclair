@@ -2,7 +2,7 @@
 title: "A complexidade e a co-dependência entre humanos e tecnologias"
 subtitle: "Os avanços tecnológicos têm mudado a rotina e a forma como as pessoas lidam com suas tarefas, o que impacta também organizações de diversos setores."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Cristiano Zanetta"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_6366bd7474d8d17b5e92a3ef2677c384.jpg"
 category: "geral"

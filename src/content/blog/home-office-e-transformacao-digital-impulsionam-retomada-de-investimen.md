@@ -2,7 +2,7 @@
 title: "Home office e transformação digital impulsionam retomada de investimentos"
 subtitle: "Atravessar a pandemia não foi nada fácil para os agentes da indústria de telecomunicações, que precisaram adequar-se rapidamente às novas demandas de conexão. Agora, os desafios deixados pela crise começam a ficar mais evidentes, à medida que o setor passa por uma retomada de investimento"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_9821c04291a69c98952e93e7c394ea6a.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Arena 22 é o novo fantasy game oficial da Copa do Nordeste"
 subtitle: "Plataforma prevê concorrência com grandes players do mercado e propõe quatro modalidades diferentes de torneios, com a possibilidade de prêmios em dinheiro"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Lume Comunicação"
 image: "https://mclair.com.br/images/galeria/19-07-2022_6_00b63b348a118193a73d0da4620d8529.jpg"
 category: "geral"

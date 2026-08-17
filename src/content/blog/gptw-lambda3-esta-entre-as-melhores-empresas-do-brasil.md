@@ -2,7 +2,7 @@
 title: "GPTW: Lambda3 está entre as melhores empresas do Brasil"
 subtitle: "Cultura organizacional e valores alçam empresa ao Top 5 do ranking; Diversidade e inclusão, iniciativas internas e estímulo ao desenvolvimento profissional também são destaques"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_aa54a904f444d13afe5816b692d6825d.png"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "O impacto dos microsserviços para o mercado e o consumidor"
 subtitle: "Os investimentos em nuvem seguem em alta. E este fator pode trazer oportunidades para negócios em diferentes setores e nichos."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-21
 author: "Giovanni Bassi"
 image: "https://mclair.com.br/images/galeria/21-07-2022_6_fc649d7acfb7d281c2a52953c8d88b72.png"
 category: "geral"

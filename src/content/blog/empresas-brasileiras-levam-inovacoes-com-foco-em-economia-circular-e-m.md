@@ -2,7 +2,7 @@
 title: "Empresas brasileiras levam inovações com foco em economia circular e meio ambiente à Argenplás"
 subtitle: "Por meio do Programa Brazil Machinery Solutions (BMS), 15 companhias participam da feira; Argentina foi o destino de 15% das exportações de máquinas e equipamentos brasileiros do setor em 2021, totalizando US$14,1 milhões em movimentações"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-20
 author: "BMS: Brazil Machinery Solutions"
 image: "https://mclair.com.br/images/galeria/20-07-2022_6_64d02d570092f9cec054b43fb53b264a.jpg"
 category: "geral"

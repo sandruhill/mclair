@@ -2,7 +2,7 @@
 title: "3 dicas para equilibrar o controle e velocidade nas tomadas de decisão"
 subtitle: "Quem não gosta de ter controle sobre as coisas? De maneira geral sempre desejamos algum tipo de certeza sobre o que está por vir. É por isso que consultamos a previsão do tempo"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_a1b63ab237129f3483b05bf85249a321.jpg"
 category: "geral"

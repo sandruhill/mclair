@@ -2,7 +2,7 @@
 title: "O que o novo mundo espera dos líderes do futuro?"
 subtitle: "Não é difícil encontrar na internet artigos sobre as 5, 7 ou 10 características dos líderes do futuro. Este é um assunto muito explorado, pois o ?futuro? está sempre mudando. Haverá sempre algo novo acontecendo"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_edbfb23f84ed762fd75768ac5cada63c.jpg"
 category: "geral"

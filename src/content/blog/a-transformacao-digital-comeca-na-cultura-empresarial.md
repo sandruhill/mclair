@@ -2,7 +2,7 @@
 title: "A transformação digital começa na cultura empresarial"
 subtitle: "O isolamento social e a obrigatoriedade do home office colocou a digitalização no centro das agendas corporativas, tanto para permitir que os colaboradores continuem a desempenhar"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Davi Filgueiras"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_3184fb4307ee584199a01579001a18cb.jpg"
 category: "geral"

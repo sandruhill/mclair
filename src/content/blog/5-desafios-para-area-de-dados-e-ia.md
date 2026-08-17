@@ -2,7 +2,7 @@
 title: "5 desafios para área de Dados e IA"
 subtitle: "A área de dados segue o movimento de plena ascensão. Com o período de isolamento social, fintechs, grandes bancos, startups dos ramos alimentícios e de delivery, entre outros"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-07-19
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/19-07-2022_1_6ea6394491ae6ba93853496eb00586b6.png"
 category: "geral"

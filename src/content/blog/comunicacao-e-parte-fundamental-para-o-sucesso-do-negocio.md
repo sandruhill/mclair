@@ -2,7 +2,7 @@
 title: "COMUNICAÇÃO É PARTE FUNDAMENTAL PARA O SUCESSO DO NEGÓCIO"
 subtitle: "Assim como a tecnologia hoje está empregada em todos os setores (saúde, financeiro, varejo, industrial e etc), temos que entender a importância das estratégias de comunicação"
 metaDescription: ""
-date: 2025-04-08
+date: 2020-05-25
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/25-05-2020_6_eb501bb32e4bee4420df1a0de63997ad.jpg"
 category: "geral"

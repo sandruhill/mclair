@@ -2,7 +2,7 @@
 title: "Como evitar o transtorno com roubo de smartphones e dados"
 subtitle: "Um smartphone, que hoje tem valor médio de R$2 mil, está entre os maiores problemas de segurança pública do país."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Giovanni Bassi"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_0f1eae9d830db9fd09908085f54fdea5.jpg"
 category: "geral"

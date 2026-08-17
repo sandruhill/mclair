@@ -2,7 +2,7 @@
 title: "Projeto Zé Conecta amplia a inclusão digital para alunos da Fundação José Carvalho"
 subtitle: "Com o objetivo de atrair empresas engajadas na causa da educação, primeira fase da ação já conta com 240 doações"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Projeto Zé Conecta"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_b33175b6677d9f6878414c2f567940ea.jpg"
 category: "geral"

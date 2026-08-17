@@ -2,7 +2,7 @@
 title: "Quem está por trás da automação?"
 subtitle: "Por muito tempo, a ideia de lucro a qualquer custo predominou nas organizações."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_6f8886e123fd084227aaafcc52800823.jpg"
 category: "geral"

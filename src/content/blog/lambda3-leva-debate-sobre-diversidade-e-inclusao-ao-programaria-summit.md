@@ -2,7 +2,7 @@
 title: "Lambda3 leva debate sobre diversidade e inclusão ao PrograMaria Summit 2021"
 subtitle: "Empresa é um dos destaques da maior conferência voltada à diversidade de gênero e tecnologia, com espaço para aconselhamento profissional e oportunidades, além de conteúdos técnicos sobre Dev Front-End e UX e Produto"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_1d1a914b845982a48aaa30d97f0708df.png"
 category: "geral"

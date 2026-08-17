@@ -2,7 +2,7 @@
 title: "Case \"O Gambito da Rainha\": O que isso tem a ver com a sua marca?"
 subtitle: "O sucesso da vez da Netflix é a minissérie ?O Gambito da Rainha?, que conta a história de Beth Harmon, uma jovem-prodígio de xadrez em seu caminho para se tornar campeã mundial"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_950838760470a4329ac5ef1199a8044a.png"
 category: "geral"

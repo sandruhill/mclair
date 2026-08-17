@@ -2,7 +2,7 @@
 title: "Como a gamificação tornou-se estratégia People First na Era Digital"
 subtitle: "A evolução da tecnologia exigiu que as empresas buscassem novas formas de se diferenciar no mercado. E a inovação não se restringe aos produtos e serviços. Ela também está atrelada a soluções para simplificar e dinamizar os processos internos e a gestão de pessoas."
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-10
 author: "Rubiana Cruz"
 image: "https://mclair.com.br/images/galeria/10-02-2022_6_bdccaeaad9b5ecc5f125e314c368e88d.jpg"
 category: "geral"

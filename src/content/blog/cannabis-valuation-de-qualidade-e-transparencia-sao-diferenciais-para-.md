@@ -2,7 +2,7 @@
 title: "Cannabis: Valuation de qualidade e transparência são diferenciais para atrair investidores"
 subtitle: "Indústria de maconha medicinal cresce no Brasil, mas ainda é controversa; saber valor de mercado e apresentar negócio de forma consistente conferem segurança na hora de captar"
 metaDescription: ""
-date: 2025-04-08
+date: 2022-02-09
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/09-02-2022_6_6c4d92dac4e5bc8ac6d878e8f0156176.jpeg"
 category: "geral"

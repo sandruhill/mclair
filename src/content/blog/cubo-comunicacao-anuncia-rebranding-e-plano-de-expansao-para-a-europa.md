@@ -2,7 +2,7 @@
 title: "Cubo Comunicação anuncia rebranding e plano de expansão para a Europa"
 subtitle: "A Cubo Comunicação acaba de anunciar o rebranding da marca."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_77d3b5c9aa14269627ecafd323b61d13.jpg"
 category: "geral"

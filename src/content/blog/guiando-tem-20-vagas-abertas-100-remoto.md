@@ -2,7 +2,7 @@
 title: "Guiando tem 20 vagas abertas 100% remoto"
 subtitle: "Startup especialista em automação inteligente de faturas oferece oportunidades em times de Tecnologia"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Guiando"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_245f0b567d1cda038ee03408baa48cac.jpg"
 category: "geral"

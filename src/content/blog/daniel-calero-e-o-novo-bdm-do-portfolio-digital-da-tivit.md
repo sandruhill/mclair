@@ -2,7 +2,7 @@
 title: "Daniel Calero é o novo BDM do portfólio digital da Tivit"
 subtitle: "Daniel Calero é o novo Business Development Manager (BDM) da Lambda3 e da Tdx, empresas que compõem a área de Digital da Tivit."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Lambda3"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_5878f9649a10ee8380f1b6dd3491fc1f.jpg"
 category: "geral"

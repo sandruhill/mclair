@@ -2,7 +2,7 @@
 title: "\"O Dilema da Redes\" reduz o protagonismo das pessoas"
 subtitle: "Ao longo de setembro, a discussão sobre tecnologias que envolvem Inteligência Artificial foi intensificada pelo documentário ?O Dilema das Redes? (2020), que estreou na Netflix Brasil."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Elemar Júnior"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_45f4911f21cb606e90c1514234f02f77.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "O futuro do home-office e a realidade pós-pandemia"
 subtitle: "A pandemia provocou diversas adaptações no cotidiano das pessoas em todo o mundo. Mudanças de hábito, distanciamento social, práticas de isolamento, suspensão de eventos noturnos"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Elemar Júnior"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_1a5db887156a37d4afa1b1663da796d5.jpg"
 category: "geral"

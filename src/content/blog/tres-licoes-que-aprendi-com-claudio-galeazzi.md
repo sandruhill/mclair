@@ -2,7 +2,7 @@
 title: "Três lições que aprendi com Cláudio Galeazzi"
 subtitle: "Ao longo da minha vida profissional trabalhei com alguns dos melhores executivos e empresários do Brasil."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-08-05
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/05-08-2021_6_9c96ecf9fd6af3b7ee7f5dfe3555bab1.jpg"
 category: "geral"

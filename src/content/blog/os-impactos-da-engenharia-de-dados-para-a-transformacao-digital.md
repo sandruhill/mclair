@@ -2,7 +2,7 @@
 title: "Os impactos da Engenharia de Dados para a transformação digital"
 subtitle: "A busca por soluções tecnológicas e modernizações é o foco das companhias em 2023."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Matheus Vidal"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_427be405e2941011797ed85a2632658f.jpg"
 category: "geral"

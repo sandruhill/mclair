@@ -2,7 +2,7 @@
 title: "5 séries e filmes impactantes sobre ESG para maratonar no feriado"
 subtitle: "ESG é uma sigla em inglês que significa environmental, social and governance, e corresponde às práticas ambientais, sociais e de governança de uma organização."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-26
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/26-04-2023_6_9c3361f4afc35208f67e42df51404fd1.jpg"
 category: "geral"

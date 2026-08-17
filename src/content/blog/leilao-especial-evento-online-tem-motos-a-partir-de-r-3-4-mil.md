@@ -2,7 +2,7 @@
 title: "Leilão especial: evento online tem motos a partir de R$3,4 mil"
 subtitle: "Evento virtual para lances acontece no dia 18 de maio, por meio do site da Fidalgo Leilões"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-06-26
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/26-06-2023_6_0dfebec03092a76b193b4a9428d5d638.jpg"
 category: "geral"

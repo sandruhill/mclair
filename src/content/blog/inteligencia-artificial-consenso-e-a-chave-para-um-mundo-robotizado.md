@@ -2,7 +2,7 @@
 title: "Inteligência Artificial: consenso é a chave para um mundo robotizado"
 subtitle: "Há quase quatro décadas, precisamente em 1984, o filme O Exterminador do Futuro era lançado."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Eduardo Camargo"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_50d5d1a8a56a77ea605bf93b00e0b201.jpg"
 category: "geral"

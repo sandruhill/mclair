@@ -2,7 +2,7 @@
 title: "Diversidade não basta: resultado também depende de abertura ao contraditório"
 subtitle: "Diversidade traz resultado para o negócio. Diversas pesquisas evidenciam isso, inclusive uma recente da McKinsey."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-12
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/12-01-2021_6_0a8fc86c3dbd4f83ffe12fa89770d6a7.jpg"
 category: "geral"

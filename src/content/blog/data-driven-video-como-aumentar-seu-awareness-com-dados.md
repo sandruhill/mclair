@@ -2,7 +2,7 @@
 title: "Data-driven video: Como aumentar seu awareness com dados"
 subtitle: "O audiovisual cresce a cada ano e se estabeleceu como um componente essencial para marcas e empresas no mundo digital. Cerca de 80% dos dados de tráfego na internet em 2021 serão vídeos."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Abrolhos Filmes"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_c72a3d5d53c4c7db34caeb00f7ae7545.jpg"
 category: "geral"

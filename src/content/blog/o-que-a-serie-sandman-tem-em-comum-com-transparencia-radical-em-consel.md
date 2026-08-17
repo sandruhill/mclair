@@ -2,7 +2,7 @@
 title: "O que a série Sandman tem em comum com \"transparência radical\" em conselhos empresariais?"
 subtitle: "Sandman estreou na plataforma de streaming Netflix no início de agosto e logo de cara se tornou a série mais vista da plataforma no Brasil, segundo ranking do site FlixPatrol."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-19
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/19-04-2023_6_2fd606a3b75fc8e73225d5e983a0c702.jpeg"
 category: "geral"

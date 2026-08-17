@@ -2,7 +2,7 @@
 title: "Valuation: Quanto vale um canal no Youtube?"
 subtitle: "Enquanto setor impacta R$ 3,4 bi no PIB brasileiro, empreendedores da plataforma ainda são despreparados para calcular seu valor de mercado"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-12
 author: "StartupHero"
 image: "https://mclair.com.br/images/galeria/12-11-2021_6_ac5b8d1afbd810183638e348fda16426.jpg"
 category: "geral"

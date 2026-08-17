@@ -2,7 +2,7 @@
 title: "Desista do controle: uma boa gestão também se faz esperando"
 subtitle: "A fruta dá no seu tempo. Você já ouviu essa frase? Ela sempre me faz pensar sobre como a natureza segue seu ritmo, sendo regida por suas próprias leis. Também insiste em me lembrar que não importa"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-01-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-01-2021_6_40e67ccc73826b4964cebc6862fa8cef.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Lideranças femininas: profissionais inspiradoras explicam os principais desafios da mulher em suas profissões"
 subtitle: "O Dia Internacional da Mulher se aproxima. No entanto, ainda há um longo caminho a ser percorrido quanto às suas trajetórias e oportunidades no ambiente de trabalho."
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Mclair Comunicação"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_9b350e8b473c3ec48e14758e802bb30a.jpeg"
 category: "geral"

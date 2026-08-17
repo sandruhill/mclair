@@ -2,7 +2,7 @@
 title: "Liderança: 5 dicas para quem deseja assumir o posto"
 subtitle: "Curiosidade, lifelong learning e autonhecimento estão entre as recomendações da conselheira e mentora Claudia Elisa Soares"
 metaDescription: ""
-date: 2025-04-08
+date: 2021-11-11
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/11-11-2021_6_95eab71f9566c130c5a0b034ab3b1ae3.jpg"
 category: "geral"

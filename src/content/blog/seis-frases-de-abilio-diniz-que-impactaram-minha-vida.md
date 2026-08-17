@@ -2,7 +2,7 @@
 title: "Seis frases de Abílio Diniz que impactaram minha vida"
 subtitle: "Me diga quem você é e como construiu sua carreira e certamente deixará escapar alguns nomes de pessoas que o inspiraram. É inevitável: bons líderes desenvolvem novos bons líderes."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-03-15
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/15-03-2021_6_12202b72e4a8985a5ac278a03f26b504.jpg"
 category: "geral"

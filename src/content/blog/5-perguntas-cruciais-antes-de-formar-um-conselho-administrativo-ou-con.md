@@ -2,7 +2,7 @@
 title: "5 perguntas cruciais antes de formar um Conselho Administrativo ou Consultivo"
 subtitle: "Obrigatório para as empresas de capital aberto, o Conselho Administrativo ou Consultivos parece ter ganhado mais foco nesse período de incertezas trazido pela pandemia."
 metaDescription: ""
-date: 2025-04-08
+date: 2021-05-04
 author: "Claudia Elisa Soares"
 image: "https://mclair.com.br/images/galeria/04-05-2021_6_502b31729cfab9d7c32246ceca42d749.jpg"
 category: "geral"

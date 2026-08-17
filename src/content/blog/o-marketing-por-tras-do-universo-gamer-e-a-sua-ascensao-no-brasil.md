@@ -2,7 +2,7 @@
 title: "O marketing por trás do universo gamer e a sua ascensão no Brasil"
 subtitle: "Para Carolina Fernandes, especialista em Marketing e Comunicação, o \"Game Marketing\" é uma estratégia que aproveita o poder de engajamento dos jogos para marcas se posicionarem e gerarem experiências também no metaverso"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-24
 author: "Carolina Fernandes"
 image: "https://mclair.com.br/images/galeria/24-04-2023_6_b2013ab370130f87ed2cf76f4f3d85c4.jpg"
 category: "geral"

@@ -2,7 +2,7 @@
 title: "Leilão da Justiça Federal tem imóveis no ABC e veículos com 50% de desconto"
 subtitle: "Lances virtuais até 22 de março, com encerramento às 11h, por meio do site da Fidalgo Leilões"
 metaDescription: ""
-date: 2025-04-08
+date: 2023-04-20
 author: "Fidalgo Leilões"
 image: "https://mclair.com.br/images/galeria/20-04-2023_6_07ea23a899793b53ae8ab0d57bdf8f44.jpg"
 category: "geral"
