@@ -245,7 +245,6 @@ const cases = (allCases as any[])
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
             </span>
           </div>
-          <div class="svc-accent"></div>
           <h3 class="svc-title">{s.title}</h3>
           <p class="svc-desc">{s.desc}</p>
           <span class="svc-learn">Saiba mais →</span>
@@ -559,15 +558,17 @@ const cases = (allCases as any[])
 }
 .he-label { font-size:.68rem; font-weight:700; letter-spacing:.22em; text-transform:uppercase; color:rgba(255,255,255,.45); }
 
+.hero-content { container-type: inline-size; }
+
 /* Title — white on dark video, compact 2-line layout */
 .hero-title {
-  font-size: clamp(1.9rem, 3.2vw, 3.4rem);
+  font-size: clamp(1.9rem, 5.6cqi, 3rem);
   font-weight: 900; line-height: 1.08; letter-spacing: -.03em;
   color: #fff;
   display: flex; flex-direction: column; gap: .12em;
   margin-bottom: 24px;
 }
-.hero-title-line { display:flex; flex-wrap:wrap; gap:.25em; }
+.hero-title-line { display:flex; flex-wrap:nowrap; gap:.25em; }
 .hero-accent { color: var(--red); }
 .italic-light { font-weight:300; font-style:italic; color:rgba(255,255,255,.35); }
 
@@ -712,10 +713,11 @@ const cases = (allCases as any[])
   transition:background .25s,color .25s,transform .3s cubic-bezier(.22,1,.36,1);
 }
 .svc-card:hover .svc-arrow { background:var(--accent,var(--red));color:#fff;transform:rotate(45deg) scale(1.1); }
-.svc-accent { height:3px;width:36px;border-radius:99px;margin-bottom:20px;background:var(--accent,var(--red));transition:width .35s cubic-bezier(.22,1,.36,1); }
-.svc-card:hover .svc-accent { width:80px; }
-.svc-title { font-size:1.02rem;font-weight:700;color:var(--ink);margin-bottom:12px;line-height:1.3; }
-.svc-desc { font-size:.84rem;color:var(--ink-3);line-height:1.75;font-weight:300;flex:1; }
+.svc-title {
+  font-size:1.35rem;font-weight:800;color:var(--accent,var(--ink));margin-bottom:12px;line-height:1.25;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.svc-desc { font-size:1rem;color:var(--ink-3);line-height:1.75;font-weight:300;flex:1; }
 .svc-learn {
   display:inline-block;margin-top:20px;
   font-size:.68rem;font-weight:700;letter-spacing:.12em;text-transform:uppercase;
@@ -773,7 +775,7 @@ const cases = (allCases as any[])
 .case-row:hover .case-line { width:100%; }
 .case-sector { font-size:.6rem;display:block;margin-bottom:8px;margin-left:-.8rem; }
 .case-client { font-size:1.15rem;font-weight:700;color:var(--ink);line-height:1.2; }
-.case-result { font-size:.88rem;color:var(--ink-3);font-weight:300;line-height:1.65; }
+.case-result { font-size:.95rem;color:var(--ink-3);font-weight:300;line-height:1.65; }
 .case-cta {
   display:flex;align-items:center;gap:6px;white-space:nowrap;
   font-size:.72rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;
@@ -896,7 +898,7 @@ const cases = (allCases as any[])
 .mtpc-tag-2 { color:var(--teal);background:rgba(27,138,118,.12); }
 .mtpc-icon { font-size:1.2rem;color:var(--red); }
 .mtpc-title { font-size:1.1rem;font-weight:700;color:#fff;margin-bottom:12px;line-height:1.3; }
-.mtpc-desc { font-size:.84rem;color:rgba(255,255,255,.45);line-height:1.75;font-weight:300;flex:1; }
+.mtpc-desc { font-size:.95rem;color:rgba(255,255,255,.45);line-height:1.75;font-weight:300;flex:1; }
 .mtpc-list {
   list-style:none;margin:16px 0 0;display:flex;flex-direction:column;gap:8px;
 }
@@ -936,7 +938,7 @@ const cases = (allCases as any[])
 .mtkc-info strong { display:block;font-size:.95rem;font-weight:700;color:#fff; }
 .mtkc-info span { display:block;font-size:.72rem;color:rgba(255,255,255,.6);font-weight:300; }
 .mtkc-quote {
-  font-size:.88rem;color:rgba(255,255,255,.75);line-height:1.7;
+  font-size:.95rem;color:rgba(255,255,255,.75);line-height:1.7;
   font-style:italic;font-weight:300;flex:1;
   border-left:2px solid rgba(255,255,255,.25);padding-left:14px;
 }
@@ -950,7 +952,7 @@ const cases = (allCases as any[])
 .t-cards-marquee { overflow:hidden; }
 .t-card { background:var(--cream); border:1px solid var(--line); border-radius:var(--r-lg); padding:28px 24px; width:340px; flex-shrink:0; }
 .t-quote-mark { font-size:3rem; line-height:1; color:var(--red); opacity:.2; font-weight:900; height:28px; display:block; }
-.t-quote { font-size:.83rem; color:var(--ink-2); line-height:1.8; font-weight:300; font-style:italic; margin-bottom:20px; }
+.t-quote { font-size:.95rem; color:var(--ink-2); line-height:1.8; font-weight:300; font-style:italic; margin-bottom:20px; }
 .t-author { display:flex; align-items:center; gap:12px; }
 .t-avatar-img { width:40px; height:40px; border-radius:50%; object-fit:cover; flex-shrink:0; border:2px solid var(--line); }
 .t-name { display:block; font-size:.85rem; font-weight:700; color:var(--ink); }
