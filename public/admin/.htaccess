@@ -3,7 +3,7 @@
 # than the rest of the site, and must never be indexed or cached.
 
 <IfModule mod_headers.c>
-  Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://github.com https://unpkg.com; img-src 'self' data: blob: https:; font-src 'self' data:; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'"
+  Header set Content-Security-Policy "default-src 'self' 'unsafe-inline' 'unsafe-eval' https://unpkg.com; connect-src 'self' https://api.github.com https://raw.githubusercontent.com https://github.com https://unpkg.com; img-src 'self' data: blob: https:; font-src 'self' data: https://unpkg.com; worker-src 'self' blob:; frame-src 'none'; object-src 'none'; base-uri 'self'"
   Header set X-Robots-Tag "noindex, nofollow"
   Header set Cache-Control "no-store"
 </IfModule>
