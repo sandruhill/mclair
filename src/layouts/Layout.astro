@@ -142,6 +142,10 @@ const websiteSchema = {
 <!doctype html>
 <html lang="pt-BR">
   <head>
+    <!-- charset must be the first thing in <head> (before any script) so mobile
+    browsers don't mid-parse re-decode/reparse the document and drop event
+    listeners bound during the first pass -->
+    <meta charset="UTF-8" />
     <!-- Google Tag Manager -->
     <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
@@ -149,7 +153,6 @@ const websiteSchema = {
     'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
     })(window,document,'script','dataLayer','GTM-P3JSQCGS');</script>
     <!-- End Google Tag Manager -->
-    <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
