@@ -178,6 +178,13 @@ function handleCallback(PDO $pdo): void {
 $pdo = acessoDb();
 $ip = clientIp();
 $path = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
+// Strip a leading /acesso so routes match both during interim testing
+// (mclair.com.br/acesso/...) and once this moves to its own subdomain
+// root (acesso.mclair.com.br/...), where the prefix won't be there at all.
+if ($path !== null && str_starts_with($path, '/acesso')) {
+    $path = substr($path, strlen('/acesso'));
+    if ($path === '') $path = '/';
+}
 $method = $_SERVER['REQUEST_METHOD'];
 
 try {
