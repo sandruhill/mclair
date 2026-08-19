@@ -39,20 +39,20 @@ const compactCases = sorted.slice(6).map(c => ({
 const allCasesForSchema = sorted.map((c, i) => ({
   position: i + 1,
   name: `Case ${c.entry.client}`,
-  url: `https://olive-gnat-658393.hostingersite.com/cases/${c.slug}`,
+  url: `https://mclair.com.br/cases/${c.slug}`,
 }));
 ---
 
 <Layout
   title="Cases Mclair | Resultados em Marketing de Autoridade"
   description="Cases Mclair: Fidalgo (11.600+ inserções), BMS/ABIMAQ (1.734 internacionais), Claudia Elisa, Alexandre Magno, Elemar Jr. e mais."
-  ogImage="https://olive-gnat-658393.hostingersite.com/paginas/cases-portfolio-comunicacao-mclair.jpg"
+  ogImage="https://mclair.com.br/paginas/cases-portfolio-comunicacao-mclair.jpg"
   schema={{
     '@context': 'https://schema.org',
     '@type': 'ItemList',
     name: 'Cases de Sucesso: Mclair Comunicação Estratégica',
     description: 'Resultados reais em Marketing de Autoridade, Assessoria de Imprensa e Comunicação Estratégica.',
-    url: 'https://olive-gnat-658393.hostingersite.com/cases',
+    url: 'https://mclair.com.br/cases',
     itemListElement: allCasesForSchema.map((c: any) => ({ '@type': 'ListItem', ...c })),
   }}
 >

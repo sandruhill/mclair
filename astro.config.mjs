@@ -50,7 +50,7 @@ function buildBlogDateMap() {
 const blogDates = buildBlogDateMap();
 
 export default defineConfig({
-  site: 'https://olive-gnat-658393.hostingersite.com',
+  site: 'https://mclair.com.br',
   output: 'static',
   integrations: [
     sitemap({

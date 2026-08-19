@@ -42,22 +42,22 @@ const { c, otherCases } = Astro.props;
   title={`Case ${c.client} | Mclair: Marketing de Autoridade e Comunicação Estratégica`}
   description={c.description}
   keywords={`case ${(c.client ?? '').toLowerCase()}, ${(c.sector ?? '').toLowerCase()}, marketing de autoridade, assessoria de imprensa, comunicação estratégica, mclair, resultados`}
-  ogImage={c.heroImg ? `https://olive-gnat-658393.hostingersite.com${c.heroImg}` : undefined}
+  ogImage={c.heroImg ? `https://mclair.com.br${c.heroImg}` : undefined}
   schema={[
     {
       '@context': 'https://schema.org',
       '@type': 'Article',
-      '@id': `https://olive-gnat-658393.hostingersite.com/cases/${c.slug}#case`,
+      '@id': `https://mclair.com.br/cases/${c.slug}#case`,
       headline: `Case ${c.client}: Mclair`,
       description: c.description || c.challenge,
       image: [c.heroImg, ...c.gallery.map((g: { src: string }) => g.src)]
         .filter(Boolean)
-        .map((src: string) => `https://olive-gnat-658393.hostingersite.com${src}`),
+        .map((src: string) => `https://mclair.com.br${src}`),
       articleSection: c.sector,
       inLanguage: 'pt-BR',
-      author: { '@id': 'https://olive-gnat-658393.hostingersite.com/#organization' },
-      publisher: { '@id': 'https://olive-gnat-658393.hostingersite.com/#organization' },
-      mainEntityOfPage: { '@type': 'WebPage', '@id': `https://olive-gnat-658393.hostingersite.com/cases/${c.slug}` },
+      author: { '@id': 'https://mclair.com.br/#organization' },
+      publisher: { '@id': 'https://mclair.com.br/#organization' },
+      mainEntityOfPage: { '@type': 'WebPage', '@id': `https://mclair.com.br/cases/${c.slug}` },
       about: [
         { '@type': 'Organization', name: c.client },
         { '@type': 'Thing', name: c.sector },
@@ -68,9 +68,9 @@ const { c, otherCases } = Astro.props;
       '@context': 'https://schema.org',
       '@type': 'BreadcrumbList',
       itemListElement: [
-        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://olive-gnat-658393.hostingersite.com' },
-        { '@type': 'ListItem', position: 2, name: 'Cases', item: 'https://olive-gnat-658393.hostingersite.com/cases' },
-        { '@type': 'ListItem', position: 3, name: c.client, item: `https://olive-gnat-658393.hostingersite.com/cases/${c.slug}` },
+        { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.com.br' },
+        { '@type': 'ListItem', position: 2, name: 'Cases', item: 'https://mclair.com.br/cases' },
+        { '@type': 'ListItem', position: 3, name: c.client, item: `https://mclair.com.br/cases/${c.slug}` },
       ],
     },
   ]}
