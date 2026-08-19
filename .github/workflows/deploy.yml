@@ -23,6 +23,14 @@ jobs:
       - name: Build
         run: npm run build
 
+      - name: Write Facebook CAPI config (not committed to git)
+        run: |
+          cat > dist/api/fb-capi-config.php <<PHP
+          <?php
+          define('FB_PIXEL_ID', '593003523500900');
+          define('FB_ACCESS_TOKEN', '${{ secrets.FB_CAPI_TOKEN }}');
+          PHP
+
       - name: Deploy to Hostinger via SSH/rsync
         uses: burnett01/rsync-deployments@7.0.1
         with:

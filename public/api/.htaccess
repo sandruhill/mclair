@@ -1,0 +1,5 @@
+# Config file is included by fb-capi.php only — deny direct requests as
+# defense in depth (PHP execution already prevents source disclosure).
+<Files "fb-capi-config.php">
+  Require all denied
+</Files>
