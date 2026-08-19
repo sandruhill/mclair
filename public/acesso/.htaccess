@@ -1,0 +1,14 @@
+# Deny direct access to the deploy-time-generated secrets file and to
+# every internal .php module — only index.php is a valid entry point.
+<FilesMatch "^(config|db|kv|codes|ratelimit|github|oauth|email)\.php$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_headers.c>
+  Header set X-Robots-Tag "noindex, nofollow"
+</IfModule>
+
+RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [QSA,L]

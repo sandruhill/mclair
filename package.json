@@ -9,12 +9,22 @@
     "dev": "astro dev",
     "build": "astro build",
     "preview": "astro preview",
-    "astro": "astro"
+    "astro": "astro",
+    "remotion": "remotion studio remotion/index.ts",
+    "remotion:render": "remotion render remotion/index.ts PainelFlow out/painel-flow.mp4"
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@astrojs/vercel": "^10.0.0",
     "@keystatic/core": "^0.5.0",
     "astro": "^6.4.7"
+  },
+  "devDependencies": {
+    "@remotion/cli": "^4.0.513",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "remotion": "^4.0.513"
   }
 }

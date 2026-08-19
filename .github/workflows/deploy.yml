@@ -31,6 +31,19 @@ jobs:
           define('FB_ACCESS_TOKEN', '${{ secrets.FB_CAPI_TOKEN }}');
           PHP
 
+      - name: Write acesso (login/signup) config (not committed to git)
+        run: |
+          cat > dist/acesso/config.php <<PHP
+          <?php
+          define('DB_HOST', '${{ secrets.ACESSO_DB_HOST }}');
+          define('DB_NAME', '${{ secrets.ACESSO_DB_NAME }}');
+          define('DB_USER', '${{ secrets.ACESSO_DB_USER }}');
+          define('DB_PASS', '${{ secrets.ACESSO_DB_PASS }}');
+          define('GITHUB_ADMIN_TOKEN', '${{ secrets.ACESSO_GITHUB_ADMIN_TOKEN }}');
+          define('GITHUB_OAUTH_CLIENT_ID', '${{ secrets.ACESSO_GITHUB_OAUTH_CLIENT_ID }}');
+          define('GITHUB_OAUTH_CLIENT_SECRET', '${{ secrets.ACESSO_GITHUB_OAUTH_CLIENT_SECRET }}');
+          PHP
+
       - name: Deploy to Hostinger via SSH/rsync
         uses: burnett01/rsync-deployments@7.0.1
         with:

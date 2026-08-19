@@ -1,0 +1,48 @@
+name: Render Remotion animation
+
+# Manual only — this doesn't run on every push, just when you want to export
+# a composition to a video/gif file. Local rendering is blocked on this
+# Mac (Remotion's ffmpeg binary requires macOS 15+), so this Linux runner
+# does the actual export instead.
+on:
+  workflow_dispatch:
+    inputs:
+      composition:
+        description: "Composition id (see remotion/Root.tsx)"
+        required: true
+        default: "PainelFlow"
+      codec:
+        description: "Output format"
+        required: true
+        default: "gif"
+        type: choice
+        options:
+          - gif
+          - h264
+
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Render
+        run: |
+          EXT=mp4
+          if [ "${{ inputs.codec }}" = "gif" ]; then EXT=gif; fi
+          npx remotion render remotion/index.ts "${{ inputs.composition }}" "out/${{ inputs.composition }}.$EXT" --codec="${{ inputs.codec }}"
+
+      - name: Upload render
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.composition }}
+          path: out/*
