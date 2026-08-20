@@ -16,7 +16,7 @@ const caseLinks = (allCases as any[])
 // template changes needed. Cases keeps its own rich mega-menu below instead
 // of a plain dropdown, regardless of what's in the menu tree for it, since
 // it's already always in sync with the real case list.
-const menu = await getMenuTree().catch((e) => { console.error('[Header] getMenuTree failed:', e); return []; });
+const menu = await getMenuTree().catch((e) => { console.error('[Header] getMenuTree failed, nav will render empty:', e); return []; });
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 ---
