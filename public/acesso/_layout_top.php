@@ -170,8 +170,10 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   .imgdrop-err { font-size:.74rem; font-weight:600; color:var(--red); margin:6px 0 0; }
 
   /* Repeater items that carry little info per item (a photo+caption, a
-     number+label...) sit side by side instead of stacking full-width. */
-  .rep.grid-cols { display:grid; grid-template-columns:repeat(auto-fill, minmax(240px, 1fr)); gap:12px; align-items:start; }
+     number+label...) sit side by side instead of stacking full-width.
+     auto-fit (not auto-fill) so a half-empty last row stretches its items
+     to fill the width instead of leaving blank trailing columns. */
+  .rep.grid-cols { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:start; }
   .rep.grid-cols .rep-item { margin-bottom:0; }
 
   /* Inline confirmation (replaces native confirm()) */
