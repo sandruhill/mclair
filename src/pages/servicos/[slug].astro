@@ -5,29 +5,27 @@ import Layout from '../../layouts/Layout.astro';
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços.';
 
 export async function getStaticPaths() {
-  const { createReader } = await import('@keystatic/core/reader');
-  const { default: cfg } = await import('../../../keystatic.config');
-  const reader = createReader(process.cwd(), cfg);
+  const { getServices } = await import('../../utils/cmsApi');
+  const rows = await getServices();
 
-  const all = await reader.collections.servicos.all();
-  const services = (all as any[])
-    .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
-    .map(s => ({
+  const services = rows
+    .sort((a: any, b: any) => (a.num ?? '').localeCompare(b.num ?? ''))
+    .map((s: any) => ({
       slug:        s.slug,
-      num:         s.entry.num ?? '',
-      color:       s.entry.color || 'var(--red)',
-      accent:      s.entry.accent || '#C8102E',
-      bg:          s.entry.bg || 'var(--red-soft)',
-      title:       String(s.entry.title),
-      headline:    s.entry.headline ?? '',
-      intro:       s.entry.intro ?? '',
-      desc:        s.entry.desc ?? '',
-      items:       (s.entry.items ?? []) as string[],
-      cta:         s.entry.cta ?? '',
-      description: s.entry.metaDescription ?? '',
+      num:         s.num ?? '',
+      color:       s.color || 'var(--red)',
+      accent:      s.accent || '#C8102E',
+      bg:          s.bg || 'var(--red-soft)',
+      title:       String(s.title),
+      headline:    s.headline ?? '',
+      intro:       s.intro ?? '',
+      desc:        s.full_desc ?? '',
+      items:       (s.items ?? []) as string[],
+      cta:         s.cta ?? '',
+      description: s.meta_description ?? '',
     }));
 
-  return services.map(s => ({
+  return services.map((s: any) => ({
     params: { slug: s.slug },
     props: { s, others: services.filter((x: any) => x.slug !== s.slug).slice(0, 3) },
   }));

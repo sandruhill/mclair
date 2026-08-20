@@ -1,11 +1,11 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import sobreJson from '../content/singletons/sobre.json';
+import { getSingleton } from '../utils/cmsApi';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20falar%20com%20a%20equipe.';
 
-const sobreContent = (sobreJson as any).content;
+const sobreContent = await getSingleton('sobre');
 const valores  = (sobreContent?.valores  ?? []) as any[];
 const equipe   = (sobreContent?.equipe   ?? []) as any[];
 const seo = sobreContent?.seo ?? {};

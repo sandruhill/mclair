@@ -16,7 +16,8 @@
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
     "@keystatic/core": "^0.5.0",
-    "astro": "^6.4.7"
+    "astro": "^6.4.7",
+    "marked": "^18.0.10"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.513",

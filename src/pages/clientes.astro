@@ -1,9 +1,9 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import clientesJson from '../content/singletons/clientes.json';
+import { getSingleton } from '../utils/cmsApi';
 
-const clientesContent = (clientesJson as any).content;
+const clientesContent = await getSingleton('clientes');
 const clients = (clientesContent?.clients ?? []) as any[];
 const stats   = (clientesContent?.stats   ?? []) as any[];
 const seo = clientesContent?.seo ?? {};

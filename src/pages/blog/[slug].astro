@@ -1,60 +1,36 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import legacyPosts from '../../data/blog.json';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
-import { documentToHtml } from '../../utils/documentToHtml';
+import { marked } from 'marked';
+import { getBlogPosts } from '../../utils/cmsApi';
+import type { DbBlogPost } from '../../utils/cmsApi';
 
 export async function getStaticPaths() {
-  // CMS posts
-  let cmsPaths: any[] = [];
-  try {
-    const { createReader: cr } = await import('@keystatic/core/reader');
-    const { default: cfg } = await import('../../../keystatic.config');
-    const { documentToHtml: toHtml } = await import('../../utils/documentToHtml');
-    const reader = cr(process.cwd(), cfg);
-    const all = await reader.collections.blog.all();
-    cmsPaths = await Promise.all(
-      all.map(async (p) => {
-        const nodes = await p.entry.content();
-        return {
-          params: { slug: p.slug },
-          props: {
-            post: {
-              slug: p.slug,
-              title: p.entry.title.name,
-              subtitle: p.entry.subtitle ?? '',
-              metaDescription: p.entry.metaDescription ?? '',
-              date: p.entry.date ?? '',
-              author: p.entry.author ?? 'Equipe Mclair',
-              image: (p.entry as any).featuredImage ?? p.entry.image ?? '',
-              content: toHtml(nodes as any),
-              keywords: p.entry.keywords ?? [],
-              aboutTopics: p.entry.aboutTopics ?? [],
-              faqItems: p.entry.faqItems ?? [],
-              category: (p.entry as any).category ?? 'geral',
-            },
-            source: 'cms',
-          },
-        };
-      })
-    );
-  } catch { /* no CMS posts yet */ }
+  const posts = await getBlogPosts();
+  // Normalized shape used both for the full post and the related-posts list
+  // (relatedPosts needs plain slug/title/author/image, not the DB column names).
+  const normalized = posts.map((p: DbBlogPost) => ({
+    slug: p.slug,
+    title: p.title,
+    subtitle: p.subtitle ?? '',
+    metaDescription: p.meta_description ?? '',
+    date: p.post_date ?? '',
+    author: p.author ?? 'Equipe Mclair',
+    image: p.featured_image ?? p.image_url ?? '',
+    content: marked.parse(p.content_md ?? '') as string,
+    keywords: p.keywords ?? [],
+    aboutTopics: p.about_topics ?? [],
+    faqItems: p.faq_items ?? [],
+    category: p.category ?? 'geral',
+  }));
 
-  // Legacy posts — skip slugs already covered by CMS
-  const cmsSlugs = new Set(cmsPaths.map((p) => p.params.slug));
-  const legacyPaths = legacyPosts
-    .filter((p) => !cmsSlugs.has(p.slug))
-    .map((post) => ({
-      params: { slug: post.slug },
-      props: { post, source: 'legacy' },
-    }));
-
-  return [...cmsPaths, ...legacyPaths];
+  return normalized.map((post) => ({
+    params: { slug: post.slug },
+    props: { post, source: 'db', allPosts: normalized },
+  }));
 }
 
-const { post, source } = Astro.props;
+const { post, source, allPosts } = Astro.props;
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
 const canonicalURL = `${BASE}/blog/${post.slug}`;
 
@@ -161,12 +137,12 @@ const faqSchema = faqItems.length
 
 const schemas = [articleSchema, breadcrumbSchema, ...(faqSchema ? [faqSchema] : [])];
 
-// Related posts (from legacy only to keep things fast)
-const related = legacyPosts
-  .filter((p) => p.slug !== post.slug && p.author === post.author)
+// Related posts
+const related = allPosts
+  .filter((p: any) => p.slug !== post.slug && p.author === post.author)
   .slice(0, 3);
 const relatedFallback = related.length < 3
-  ? legacyPosts.filter((p) => p.slug !== post.slug && !related.find((r) => r.slug === p.slug)).slice(0, 3 - related.length)
+  ? allPosts.filter((p: any) => p.slug !== post.slug && !related.find((r: any) => r.slug === p.slug)).slice(0, 3 - related.length)
   : [];
 const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 ---

@@ -2,41 +2,37 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import HomeBlog from '../components/HomeBlog.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
-import homepageJson from '../content/singletons/homepage.json';
+import { getServices, getCases, getSingleton } from '../utils/cmsApi';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-
-const hpContent = (homepageJson as any).content;
+const hpContent = await getSingleton('homepage');
 const stats  = (hpContent?.stats ?? []);
 const testimonials = (hpContent?.testimonials ?? []);
 
-const allServicos = await reader.collections.servicos.all().catch(() => []);
+const allServicos = await getServices().catch(() => []);
 const services = (allServicos as any[])
-  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''))
   .map(s => ({
-    num:   s.entry.num ?? '',
-    title: String(s.entry.title),
-    desc:  s.entry.homeDesc || s.entry.intro || '',
-    color: s.entry.color || 'var(--red)',
+    num:   s.num ?? '',
+    title: String(s.title),
+    desc:  s.home_desc || s.intro || '',
+    color: s.color || 'var(--red)',
     href:  `/servicos/${s.slug}`,
   }));
 
-const allCases = await reader.collections.cases.all().catch(() => []);
+const allCases = await getCases().catch(() => []);
 const cases = (allCases as any[])
-  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''))
   .slice(0, 5)
   .map(c => ({
-    client: c.entry.client,
-    sector: c.entry.sector ?? '',
-    result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
-    accent: c.entry.accent || '#C8102E',
+    client: c.client,
+    sector: c.sector ?? '',
+    result: c.home_result || (c.results?.[0] ? `${c.results[0].v} ${c.results[0].l}` : ''),
+    accent: c.accent || '#C8102E',
     slug:   c.slug,
-    img:    c.entry.img ?? '',
-    challenge: c.entry.challenge ?? '',
+    img:    c.img ?? '',
+    challenge: c.challenge ?? '',
   }));
 ---
 

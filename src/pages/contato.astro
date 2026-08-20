@@ -1,11 +1,11 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import contatoJson from '../content/singletons/contato.json';
+import { getSingleton } from '../utils/cmsApi';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20consultoria.';
 
-const contatoContent = (contatoJson as any).content;
+const contatoContent = await getSingleton('contato');
 const faqs    = (contatoContent?.faqs  ?? []) as any[];
 const phone   = contatoContent?.contactInfo?.phone ?? '(11) 98860-0372';
 const email   = contatoContent?.contactInfo?.email ?? 'kelly@mclair.com.br';

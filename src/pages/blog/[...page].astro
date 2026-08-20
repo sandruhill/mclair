@@ -1,88 +1,28 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import legacyPosts from '../../data/blog.json';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
-import { documentToHtml } from '../../utils/documentToHtml';
-
-// ── Merge CMS posts with legacy blog.json ────────────────────
-let cmsPosts: any[] = [];
-try {
-  const reader = createReader(process.cwd(), keystaticConfig);
-  const all = await reader.collections.blog.all();
-  cmsPosts = await Promise.all(
-    all.map(async (p) => {
-      const nodes = await p.entry.content();
-      return {
-        id: `cms-${p.slug}`,
-        slug: p.slug,
-        title: p.entry.title.name,
-        subtitle: p.entry.subtitle ?? '',
-        date: p.entry.date ?? '',
-        author: p.entry.author ?? 'Equipe Mclair',
-        image: (p.entry as any).featuredImage ?? p.entry.image ?? '',
-        content: documentToHtml(nodes as any),
-        category: (p.entry as any).category ?? 'geral',
-        _cms: true,
-      };
-    })
-  );
-} catch {
-  // No CMS posts yet
-}
-
-// Sort newest first — CMS date is YYYY-MM-DD, legacy is DD/MM/YYYY
-function toTimestamp(d: string): number {
-  if (!d) return 0;
-  if (d.includes('-')) return new Date(d).getTime();
-  const [dd, mm, yy] = d.split('/');
-  return new Date(`${yy}-${mm}-${dd}`).getTime();
-}
-
-// Deduplicate: CMS takes priority over legacy (CMS has all migrated posts)
-const cmsSlugsSet = new Set(cmsPosts.map((p: any) => p.slug));
-const allPosts = [...cmsPosts, ...legacyPosts.filter((p: any) => !cmsSlugsSet.has(p.slug))].sort(
-  (a, b) => toTimestamp(b.date) - toTimestamp(a.date)
-);
 
 export async function getStaticPaths({ paginate }) {
-  // Re-run the same merge (getStaticPaths runs in its own scope)
-  let cms: any[] = [];
-  try {
-    const { createReader } = await import('@keystatic/core/reader');
-    const { default: cfg } = await import('../../../keystatic.config');
-    const { documentToHtml: toHtml } = await import('../../utils/documentToHtml');
-    const reader = createReader(process.cwd(), cfg);
-    const all = await reader.collections.blog.all();
-    cms = await Promise.all(
-      all.map(async (p) => {
-        const nodes = await p.entry.content();
-        return {
-          id: `cms-${p.slug}`,
-          slug: p.slug,
-          title: p.entry.title.name,
-          subtitle: p.entry.subtitle ?? '',
-          date: p.entry.date ?? '',
-          author: p.entry.author ?? 'Equipe Mclair',
-          image: (p.entry as any).featuredImage ?? p.entry.image ?? '',
-          content: toHtml(nodes as any),
-          category: (p.entry as any).category ?? 'geral',
-          _cms: true,
-        };
-      })
-    );
-  } catch { /* no CMS posts */ }
+  const { getBlogPosts } = await import('../../utils/cmsApi');
+  const { marked } = await import('marked');
+  const posts = await getBlogPosts();
 
   function ts(d: string) {
-    if (!d) return 0;
-    if (d.includes('-')) return new Date(d).getTime();
-    const [dd, mm, yy] = d.split('/');
-    return new Date(`${yy}-${mm}-${dd}`).getTime();
+    return d ? new Date(d).getTime() : 0;
   }
-  const { default: legacy } = await import('../../data/blog.json');
-  const cmsSlugsDedup = new Set(cms.map((p: any) => p.slug));
-  const merged = [...cms, ...legacy.filter((p: any) => !cmsSlugsDedup.has(p.slug))].sort((a, b) => ts(b.date) - ts(a.date));
+
+  const merged = posts
+    .map((p: any) => ({
+      slug: p.slug,
+      title: p.title,
+      subtitle: p.subtitle ?? '',
+      date: p.post_date ?? '',
+      author: p.author ?? 'Equipe Mclair',
+      image: p.featured_image ?? p.image_url ?? '',
+      content: marked.parse(p.content_md ?? '') as string,
+      category: p.category ?? 'geral',
+    }))
+    .sort((a, b) => ts(b.date) - ts(a.date));
 
   return paginate(merged, { pageSize: 18 });
 }

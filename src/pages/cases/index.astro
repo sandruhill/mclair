@@ -1,44 +1,42 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../../keystatic.config';
+import { getCases } from '../../utils/cmsApi';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20saber%20mais%20sobre%20os%20cases.';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const allCases = await reader.collections.cases.all().catch(() => []);
+const allCases = await getCases().catch(() => []);
 const sorted = (allCases as any[])
-  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''));
+  .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''));
 
 // First 6: full detailed cards; rest: compact cards
 const cases = sorted.slice(0, 6).map(c => ({
-  num:       c.entry.num ?? '',
-  color:     c.entry.color || 'var(--red)',
-  accent:    c.entry.accent || '#C8102E',
+  num:       c.num ?? '',
+  color:     c.color || 'var(--red)',
+  accent:    c.accent || '#C8102E',
   slug:      c.slug,
-  img:       c.entry.img ?? '',
-  logo:      c.entry.logo ?? '',
-  client:    c.entry.client,
-  sector:    c.entry.sector ?? '',
-  challenge: c.entry.challenge ?? '',
-  solution:  c.entry.solution ?? '',
-  results:   (c.entry.results ?? []) as { v: string; l: string }[],
-  tags:      (c.entry.tags ?? []) as string[],
+  img:       c.img ?? '',
+  logo:      c.logo ?? '',
+  client:    c.client,
+  sector:    c.sector ?? '',
+  challenge: c.challenge ?? '',
+  solution:  c.solution ?? '',
+  results:   (c.results ?? []) as { v: string; l: string }[],
+  tags:      (c.tags ?? []) as string[],
 }));
 
 const compactCases = sorted.slice(6).map(c => ({
   slug:   c.slug,
-  accent: c.entry.accent || '#C8102E',
-  client: c.entry.client,
-  sector: c.entry.sector ?? '',
-  result: c.entry.homeResult || (c.entry.results?.[0] ? `${c.entry.results[0].v} ${c.entry.results[0].l}` : ''),
-  tags:   (c.entry.tags ?? []) as string[],
+  accent: c.accent || '#C8102E',
+  client: c.client,
+  sector: c.sector ?? '',
+  result: c.home_result || (c.results?.[0] ? `${c.results[0].v} ${c.results[0].l}` : ''),
+  tags:   (c.tags ?? []) as string[],
 }));
 
 const allCasesForSchema = sorted.map((c, i) => ({
   position: i + 1,
-  name: `Case ${c.entry.client}`,
+  name: `Case ${c.client}`,
   url: `https://mclair.com.br/cases/${c.slug}`,
 }));
 ---
