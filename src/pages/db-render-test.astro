@@ -1,0 +1,55 @@
+---
+// Proof-of-concept: fetches content from the MySQL-backed export API at
+// BUILD TIME (not runtime -- this is output:'static', same model as the
+// rest of the site) and renders it, to validate that Astro can source
+// content from the database instead of git-tracked files.
+export const prerender = true;
+
+const EXPORT_URL = 'https://mclair.com.br/cms-test/api-export.php';
+const TOKEN = import.meta.env.CMS_EXPORT_TOKEN;
+
+let posts: any[] = [];
+let error: string | null = null;
+
+try {
+  const res = await fetch(`${EXPORT_URL}?type=blog_posts`, {
+    headers: { 'X-Export-Token': TOKEN },
+  });
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  posts = await res.json();
+} catch (e: any) {
+  error = e.message;
+}
+---
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="robots" content="noindex" />
+  <title>Teste: Astro renderizando do banco</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #F1EBDD; color: #211B14; }
+    h1 { color: #C8102E; }
+    .post { background: #fff; border: 1px solid #D6C9A8; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+    .err { background: #C8102E; color: #fff; padding: 16px; border-radius: 8px; }
+    .ok { background: #2F7D4F; color: #fff; padding: 12px 16px; border-radius: 8px; margin-bottom: 20px; }
+  </style>
+</head>
+<body>
+  <h1>Prova: Astro renderizando a partir do banco de dados</h1>
+  {error ? (
+    <div class="err">Falha ao buscar do banco durante o build: {error}</div>
+  ) : (
+    <>
+      <div class="ok">Build buscou {posts.length} posts do MySQL via HTTPS, com sucesso, e gerou este HTML estático.</div>
+      {posts.slice(0, 5).map((p) => (
+        <div class="post">
+          <strong>{p.title}</strong>
+          <p>{p.subtitle}</p>
+          <small>{p.post_date} — {p.category} — por {p.author}</small>
+        </div>
+      ))}
+    </>
+  )}
+</body>
+</html>

@@ -22,6 +22,8 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          CMS_EXPORT_TOKEN: ${{ secrets.CMS_EXPORT_TOKEN }}
 
       - name: Write Facebook CAPI config (not committed to git)
         run: |
