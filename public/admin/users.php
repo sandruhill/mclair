@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             try {
                 $stmt = $pdo->prepare('INSERT INTO cmstest_users (username, password_hash, role) VALUES (?, ?, ?)');
                 $stmt->execute([$username, $hash, $role]);
-                header('Location: users.php?created=1');
+                header('Location: usuarios?created=1');
                 exit;
             } catch (PDOException $e) {
                 $error = str_contains($e->getMessage(), 'Duplicate') ? 'Esse usuário já existe.' : 'Erro ao criar usuário.';
@@ -41,7 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt = $pdo->prepare('DELETE FROM cmstest_users WHERE id = ?');
             $stmt->execute([$id]);
         }
-        header('Location: users.php?deleted=1');
+        header('Location: usuarios?deleted=1');
         exit;
     }
 }

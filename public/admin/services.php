@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
-    header('Location: services.php?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: servicos?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }
 
@@ -45,7 +45,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços');
     <td><?php if ($s['image']): ?><img class="dt-thumb" src="<?= htmlspecialchars($s['image']) ?>" alt="" /><?php else: ?><div class="dt-thumb-empty"></div><?php endif; ?></td>
     <td><?= htmlspecialchars($s['num']) ?></td>
     <td><?= htmlspecialchars($s['title']) ?></td>
-    <td class="dt-actions"><a href="services.php?slug=<?= urlencode($s['slug']) ?>">editar</a></td>
+    <td class="dt-actions"><a href="servicos?slug=<?= urlencode($s['slug']) ?>">editar</a></td>
   </tr>
   <?php endforeach; ?>
   </table>

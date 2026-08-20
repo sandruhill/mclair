@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     $stmt = $pdo->prepare('DELETE FROM cmstest_cases WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
     queueRebuild();
-    header('Location: cases.php?deleted=1');
+    header('Location: casos?deleted=1');
     exit;
 }
 
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_cases SET client = ?, sector = ?, challenge = ?, solution = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['client'], $_POST['sector'], $_POST['challenge'], $_POST['solution'], $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
-    header('Location: cases.php?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: casos?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }
 
@@ -56,7 +56,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases');
     <td><?= htmlspecialchars($c['client']) ?></td>
     <td><span class="badge"><?= htmlspecialchars($c['sector']) ?></span></td>
     <td class="dt-actions">
-      <a href="cases.php?slug=<?= urlencode($c['slug']) ?>">editar</a>
+      <a href="casos?slug=<?= urlencode($c['slug']) ?>">editar</a>
       <form method="post" style="display:inline" onsubmit="return confirm('Apagar este case?');">
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="slug" value="<?= htmlspecialchars($c['slug']) ?>" />

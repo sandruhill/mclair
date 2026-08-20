@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_POST['content_md'], $_SESSION['cms_user_id'], $slug,
     ]);
     queueRebuild();
-    header('Location: edit.php?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: editar?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }
 
@@ -127,7 +127,7 @@ adminLayoutTop('blog', 'Editando post');
             <?php if ($post['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($post['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
           </p>
           <button type="submit" class="btn" style="width:100%;justify-content:center">Salvar</button>
-          <a href="index.php" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
+          <a href="/admin/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
         </div>
       </div>
     </div>

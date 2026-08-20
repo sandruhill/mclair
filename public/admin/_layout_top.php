@@ -143,20 +143,24 @@ function adminLayoutTop(string $active, string $title): void {
     </div>
     <nav>
       <div class="nav-label">Conteúdo</div>
-      <a href="index.php" class="<?= $active === 'blog' ? 'active' : '' ?>">
+      <a href="/admin/posts" class="<?= $active === 'blog' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13v16H4z"/><path d="M8 8h5M8 12h5M8 16h3"/></svg>
         Posts do blog
       </a>
-      <a href="cases.php" class="<?= $active === 'cases' ? 'active' : '' ?>">
+      <a href="/admin/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         Cases
       </a>
-      <a href="services.php" class="<?= $active === 'services' ? 'active' : '' ?>">
+      <a href="/admin/servicos" class="<?= $active === 'services' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="m2 13 10 5 10-5"/></svg>
         Serviços
       </a>
+      <a href="/admin/paginas" class="<?= $active === 'pages' ? 'active' : '' ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+        Páginas
+      </a>
       <div class="nav-label">Administração</div>
-      <a href="users.php" class="<?= $active === 'users' ? 'active' : '' ?>">
+      <a href="/admin/usuarios" class="<?= $active === 'users' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16.5 4.8a3.5 3.5 0 0 1 0 6.4M18 14.7c2.1.8 3.5 2.4 3.5 5.3"/></svg>
         Usuários
       </a>
@@ -165,7 +169,7 @@ function adminLayoutTop(string $active, string $title): void {
       <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['cms_username'] ?? '?', 0, 1))) ?></div>
       <div class="who">
         <strong><?= htmlspecialchars($_SESSION['cms_username'] ?? '') ?></strong>
-        <a href="index.php?logout=1">sair do painel</a>
+        <a href="/admin/posts?logout=1">sair do painel</a>
       </div>
     </div>
   </aside>

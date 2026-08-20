@@ -6,7 +6,7 @@ $pdo = cmsDb();
 
 if (isset($_GET['logout'])) {
     session_destroy();
-    header('Location: index.php');
+    header('Location: posts');
     exit;
 }
 
@@ -14,7 +14,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
     $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
     queueRebuild();
-    header('Location: index.php?deleted=1');
+    header('Location: posts?deleted=1');
     exit;
 }
 
@@ -58,7 +58,7 @@ adminLayoutTop('blog', 'Posts do blog');
   <td><?= htmlspecialchars($p['post_date'] ? date('d/m/Y', strtotime($p['post_date'])) : '') ?></td>
   <td><?= htmlspecialchars($p['author']) ?></td>
   <td class="dt-actions">
-    <a href="edit.php?slug=<?= urlencode($p['slug']) ?>">editar</a>
+    <a href="posts/editar?slug=<?= urlencode($p['slug']) ?>">editar</a>
     <form method="post" style="display:inline" onsubmit="return confirm('Apagar este post do banco?');">
       <input type="hidden" name="action" value="delete" />
       <input type="hidden" name="slug" value="<?= htmlspecialchars($p['slug']) ?>" />
