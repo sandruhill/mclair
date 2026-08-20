@@ -32,6 +32,16 @@ if (!$input || empty($input['event_name'])) {
     exit;
 }
 
+// Allowlist — this endpoint forwards straight to Facebook's API using our
+// own access token, so an unrestricted event_name lets anyone burn the
+// token's quota or pollute ad account data with junk events.
+$allowedEvents = ['whatsapp_click', 'whatsapp_form_submit', 'contact_form_submit', 'scroll_90'];
+if (!in_array($input['event_name'], $allowedEvents, true)) {
+    http_response_code(400);
+    echo json_encode(['error' => 'Unknown event_name']);
+    exit;
+}
+
 $clientIp = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? $_SERVER['REMOTE_ADDR'] ?? '';
 if (strpos($clientIp, ',') !== false) {
     $clientIp = trim(explode(',', $clientIp)[0]);

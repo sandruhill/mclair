@@ -4,10 +4,12 @@ Allow: /
 # Bloquear áreas administrativas e sensíveis dos crawlers
 Disallow: /admin/
 Disallow: /keystatic/
+Disallow: /acesso/
 
 # Sitemaps
-Sitemap: https://olive-gnat-658393.hostingersite.com/sitemap-index.xml
-Sitemap: https://olive-gnat-658393.hostingersite.com/sitemap-0.xml
+Sitemap: https://mclair.com.br/sitemap-index.xml
+Sitemap: https://mclair.com.br/sitemap-0.xml
 
 # Verificado e resincronizado em 2026-08-17 — remove bloqueio a Googlebot
 # que havia sido adicionado direto no servidor, fora do deploy via git.
+# Corrigido em 2026-08-19 — sitemap apontava pro domínio antigo do Hostinger.
