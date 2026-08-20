@@ -43,6 +43,7 @@ export async function getStaticPaths() {
         items:       (s.items ?? []) as string[],
         cta:         s.cta ?? '',
         description: s.meta_description ?? '',
+        image:       s.image || null,
       };
     });
 
@@ -59,7 +60,7 @@ const { s, others } = Astro.props;
   title={`${s.title} | Mclair: Agência de Comunicação Estratégica`}
   description={s.description}
   keywords={`${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`}
-  ogImage="https://mclair.com.br/paginas/servicos-marketing-autoridade-mclair.jpg"
+  ogImage={s.image || 'https://mclair.com.br/paginas/servicos-marketing-autoridade-mclair.jpg'}
   cmsEdit={{ type: 'service', slug: s.slug }}
   schema={[
     {
@@ -162,7 +163,7 @@ const { s, others } = Astro.props;
     </div>
     <div class="sc-right" data-anim="right" data-delay="1">
       <div class="scr-card" style={`background:${s.bg};border-color:${s.accent}20`}>
-        <img src="/brand/mockup-completo.jpg" alt="Mclair branding" class="scr-img" />
+        <img src={s.image || '/brand/mockup-completo.jpg'} alt={s.title} class="scr-img" />
         <div class="scr-overlay"></div>
         <div class="scr-content">
           <p class="scr-quote">"Resultados que constroem legado."</p>
