@@ -122,7 +122,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
                 <button type="button" id="tabVideo" onclick="setHeroMode('video')">Vídeo</button>
               </div>
               <div id="paneImage">
-                <label style="margin-top:0">Imagem de capa (URL)</label>
+                <label style="margin-top:0">Imagem de capa</label>
                 <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
               </div>
               <div id="paneVideo">
@@ -205,7 +205,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
       <button type="button" onclick="imgModalClose()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--ink-3)" title="Fechar">✕</button>
     </div>
     <div id="imgPaneUp">
-      <label>Imagem (URL)</label>
+      <label>Imagem</label>
       <input type="text" id="imgModalUrl" class="img-url" placeholder="/uploads/exemplo.jpg" />
     </div>
     <div id="imgPaneGal" style="display:none">

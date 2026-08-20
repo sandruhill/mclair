@@ -63,7 +63,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
     <input type="text" name="title" value="<?= htmlspecialchars($item['title']) ?>" />
     <label>Headline</label>
     <input type="text" name="headline" value="<?= htmlspecialchars($item['headline']) ?>" />
-    <label>Imagem de capa (URL)</label>
+    <label>Imagem de capa</label>
     <input type="text" name="image" class="img-url" value="<?= htmlspecialchars($item['image'] ?? '') ?>" placeholder="/uploads/exemplo.jpg" />
     <label>Introdução</label>
     <textarea name="intro" style="min-height:100px"><?= htmlspecialchars($item['intro']) ?></textarea>

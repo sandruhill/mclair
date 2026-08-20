@@ -24,13 +24,13 @@ $GLOBALS['PAGES_LABELS'] = [
     'bolderLevels' => 'Níveis Bolder', 'bolderPressLevels' => 'Níveis Bolder Press',
     // item fields
     'n' => 'Número', 's' => 'Sufixo', 'label' => 'Legenda',
-    'quote' => 'Depoimento', 'name' => 'Nome', 'role' => 'Cargo', 'photo' => 'Foto (URL)',
+    'quote' => 'Depoimento', 'name' => 'Nome', 'role' => 'Cargo', 'photo' => 'Foto',
     'icon' => 'Ícone', 'title' => 'Título', 'desc' => 'Descrição',
     'nome' => 'Nome', 'cargo' => 'Cargo', 'initials' => 'Iniciais', 'bio' => 'Bio',
-    'logo' => 'Logo (URL)', 'case' => 'Case',
+    'logo' => 'Logo', 'case' => 'Case',
     'q' => 'Pergunta', 'a' => 'Resposta',
     'phone' => 'Telefone', 'email' => 'E-mail',
-    'description' => 'Descrição', 'keywords' => 'Palavras-chave', 'ogImage' => 'Imagem OG (URL)',
+    'description' => 'Descrição', 'keywords' => 'Palavras-chave', 'ogImage' => 'Imagem OG',
 ];
 
 function pagesLabel(string $key): string {

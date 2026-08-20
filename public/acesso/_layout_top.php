@@ -136,11 +136,15 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   .side-sec:first-child { border-top:none; margin-top:0; padding-top:0; }
   .side-sec > strong { font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink); }
 
-  /* Drag-and-drop image upload (pairs with an image-URL text input) */
-  .imgdrop { margin-top:8px; border:1.5px dashed var(--line); border-radius:8px; background:var(--paper); padding:14px; text-align:center; cursor:pointer; }
+  /* Drag-and-drop image upload -- IS the photo slot (backs a hidden image-URL input) */
+  .imgdrop { position:relative; margin-top:8px; border:1.5px dashed var(--line); border-radius:8px; background:var(--paper); overflow:hidden; text-align:center; cursor:pointer; min-height:52px; display:flex; align-items:center; justify-content:center; }
   .imgdrop.over { border-color:var(--red); background:rgba(200,16,46,.04); }
-  .imgdrop img { display:block; margin:0 auto 10px; max-width:100%; max-height:120px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
-  .imgdrop .imgdrop-msg { font-size:.76rem; font-weight:600; color:var(--ink-3); }
+  .imgdrop img { display:none; width:100%; height:190px; object-fit:cover; }
+  .imgdrop.has-img { border-style:solid; padding:0; }
+  .imgdrop.has-img img { display:block; }
+  .imgdrop .imgdrop-msg { font-size:.76rem; font-weight:600; color:var(--ink-3); padding:14px; }
+  .imgdrop.has-img .imgdrop-msg { position:absolute; inset:auto 0 0 0; padding:8px 10px; text-align:left; color:#fff; background:linear-gradient(0deg,rgba(0,0,0,.65),rgba(0,0,0,0)); opacity:0; transition:opacity .15s; }
+  .imgdrop.has-img:hover .imgdrop-msg { opacity:1; }
   .imgdrop-err { font-size:.74rem; font-weight:600; color:var(--red); margin:6px 0 0; }
 
   /* Inline confirmation (replaces native confirm()) */
@@ -162,6 +166,7 @@ function imgDrop(input) {
   if (input.dataset.imgdrop) return; // idempotent: safe to re-init a container
   input.dataset.imgdrop = '1';
   var noThumb = input.hasAttribute('data-imgdrop-nothumb');
+  input.style.display = 'none'; // the drop zone below IS the field now -- no raw URL shown
 
   var zone = document.createElement('div');
   zone.className = 'imgdrop';
@@ -182,9 +187,10 @@ function imgDrop(input) {
   function render() {
     var url = input.value.trim();
     var show = url !== '' && !noThumb;
+    zone.classList.toggle('has-img', show);
     img.style.display = show ? '' : 'none';
     if (show) img.src = url;
-    msg.textContent = 'Arraste uma imagem aqui ou clique para escolher';
+    msg.textContent = show ? 'Clique ou arraste para trocar' : 'Arraste uma imagem aqui ou clique para escolher';
   }
 
   function fail(text) {

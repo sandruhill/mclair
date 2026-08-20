@@ -101,7 +101,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <input type="text" name="client" value="<?= htmlspecialchars($item['client']) ?>" />
     <label>Setor</label>
     <input type="text" name="sector" value="<?= htmlspecialchars($item['sector']) ?>" />
-    <label>Imagem de capa (URL)</label>
+    <label>Imagem de capa</label>
     <input type="text" name="img" class="img-url" value="<?= htmlspecialchars($item['img'] ?? '') ?>" placeholder="/uploads/exemplo.jpg" />
     <label>Desafio</label>
     <textarea name="challenge" style="min-height:100px"><?= htmlspecialchars($item['challenge']) ?></textarea>
@@ -116,7 +116,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
           <span class="rep-n">Foto <?= $i + 1 ?></span>
           <button type="button" onclick="galDel(this)">Remover</button>
         </div>
-        <label>Imagem (URL)</label>
+        <label>Imagem</label>
         <input type="text" class="img-url" name="gallery[<?= $i ?>][src]" value="<?= htmlspecialchars($g['src'] ?? '') ?>" placeholder="/uploads/exemplo.jpg" />
         <label>Legenda</label>
         <input type="text" name="gallery[<?= $i ?>][caption]" value="<?= htmlspecialchars($g['caption'] ?? '') ?>" />
@@ -129,7 +129,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
           <span class="rep-n">Nova foto</span>
           <button type="button" onclick="galDel(this)">Remover</button>
         </div>
-        <label>Imagem (URL)</label>
+        <label>Imagem</label>
         <input type="text" class="img-url" name="gallery[__i__][src]" value="" placeholder="/uploads/exemplo.jpg" />
         <label>Legenda</label>
         <input type="text" name="gallery[__i__][caption]" value="" />
