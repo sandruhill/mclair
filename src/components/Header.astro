@@ -56,10 +56,10 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
         <div class="nav-dropdown nd-cases" id="cases-mega">
           <!-- Preview image panel -->
           <div class="nd-preview" aria-hidden="true">
-            <img id="case-preview-img" src={caseLinks[0].img} alt="" class="nd-preview-img" loading="eager" />
+            <img id="case-preview-img" src={caseLinks[0]?.img ?? ''} alt="" class="nd-preview-img" loading="eager" />
             <div class="nd-preview-overlay">
               <span class="nd-preview-tag">Case</span>
-              <strong id="case-preview-name">{caseLinks[0].label}</strong>
+              <strong id="case-preview-name">{caseLinks[0]?.label ?? ''}</strong>
             </div>
           </div>
           <!-- Links list -->

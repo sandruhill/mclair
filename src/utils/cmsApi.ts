@@ -2,13 +2,24 @@
 // Used by every page that used to read from Keystatic/git-tracked files.
 const EXPORT_URL = 'https://mclair.com.br/admin/api-export.php';
 
+// Building now runs on the same server that serves this API, and every page/component
+// that needs a content type calls its getter independently -- without caching, a full
+// build fires dozens of concurrent self-requests at the PHP-FPM pool, which can exhaust
+// it and cause sporadic failures. One fetch per type per build avoids that entirely.
+const cache = new Map<string, Promise<any[]>>();
+
 async function fetchType<T = any>(type: string): Promise<T[]> {
-  const token = import.meta.env.CMS_EXPORT_TOKEN;
-  const res = await fetch(`${EXPORT_URL}?type=${type}`, {
-    headers: { 'X-Export-Token': token },
-  });
-  if (!res.ok) throw new Error(`CMS export fetch failed (${type}): HTTP ${res.status}`);
-  return res.json();
+  if (cache.has(type)) return cache.get(type)!;
+  const promise = (async () => {
+    const token = import.meta.env.CMS_EXPORT_TOKEN;
+    const res = await fetch(`${EXPORT_URL}?type=${type}`, {
+      headers: { 'X-Export-Token': token },
+    });
+    if (!res.ok) throw new Error(`CMS export fetch failed (${type}): HTTP ${res.status}`);
+    return res.json();
+  })();
+  cache.set(type, promise);
+  return promise;
 }
 
 export type DbBlogPost = {
