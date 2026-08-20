@@ -2,8 +2,6 @@ User-agent: *
 Allow: /
 
 # Bloquear áreas administrativas e sensíveis dos crawlers
-Disallow: /admin/
-Disallow: /keystatic/
 Disallow: /acesso/
 
 # Sitemaps

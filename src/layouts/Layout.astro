@@ -283,11 +283,11 @@ const websiteSchema = {
         var target;
         try { target = JSON.parse(raw); } catch (e) { fab.style.display = 'none'; return; }
 
-        fetch('/admin/whoami.php', { credentials: 'same-origin' })
+        fetch('/acesso/whoami.php', { credentials: 'same-origin' })
           .then(function (r) { return r.json(); })
           .then(function (data) {
             if (!data.loggedIn) { fab.style.display = 'none'; return; }
-            var base = { post: '/admin/posts/editar', case: '/admin/casos', service: '/admin/servicos', page: '/admin/paginas' }[target.type];
+            var base = { post: '/acesso/posts/editar', case: '/acesso/casos', service: '/acesso/servicos', page: '/acesso/paginas' }[target.type];
             if (!base) { fab.style.display = 'none'; return; }
             fab.href = base + '?slug=' + encodeURIComponent(target.slug);
             fab.classList.toggle('prominent', target.type === 'post');

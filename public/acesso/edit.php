@@ -64,7 +64,7 @@ $kwText = is_array($kwDecoded) ? implode(', ', $kwDecoded) : (string) ($post['ke
 
 $heroMode = !empty($post['hero_video']) ? 'video' : 'image';
 
-adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/admin/posts']);
+adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/acesso/posts']);
 ?>
 
 <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
@@ -169,7 +169,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
             <?php if ($post['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($post['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
           </p>
           <button type="submit" class="btn" style="width:100%;justify-content:center">Salvar</button>
-          <a href="/admin/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
+          <a href="/acesso/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
         </div>
       </div>
     </div>

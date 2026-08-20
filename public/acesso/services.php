@@ -26,7 +26,7 @@ if ($slug) {
 }
 $list = $pdo->query('SELECT slug, title, num, image FROM cmstest_services ORDER BY num')->fetchAll();
 
-adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $slug ? ['label' => 'Serviços', 'href' => '/admin/servicos'] : null);
+adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $slug ? ['label' => 'Serviços', 'href' => '/acesso/servicos'] : null);
 ?>
 
 <?php if (!$slug): ?>

@@ -156,7 +156,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
 <script>
 // ---- Drag-and-drop image upload ----
 // Enhances an image-URL text input (class "img-url") with a drop zone that
-// POSTs to /admin/upload.php and keeps a live thumbnail preview in sync.
+// POSTs to /acesso/upload.php and keeps a live thumbnail preview in sync.
 // data-imgdrop-nothumb skips the thumbnail (when a bigger preview exists).
 function imgDrop(input) {
   if (input.dataset.imgdrop) return; // idempotent: safe to re-init a container
@@ -199,7 +199,7 @@ function imgDrop(input) {
     msg.textContent = 'Enviando...';
     var fd = new FormData();
     fd.append('file', f);
-    fetch('/admin/upload.php', { method: 'POST', body: fd })
+    fetch('/acesso/upload.php', { method: 'POST', body: fd })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
         if (!res.ok || !res.j.url) { fail(res.j.error || 'Falha no upload.'); return; }
@@ -293,37 +293,37 @@ function askUrl(anchor, cb) {
     </div>
     <nav>
       <div class="nav-label">Conteúdo</div>
-      <a href="/admin/posts" class="<?= $active === 'blog' ? 'active' : '' ?>">
+      <a href="/acesso/posts" class="<?= $active === 'blog' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13v16H4z"/><path d="M8 8h5M8 12h5M8 16h3"/></svg>
         Posts do blog
       </a>
       <?php if (cmsRole() !== 'author'): ?>
-      <a href="/admin/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">
+      <a href="/acesso/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
         Cases
       </a>
-      <a href="/admin/servicos" class="<?= $active === 'services' ? 'active' : '' ?>">
+      <a href="/acesso/servicos" class="<?= $active === 'services' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="m2 13 10 5 10-5"/></svg>
         Serviços
       </a>
-      <a href="/admin/paginas" class="<?= $active === 'pages' ? 'active' : '' ?>">
+      <a href="/acesso/paginas" class="<?= $active === 'pages' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Páginas
       </a>
-      <a href="/admin/menu" class="<?= $active === 'menu' ? 'active' : '' ?>">
+      <a href="/acesso/menu" class="<?= $active === 'menu' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         Menu
       </a>
       <div class="nav-label">Administração</div>
       <?php endif; ?>
       <?php if (cmsRole() === 'admin'): ?>
-      <a href="/admin/usuarios" class="<?= $active === 'users' ? 'active' : '' ?>">
+      <a href="/acesso/usuarios" class="<?= $active === 'users' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16.5 4.8a3.5 3.5 0 0 1 0 6.4M18 14.7c2.1.8 3.5 2.4 3.5 5.3"/></svg>
         Usuários
       </a>
       <?php endif; ?>
       <?php if (cmsRole() !== 'author'): ?>
-      <a href="/admin/configuracoes" class="<?= $active === 'settings' ? 'active' : '' ?>">
+      <a href="/acesso/configuracoes" class="<?= $active === 'settings' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
         Configurações
       </a>
@@ -333,7 +333,7 @@ function askUrl(anchor, cb) {
       <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['cms_username'] ?? '?', 0, 1))) ?></div>
       <div class="who">
         <strong><?= htmlspecialchars($_SESSION['cms_username'] ?? '') ?></strong>
-        <a href="/admin/posts?logout=1">sair do painel</a>
+        <a href="/acesso/posts?logout=1">sair do painel</a>
       </div>
     </div>
   </aside>

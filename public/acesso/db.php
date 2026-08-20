@@ -1,33 +1,23 @@
 <?php
-// PDO connection + schema bootstrap. config.php (deploy-time generated,
-// never committed) must define DB_HOST/DB_NAME/DB_USER/DB_PASS before this
-// runs.
+require_once __DIR__ . '/config.php';
 
-function acessoDb(): PDO {
+function cmsDb(): PDO {
     static $pdo = null;
     if ($pdo !== null) return $pdo;
-
     $pdo = new PDO(
         'mysql:host=' . DB_HOST . ';dbname=' . DB_NAME . ';charset=utf8mb4',
         DB_USER,
         DB_PASS,
-        [
-            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
-            PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
-        ]
+        [PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION, PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC]
     );
-
-    // Mirrors Deno KV's key/value/expiry model as a single generic table —
-    // every rate limiter, code store, and OAuth state in this app is just a
-    // row here. Idempotent, so it's safe to run on every request.
-    $pdo->exec(
-        'CREATE TABLE IF NOT EXISTS kv_store (
-            kv_key VARCHAR(191) PRIMARY KEY,
-            value VARCHAR(255) NOT NULL,
-            expires_at DATETIME NOT NULL,
-            INDEX idx_expires (expires_at)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4'
-    );
-
     return $pdo;
+}
+
+// Signals the server-side cron (see ~/mclair-build/rebuild.sh) to rebuild and
+// republish the static site. Just drops a flag file — actual build/deploy
+// happens outside PHP since exec()/shell_exec() are disabled on this host.
+function queueRebuild(): void {
+    $dir = '/home/u229450165/mclair-build/queue';
+    if (!is_dir($dir)) return;
+    @touch($dir . '/pending');
 }
