@@ -1,6 +1,94 @@
 # Security headers — the equivalent vercel.json config stopped applying once
 # deploy moved from Vercel to plain static hosting on Hostinger/Apache.
-# /admin/ gets its own .htaccess that overrides the CSP for the Keystatic CMS.
+# /acesso/ (the CMS admin) gets its own .htaccess with its own CSP.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Old PHP-era URLs (pre-Astro site) -> current routes, so any surviving
+  # backlinks/bookmarks/search-index entries land on real content instead
+  # of a dead end.
+  RewriteRule ^quem-somos\.php$ /sobre/ [R=301,L]
+  RewriteRule ^contato\.php$ /contato/ [R=301,L]
+  RewriteRule ^servicos\.php$ /servicos/ [R=301,L]
+  RewriteRule ^blog\.php$ /blog/ [R=301,L]
+  RewriteRule ^index\.php$ / [R=301,L]
+
+  # blog-detalhe.php?id=N -> matching current post, recovered from Wayback
+  # Machine archives (old site never preserved these ids in the DB). Ids
+  # without a confirmed match fall through to the blog index below rather
+  # than guessing or sending everything to the homepage.
+  RewriteCond %{QUERY_STRING} ^id=12(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/em-tempos-de-pandemia-tecnologia-cria-oportunidades/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=13(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/o-lado-b-da-produtividade-em-trabalho-remoto/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=96(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/guiando-tem-20-vagas-abertas-100-remoto-1/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=99(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/o-que-a-vida-corporativa-tem-a-ver-com-um-jogo-de-squash/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=101(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/5-perguntas-cruciais-antes-de-formar-um-conselho-administrativo-ou-con/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=108(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/perceber-nuances-o-superpoder-que-todo-lider-precisa-ter/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=124(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/cotas-para-streaming-na-franca-realca-atraso-do-brasil-na-regulamentac/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=125(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/projeto-ze-conecta-amplia-inclusao-digital-a-alunos-em-situacao-vulner/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=126(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/3-setores-beneficiados-pelo-audiovisual-em-2021/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=127(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/guiando-abre-novas-vagas-para-ti-e-outras-areas/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=128(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/comunicacao-nao-tem-receita-infalivel/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=129(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/entre-perfis-e-curtidas-por-que-alguem-seria-fiel-a-sua-marca/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=131(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/o-growth-e-eu-acelerando/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=145(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/valuation-quanto-vale-um-canal-no-youtube/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=150(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/a-quem-interessa-a-desigualdade-social/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=155(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/dona-coruja-e-sua-marca-propria/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=169(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/a-maternidade-e-os-desafios-para-a-carreira-da-mulher/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=171(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/caixa-realiza-leilao-de-imoveis-online-no-centro-oeste-com-descontos-d/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=172(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/o-que-mudou-na-busca-pelo-lider-de-rh/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=173(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/lambda3-abre-vagas-para-times-de-tecnologia/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=174(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/como-a-robotizacao-deve-ganhar-protagonismo-para-os-processos-empresar/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=247(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/como-evitar-o-transtorno-com-roubo-de-smartphones-e-dados/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=261(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/nao-caia-na-armadilha-da-massificacao-da-inteligencia-artificial/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=262(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/ted-lasso-por-que-a-serie-e-um-case-de-branded-content/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=278(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/racismo-algoritmico-especialistas-apontam-caminhos-para-um-futuro-incl/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=279(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/5-filmes-e-series-para-inspirar-os-amantes-da-comunicacao/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=280(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/artista-catarinense-vence-a-3a-edicao-da-galeria-consigaz/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=281(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/referencia-mundial-em-tecnologia-para-o-campo-brasil-apresenta-maquina/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=282(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/diego-nogare-deixa-o-itau-apos-consolidar-inovacao-em-machine-learning/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=283(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/de-imoveis-a-veiculos-o-leilao-da-justica-do-trabalho-de-sp-oferece-va/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=284(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/esg-e-felicidade-corporativa-a-nova-fronteira-da-gestao/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=285(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/leilao-do-bradesco-traz-52-imoveis-com-precos-a-partir-de-r-40-mil/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=287(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/do-glp-ao-coracao-dos-corinthianos-como-o-patrocinio-do-appgas-ao-tima/ [R=301,L]
+  RewriteCond %{QUERY_STRING} ^id=295(/|$|&)
+  RewriteRule ^blog-detalhe\.php$ /blog/justica-federal-leilao-com-descontos-de-ate-50-oferece-imoveis-e-veicu/ [R=301,L]
+  RewriteCond %{REQUEST_URI} ^/blog-detalhe\.php$
+  RewriteRule ^blog-detalhe\.php$ /blog/ [R=301,L]
+</IfModule>
 
 <IfModule mod_headers.c>
   Header always set X-Content-Type-Options "nosniff"
