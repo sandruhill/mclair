@@ -81,7 +81,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
   </table>
   </div>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/cases/<?= urlencode($slug) ?>"><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/cases/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Case salvo.</span></div><?php endif; ?>
   <?php $gal = json_decode($item['gallery'] ?? '', true); if (!is_array($gal)) $gal = []; ?>
   <style>
     .rep { margin-top:6px; }

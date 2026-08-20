@@ -2,6 +2,12 @@
 // Shared admin shell: sidebar + topbar. Include after auth.php/db.php,
 // call adminLayoutTop($activeNav, $pageTitle) then page content, then
 // adminLayoutBottom() at the end.
+
+// Small animated checkmark used in the "saved" confirmation pill (#savedMsg).
+function cmsCheckIcon(): string {
+    return '<svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+}
+
 function adminLayoutTop(string $active, string $title, ?array $crumb = null): void {
 ?>
 <!doctype html>
@@ -75,6 +81,12 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   .msg .spin { width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; animation:msgspin .7s linear infinite; flex-shrink:0; }
   @keyframes msgspin { to { transform:rotate(360deg); } }
   .msg a { color:#fff; font-weight:700; text-decoration:underline; }
+
+  /* Save confirmation: small pill, right-aligned, animated check */
+  #savedMsg { width:fit-content; max-width:100%; margin:0 0 18px auto; padding:7px 12px; font-size:.8rem; gap:6px; }
+  #savedMsg .check-icon { width:13px; height:13px; flex-shrink:0; }
+  #savedMsg .check-icon path { stroke-dasharray:30; stroke-dashoffset:30; animation:checkdraw .45s cubic-bezier(.65,0,.35,1) forwards .1s; }
+  @keyframes checkdraw { to { stroke-dashoffset:0; } }
 
   /* Stat cards */
   .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:22px; }

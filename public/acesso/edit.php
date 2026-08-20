@@ -67,7 +67,7 @@ $heroMode = !empty($post['hero_video']) ? 'video' : 'image';
 adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/acesso/posts']);
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
+<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
 
 <form method="post">
   <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />

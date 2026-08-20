@@ -52,7 +52,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
   </table>
   </div>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/servicos/<?= urlencode($slug) ?>"><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/servicos/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Serviço salvo.</span></div><?php endif; ?>
   <div class="card">
   <p style="font-size:.82rem;color:var(--ink-3);margin-top:0">
     <?php if ($item['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>

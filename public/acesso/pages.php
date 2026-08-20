@@ -181,7 +181,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
   <?php
   $pagesLiveUrl = $slug === 'homepage' ? 'https://mclair.com.br/' : ($slug === 'llms' ? '' : 'https://mclair.com.br/' . urlencode($slug));
   ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok"<?= $pagesLiveUrl ? ' id="savedMsg" data-live-url="' . htmlspecialchars($pagesLiveUrl) . '"' : '' ?>><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok"<?= $pagesLiveUrl ? ' id="savedMsg" data-live-url="' . htmlspecialchars($pagesLiveUrl) . '"' : '' ?>><?= cmsCheckIcon() ?><span class="msg-text">Página salva.</span></div><?php endif; ?>
 
   <style>
     .objbox, .rep-item { border:1px solid var(--line); border-radius:10px; background:#FAFBFC; padding:2px 16px 16px; }
