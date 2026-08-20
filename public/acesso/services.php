@@ -26,7 +26,7 @@ if ($slug) {
 }
 $list = $pdo->query('SELECT slug, title, num, image FROM cmstest_services ORDER BY num')->fetchAll();
 
-adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $slug ? ['label' => 'Serviços', 'href' => '/acesso/servicos'] : null);
+adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $slug ? ['label' => 'Serviços', 'href' => '/acesso/servicos'] : null, $slug ? 'https://mclair.com.br/servicos/' . urlencode($slug) : null);
 ?>
 
 <?php if (!$slug): ?>

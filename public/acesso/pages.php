@@ -161,7 +161,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     exit;
 }
 
-adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug ? ['label' => 'Páginas', 'href' => '/acesso/paginas'] : null);
+$pagesLiveUrl = !$slug ? null : ($slug === 'homepage' ? 'https://mclair.com.br/' : ($slug === 'llms' ? null : 'https://mclair.com.br/' . urlencode($slug)));
+adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug ? ['label' => 'Páginas', 'href' => '/acesso/paginas'] : null, $pagesLiveUrl);
 ?>
 
 <?php if (!$slug): ?>
@@ -178,9 +179,6 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
   </table>
   </div>
 <?php else: ?>
-  <?php
-  $pagesLiveUrl = $slug === 'homepage' ? 'https://mclair.com.br/' : ($slug === 'llms' ? '' : 'https://mclair.com.br/' . urlencode($slug));
-  ?>
   <?php if (isset($_GET['saved'])): ?><div class="msg ok"<?= $pagesLiveUrl ? ' id="savedMsg" data-live-url="' . htmlspecialchars($pagesLiveUrl) . '"' : '' ?>><?= cmsCheckIcon() ?><span class="msg-text">Página salva.</span></div><?php endif; ?>
 
   <style>

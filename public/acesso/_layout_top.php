@@ -8,7 +8,7 @@ function cmsCheckIcon(): string {
     return '<svg class="check-icon" viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5L20 6" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"/></svg>';
 }
 
-function adminLayoutTop(string $active, string $title, ?array $crumb = null): void {
+function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?string $liveUrl = null): void {
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -421,7 +421,12 @@ function askUrl(anchor, cb) {
         <?php endif; ?>
         <h1><?= htmlspecialchars($title) ?></h1>
       </div>
-      <div class="meta"><?= date('d/m/Y') ?></div>
+      <div style="display:flex;align-items:center;gap:14px">
+        <?php if ($liveUrl): ?>
+        <a class="btn secondary" href="<?= htmlspecialchars($liveUrl) ?>" target="_blank" rel="noopener" style="padding:7px 14px;font-size:.78rem">Ver no site ↗</a>
+        <?php endif; ?>
+        <div class="meta"><?= date('d/m/Y') ?></div>
+      </div>
     </div>
     <div class="content">
 <?php

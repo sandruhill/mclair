@@ -64,7 +64,7 @@ $kwText = is_array($kwDecoded) ? implode(', ', $kwDecoded) : (string) ($post['ke
 
 $heroMode = !empty($post['hero_video']) ? 'video' : 'image';
 
-adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/acesso/posts']);
+adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/acesso/posts'], 'https://mclair.com.br/blog/' . urlencode($slug));
 ?>
 
 <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
