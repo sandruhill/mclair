@@ -1,6 +1,7 @@
 <?php
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
+require_once __DIR__ . '/_layout_top.php';
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 
@@ -21,48 +22,28 @@ if ($slug) {
     $item = $stmt->fetch();
     if (!$item) { http_response_code(404); die('Serviço não encontrado'); }
 }
-$list = $pdo->query('SELECT slug, title, num FROM cmstest_services ORDER BY num')->fetchAll();
+$list = $pdo->query('SELECT slug, title, num, image FROM cmstest_services ORDER BY num')->fetchAll();
+
+adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços');
 ?>
-<!doctype html>
-<html lang="pt-BR">
-<head>
-<meta charset="utf-8" /><meta name="robots" content="noindex" />
-<title>Serviços — CMS Teste</title>
-<style>
-  body { font-family: -apple-system, sans-serif; max-width: 800px; margin: 40px auto; padding: 0 20px; background: #F1EBDD; color: #211B14; }
-  h1 { color: #C8102E; font-size: 1.3rem; }
-  a.back { display: inline-block; margin-bottom: 16px; color: #C8102E; }
-  table { width: 100%; border-collapse: collapse; background: #fff; border-radius: 8px; overflow: hidden; }
-  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid #eee; font-size: 0.85rem; }
-  th { background: #211B14; color: #fff; }
-  label { display: block; font-weight: 700; margin: 14px 0 5px; font-size: 0.8rem; }
-  input, textarea { width: 100%; padding: 9px; border: 1px solid #D6C9A8; border-radius: 6px; font-family: inherit; box-sizing: border-box; }
-  textarea { min-height: 120px; }
-  button { margin-top: 14px; background: #C8102E; color: #fff; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; cursor: pointer; }
-  .saved { background: #2F7D4F; color: #fff; padding: 10px 16px; border-radius: 6px; margin-bottom: 16px; }
-</style>
-</head>
-<body>
-<a class="back" href="index.php">&larr; voltar</a>
 
 <?php if (!$slug): ?>
-  <h1>Serviços</h1>
-  <table>
-  <tr><th>#</th><th>Título</th><th></th></tr>
+  <table class="dt">
+  <tr><th>Capa</th><th>#</th><th>Título</th><th>Ações</th></tr>
   <?php foreach ($list as $s): ?>
   <tr>
+    <td><?php if ($s['image']): ?><img class="dt-thumb" src="<?= htmlspecialchars($s['image']) ?>" alt="" /><?php else: ?><div class="dt-thumb-empty"></div><?php endif; ?></td>
     <td><?= htmlspecialchars($s['num']) ?></td>
     <td><?= htmlspecialchars($s['title']) ?></td>
-    <td><a href="services.php?slug=<?= urlencode($s['slug']) ?>">editar</a></td>
+    <td class="dt-actions"><a href="services.php?slug=<?= urlencode($s['slug']) ?>">editar</a></td>
   </tr>
   <?php endforeach; ?>
   </table>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="saved">Salvo no banco.</div><?php endif; ?>
-  <h1>Editando serviço: <?= htmlspecialchars($item['title']) ?></h1>
-  <p style="font-size:.85rem;color:#665D4D">
-    Logado como <strong><?= htmlspecialchars($_SESSION['cms_username']) ?></strong>
-    <?php if ($item['updated_by_name']): ?> · última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
+  <div class="card">
+  <p style="font-size:.82rem;color:var(--ink-3);margin-top:0">
+    <?php if ($item['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
   </p>
   <form method="post">
     <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
@@ -71,11 +52,12 @@ $list = $pdo->query('SELECT slug, title, num FROM cmstest_services ORDER BY num'
     <label>Headline</label>
     <input type="text" name="headline" value="<?= htmlspecialchars($item['headline']) ?>" />
     <label>Introdução</label>
-    <textarea name="intro"><?= htmlspecialchars($item['intro']) ?></textarea>
+    <textarea name="intro" style="min-height:100px"><?= htmlspecialchars($item['intro']) ?></textarea>
     <label>Descrição completa</label>
-    <textarea name="full_desc"><?= htmlspecialchars($item['full_desc']) ?></textarea>
-    <button type="submit">Salvar</button>
+    <textarea name="full_desc" style="min-height:140px"><?= htmlspecialchars($item['full_desc']) ?></textarea>
+    <button type="submit" class="btn" style="margin-top:16px">Salvar</button>
   </form>
+  </div>
 <?php endif; ?>
-</body>
-</html>
+
+<?php adminLayoutBottom(); ?>

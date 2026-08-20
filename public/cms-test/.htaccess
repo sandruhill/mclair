@@ -6,3 +6,15 @@
 <Files "config.php">
   Require all denied
 </Files>
+
+<Files "_layout_top.php">
+  Require all denied
+</Files>
+
+<Files "db.php">
+  Require all denied
+</Files>
+
+<Files "auth.php">
+  Require all denied
+</Files>
