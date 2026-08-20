@@ -72,29 +72,6 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
 <form method="post">
   <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
 
-  <!-- Hero media -->
-  <div class="hero-card">
-    <div class="hero-preview" id="heroPreview">
-      <span class="hero-chip" id="heroChip">Capa</span>
-      <div class="empty">Sem mídia de capa — cole uma URL abaixo</div>
-    </div>
-    <div class="hero-controls">
-      <div class="hero-tabs" role="tablist">
-        <button type="button" id="tabImage" onclick="setHeroMode('image')">Imagem</button>
-        <button type="button" id="tabVideo" onclick="setHeroMode('video')">Vídeo</button>
-      </div>
-      <div id="paneImage">
-        <label style="margin-top:0">Imagem de capa (URL)</label>
-        <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
-      </div>
-      <div id="paneVideo">
-        <label style="margin-top:0">Vídeo de capa (URL — YouTube ou arquivo .mp4)</label>
-        <input type="text" name="hero_video" id="heroVideo" value="<?= htmlspecialchars($post['hero_video'] ?? '') ?>" placeholder="https://www.youtube.com/watch?v=..." oninput="renderHero()" />
-        <p class="hint">Deixe em branco para usar a imagem como capa.</p>
-      </div>
-    </div>
-  </div>
-
   <div class="editor-grid">
     <!-- Left: content -->
     <div>
@@ -123,6 +100,31 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
     <!-- Right: metadata + SEO -->
     <div>
       <div class="card">
+        <div class="side-sec">
+          <strong>Capa</strong>
+          <div class="hero-card" style="margin-top:10px;margin-bottom:0">
+            <div class="hero-preview" id="heroPreview" style="min-height:140px">
+              <span class="hero-chip" id="heroChip">Capa</span>
+              <div class="empty">Sem mídia de capa — cole uma URL abaixo</div>
+            </div>
+            <div class="hero-controls">
+              <div class="hero-tabs" role="tablist">
+                <button type="button" id="tabImage" onclick="setHeroMode('image')">Imagem</button>
+                <button type="button" id="tabVideo" onclick="setHeroMode('video')">Vídeo</button>
+              </div>
+              <div id="paneImage">
+                <label style="margin-top:0">Imagem de capa (URL)</label>
+                <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
+              </div>
+              <div id="paneVideo">
+                <label style="margin-top:0">Vídeo de capa (URL — YouTube ou .mp4)</label>
+                <input type="text" name="hero_video" id="heroVideo" value="<?= htmlspecialchars($post['hero_video'] ?? '') ?>" placeholder="https://www.youtube.com/watch?v=..." oninput="renderHero()" />
+                <p class="hint">Deixe em branco para usar a imagem como capa.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <div class="side-sec">
           <strong>Publicação</strong>
           <label>Subtítulo</label>
