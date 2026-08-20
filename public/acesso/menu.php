@@ -246,7 +246,7 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
 
       <label>Item pai</label>
       <select name="parent_id">
-        <option value="">— nenhum, fica no topo —</option>
+        <option value="">Nenhum, fica no topo</option>
         <?php foreach ($byParent[0] ?? [] as $top): if ((int) $top['id'] === $editId) continue; ?>
         <option value="<?= (int) $top['id'] ?>"<?= $editItem && (int) $editItem['parent_id'] === (int) $top['id'] ? ' selected' : '' ?>><?= htmlspecialchars($top['label']) ?></option>
         <?php endforeach; ?>

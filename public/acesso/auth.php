@@ -26,7 +26,7 @@ if (empty($_SESSION['cms_user_id'])) {
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="robots" content="noindex" />
-    <title>Painel Mclair — login</title>
+    <title>Painel Mclair · login</title>
     <style>
       :root { --red:#C8102E; --ink:#1A1B1E; --ink-3:#6B7280; --line:#E5E7EB; --bg:#F1F2F4; }
       * { box-sizing: border-box; }

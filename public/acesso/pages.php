@@ -55,7 +55,7 @@ function pagesImgRatio(string $key): ?string {
 }
 
 function pagesCaseOptionsHtml(string $selected = ''): string {
-    $html = '<option value="">— nenhum —</option>';
+    $html = '<option value="">Nenhum</option>';
     foreach ($GLOBALS['PAGES_CASE_OPTIONS'] as $caseSlug => $caseClient) {
         $href = '/cases/' . $caseSlug;
         $html .= '<option value="' . htmlspecialchars($href) . '"' . ($selected === $href ? ' selected' : '') . '>' . htmlspecialchars($caseClient) . '</option>';
@@ -70,19 +70,23 @@ function clientsManagerRender(array $clients): void {
 ?>
 <div id="cm" data-case-options="<?= htmlspecialchars(pagesCaseOptionsHtml(), ENT_QUOTES) ?>">
   <div class="cm-toolbar">
-    <div class="cm-view-toggle">
-      <button type="button" class="on" data-view="grid" onclick="cmSetView('grid')">Quadrado</button>
-      <button type="button" data-view="list" onclick="cmSetView('list')">Lista</button>
-    </div>
     <div class="cm-bulk-actions" id="cmBulkActions" style="display:none">
       <span id="cmSelCount"></span>
       <button type="button" class="del" onclick="cmDeleteSelected()">Apagar selecionados</button>
+    </div>
+    <div class="cm-view-group">
+      <span class="cm-view-label">Modo de visualização</span>
+      <div class="cm-view-toggle">
+        <button type="button" class="on" data-view="grid" onclick="cmSetView('grid')">Quadrado</button>
+        <button type="button" data-view="list" onclick="cmSetView('list')">Lista</button>
+      </div>
     </div>
   </div>
 
   <div class="cm-bulk-drop" id="cmBulkDrop">
     <input type="file" id="cmBulkFile" accept="image/*" multiple style="display:none" />
-    <div class="cm-bulk-msg">Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo</div>
+    <svg class="cm-bulk-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 16V4M12 4l-4 4M12 4l4 4"/><path d="M4 16v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+    <div class="cm-bulk-msg">Arraste vários logos aqui ou clique para escolher. Cada imagem enviada vira um cliente novo.</div>
   </div>
   <p class="imgdrop-err" id="cmErr" style="display:none"></p>
 
@@ -127,10 +131,11 @@ function clientsManagerRender(array $clients): void {
       card.className = 'cm-item';
       if (selected.has(i)) card.classList.add('cm-selected');
       if (editingIndex === i) {
+        card.classList.add('cm-editing');
         card.innerHTML = editForm(c, i);
       } else {
         card.innerHTML =
-          '<label class="cm-check"><input type="checkbox" ' + (selected.has(i) ? 'checked' : '') + ' onchange="cmToggleSelect(' + i + ')" /></label>' +
+          '<div class="cm-top"><label class="cm-check"><input type="checkbox" ' + (selected.has(i) ? 'checked' : '') + ' onchange="cmToggleSelect(' + i + ')" /></label></div>' +
           '<img class="cm-logo" src="' + esc(c.logo) + '" alt="" />' +
           '<div class="cm-info"><strong>' + esc(c.name) + '</strong>' +
           (c.case ? '<span class="cm-case-badge">' + esc(caseLabel(c.case)) + '</span>' : '<span class="cm-case-badge cm-empty">sem case</span>') +
@@ -147,13 +152,14 @@ function clientsManagerRender(array $clients): void {
   function editForm(c, i) {
     return '' +
       '<div class="cm-edit">' +
+      '<div class="cm-edit-logo"><label>Logo</label><input type="text" class="img-url" value="' + esc(c.logo) + '" data-f="logo" /></div>' +
+      '<div class="cm-edit-fields">' +
       '<label>Nome</label><input type="text" value="' + esc(c.name) + '" data-f="name" />' +
-      '<label>Logo</label><input type="text" class="img-url" value="' + esc(c.logo) + '" data-f="logo" />' +
       '<label>Case</label><select data-f="case">' + caseOptionsWithSelected(c.case) + '</select>' +
       '<div class="cm-edit-actions">' +
       '<button type="button" class="btn" onclick="cmSave(' + i + ')">Salvar</button>' +
       '<button type="button" class="btn secondary" onclick="cmCancelEdit()">Cancelar</button>' +
-      '</div></div>';
+      '</div></div></div>';
   }
 
   function caseOptionsWithSelected(val) {
@@ -275,14 +281,14 @@ function clientsManagerRender(array $clients): void {
         else errors.push(r.name);
       });
       if (errors.length) showErr('Falha ao enviar: ' + errors.join(', '));
-      if (!items.length) { drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo'; return; }
+      if (!items.length) { drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher. Cada imagem enviada vira um cliente novo.'; return; }
       var fd = new FormData();
       fd.append('action', 'add_many');
       fd.append('items', JSON.stringify(items));
       return fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
         .then(function (r) { return r.json(); })
         .then(function (res) {
-          drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo';
+          drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher. Cada imagem enviada vira um cliente novo.';
           if (!res.ok) { showErr(res.error || 'Falha ao salvar.'); return; }
           clients = res.clients;
           render();
@@ -472,21 +478,25 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     label.sec { font-size:.82rem; color:var(--ink); margin-top:22px; }
 
     /* Clients manager */
-    .cm-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .cm-toolbar { display:flex; align-items:center; justify-content:flex-end; gap:20px; margin-bottom:14px; }
+    .cm-view-group { display:flex; align-items:center; gap:10px; }
+    .cm-view-label { font-size:.76rem; font-weight:700; color:var(--ink-3); }
     .cm-view-toggle { display:inline-flex; background:var(--soft); border-radius:8px; padding:3px; }
     .cm-view-toggle button { border:none; background:none; padding:6px 14px; border-radius:6px; font-size:.78rem; font-weight:700; color:var(--ink-3); cursor:pointer; font-family:inherit; }
     .cm-view-toggle button.on { background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.08); }
     .cm-bulk-actions { display:flex; align-items:center; gap:10px; font-size:.8rem; color:var(--ink-3); }
     .cm-bulk-actions button.del { background:var(--red); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:.76rem; font-weight:700; cursor:pointer; font-family:inherit; }
 
-    .cm-bulk-drop { border:1.5px dashed var(--line); border-radius:10px; padding:18px; text-align:center; cursor:pointer; background:var(--paper); margin-bottom:14px; }
+    .cm-bulk-drop { border:1.5px dashed var(--line); border-radius:14px; padding:64px 24px; text-align:center; cursor:pointer; background:var(--paper); margin-bottom:14px; }
     .cm-bulk-drop.over { border-color:var(--red); background:rgba(200,16,46,.04); }
-    .cm-bulk-msg { font-size:.8rem; font-weight:600; color:var(--ink-3); }
+    .cm-bulk-icon { width:36px; height:36px; color:var(--ink-3); margin-bottom:10px; }
+    .cm-bulk-msg { font-size:.92rem; font-weight:600; color:var(--ink-3); max-width:360px; margin:0 auto; }
 
     .cm-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:12px; }
-    .cm-item { border:1px solid var(--line); border-radius:10px; background:#FAFBFC; padding:12px; position:relative; }
+    .cm-item { border:1px solid var(--line); border-radius:10px; background:#FAFBFC; padding:12px; }
     .cm-item.cm-selected { border-color:var(--red); background:rgba(200,16,46,.03); }
-    .cm-check { position:absolute; top:8px; left:8px; }
+    .cm-item.cm-editing { grid-column:1 / -1; }
+    .cm-top { display:flex; margin-bottom:6px; }
     .cm-logo { width:100%; height:80px; object-fit:contain; background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px; box-sizing:border-box; }
     .cm-info { margin-top:8px; text-align:center; }
     .cm-info strong { display:block; font-size:.82rem; }
@@ -498,14 +508,16 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
 
     /* List view: rows instead of a grid */
     .cm-list.cm-view-list { display:flex; flex-direction:column; gap:6px; }
-    .cm-view-list .cm-item { display:flex; align-items:center; gap:12px; padding:8px 12px; }
-    .cm-view-list .cm-check { position:static; }
+    .cm-view-list .cm-item:not(.cm-editing) { display:flex; align-items:center; gap:12px; padding:8px 12px; }
+    .cm-view-list .cm-top { margin:0; }
     .cm-view-list .cm-logo { width:36px; height:36px; padding:3px; flex-shrink:0; }
     .cm-view-list .cm-info { margin-top:0; text-align:left; flex:1; display:flex; align-items:center; gap:10px; }
     .cm-view-list .cm-info strong { display:inline; }
     .cm-view-list .cm-actions { margin-top:0; }
 
-    .cm-edit { display:flex; flex-direction:column; gap:8px; }
+    .cm-edit { display:flex; gap:20px; }
+    .cm-edit-logo { width:160px; flex-shrink:0; }
+    .cm-edit-fields { flex:1; display:flex; flex-direction:column; gap:8px; min-width:0; }
     .cm-edit label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin:0; }
     .cm-edit-actions { display:flex; gap:8px; margin-top:4px; }
   </style>

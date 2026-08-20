@@ -90,7 +90,7 @@ adminLayoutTop('users', 'Usuários');
       <input type="text" name="password" id="newPassword" minlength="8" required style="font-family:ui-monospace,monospace" />
       <button type="button" class="btn secondary" style="white-space:nowrap" onclick="generatePassword()">Gerar senha</button>
     </div>
-    <p class="hint">Clique em "Gerar senha" pra criar uma senha forte automaticamente. Copie antes de salvar — ela não aparece de novo depois.</p>
+    <p class="hint">Clique em "Gerar senha" pra criar uma senha forte automaticamente. Copie antes de salvar, ela não aparece de novo depois.</p>
     <label>Permissão</label>
     <select name="role">
       <option value="author">Autor (edita só os próprios posts do blog)</option>

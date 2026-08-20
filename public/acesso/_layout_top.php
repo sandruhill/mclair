@@ -16,7 +16,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <meta name="robots" content="noindex" />
-<title><?= htmlspecialchars($title) ?> — Painel Mclair</title>
+<title><?= htmlspecialchars($title) ?> · Painel Mclair</title>
 <style>
   :root { --red:#C8102E; --ink:#1A1B1E; --ink-3:#6B7280; --line:#E5E7EB; --bg:#F6F7F9; --soft:#F1F2F4; --sidebar:#ffffff; --paper:#fff; }
   * { box-sizing: border-box; }

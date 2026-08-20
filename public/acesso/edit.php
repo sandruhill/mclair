@@ -114,7 +114,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
           <div class="hero-card" style="margin-top:10px;margin-bottom:0">
             <div class="hero-preview" id="heroPreview" style="min-height:140px">
               <span class="hero-chip" id="heroChip">Capa</span>
-              <div class="empty">Sem mídia de capa — cole uma URL abaixo</div>
+              <div class="empty">Sem mídia de capa, cole uma URL abaixo</div>
             </div>
             <div class="hero-controls">
               <div class="hero-tabs" role="tablist">
@@ -126,7 +126,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
                 <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
               </div>
               <div id="paneVideo">
-                <label style="margin-top:0">Vídeo de capa (URL — YouTube ou .mp4)</label>
+                <label style="margin-top:0">Vídeo de capa (URL do YouTube ou .mp4)</label>
                 <input type="text" name="hero_video" id="heroVideo" value="<?= htmlspecialchars($post['hero_video'] ?? '') ?>" placeholder="https://www.youtube.com/watch?v=..." oninput="renderHero()" />
                 <p class="hint">Deixe em branco para usar a imagem como capa.</p>
               </div>
@@ -143,7 +143,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
             <input type="text" value="<?= htmlspecialchars($_SESSION['cms_username']) ?>" disabled />
           <?php else: ?>
             <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
-              <option value="">— outro (digitar abaixo) —</option>
+              <option value="">Outro (digitar abaixo)</option>
               <?php foreach ($authorOptions as $u): ?>
                 <option value="<?= (int) $u['id'] ?>" <?= (int) $post['author_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['username']) ?></option>
               <?php endforeach; ?>
@@ -243,10 +243,10 @@ function renderHero() {
   var url = (heroMode === 'video'
     ? document.getElementById('heroVideo').value
     : document.getElementById('featuredImage').value).trim();
-  var chip = heroMode === 'video' ? 'Capa — vídeo' : 'Capa — imagem';
+  var chip = heroMode === 'video' ? 'Capa em vídeo' : 'Capa em imagem';
   var media;
   if (!url) {
-    media = '<div class="empty">Sem mídia de capa — cole uma URL abaixo</div>';
+    media = '<div class="empty">Sem mídia de capa, cole uma URL abaixo</div>';
   } else if (heroMode === 'video') {
     var yt = youtubeId(url);
     media = yt
