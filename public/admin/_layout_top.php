@@ -163,6 +163,10 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Páginas
       </a>
+      <a href="/admin/menu" class="<?= $active === 'menu' ? 'active' : '' ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        Menu
+      </a>
       <div class="nav-label">Administração</div>
       <?php endif; ?>
       <?php if (cmsRole() === 'admin'): ?>

@@ -12,6 +12,7 @@
   RewriteRule ^casos/?$ cases.php [L,QSA]
   RewriteRule ^servicos/?$ services.php [L,QSA]
   RewriteRule ^paginas/?$ pages.php [L,QSA]
+  RewriteRule ^menu/?$ menu.php [L,QSA]
   RewriteRule ^usuarios/?$ users.php [L,QSA]
   RewriteRule ^configuracoes/?$ settings.php [L,QSA]
 </IfModule>
