@@ -152,6 +152,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   description={metaDesc}
   ogImage={ogImg}
   ogType="article"
+  cmsEdit={{ type: 'post', slug: post.slug }}
   articleAuthor={post.author}
   articlePublishedTime={dateISO}
   articleModifiedTime={dateISO}

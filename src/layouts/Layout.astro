@@ -18,6 +18,7 @@ interface Props {
   prevUrl?: string;
   nextUrl?: string;
   schema?: object | object[];
+  cmsEdit?: { type: 'post' | 'case' | 'service' | 'page'; slug: string };
 }
 
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
@@ -35,6 +36,7 @@ const {
   prevUrl,
   nextUrl,
   schema,
+  cmsEdit,
 } = Astro.props;
 const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
 const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
@@ -231,7 +233,7 @@ const websiteSchema = {
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet" />
     <ClientRouter />
   </head>
-  <body>
+  <body data-cms-edit={cmsEdit ? JSON.stringify(cmsEdit) : ''}>
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P3JSQCGS"
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
@@ -247,6 +249,56 @@ const websiteSchema = {
       <slot />
     </main>
     <Footer />
+
+    <!-- CMS edit affordance: only rendered for logged-in admin/editor/author, checked client-side -->
+    <a id="cms-edit-fab" class="cms-edit-fab" style="display:none" rel="nofollow">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z"/></svg>
+      <span class="cms-edit-fab-label">Editar</span>
+    </a>
+    <style>
+      .cms-edit-fab {
+        position: fixed; z-index: 200; bottom: 22px; right: 22px;
+        display: flex; align-items: center; gap: 7px;
+        background: rgba(26,27,30,.88); color: #fff; backdrop-filter: blur(6px);
+        padding: 10px 12px; border-radius: 99px; text-decoration: none;
+        font-size: .74rem; font-weight: 700; letter-spacing: .02em;
+        box-shadow: 0 4px 16px rgba(0,0,0,.18); opacity: .55; transition: opacity .2s, transform .2s;
+      }
+      .cms-edit-fab:hover { opacity: 1; transform: translateY(-2px); }
+      .cms-edit-fab .cms-edit-fab-label { max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width .2s; }
+      .cms-edit-fab:hover .cms-edit-fab-label { max-width: 80px; }
+      .cms-edit-fab.prominent {
+        opacity: .95; background: #C8102E; padding: 12px 18px;
+      }
+      .cms-edit-fab.prominent .cms-edit-fab-label { max-width: 80px; }
+      @media (max-width: 640px) { .cms-edit-fab { bottom: 16px; right: 16px; } }
+    </style>
+    <script is:inline>
+    (function () {
+      function initCmsEditFab() {
+        var fab = document.getElementById('cms-edit-fab');
+        if (!fab) return;
+        var raw = document.body.getAttribute('data-cms-edit');
+        if (!raw) { fab.style.display = 'none'; return; }
+        var target;
+        try { target = JSON.parse(raw); } catch (e) { fab.style.display = 'none'; return; }
+
+        fetch('/admin/whoami.php', { credentials: 'same-origin' })
+          .then(function (r) { return r.json(); })
+          .then(function (data) {
+            if (!data.loggedIn) { fab.style.display = 'none'; return; }
+            var base = { post: '/admin/posts/editar', case: '/admin/casos', service: '/admin/servicos', page: '/admin/paginas' }[target.type];
+            if (!base) { fab.style.display = 'none'; return; }
+            fab.href = base + '?slug=' + encodeURIComponent(target.slug);
+            fab.classList.toggle('prominent', target.type === 'post');
+            fab.style.display = 'flex';
+          })
+          .catch(function () { fab.style.display = 'none'; });
+      }
+      initCmsEditFab();
+      document.addEventListener('astro:page-load', initCmsEditFab);
+    })();
+    </script>
 
     <script is:inline>
     (function() {
