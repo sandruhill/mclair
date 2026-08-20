@@ -83,15 +83,24 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
         <div class="mdbar" id="mdbar">
           <button type="button" title="Negrito" onclick="mdWrap('**','**','texto em negrito')"><b>B</b></button>
           <button type="button" title="Itálico" onclick="mdWrap('*','*','texto em itálico')"><i>I</i></button>
+          <button type="button" title="Riscado" onclick="mdWrap('~~','~~','texto riscado')"><s>S</s></button>
           <span class="div"></span>
           <button type="button" title="Título (H2)" onclick="mdLine('## ')">H2</button>
           <button type="button" title="Subtítulo (H3)" onclick="mdLine('### ')">H3</button>
+          <button type="button" title="Subtítulo (H4)" onclick="mdLine('#### ')">H4</button>
           <span class="div"></span>
           <button type="button" title="Link" onclick="mdLink(this)">🔗</button>
+          <button type="button" title="Imagem" onclick="mdImage()">🖼&nbsp;Imagem</button>
           <span class="div"></span>
           <button type="button" title="Lista" onclick="mdLine('- ')">•&nbsp;Lista</button>
           <button type="button" title="Lista numerada" onclick="mdLine('1. ', true)">1.&nbsp;Lista</button>
           <button type="button" title="Citação" onclick="mdLine('> ')">&ldquo;&nbsp;Citação</button>
+          <span class="div"></span>
+          <button type="button" title="Código inline" onclick="mdWrap('`','`','código')">&lt;/&gt;</button>
+          <button type="button" title="Bloco de código" onclick="mdWrap('```\n','\n```','código')">```</button>
+          <span class="div"></span>
+          <button type="button" title="Tabela" onclick="mdTable()">⊞&nbsp;Tabela</button>
+          <button type="button" title="Linha divisória" onclick="mdBlock('---')">―</button>
         </div>
         <textarea name="content_md" id="contentMd" style="min-height:480px;font-family:ui-monospace,monospace;font-size:.85rem"><?= htmlspecialchars($post['content_md']) ?></textarea>
       </div>
@@ -176,6 +185,41 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
   </div>
 </form>
 
+<!-- Media picker modal (toolbar "Imagem" button) -->
+<style>
+  .imgmodal { display:none; position:fixed; inset:0; background:rgba(26,27,30,.5); z-index:50; align-items:center; justify-content:center; }
+  .imgmodal.open { display:flex; }
+  .imgmodal .card { width:640px; max-width:92vw; max-height:84vh; overflow:auto; }
+  .imggrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:8px; margin-top:12px; }
+  .imggrid button { border:2px solid transparent; border-radius:8px; padding:0; background:var(--soft); cursor:pointer; overflow:hidden; aspect-ratio:4/3; }
+  .imggrid button img { width:100%; height:100%; object-fit:cover; display:block; }
+  .imggrid button.on { border-color:var(--red); }
+</style>
+<div class="imgmodal" id="imgModal">
+  <div class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="hero-tabs" role="tablist">
+        <button type="button" id="imgTabUp" onclick="imgTab('up')">Enviar nova</button>
+        <button type="button" id="imgTabGal" onclick="imgTab('gal')">Galeria</button>
+      </div>
+      <button type="button" onclick="imgModalClose()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--ink-3)" title="Fechar">✕</button>
+    </div>
+    <div id="imgPaneUp">
+      <label>Imagem (URL)</label>
+      <input type="text" id="imgModalUrl" class="img-url" placeholder="/uploads/exemplo.jpg" />
+    </div>
+    <div id="imgPaneGal" style="display:none">
+      <div class="imggrid" id="imgGrid"></div>
+      <p class="hint" id="imgGalMsg"></p>
+    </div>
+    <div style="margin-top:16px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
+      <span class="hint" id="imgModalErr" style="margin:0"></span>
+      <button type="button" class="btn secondary" onclick="imgModalClose()">Cancelar</button>
+      <button type="button" class="btn" onclick="imgModalInsert()">Inserir imagem</button>
+    </div>
+  </div>
+</div>
+
 <script>
 // ---- Hero preview ----
 var heroMode = <?= json_encode($heroMode) ?>;
@@ -248,6 +292,91 @@ function mdLink(btn) {
     ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
     ta.focus();
   });
+}
+
+// Inserts text as its own block at the cursor, padded with blank lines.
+function mdBlock(text) {
+  ta.focus();
+  ta.setRangeText('\n\n' + text + '\n\n', ta.selectionStart, ta.selectionEnd, 'end');
+}
+
+function mdTable() {
+  mdBlock('| Coluna 1 | Coluna 2 |\n| --- | --- |\n| valor | valor |\n| valor | valor |');
+}
+
+// ---- Media picker modal ----
+// Cursor position is captured when the modal opens (the textarea loses focus
+// once the modal takes over) and the insert happens at that saved range.
+var imgIns = { s: 0, e: 0 };
+var imgCurTab = 'up';
+var imgPicked = '';
+
+function mdImage() {
+  imgIns.s = ta.selectionStart;
+  imgIns.e = ta.selectionEnd;
+  imgPicked = '';
+  document.getElementById('imgModalErr').textContent = '';
+  document.getElementById('imgModal').classList.add('open');
+  imgTab('up');
+}
+
+function imgTab(t) {
+  imgCurTab = t;
+  document.getElementById('imgTabUp').className = t === 'up' ? 'on' : '';
+  document.getElementById('imgTabGal').className = t === 'gal' ? 'on' : '';
+  document.getElementById('imgPaneUp').style.display = t === 'up' ? '' : 'none';
+  document.getElementById('imgPaneGal').style.display = t === 'gal' ? '' : 'none';
+  if (t === 'gal') imgLoadGallery();
+}
+
+function imgLoadGallery() {
+  var grid = document.getElementById('imgGrid');
+  var msg = document.getElementById('imgGalMsg');
+  grid.innerHTML = '';
+  msg.textContent = 'Carregando...';
+  fetch('/acesso/media-list.php')
+    .then(function (r) { return r.json(); })
+    .then(function (list) {
+      msg.textContent = list.length ? '' : 'Nenhuma imagem enviada ainda.';
+      list.forEach(function (f) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.title = f.url;
+        var im = document.createElement('img');
+        im.src = f.url;
+        im.alt = '';
+        im.loading = 'lazy';
+        b.appendChild(im);
+        b.addEventListener('click', function () {
+          var on = grid.querySelector('.on');
+          if (on) on.classList.remove('on');
+          b.classList.add('on');
+          imgPicked = f.url;
+          document.getElementById('imgModalErr').textContent = '';
+        });
+        grid.appendChild(b);
+      });
+    })
+    .catch(function () { msg.textContent = 'Falha ao carregar a galeria. Tente de novo.'; });
+}
+
+function imgModalClose() {
+  document.getElementById('imgModal').classList.remove('open');
+}
+
+function imgModalInsert() {
+  var url = imgCurTab === 'up'
+    ? document.getElementById('imgModalUrl').value.trim()
+    : imgPicked;
+  if (!url) {
+    document.getElementById('imgModalErr').textContent = imgCurTab === 'up'
+      ? 'Envie ou cole a URL de uma imagem primeiro.'
+      : 'Clique numa imagem da galeria primeiro.';
+    return;
+  }
+  ta.setRangeText('![](' + url + ')', imgIns.s, imgIns.e, 'end');
+  ta.focus();
+  imgModalClose();
 }
 </script>
 
