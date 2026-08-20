@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () { imgDropInit(document
 // timestamp file rebuild.sh writes on every successful publish and swaps the
 // static "Salvo no banco." message for a live link once that build is newer
 // than this save (?t=<serverUnixTime set at save-redirect time>).
-(function () {
+document.addEventListener('DOMContentLoaded', function () {
   var el = document.getElementById('savedMsg');
   if (!el) return;
   var liveUrl = el.getAttribute('data-live-url');
@@ -280,7 +280,7 @@ document.addEventListener('DOMContentLoaded', function () { imgDropInit(document
       })
       .catch(function () {});
   }, 3000);
-})();
+});
 
 // ---- Inline delete confirmation (replaces native confirm()) ----
 // Delete buttons are type="button" with onclick="askConfirm(this)"; the first
