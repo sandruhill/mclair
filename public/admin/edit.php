@@ -4,17 +4,40 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
+$myId = (int) $_SESSION['cms_user_id'];
+$isAuthorRole = cmsRole() === 'author';
+
+// "Autor" role can only ever touch their own posts.
+if ($isAuthorRole) {
+    $owns = $pdo->prepare('SELECT 1 FROM cmstest_blog_posts WHERE slug = ? AND author_id = ?');
+    $owns->execute([$slug, $myId]);
+    if (!$owns->fetchColumn()) { http_response_code(403); die('Você só pode editar os seus próprios posts.'); }
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // keywords: comma-separated text -> JSON array (stored format used by the build)
     $kwArr = array_values(array_filter(array_map('trim', explode(',', $_POST['keywords'] ?? '')), 'strlen'));
     $kwJson = json_encode($kwArr, JSON_UNESCAPED_UNICODE);
 
-    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, updated_by = ? WHERE slug = ?');
+    if ($isAuthorRole) {
+        // authorship stays locked to themselves regardless of what's posted
+        $authorId = $myId;
+        $authorName = $_SESSION['cms_username'];
+    } else {
+        $authorId = $_POST['author_id'] !== '' ? (int) $_POST['author_id'] : null;
+        $authorName = $authorId ? null : trim($_POST['author_other'] ?? '');
+    }
+    if ($authorId) {
+        $u = $pdo->prepare('SELECT username FROM cmstest_users WHERE id = ?');
+        $u->execute([$authorId]);
+        $authorName = $u->fetchColumn() ?: $authorName;
+    }
+
+    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author_id = ?, author = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([
         $_POST['title'], $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
         $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
-        $_POST['content_md'], $_SESSION['cms_user_id'], $slug,
+        $_POST['content_md'], $authorId, $authorName, $myId, $slug,
     ]);
     queueRebuild();
     header('Location: editar?slug=' . urlencode($slug) . '&saved=1');
@@ -30,6 +53,8 @@ $stmt = $pdo->prepare('
 $stmt->execute([$slug]);
 $post = $stmt->fetch();
 if (!$post) { http_response_code(404); die('Post não encontrado'); }
+
+$authorOptions = $pdo->query('SELECT id, username FROM cmstest_users ORDER BY username')->fetchAll();
 
 $categories = ['assessoria-de-imprensa','marketing-de-autoridade','branding-estrategico','marketing-digital','comunicacao','marca-pessoal','negocios','geral'];
 
@@ -102,6 +127,21 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
           <strong>Publicação</strong>
           <label>Subtítulo</label>
           <input type="text" name="subtitle" value="<?= htmlspecialchars($post['subtitle']) ?>" />
+          <label>Autor</label>
+          <?php if ($isAuthorRole): ?>
+            <input type="text" value="<?= htmlspecialchars($_SESSION['cms_username']) ?>" disabled />
+          <?php else: ?>
+            <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
+              <option value="">— outro (digitar abaixo) —</option>
+              <?php foreach ($authorOptions as $u): ?>
+                <option value="<?= (int) $u['id'] ?>" <?= (int) $post['author_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['username']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <div id="authorOtherWrap" style="<?= $post['author_id'] ? 'display:none' : '' ?>">
+              <input type="text" name="author_other" value="<?= htmlspecialchars($post['author_id'] ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
+              <p class="hint">Para autores sem login no painel (colaboradores externos, etc).</p>
+            </div>
+          <?php endif; ?>
           <label>Categoria</label>
           <select name="category">
             <?php foreach ($categories as $cat): ?>

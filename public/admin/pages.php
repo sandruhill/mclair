@@ -2,6 +2,7 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
+cmsRequireRole(['admin', 'editor']);
 $pdo = cmsDb();
 
 $PAGES = [

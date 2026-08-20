@@ -39,3 +39,20 @@ if (empty($_SESSION['cms_user_id'])) {
     <?php
     exit;
 }
+
+// Re-read the role on every request (not just at login) so a demotion/promotion
+// takes effect immediately instead of waiting for the session to expire.
+$stmt = cmsDb()->prepare('SELECT role FROM cmstest_users WHERE id = ?');
+$stmt->execute([$_SESSION['cms_user_id']]);
+$_SESSION['cms_role'] = $stmt->fetchColumn() ?: 'author';
+
+function cmsRole(): string {
+    return $_SESSION['cms_role'] ?? 'author';
+}
+
+function cmsRequireRole(array $allowed): void {
+    if (!in_array(cmsRole(), $allowed, true)) {
+        http_response_code(403);
+        die('Você não tem permissão para acessar esta página.');
+    }
+}

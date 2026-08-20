@@ -2,12 +2,8 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
+cmsRequireRole(['admin']);
 $pdo = cmsDb();
-
-$me = $pdo->prepare('SELECT role FROM cmstest_users WHERE id = ?');
-$me->execute([$_SESSION['cms_user_id']]);
-$myRole = $me->fetchColumn();
-if ($myRole !== 'admin') { http_response_code(403); die('Só administradores podem gerenciar usuários.'); }
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -16,7 +12,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'create') {
         $username = trim(strtolower($_POST['username'] ?? ''));
         $password = $_POST['password'] ?? '';
-        $role = $_POST['role'] === 'admin' ? 'admin' : 'editor';
+        $role = in_array($_POST['role'] ?? '', ['admin', 'editor', 'author'], true) ? $_POST['role'] : 'author';
 
         if ($username === '' || strlen($password) < 8) {
             $error = 'E-mail obrigatório e senha com pelo menos 8 caracteres.';
@@ -62,7 +58,8 @@ adminLayoutTop('users', 'Usuários');
 <?php foreach ($users as $u): ?>
 <tr>
   <td><?= htmlspecialchars($u['username']) ?></td>
-  <td><span class="badge" style="<?= $u['role']==='admin' ? 'background:var(--red);color:#fff' : '' ?>"><?= $u['role'] === 'admin' ? 'Administrador' : 'Editor' ?></span></td>
+  <?php $roleLabels = ['admin' => 'Administrador', 'editor' => 'Editor', 'author' => 'Autor']; ?>
+  <td><span class="badge" style="<?= $u['role']==='admin' ? 'background:var(--red);color:#fff' : '' ?>"><?= $roleLabels[$u['role']] ?? $u['role'] ?></span></td>
   <td><?= htmlspecialchars($u['created_at']) ?></td>
   <td><?= htmlspecialchars($u['last_login_at'] ?? 'nunca') ?></td>
   <td class="dt-actions">
@@ -92,8 +89,9 @@ adminLayoutTop('users', 'Usuários');
     <input type="password" name="password" minlength="8" required />
     <label>Permissão</label>
     <select name="role">
-      <option value="editor">Editor (edita conteúdo)</option>
-      <option value="admin">Administrador (edita + gerencia usuários)</option>
+      <option value="author">Autor (edita só os próprios posts do blog)</option>
+      <option value="editor">Editor (edita todo o conteúdo)</option>
+      <option value="admin">Administrador (edita tudo + gerencia usuários)</option>
     </select>
     <button type="submit" class="btn" style="margin-top:16px">Criar usuário</button>
   </form>

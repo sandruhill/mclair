@@ -10,9 +10,18 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+// "Autor" role only ever sees/touches their own posts; admin/editor see everything.
+$onlyMine = cmsRole() === 'author';
+$myId = (int) $_SESSION['cms_user_id'];
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
-    $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ?');
-    $stmt->execute([$_POST['slug']]);
+    if ($onlyMine) {
+        $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ? AND author_id = ?');
+        $stmt->execute([$_POST['slug'], $myId]);
+    } else {
+        $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ?');
+        $stmt->execute([$_POST['slug']]);
+    }
     queueRebuild();
     header('Location: posts?deleted=1');
     exit;
@@ -22,13 +31,15 @@ $perPage = 20;
 $page = max(1, (int) ($_GET['p'] ?? 1));
 $offset = ($page - 1) * $perPage;
 
-$total = (int) $pdo->query('SELECT COUNT(*) FROM cmstest_blog_posts')->fetchColumn();
+$scope = $onlyMine ? ' WHERE author_id = ' . $myId : '';
+
+$total = (int) $pdo->query('SELECT COUNT(*) FROM cmstest_blog_posts' . $scope)->fetchColumn();
 $lastPage = max(1, (int) ceil($total / $perPage));
 
-$thisMonth = (int) $pdo->query("SELECT COUNT(*) FROM cmstest_blog_posts WHERE post_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')")->fetchColumn();
-$numCats = (int) $pdo->query('SELECT COUNT(DISTINCT category) FROM cmstest_blog_posts')->fetchColumn();
+$thisMonth = (int) $pdo->query("SELECT COUNT(*) FROM cmstest_blog_posts" . $scope . ($scope ? ' AND' : ' WHERE') . " post_date >= DATE_FORMAT(CURDATE(), '%Y-%m-01')")->fetchColumn();
+$numCats = (int) $pdo->query('SELECT COUNT(DISTINCT category) FROM cmstest_blog_posts' . $scope)->fetchColumn();
 
-$stmt = $pdo->prepare('SELECT slug, title, featured_image, image_url, post_date, category, author FROM cmstest_blog_posts ORDER BY post_date DESC LIMIT ? OFFSET ?');
+$stmt = $pdo->prepare('SELECT slug, title, featured_image, image_url, post_date, category, author FROM cmstest_blog_posts' . $scope . ' ORDER BY post_date DESC LIMIT ? OFFSET ?');
 $stmt->bindValue(1, $perPage, PDO::PARAM_INT);
 $stmt->bindValue(2, $offset, PDO::PARAM_INT);
 $stmt->execute();
