@@ -30,7 +30,11 @@ $counts = $pdo->query("
 </head>
 <body>
 <h1>CMS Teste — banco de dados isolado</h1>
-<p>Prova de conceito: este conteúdo veio do banco MySQL de teste, não dos arquivos do Git. Editar aqui e salvar não mexe no site real.</p>
+<p>Logado como <strong><?= htmlspecialchars($_SESSION['cms_username']) ?></strong> ·
+  <a href="cases.php">Cases</a> ·
+  <a href="services.php">Serviços</a> ·
+  <a href="users.php">Usuários</a>
+</p>
 
 <div class="counts">
 <?php foreach ($counts as $c): ?>
