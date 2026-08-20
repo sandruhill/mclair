@@ -504,7 +504,6 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     .cm-view-list .cm-info { margin-top:0; text-align:left; flex:1; display:flex; align-items:center; gap:10px; }
     .cm-view-list .cm-info strong { display:inline; }
     .cm-view-list .cm-actions { margin-top:0; }
-    .cm-view-list .cm-edit { grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); display:grid; gap:0 14px; align-items:end; width:100%; }
 
     .cm-edit { display:flex; flex-direction:column; gap:8px; }
     .cm-edit label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin:0; }
