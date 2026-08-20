@@ -395,6 +395,7 @@ function askUrl(anchor, cb) {
         <a href="/acesso/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">Cases</a>
         <a href="/acesso/paginas?slug=mentorias" class="<?= $active === 'pages' && ($_GET['slug'] ?? '') === 'mentorias' ? 'active' : '' ?>">Mentorias</a>
         <a href="/acesso/paginas?slug=sobre" class="<?= $active === 'pages' && ($_GET['slug'] ?? '') === 'sobre' ? 'active' : '' ?>">Sobre</a>
+        <a href="/acesso/paginas?slug=clientes" class="<?= $active === 'pages' && ($_GET['slug'] ?? '') === 'clientes' ? 'active' : '' ?>">Clientes</a>
       </div>
       <?php endif; ?>
       <a href="/acesso/menu" class="<?= $active === 'menu' ? 'active' : '' ?>">
