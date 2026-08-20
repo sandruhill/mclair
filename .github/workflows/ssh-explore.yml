@@ -1,0 +1,25 @@
+name: SSH Explore (temporary)
+
+on:
+  workflow_dispatch:
+    inputs:
+      command:
+        description: 'Shell command to run on the server'
+        required: true
+        type: string
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run command via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DB_PASS: ${{ secrets.ACESSO_DB_PASS }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: DB_PASS
+          script: ${{ inputs.command }}
