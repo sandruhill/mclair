@@ -141,7 +141,7 @@ const cases = (allCases as any[])
       <div class="hsc-divider"></div>
       {stats.map(s => (
         <div class="hsc-stat">
-          <strong class="hsc-num counter" data-target={s.n} data-suffix={s.s}>0</strong>
+          <strong class="hsc-num counter" data-target={s.n} data-suffix={s.s}>{Number(s.n).toLocaleString('pt-BR')}{s.s}</strong>
           <span class="hsc-label">{s.label}</span>
         </div>
       ))}
