@@ -48,6 +48,10 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   .sidebar nav a:hover { color:var(--ink); background:var(--soft); }
   .sidebar nav a.active { color:var(--red); background:rgba(200,16,46,.08); }
   .sidebar nav a.active svg { opacity:1; }
+  .nav-tree { display:flex; flex-direction:column; margin:2px 0 4px 22px; padding-left:12px; border-left:1.5px solid var(--line); }
+  .nav-tree a { display:block; padding:7px 10px; margin:1px 0; font-size:.8rem; font-weight:600; color:var(--ink-3); border-radius:8px; }
+  .nav-tree a:hover { color:var(--ink); background:var(--soft); }
+  .nav-tree a.active { color:var(--red); background:rgba(200,16,46,.08); }
   .sidebar-user {
     margin-top:auto; display:flex; align-items:center; gap:10px;
     padding:12px 10px; border-top:1px solid var(--line);
@@ -380,18 +384,19 @@ function askUrl(anchor, cb) {
         Posts do blog
       </a>
       <?php if (cmsRole() !== 'author'): ?>
-      <a href="/acesso/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M8 7V5a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
-        Cases
-      </a>
-      <a href="/acesso/servicos" class="<?= $active === 'services' ? 'active' : '' ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 2 8l10 5 10-5-10-5z"/><path d="m2 13 10 5 10-5"/></svg>
-        Serviços
-      </a>
+      <?php $pagesAreaOpen = in_array($active, ['pages', 'cases', 'services'], true); ?>
       <a href="/acesso/paginas" class="<?= $active === 'pages' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
         Páginas
       </a>
+      <?php if ($pagesAreaOpen): ?>
+      <div class="nav-tree">
+        <a href="/acesso/servicos" class="<?= $active === 'services' ? 'active' : '' ?>">Serviços</a>
+        <a href="/acesso/casos" class="<?= $active === 'cases' ? 'active' : '' ?>">Cases</a>
+        <a href="/acesso/paginas?slug=mentorias" class="<?= $active === 'pages' && ($_GET['slug'] ?? '') === 'mentorias' ? 'active' : '' ?>">Mentorias</a>
+        <a href="/acesso/paginas?slug=sobre" class="<?= $active === 'pages' && ($_GET['slug'] ?? '') === 'sobre' ? 'active' : '' ?>">Sobre</a>
+      </div>
+      <?php endif; ?>
       <a href="/acesso/menu" class="<?= $active === 'menu' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
         Menu
