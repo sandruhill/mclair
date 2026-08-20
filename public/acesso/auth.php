@@ -36,19 +36,22 @@ if (empty($_SESSION['cms_user_id'])) {
         background:var(--bg); padding:24px;
       }
       .glow {
-        position:fixed; top:50%; left:50%; width:640px; height:640px; transform:translate(-50%,-50%);
-        background:radial-gradient(circle, rgba(200,16,46,.07) 0%, rgba(200,16,46,0) 70%);
+        position:fixed; top:50%; left:50%; width:900px; height:700px; transform:translate(-50%,-50%);
+        background:radial-gradient(circle, rgba(200,16,46,.08) 0%, rgba(200,16,46,0) 70%);
         pointer-events:none; z-index:0;
       }
-      .form-card {
-        position:relative; z-index:1; width:100%; max-width:380px; background:#fff;
-        border-radius:16px; padding:40px 36px; box-shadow:0 2px 6px rgba(20,16,12,.04), 0 24px 64px -20px rgba(20,16,12,.14);
+      .card {
+        position:relative; z-index:1; width:100%; max-width:840px; min-height:520px;
+        display:flex; background:#fff; border-radius:20px; overflow:hidden;
+        box-shadow:0 2px 6px rgba(20,16,12,.04), 0 30px 70px -24px rgba(20,16,12,.18);
       }
-      .brand { display:flex; align-items:center; justify-content:center; gap:9px; margin-bottom:30px; }
+      .form-side { flex:1; display:flex; align-items:center; justify-content:center; padding:32px; }
+      .form-card { width:100%; max-width:320px; }
+      .brand { display:flex; align-items:center; gap:9px; margin-bottom:30px; }
       .brand .dot { width:24px; height:24px; border-radius:7px; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.8rem; }
       .brand strong { font-size:.95rem; letter-spacing:.01em; }
-      h1 { font-size:1.4rem; margin:0 0 6px; letter-spacing:-.01em; text-align:center; }
-      .sub { font-size:.85rem; color:var(--ink-3); margin:0 0 28px; text-align:center; }
+      h1 { font-size:1.4rem; margin:0 0 6px; letter-spacing:-.01em; }
+      .sub { font-size:.85rem; color:var(--ink-3); margin:0 0 28px; }
       label { display:block; font-weight:700; margin:16px 0 5px; font-size:.72rem; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); }
       label:first-of-type { margin-top:0; }
       input { width:100%; padding:11px 13px; border:1px solid var(--line); border-radius:8px; font-family:inherit; font-size:.92rem; background:#fff; }
@@ -56,22 +59,45 @@ if (empty($_SESSION['cms_user_id'])) {
       button { width:100%; margin-top:22px; background:var(--red); color:#fff; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700; font-size:.92rem; }
       button:hover { opacity:.92; }
       .err { background:var(--red); color:#fff; padding:9px 13px; border-radius:8px; font-size:.82rem; margin-bottom:16px; }
+      .image-side {
+        flex:1; position:relative; overflow:hidden; display:none;
+        background:#211B14 url('/brand/mockup-completo.jpg') center/cover no-repeat;
+      }
+      .image-side::after {
+        content:''; position:absolute; inset:0;
+        background:linear-gradient(180deg, rgba(33,27,20,.15) 0%, rgba(20,16,12,.15) 55%, rgba(15,12,9,.9) 100%);
+      }
+      .image-overlay { position:absolute; left:28px; right:28px; bottom:28px; z-index:1; color:#fff; }
+      .image-overlay .quote { font-size:.95rem; font-weight:300; line-height:1.5; margin:0 0 14px; }
+      .image-overlay .who strong { display:block; font-size:.85rem; }
+      .image-overlay .who span { font-size:.72rem; color:rgba(255,255,255,.65); }
+      @media (min-width: 760px) { .image-side { display:block; } }
     </style>
     </head>
     <body>
     <div class="glow"></div>
-    <div class="form-card">
-      <div class="brand"><span class="dot">M</span><strong>Painel Mclair</strong></div>
-      <h1>Bem-vindo de volta</h1>
-      <p class="sub">Entre com sua conta para gerenciar o site.</p>
-      <?php if (isset($authError)): ?><div class="err"><?= htmlspecialchars($authError) ?></div><?php endif; ?>
-      <form method="post">
-        <label>Usuário ou e-mail</label>
-        <input type="text" name="username" autofocus />
-        <label>Senha</label>
-        <input type="password" name="password" />
-        <button type="submit">Entrar</button>
-      </form>
+    <div class="card">
+      <div class="form-side">
+        <div class="form-card">
+          <div class="brand"><span class="dot">M</span><strong>Painel Mclair</strong></div>
+          <h1>Bem-vindo de volta</h1>
+          <p class="sub">Entre com sua conta para gerenciar o site.</p>
+          <?php if (isset($authError)): ?><div class="err"><?= htmlspecialchars($authError) ?></div><?php endif; ?>
+          <form method="post">
+            <label>Usuário ou e-mail</label>
+            <input type="text" name="username" autofocus />
+            <label>Senha</label>
+            <input type="password" name="password" />
+            <button type="submit">Entrar</button>
+          </form>
+        </div>
+      </div>
+      <div class="image-side">
+        <div class="image-overlay">
+          <p class="quote">"Construímos autoridade de marca com Comunicação Estratégica desde 2017."</p>
+          <div class="who"><strong>Mclair Comunicação</strong><span>200+ marcas atendidas · São Paulo</span></div>
+        </div>
+      </div>
     </div>
     </body></html>
     <?php
