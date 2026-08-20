@@ -1,0 +1,42 @@
+name: CMS Test DB Import (temporary)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload SQL file
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "scripts/cms-content-import.sql"
+          target: "/tmp/cms-import"
+          strip_components: 1
+
+      - name: Import SQL
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DB_PASS: ${{ secrets.ACESSO_DB_PASS }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: DB_PASS
+          script: |
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso < /tmp/cms-import/cms-content-import.sql
+            echo "import done"
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso -e "
+              SELECT 'blog_posts' t, COUNT(*) n FROM cmstest_blog_posts
+              UNION SELECT 'services', COUNT(*) FROM cmstest_services
+              UNION SELECT 'cases', COUNT(*) FROM cmstest_cases
+              UNION SELECT 'singletons', COUNT(*) FROM cmstest_singletons;
+            "
+            rm -rf /tmp/cms-import
