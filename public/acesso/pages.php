@@ -189,7 +189,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     .rep-item-head { display:flex; align-items:center; justify-content:space-between; padding-top:12px; }
     .rep-item-head .rep-n { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); }
     .rep-item-head button { background:none; border:none; color:var(--red); font-weight:700; font-size:.74rem; cursor:pointer; padding:0; font-family:inherit; }
-    .rep-fields { display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:0 14px; }
+    .rep-fields { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(220px, 100%), 1fr)); gap:0 14px; }
     .rep-fields .fw { grid-column:1 / -1; }
     .rep-add { margin-top:4px; }
     label.sec { font-size:.82rem; color:var(--ink); margin-top:22px; }
@@ -227,11 +227,17 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
             // No prose field in this repeater (stats, logos...) -> items are
             // short enough to sit side by side instead of one per row.
             $compact  = empty($longKeys);
+            // Once the item itself is narrow, its own fields need pairing up
+            // too (a lone "+" in a full-width input is the same waste one
+            // level down) -- except when a field is an image drop-zone,
+            // which needs real width and shouldn't get squeezed.
+            $hasImgField = (bool) array_intersect($tplKeys, ['photo', 'logo', 'ogImage']);
+            $tight = $compact && !$hasImgField && count($tplKeys) > 1;
           ?>
           <?php if ($big): ?>
             <button type="button" class="btn secondary rep-add" onclick="repAdd('<?= htmlspecialchars($key) ?>')">+ Adicionar item</button>
           <?php endif; ?>
-          <div class="rep<?= $compact ? ' grid-cols' : '' ?>" id="rep-<?= htmlspecialchars($key) ?>" data-next="<?= count($orig) ?>">
+          <div class="rep<?= $compact ? ' grid-cols' : '' ?><?= $tight ? ' tight-fields' : '' ?>" id="rep-<?= htmlspecialchars($key) ?>" data-next="<?= count($orig) ?>">
             <?php foreach ($orig as $i => $row): ?>
               <div class="rep-item">
                 <div class="rep-item-head">

@@ -173,8 +173,14 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
      number+label...) sit side by side instead of stacking full-width.
      auto-fit (not auto-fill) so a half-empty last row stretches its items
      to fill the width instead of leaving blank trailing columns. */
-  .rep.grid-cols { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:12px; align-items:start; }
+  .rep.grid-cols { display:grid; grid-template-columns:repeat(auto-fit, minmax(min(200px, 100%), 1fr)); gap:12px; align-items:start; }
   .rep.grid-cols .rep-item { margin-bottom:0; }
+
+  /* Inside a compact item, pair up its short fields (a number + a suffix)
+     instead of each stacking full-width, and let the last field (usually
+     the label/caption) take the full row underneath them. */
+  .rep.tight-fields .rep-fields { grid-template-columns:repeat(auto-fit, minmax(min(70px, 100%), 1fr)); gap:8px; }
+  .rep.tight-fields .rep-fields > *:last-child { grid-column:1 / -1; }
 
   /* Inline confirmation (replaces native confirm()) */
   .ci { display:inline-flex; align-items:center; gap:8px; font-size:.78rem; }
