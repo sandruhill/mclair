@@ -109,7 +109,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <textarea name="solution" style="min-height:100px"><?= htmlspecialchars($item['solution']) ?></textarea>
 
     <label>Galeria de fotos</label>
-    <div class="rep" id="galRep" data-next="<?= count($gal) ?>">
+    <div class="rep grid-cols" id="galRep" data-next="<?= count($gal) ?>">
       <?php foreach ($gal as $i => $g): ?>
       <div class="rep-item">
         <div class="rep-item-head">

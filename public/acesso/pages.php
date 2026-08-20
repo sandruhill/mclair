@@ -226,11 +226,14 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
             $tplKeys  = array_keys($orig[0] ?? []);
             $longKeys = pagesLongKeys($orig);
             $big      = count($orig) > 20;
+            // No prose field in this repeater (stats, logos...) -> items are
+            // short enough to sit side by side instead of one per row.
+            $compact  = empty($longKeys);
           ?>
           <?php if ($big): ?>
             <button type="button" class="btn secondary rep-add" onclick="repAdd('<?= htmlspecialchars($key) ?>')">+ Adicionar item</button>
           <?php endif; ?>
-          <div class="rep" id="rep-<?= htmlspecialchars($key) ?>" data-next="<?= count($orig) ?>">
+          <div class="rep<?= $compact ? ' grid-cols' : '' ?>" id="rep-<?= htmlspecialchars($key) ?>" data-next="<?= count($orig) ?>">
             <?php foreach ($orig as $i => $row): ?>
               <div class="rep-item">
                 <div class="rep-item-head">
