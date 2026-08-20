@@ -7,7 +7,7 @@ export const Root: React.FC = () => {
       <Composition
         id="PainelFlow"
         component={PainelFlow}
-        durationInFrames={150}
+        durationInFrames={210}
         fps={30}
         width={1280}
         height={800}

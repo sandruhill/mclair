@@ -12,7 +12,7 @@ const LINE = '#D6C9A8';
 const SIDEBAR_ITEMS = ['Páginas', 'Serviços', 'Cases', 'Blog', 'Configurações', 'SEO & GEO'];
 const ENTRIES = ['Homepage', 'Sobre', 'Clientes', 'Contato', 'Mentorias'];
 
-// Phase boundaries (frames, at 30fps / 150 total = 5s)
+// Phase boundaries (frames, at 30fps / 210 total = 7s)
 const PHASE = {
   sidebarIdle: [0, 35],
   sidebarClick: [35, 45],
@@ -21,6 +21,10 @@ const PHASE = {
   entryClick: [90, 100],
   panelIn: [100, 120],
   panelIdle: [120, 150],
+  cursorToSave: [132, 156],
+  saveClick: [156, 164],
+  toastIn: [164, 180],
+  toastIdle: [180, 210],
 } as const;
 
 function easeFrame(frame: number, range: readonly [number, number]) {
@@ -91,6 +95,21 @@ export const PainelFlow: React.FC = () => {
   const panelOpacity = easeFrame(frame, PHASE.panelIn);
   const panelX = interpolate(easeFrame(frame, PHASE.panelIn), [0, 1], [40, 0]);
   const showList = frame < PHASE.panelIn[0] + 4;
+
+  // ---- Cursor travels to "Salvar", clicks, success toast appears ----
+  const cursor3X = interpolate(frame, PHASE.cursorToSave, [520, 210], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const cursor3Y = interpolate(frame, PHASE.cursorToSave, [520, 372], {
+    extrapolateLeft: 'clamp',
+    extrapolateRight: 'clamp',
+  });
+  const isClickingSave = frame >= PHASE.saveClick[0] && frame < PHASE.saveClick[0] + 8;
+  const saveButtonPressed = frame >= PHASE.saveClick[0] && frame < PHASE.saveClick[0] + 10;
+  const toastProgress = spring({ frame: frame - PHASE.toastIn[0], fps, config: { damping: 16, mass: 0.5 } });
+  const toastY = interpolate(toastProgress, [0, 1], [20, 0]);
+  const toastOpacity = easeFrame(frame, PHASE.toastIn);
 
   return (
     <AbsoluteFill style={{ background: GROUND, fontFamily: '-apple-system, BlinkMacSystemFont, sans-serif' }}>
@@ -188,6 +207,23 @@ export const PainelFlow: React.FC = () => {
                     </div>
                   );
                 })}
+                <div
+                  style={{
+                    marginTop: 8,
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: 8,
+                    padding: '10px 22px',
+                    borderRadius: 8,
+                    background: RED,
+                    color: '#fff',
+                    fontSize: 13,
+                    fontWeight: 700,
+                    transform: `scale(${saveButtonPressed ? 0.94 : 1})`,
+                  }}
+                >
+                  Salvar
+                </div>
               </div>
               <div style={{ flex: 1, background: GROUND_RAISED, border: `1px solid ${LINE}`, borderRadius: 10, padding: 20 }}>
                 <div style={{ fontSize: 12, fontWeight: 700, letterSpacing: '0.06em', color: INK_SOFT, marginBottom: 14 }}>
@@ -200,12 +236,54 @@ export const PainelFlow: React.FC = () => {
               </div>
             </div>
           )}
+
+          {frame >= PHASE.toastIn[0] && (
+            <div
+              style={{
+                position: 'absolute',
+                top: 24,
+                right: 24,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 10,
+                padding: '12px 20px',
+                borderRadius: 10,
+                background: INK,
+                color: '#fff',
+                fontSize: 14,
+                fontWeight: 600,
+                opacity: toastOpacity,
+                transform: `translateY(${toastY}px)`,
+                boxShadow: '0 12px 30px rgba(0,0,0,.18)',
+              }}
+            >
+              <div
+                style={{
+                  width: 18,
+                  height: 18,
+                  borderRadius: '50%',
+                  background: '#3FA85C',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: 11,
+                  flexShrink: 0,
+                }}
+              >
+                ✓
+              </div>
+              Alterações salvas
+            </div>
+          )}
         </div>
       </div>
 
       <Cursor x={cursorX} y={cursorY} clicking={isClickingSidebar} />
       {frame >= PHASE.entriesIdle[0] && frame < PHASE.panelIn[0] && (
         <Cursor x={cursor2X} y={cursor2Y} clicking={isClickingEntry} />
+      )}
+      {frame >= PHASE.cursorToSave[0] && frame < PHASE.toastIn[0] + 6 && (
+        <Cursor x={cursor3X} y={cursor3Y} clicking={isClickingSave} />
       )}
     </AbsoluteFill>
   );
