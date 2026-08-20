@@ -1,6 +1,6 @@
 // Fetches content from the MySQL-backed export API at build time.
 // Used by every page that used to read from Keystatic/git-tracked files.
-const EXPORT_URL = 'https://mclair.com.br/cms-test/api-export.php';
+const EXPORT_URL = 'https://mclair.com.br/admin/api-export.php';
 
 async function fetchType<T = any>(type: string): Promise<T[]> {
   const token = import.meta.env.CMS_EXPORT_TOKEN;
