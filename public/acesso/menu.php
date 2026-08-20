@@ -47,25 +47,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if ($action === 'move') {
-        $id  = (int) ($_POST['id'] ?? 0);
-        $dir = $_POST['dir'] === 'up' ? -1 : 1;
-        $stmt = $pdo->prepare('SELECT parent_id FROM cmstest_menu WHERE id = ?');
-        $stmt->execute([$id]);
-        $row = $stmt->fetch();
-        if ($row) {
-            $parentId = $row['parent_id'] !== null ? (int) $row['parent_id'] : null;
-            $ids = menuReorderSiblings($pdo, $parentId);
-            $pos = array_search($id, $ids, true);
-            $swap = $pos + $dir;
-            if ($pos !== false && isset($ids[$swap])) {
-                $upd = $pdo->prepare('UPDATE cmstest_menu SET sort_order = ? WHERE id = ?');
-                $upd->execute([$swap, $id]);
-                $upd->execute([$pos, $ids[$swap]]);
-            }
+    if ($action === 'reorder') {
+        header('Content-Type: application/json');
+        $parentId = ($_POST['parent_id'] ?? '') !== '' ? (int) $_POST['parent_id'] : null;
+        $ids = json_decode($_POST['ids'] ?? '[]', true) ?: [];
+        // Only accept ids that are actually siblings under this parent --
+        // ignores anything tampered with client-side.
+        $valid = menuReorderSiblings($pdo, $parentId);
+        sort($valid);
+        $wanted = array_map('intval', $ids);
+        sort($wanted);
+        if ($valid !== $wanted) {
+            http_response_code(400);
+            echo json_encode(['ok' => false, 'error' => 'ids não conferem com os irmãos atuais']);
+            exit;
         }
+        $upd = $pdo->prepare('UPDATE cmstest_menu SET sort_order = ? WHERE id = ?');
+        foreach (array_map('intval', $ids) as $i => $mid) $upd->execute([$i, $mid]);
         queueRebuild();
-        header('Location: menu');
+        echo json_encode(['ok' => true]);
         exit;
     }
 
@@ -149,26 +149,31 @@ function menuTargetBadge(array $it, array $pages, array $services): string {
     }
 }
 
-function menuRenderRows(array $byParent, int $parentKey, int $depth, array $pages, array $services): void {
+// Each sibling group is a drag-and-drop container (.mi-children, keyed by
+// data-parent); each item is a .mi-node wrapping its own row plus its own
+// children container, so dragging a node carries its whole subtree with it
+// and reordering only ever happens among true siblings.
+function menuRenderRows(array $byParent, int $parentKey, array $pages, array $services): void {
     $sibs = $byParent[$parentKey] ?? [];
-    $n = count($sibs);
-    foreach ($sibs as $i => $it) {
+    if (!$sibs) return;
+    echo '<div class="mi-children" data-parent="' . $parentKey . '">';
+    foreach ($sibs as $it) {
         $id = (int) $it['id'];
-        echo '<div class="mi" style="margin-left:' . ($depth * 34) . 'px">';
+        echo '<div class="mi-node" data-id="' . $id . '">';
+        echo '<div class="mi" draggable="true">';
+        echo '<span class="mi-handle" title="Arraste para reordenar"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></span>';
         echo '<div class="mi-info"><strong>' . htmlspecialchars($it['label']) . '</strong>';
         echo '<span class="badge">' . htmlspecialchars(menuTargetBadge($it, $pages, $services)) . '</span></div>';
         echo '<div class="mi-actions">';
-        echo '<form method="post"><input type="hidden" name="action" value="move" /><input type="hidden" name="id" value="' . $id . '" /><input type="hidden" name="dir" value="up" />'
-           . '<button type="submit" title="Mover para cima"' . ($i === 0 ? ' disabled' : '') . '>&uarr;</button></form>';
-        echo '<form method="post"><input type="hidden" name="action" value="move" /><input type="hidden" name="id" value="' . $id . '" /><input type="hidden" name="dir" value="down" />'
-           . '<button type="submit" title="Mover para baixo"' . ($i === $n - 1 ? ' disabled' : '') . '>&darr;</button></form>';
         echo '<a href="menu?edit=' . $id . '">editar</a>';
         echo '<form method="post">'
            . '<input type="hidden" name="action" value="delete" /><input type="hidden" name="id" value="' . $id . '" />'
            . '<button type="button" class="del" data-confirm="Remover? Os itens filhos passam a ficar no topo do menu." data-yes="sim, remover" onclick="askConfirm(this)">remover</button></form>';
         echo '</div></div>';
-        menuRenderRows($byParent, $id, $depth + 1, $pages, $services);
+        menuRenderRows($byParent, $id, $pages, $services);
+        echo '</div>';
     }
+    echo '</div>';
 }
 
 adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
@@ -179,17 +184,24 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
 <?php if (isset($_GET['err'])): ?><div class="msg err">Preencha o rótulo e o destino do link antes de salvar.</div><?php endif; ?>
 
 <style>
-  .mi { display:flex; align-items:center; justify-content:space-between; gap:12px;
+  .mi-children { display:flex; flex-direction:column; }
+  .mi-children[data-parent]:not([data-parent="0"]) { margin-left:34px; margin-top:6px; }
+  .mi-node { display:flex; flex-direction:column; }
+  .mi { display:flex; align-items:center; gap:10px;
         background:var(--paper); border:1px solid var(--line); border-radius:10px;
-        padding:10px 14px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
-  .mi-info { display:flex; align-items:center; gap:10px; min-width:0; }
+        padding:10px 14px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.04);
+        transition:opacity .15s, box-shadow .15s, border-color .15s; }
+  .mi-handle { display:flex; align-items:center; color:var(--line); cursor:grab; flex-shrink:0; touch-action:none; }
+  .mi-handle:hover { color:var(--ink-3); }
+  .mi.dragging { opacity:.4; }
+  .mi-node.drag-over > .mi { border-color:var(--red); box-shadow:0 0 0 2px rgba(200,16,46,.12); }
+  .mi-info { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
   .mi-info strong { font-size:.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mi-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
   .mi-actions form { display:inline; margin:0; }
   .mi-actions button, .mi-actions a { background:none; border:none; padding:0; cursor:pointer;
         font-size:.78rem; font-weight:700; font-family:inherit; color:var(--ink-3); }
   .mi-actions button:hover, .mi-actions a:hover { color:var(--ink); }
-  .mi-actions button[disabled] { opacity:.25; cursor:default; }
   .mi-actions a { color:var(--red); }
   .mi-actions button.del { color:#9a1f1f; text-decoration:underline; }
 </style>
@@ -199,8 +211,8 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
     <?php if (!$items): ?>
       <div class="card"><p class="hint" style="font-size:.85rem">Nenhum item de menu ainda. Adicione o primeiro pelo formulário ao lado.</p></div>
     <?php else: ?>
-      <?php menuRenderRows($byParent, 0, 0, $MENU_PAGES, $services); ?>
-      <p class="hint">Use &uarr;/&darr; para reordenar entre irmãos. Itens indentados são sub-itens do item acima.</p>
+      <?php menuRenderRows($byParent, 0, $MENU_PAGES, $services); ?>
+      <p class="hint">Arraste pela alça para reordenar entre irmãos. Itens indentados são sub-itens do item acima.</p>
     <?php endif; ?>
   </div>
 
@@ -268,6 +280,63 @@ function setLinkType(t) {
   document.getElementById('pane_custom').style.display    = t === 'custom'    ? '' : 'none';
 }
 setLinkType(document.getElementById('linkType').value);
+
+// ---- Drag-and-drop reorder (siblings only, same parent) ----
+(function () {
+  var dragged = null;
+
+  document.addEventListener('dragstart', function (e) {
+    var handle = e.target.closest('.mi-handle');
+    if (!handle) { e.preventDefault(); return; }
+    dragged = handle.closest('.mi-node');
+    dragged.querySelector('.mi').classList.add('dragging');
+    e.dataTransfer.effectAllowed = 'move';
+  });
+
+  document.addEventListener('dragend', function () {
+    if (dragged) dragged.querySelector('.mi').classList.remove('dragging');
+    document.querySelectorAll('.mi-node.drag-over').forEach(function (n) { n.classList.remove('drag-over'); });
+    dragged = null;
+  });
+
+  document.addEventListener('dragover', function (e) {
+    if (!dragged) return;
+    var node = e.target.closest('.mi-node');
+    if (!node || node === dragged) return;
+    // Only siblings: the target must live in the same .mi-children as dragged.
+    if (node.parentElement !== dragged.parentElement) return;
+    e.preventDefault();
+    var rect = node.getBoundingClientRect();
+    var before = (e.clientY - rect.top) < rect.height / 2;
+    document.querySelectorAll('.mi-node.drag-over').forEach(function (n) { if (n !== node) n.classList.remove('drag-over'); });
+    node.classList.add('drag-over');
+    node.dataset.dropBefore = before ? '1' : '0';
+  });
+
+  document.addEventListener('drop', function (e) {
+    if (!dragged) return;
+    var node = e.target.closest('.mi-node');
+    if (!node || node === dragged || node.parentElement !== dragged.parentElement) return;
+    e.preventDefault();
+    var before = node.dataset.dropBefore === '1';
+    var container = node.parentElement;
+    if (before) container.insertBefore(dragged, node);
+    else container.insertBefore(dragged, node.nextSibling);
+    node.classList.remove('drag-over');
+    saveOrder(container);
+  });
+
+  function saveOrder(container) {
+    var ids = Array.from(container.children).map(function (n) { return n.dataset.id; });
+    var fd = new FormData();
+    fd.append('action', 'reorder');
+    fd.append('parent_id', container.dataset.parent === '0' ? '' : container.dataset.parent);
+    fd.append('ids', JSON.stringify(ids));
+    fetch('/acesso/menu', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .catch(function () {});
+  }
+})();
 </script>
 
 <?php adminLayoutBottom(); ?>
