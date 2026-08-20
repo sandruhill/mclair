@@ -5,13 +5,12 @@ require_once __DIR__ . '/_layout_top.php';
 $pdo = cmsDb();
 
 $PAGES = [
-    'homepage'      => 'Home',
-    'sobre'         => 'Sobre',
-    'clientes'      => 'Clientes',
-    'contato'       => 'Contato',
-    'mentorias'     => 'Mentorias',
-    'configuracoes' => 'Configurações',
-    'llms'          => 'LLMs.txt',
+    'homepage'  => 'Home',
+    'sobre'     => 'Sobre',
+    'clientes'  => 'Clientes',
+    'contato'   => 'Contato',
+    'mentorias' => 'Mentorias',
+    'llms'      => 'LLMs.txt',
 ];
 
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
@@ -74,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     }
 }
 
-adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas');
+adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug ? ['label' => 'Páginas', 'href' => '/admin/paginas'] : null);
 ?>
 
 <?php if (!$slug): ?>

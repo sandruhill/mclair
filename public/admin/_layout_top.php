@@ -2,7 +2,7 @@
 // Shared admin shell: sidebar + topbar. Include after auth.php/db.php,
 // call adminLayoutTop($activeNav, $pageTitle) then page content, then
 // adminLayoutBottom() at the end.
-function adminLayoutTop(string $active, string $title): void {
+function adminLayoutTop(string $active, string $title, ?array $crumb = null): void {
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -55,6 +55,9 @@ function adminLayoutTop(string $active, string $title): void {
     padding:16px 28px; background:var(--paper); border-bottom:1px solid var(--line);
   }
   .topbar h1 { font-size:1.1rem; margin:0; }
+  .breadcrumb { display:flex; align-items:center; gap:6px; font-size:.75rem; font-weight:600; color:var(--ink-3); margin-bottom:3px; }
+  .breadcrumb a:hover { color:var(--red); }
+  .breadcrumb span { color:#C7CBD1; }
   .topbar .meta { font-size:.78rem; color:var(--ink-3); font-weight:600; }
   .content { padding:28px; max-width:1200px; }
 
@@ -164,6 +167,10 @@ function adminLayoutTop(string $active, string $title): void {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.5 3-5.5 6.5-5.5s6.5 2 6.5 5.5"/><path d="M16.5 4.8a3.5 3.5 0 0 1 0 6.4M18 14.7c2.1.8 3.5 2.4 3.5 5.3"/></svg>
         Usuários
       </a>
+      <a href="/admin/configuracoes" class="<?= $active === 'settings' ? 'active' : '' ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        Configurações
+      </a>
     </nav>
     <div class="sidebar-user">
       <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['cms_username'] ?? '?', 0, 1))) ?></div>
@@ -175,7 +182,12 @@ function adminLayoutTop(string $active, string $title): void {
   </aside>
   <div class="main">
     <div class="topbar">
-      <h1><?= htmlspecialchars($title) ?></h1>
+      <div>
+        <?php if ($crumb): ?>
+        <div class="breadcrumb"><a href="<?= htmlspecialchars($crumb['href']) ?>"><?= htmlspecialchars($crumb['label']) ?></a><span>/</span></div>
+        <?php endif; ?>
+        <h1><?= htmlspecialchars($title) ?></h1>
+      </div>
       <div class="meta"><?= date('d/m/Y') ?></div>
     </div>
     <div class="content">

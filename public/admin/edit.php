@@ -39,7 +39,7 @@ $kwText = is_array($kwDecoded) ? implode(', ', $kwDecoded) : (string) ($post['ke
 
 $heroMode = !empty($post['hero_video']) ? 'video' : 'image';
 
-adminLayoutTop('blog', 'Editando post');
+adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/admin/posts']);
 ?>
 
 <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
