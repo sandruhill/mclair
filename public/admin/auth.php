@@ -31,7 +31,7 @@ if (empty($_SESSION['cms_user_id'])) {
     <h2>CMS Teste — Mclair</h2>
     <?php if (isset($authError)): ?><p class="err"><?= htmlspecialchars($authError) ?></p><?php endif; ?>
     <form method="post">
-      <input type="text" name="username" placeholder="Usuário" autofocus />
+      <input type="text" name="username" placeholder="Usuário ou e-mail" autofocus />
       <input type="password" name="password" placeholder="Senha" />
       <button type="submit">Entrar</button>
     </form>

@@ -14,12 +14,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'create') {
-        $username = trim($_POST['username'] ?? '');
+        $username = trim(strtolower($_POST['username'] ?? ''));
         $password = $_POST['password'] ?? '';
         $role = $_POST['role'] === 'admin' ? 'admin' : 'editor';
 
         if ($username === '' || strlen($password) < 8) {
-            $error = 'Usuário obrigatório e senha com pelo menos 8 caracteres.';
+            $error = 'E-mail obrigatório e senha com pelo menos 8 caracteres.';
+        } elseif (!str_ends_with($username, '@mclair.com.br')) {
+            $error = 'Novos usuários precisam de um e-mail @mclair.com.br (só funcionários da Mclair).';
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             try {
@@ -56,7 +58,7 @@ adminLayoutTop('users', 'Usuários');
 <div class="tablecard" style="margin-bottom:24px">
 <div class="tablecard-head"><div><strong>Usuários</strong><span class="count"><?= count($users) ?></span></div></div>
 <table class="dt">
-<tr><th>Usuário</th><th>Permissão</th><th class="s">Criado em</th><th>Último login</th><th>Ações</th></tr>
+<tr><th>Usuário / e-mail</th><th>Permissão</th><th class="s">Criado em</th><th>Último login</th><th>Ações</th></tr>
 <?php foreach ($users as $u): ?>
 <tr>
   <td><?= htmlspecialchars($u['username']) ?></td>
@@ -83,8 +85,9 @@ adminLayoutTop('users', 'Usuários');
   <strong>Novo usuário</strong>
   <form method="post">
     <input type="hidden" name="action" value="create" />
-    <label>Usuário</label>
-    <input type="text" name="username" required />
+    <label>E-mail (@mclair.com.br)</label>
+    <input type="email" name="username" placeholder="nome@mclair.com.br" required />
+    <p class="hint">Só e-mails da Mclair podem ser cadastrados.</p>
     <label>Senha (mín. 8 caracteres)</label>
     <input type="password" name="password" minlength="8" required />
     <label>Permissão</label>
