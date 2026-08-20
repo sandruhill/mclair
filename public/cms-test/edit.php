@@ -5,13 +5,18 @@ $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, content_md = ? WHERE slug = ?');
-    $stmt->execute([$_POST['title'], $_POST['subtitle'], $_POST['content_md'], $slug]);
+    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, content_md = ?, updated_by = ? WHERE slug = ?');
+    $stmt->execute([$_POST['title'], $_POST['subtitle'], $_POST['content_md'], $_SESSION['cms_user_id'], $slug]);
     header('Location: edit.php?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }
 
-$stmt = $pdo->prepare('SELECT * FROM cmstest_blog_posts WHERE slug = ?');
+$stmt = $pdo->prepare('
+  SELECT p.*, u.username AS updated_by_name
+  FROM cmstest_blog_posts p
+  LEFT JOIN cmstest_users u ON u.id = p.updated_by
+  WHERE p.slug = ?
+');
 $stmt->execute([$slug]);
 $post = $stmt->fetch();
 if (!$post) { http_response_code(404); die('Post não encontrado'); }
@@ -37,6 +42,10 @@ if (!$post) { http_response_code(404); die('Post não encontrado'); }
 <a class="back" href="index.php">&larr; voltar</a>
 <?php if (isset($_GET['saved'])): ?><div class="saved">Salvo no banco de dados de teste.</div><?php endif; ?>
 <h1>Editando (banco de teste): <?= htmlspecialchars($post['title']) ?></h1>
+<p style="font-size:.85rem;color:#665D4D">
+  Logado como <strong><?= htmlspecialchars($_SESSION['cms_username']) ?></strong>
+  <?php if ($post['updated_by_name']): ?> · última edição por <strong><?= htmlspecialchars($post['updated_by_name']) ?></strong><?php endif; ?>
+</p>
 <form method="post">
   <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
   <label>Título</label>

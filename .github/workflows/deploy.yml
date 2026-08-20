@@ -52,7 +52,6 @@ jobs:
           define('DB_NAME', '${{ secrets.ACESSO_DB_NAME }}');
           define('DB_USER', '${{ secrets.ACESSO_DB_USER }}');
           define('DB_PASS', '${{ secrets.ACESSO_DB_PASS }}');
-          define('CMS_TEST_PASSWORD', '${{ secrets.CMS_TEST_PASSWORD }}');
           PHP
 
       - name: Deploy to Hostinger via SSH/rsync
