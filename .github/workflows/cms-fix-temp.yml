@@ -1,0 +1,37 @@
+name: CMS Fix (temporary)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Upload SQL
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          source: "scripts/llms-insert.sql"
+          target: "/tmp/cms-fix"
+          strip_components: 1
+
+      - name: Import
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DB_PASS: ${{ secrets.ACESSO_DB_PASS }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: DB_PASS
+          script: |
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso < /tmp/cms-fix/llms-insert.sql
+            echo "done"
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso -e "SELECT slug, LENGTH(data) FROM cmstest_singletons WHERE slug='llms';"
+            rm -rf /tmp/cms-fix

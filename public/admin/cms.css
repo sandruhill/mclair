@@ -1,7 +1,0 @@
-/* ── Mclair CMS — apenas ajuste do logo ───────────────────────────────── */
-
-[class*="logo"] img,
-header img {
-  max-height: 40px;
-  width: auto;
-}
