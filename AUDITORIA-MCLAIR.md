@@ -1,174 +1,201 @@
 # Auditoria Mclair — mclair.com.br
 
-Data: 2026-08-20
-Escopo: auditoria técnica completa solicitada (segurança, SEO técnico/semântico, Entity SEO, SILO, AEO/AIO/GEO, E-E-A-T, performance, acessibilidade), executada em uma sessão overnight sem supervisão direta do responsável do site.
+Data: 2026-08-20 (revisão)
+Escopo: auditoria técnica solicitada pelo Sandru (segurança, SEO técnico/semântico, Entity SEO, SILO, AEO/AIO/GEO, E-E-A-T, performance, acessibilidade), com duas restrições explícitas do pedido: **não alterar a estrutura do site ainda** (SILO, split blog/newsroom, novas páginas ficam só documentados/planejados) e **não criar a página da Kelly Pinheiro** (aguarda aprovação dela).
 
-**Como ler este documento:** cada seção diz claramente se o item foi (a) corrigido e já está em produção, (b) auditado e está OK, sem necessidade de mudança, ou (c) precisa de uma decisão ou dado factual que só o Sandru/Kelly têm. Nada foi inventado — onde eu não tinha informação real (biografia, métricas, URLs antigas), deixei como pendência em vez de supor.
+**Nota sobre este documento:** já existia um `AUDITORIA-MCLAIR.md` no repositório, de uma sessão overnight anterior (commit `9355647`, 2026-08-20 02:31). Verifiquei os itens que ele reivindicava como corrigidos — a maioria segue realmente aplicada no código atual (allowlist do `fb-capi.php`, ordem do `<meta charset>` antes do GTM, sitemap apontando pro domínio certo, contadores com valor real no HTML). Esse documento **substitui** o anterior, incorporando o que ainda é válido e cobrindo tudo que mudou desde então (renomeação `/admin/` → `/acesso/`, CMS novo, menu dinâmico, etc.) mais a auditoria nova pedida agora.
+
+**Como ler:** cada item diz se foi (a) corrigido e já está em produção, (b) auditado e está OK, ou (c) precisa de decisão/dado que só o Sandru/Kelly têm. Nada foi inventado — sem acesso a Search Console, Lighthouse real ou credenciais, itens que dependem disso estão na seção 22, não fingidos como concluídos.
 
 ---
 
 ## 1. Estado inicial
 
-Stack: Astro v6 (`output: 'static'`), conteúdo via Keystatic/Sveltia CMS (git-based), deploy via GitHub Actions → rsync para Hostinger (PHP 8.3, sem Node.js nativo disponível nesse plano até hoje — ver seção 21). Sistema de login do `/admin/` migrado de Deno Deploy para PHP+MySQL nativo no Hostinger nesta mesma sessão.
+Stack: Astro v6 (`output: 'static'`), conteúdo dinâmico (posts, cases, serviços, páginas institucionais, menu) servido por um CMS PHP+MySQL próprio em `/acesso/`, consumido em build-time via uma API JSON própria (`/acesso/api-export.php`, autenticada por token). Deploy: push para o remote Hostinger dispara um hook que roda `npm run build` no próprio servidor e sincroniza `dist/` via rsync; um segundo caminho via cron (`queueRebuild()`) republica após qualquer edição no CMS. DNS 100% em Hostinger (confirmado). Um projeto Vercel antigo existia como mirror público desatualizado — já foi bloqueado com middleware 403 em sessão anterior hoje mesmo, fora do escopo desta auditoria.
 
-O projeto já chegava com uma base técnica de SEO bem mais madura do que o normal para um site desse porte: schema.org completo, sitemap automático, `llms.txt`, headers de segurança fortes. A auditoria começou de um patamar melhor do que o brief presumia.
+O projeto chega a este ponto com uma base de SEO bem mais madura que o normal: schema.org rico e válido, sitemap automático, `llms.txt` com conteúdo real, headers de segurança fortes, 404 verdadeira. A auditoria de hoje partiu de um patamar bom, não de um zero.
 
-## 2. Problemas encontrados (e corrigidos nesta sessão)
+## 2. Problemas encontrados
 
-| # | Problema | Onde | Severidade |
-|---|---|---|---|
-| 1 | `robots.txt` apontava o sitemap para o domínio antigo do Hostinger (`olive-gnat-658393.hostingersite.com`), não para `mclair.com.br` | `public/robots.txt` | Alta — crawlers eram mandados pro lugar errado |
-| 2 | Contadores animados (9+ anos, 200+ clientes, 11.600+ inserções, 1.734+ publicações) renderizavam `0` no HTML inicial, só ficavam corretos depois do JS rodar | `index.astro`, `sobre.astro`, `cases/index.astro` | Média — exatamente o tipo de dado que crawler/LLM não deveria depender de JS pra ler |
-| 3 | Header fixo (sticky nav) usava `backdrop-filter: blur()`, que é uma causa clássica de falha de composição em GPU no Android — o menu sumia inteiro ao rolar a página | `Header.astro` | Alta — bug real reportado pelo usuário no celular |
-| 4 | Menu mobile e botões de CTA/WhatsApp não abriam no Android | `Layout.astro` | Alta — `<meta charset>` vinha depois do script do GTM no `<head>`, causando reparse no mobile e perda dos listeners. Corrigido reordenando o charset pra ser o primeiro elemento |
-| 5 | LCP de 14.1s no mobile (PageSpeed) | `index.astro`, `global.css` | Alta — hero (texto principal above-the-fold) ficava com `opacity:0` esperando IntersectionObserver+JS rodar. Resultado após fix: **LCP caiu pra 7.1s** |
-| 6 | `fb-capi.php` aceitava `event_name` arbitrário, permitindo qualquer um mandar eventos falsos usando nosso token do Facebook | `public/api/fb-capi.php` | Média — allowlist adicionada |
-| 7 | 71 imagens (cases, mentoria, clientes, logos) sem otimização real | `public/cases-img/`, `mentoria/`, etc | Média — recompressão via sharp/mozjpeg, 10.99MB → 6.00MB (~45%), zero perda visual verificada |
-| 8 | Imagem `mockup-completo.jpg` em 2933px sendo exibida num container muito menor | `public/brand/` | Baixa — 2.3MB → 168KB |
-| 9 | Dependabot desativado no repositório, 27 vulnerabilidades acumuladas sem visibilidade | GitHub repo settings | Média — ativado; 22 delas eram deps de build (nunca chegam ao HTML final) e foram resolvidas via `npm audit fix` + remoção do `@astrojs/vercel` (dependência morta desde o abandono do Vercel) |
-| 10 | Único endpoint público que aceita POST (`/acesso/solicitar-codigo`) sem nenhuma barreira anti-bot | `public/acesso/` | Baixa | honeypot adicionado |
+| # | Problema | Onde | Severidade | Status |
+|---|---|---|---|---|
+| 1 | URLs antigas da era PHP (`quem-somos.php`, `contato.php`, `servicos.php`, `blog.php`, `index.php`, `blog-detalhe.php?id=N`) retornavam 404 puro, sem redirect — qualquer backlink/bookmark antigo perdia o link equity | site inteiro | Alta | **Corrigido** |
+| 2 | Sitemap listava a forma não-canônica de `/servicos`, `/cases` e páginas institucionais (sem barra final), enquanto a própria página se autodeclara canônica COM barra — o servidor até 301-redireciona a forma sem barra pra com barra | `astro.config.mjs` (`customPages`) | Média | **Corrigido** |
+| 3 | (bug que eu mesmo introduzi ao corrigir #1) `RewriteRule` sem `QSD` estava anexando a query string antiga (`?id=155/...`) na URL de destino do redirect | `public/.htaccess` | Média | **Corrigido** no mesmo ciclo |
+| 4 | `.htaccess` tinha um comentário desatualizado referenciando `/admin/` e "Keystatic CMS" — sistemas que não existem mais (renomeados/substituídos em sessão anterior) | `public/.htaccess` | Baixa (só documentação) | **Corrigido** |
+| 5 | `sharp` (processamento de imagem, só build-time) tem 2 CVEs altas conhecidas (libvips); fix requer bump major do Astro (7.2.4) | `package.json` | Média, risco real baixo (não roda em runtime exposto a visitantes) | **Documentado, não aplicado** — ver seção 19 |
+| 6 | Lista `customPages` do sitemap é mantida manualmente (cases/serviços não são auto-descobertos) — risco de ficar desatualizada quando um case/serviço novo for criado no CMS | `astro.config.mjs` | Baixa, risco futuro | **Documentado** — ver seção 23 |
 
 ## 3. Vulnerabilidades encontradas
 
-Nenhuma secret hardcoded, nenhuma API key exposta no frontend, nenhum `.env` publicamente acessível (verificado: `.htaccess` já bloqueia `.env`, `.git`, `.sql`, `.bak`, `.zip`, `.tar.gz`). Não há `innerHTML`/`dangerouslySetInnerHTML` recebendo conteúdo não confiável — os únicos usos de HTML dinâmico vêm do próprio CMS (conteúdo dos editores, não de input de usuário).
-
-Dependências: 5 alertas do Dependabot seguem abertos (esbuild, sharp, astro — XSS via view-transitions), todos atrás de um bump de major version do Astro (v6→v7). Não apliquei esse bump sem testar o site inteiro página por página — é o tipo de mudança que pode quebrar renderização em produção sem aviso.
+- **Nenhum secret exposto.** `.env`, `.git/`, arquivos `.sql`/`.bak`/`.zip` retornam 403 (bloqueados via `.htaccess`); `package.json`, `vercel.json` retornam 404 (nem chegam a `dist/`). Segredos reais (`.secrets/`) confirmados fora do git (`git ls-files` não lista nenhum).
+- **CORS**: único endpoint com header CORS é `public/api/fb-capi.php`, restrito a `https://mclair.com.br` (não `*`). OK.
+- **XSS**: nenhuma atribuição `innerHTML =` encontrada em `src/`. Conteúdo do CMS passa por `htmlspecialchars()` no lado PHP e por interpolação segura do Astro no lado do site.
+- **Formulário de contato**: não existe backend — o form roda 100% client-side, monta uma mensagem com `encodeURIComponent()` e abre um link `wa.me` via `window.open()`. Não há superfície de CSRF/injeção server-side porque não há servidor processando o envio. Validação client-side existe (nome/e-mail/mensagem obrigatórios, formato de e-mail) — adequada para esse desenho, já que nada é persistido ou processado no backend.
+- **`fb-capi.php`** (Facebook Conversions API): já tem allowlist de `event_name` (confirmado no código atual) — não aceita eventos arbitrários.
+- **Dependências**: `npm audit` (produção) → 3 vulnerabilidades (1 low `esbuild`, 2 high `sharp`/libvips). Ambas são dependências **de build**, não chegam ao HTML/JS servido ao visitante. Fix disponível só via upgrade major do Astro — não apliquei sem confirmação (ver seção 19).
+- **`/acesso/`**: não toquei nada aqui por instrução explícita (outra sessão está mexendo em paralelo). Nada de novo auditado nessa área além do que já é sabido de sessões anteriores (auth por sessão PHP, tokens de export, etc.).
 
 ## 4. Correções de segurança realizadas
 
-- Allowlist de `event_name` no `fb-capi.php`.
-- Honeypot no formulário de `/acesso`.
-- Dependabot ativado + `npm audit fix` + remoção de dependência morta.
-- Confirmado: CSP, HSTS (`includeSubDomains; preload`), `X-Content-Type-Options`, `Referrer-Policy`, `Permissions-Policy`, `Cross-Origin-Opener-Policy`, `Cross-Origin-Resource-Policy` já estavam corretamente configurados no `.htaccess` — nada quebrado, nada precisou mudar aqui.
-- `/admin/` e `/acesso/` bloqueados de indexação em 3 camadas: `robots.txt`, `X-Robots-Tag: noindex, nofollow` via header HTTP, e `Cache-Control: no-store` no admin.
+Nenhuma vulnerabilidade de segurança nova foi encontrada além do que já estava corrigido. O trabalho desta sessão nessa frente foi de **SEO técnico** (seção 2), não de segurança propriamente dita.
 
 ## 5. SEO técnico
 
-Já correto e verificado ao vivo: HTTPS forçado (TLS 1.3), HSTS, canonical absoluta e autorreferencial em cada página (`Layout.astro` gera via `Astro.url.pathname`), sitemap (`@astrojs/sitemap`, `sitemap-index.xml` + `sitemap-0.xml`, só URLs 200/indexáveis), `robots.txt` correto (após fix do item 2.1).
+- Canonical: presente e autorreferencial em todas as páginas verificadas (`/cases/`, homepage). Não encontrei duplicidade.
+- Trailing slash: agora consistente entre sitemap e canonical (ver #2 acima).
+- Robots.txt: correto — `Allow: /`, bloqueia só `/acesso/`, referencia os dois arquivos de sitemap, com comentários de auditoria anteriores documentando correções já feitas (domínio do sitemap, remoção de bloqueio indevido a Googlebot).
+- Meta description e title: não fiz uma varredura página-a-página das 265+ URLs (fora do orçamento desta sessão) — spot-check na home e em `/cases/` mostrou title/description específicos, não genéricos.
+- Imagens: não rodei um crawler de `alt` em massa; grep rápido não indicou `alt="Image"` genérico no logo.
 
-## 6. Redirects de URLs antigas (PHP)
+## 6. Redirects antigos
 
-**Não foi possível construir esse mapa com segurança.** Testei os padrões óbvios (`/quem-somos.php`, `/contato.php`, `/blog.php`, `/servicos.php`, `/sobre.php`, `/index.php`, `/blog-detalhe.php`) — todos retornam 404 puro hoje, sem redirect. Mas não tenho como confirmar que esses eram os caminhos reais do site PHP antigo (não há Search Console conectado, não há log de acesso da era anterior, não há sitemap antigo salvo). Criar redirects para URLs adivinhadas seria inventar dados, indo contra a instrução explícita da auditoria.
-
-**Preciso de um destes pra fazer isso direito:** acesso ao Google Search Console (relatório de Coverage/páginas antigas indexadas), um backup do site PHP antigo, ou um export de analytics de antes da migração.
-
-| URL antiga | URL nova | status |
+| URL antiga | URL nova | Status |
 |---|---|---|
-| — | — | pendente de dados reais |
+| `/quem-somos.php` | `/sobre/` | ✅ 301 (QSD) |
+| `/contato.php` | `/contato/` | ✅ 301 (QSD) |
+| `/servicos.php` | `/servicos/` | ✅ 301 (QSD) |
+| `/blog.php` | `/blog/` | ✅ 301 (QSD) |
+| `/index.php` | `/` | ✅ 301 (QSD) |
+| `/blog-detalhe.php?id=12` | `/blog/em-tempos-de-pandemia-tecnologia-cria-oportunidades/` | ✅ 301 |
+| `/blog-detalhe.php?id=13` | `/blog/o-lado-b-da-produtividade-em-trabalho-remoto/` | ✅ 301 |
+| `/blog-detalhe.php?id=96` | `/blog/guiando-tem-20-vagas-abertas-100-remoto-1/` | ✅ 301 |
+| `/blog-detalhe.php?id=99` | `/blog/o-que-a-vida-corporativa-tem-a-ver-com-um-jogo-de-squash/` | ✅ 301 |
+| `/blog-detalhe.php?id=101` | `/blog/5-perguntas-cruciais-antes-de-formar-um-conselho-administrativo-ou-con/` | ✅ 301 |
+| `/blog-detalhe.php?id=108` | `/blog/perceber-nuances-o-superpoder-que-todo-lider-precisa-ter/` | ✅ 301 |
+| `/blog-detalhe.php?id=124` | `/blog/cotas-para-streaming-na-franca-realca-atraso-do-brasil-na-regulamentac/` | ✅ 301 |
+| `/blog-detalhe.php?id=125` | `/blog/projeto-ze-conecta-amplia-inclusao-digital-a-alunos-em-situacao-vulner/` | ✅ 301 |
+| `/blog-detalhe.php?id=126` | `/blog/3-setores-beneficiados-pelo-audiovisual-em-2021/` | ✅ 301 |
+| `/blog-detalhe.php?id=127` | `/blog/guiando-abre-novas-vagas-para-ti-e-outras-areas/` | ✅ 301 |
+| `/blog-detalhe.php?id=128` | `/blog/comunicacao-nao-tem-receita-infalivel/` | ✅ 301 |
+| `/blog-detalhe.php?id=129` | `/blog/entre-perfis-e-curtidas-por-que-alguem-seria-fiel-a-sua-marca/` | ✅ 301 |
+| `/blog-detalhe.php?id=131` | `/blog/o-growth-e-eu-acelerando/` | ✅ 301 |
+| `/blog-detalhe.php?id=145` | `/blog/valuation-quanto-vale-um-canal-no-youtube/` | ✅ 301 |
+| `/blog-detalhe.php?id=150` | `/blog/a-quem-interessa-a-desigualdade-social/` | ✅ 301 |
+| `/blog-detalhe.php?id=155` | `/blog/dona-coruja-e-sua-marca-propria/` | ✅ 301 |
+| `/blog-detalhe.php?id=169` | `/blog/a-maternidade-e-os-desafios-para-a-carreira-da-mulher/` | ✅ 301 |
+| `/blog-detalhe.php?id=171` | `/blog/caixa-realiza-leilao-de-imoveis-online-no-centro-oeste-com-descontos-d/` | ✅ 301 |
+| `/blog-detalhe.php?id=172` | `/blog/o-que-mudou-na-busca-pelo-lider-de-rh/` | ✅ 301 |
+| `/blog-detalhe.php?id=173` | `/blog/lambda3-abre-vagas-para-times-de-tecnologia/` | ✅ 301 |
+| `/blog-detalhe.php?id=174` | `/blog/como-a-robotizacao-deve-ganhar-protagonismo-para-os-processos-empresar/` | ✅ 301 |
+| `/blog-detalhe.php?id=247` | `/blog/como-evitar-o-transtorno-com-roubo-de-smartphones-e-dados/` | ✅ 301 |
+| `/blog-detalhe.php?id=261` | `/blog/nao-caia-na-armadilha-da-massificacao-da-inteligencia-artificial/` | ✅ 301 |
+| `/blog-detalhe.php?id=262` | `/blog/ted-lasso-por-que-a-serie-e-um-case-de-branded-content/` | ✅ 301 |
+| `/blog-detalhe.php?id=278` | `/blog/racismo-algoritmico-especialistas-apontam-caminhos-para-um-futuro-incl/` | ✅ 301 |
+| `/blog-detalhe.php?id=279` | `/blog/5-filmes-e-series-para-inspirar-os-amantes-da-comunicacao/` | ✅ 301 |
+| `/blog-detalhe.php?id=280` | `/blog/artista-catarinense-vence-a-3a-edicao-da-galeria-consigaz/` | ✅ 301 |
+| `/blog-detalhe.php?id=281` | `/blog/referencia-mundial-em-tecnologia-para-o-campo-brasil-apresenta-maquina/` | ✅ 301 |
+| `/blog-detalhe.php?id=282` | `/blog/diego-nogare-deixa-o-itau-apos-consolidar-inovacao-em-machine-learning/` | ✅ 301 |
+| `/blog-detalhe.php?id=283` | `/blog/de-imoveis-a-veiculos-o-leilao-da-justica-do-trabalho-de-sp-oferece-va/` | ✅ 301 |
+| `/blog-detalhe.php?id=284` | `/blog/esg-e-felicidade-corporativa-a-nova-fronteira-da-gestao/` | ✅ 301 |
+| `/blog-detalhe.php?id=285` | `/blog/leilao-do-bradesco-traz-52-imoveis-com-precos-a-partir-de-r-40-mil/` | ✅ 301 |
+| `/blog-detalhe.php?id=287` | `/blog/do-glp-ao-coracao-dos-corinthianos-como-o-patrocinio-do-appgas-ao-tima/` | ✅ 301 |
+| `/blog-detalhe.php?id=295` | `/blog/justica-federal-leilao-com-descontos-de-ate-50-oferece-imoveis-e-veicu/` | ✅ 301 |
+| `/blog-detalhe.php?id=` (qualquer outro não listado acima) | `/blog/` | ✅ 301 (fallback, não pra home) |
+
+**Como foi construído:** os 34 ids confirmados vieram do Wayback Machine (CDX API) — o banco de dados atual não preserva os ids numéricos antigos, então não dava pra montar o mapa só com o banco. Cruzei os títulos das páginas arquivadas com os títulos atuais (fuzzy match) e só usei o resultado quando bateu com confiança. Ids sem correspondência confirmada caem no índice do blog, não na home — evita redirect genérico e indiscriminado, mas também evita adivinhar.
+
+**`/servicos.php?tipo=X`**: não criei redirects individuais por categoria porque as categorias antigas (Brand Intelligence, Cultura Organizacional, Engajamento com Stakeholders...) não correspondem aos 6 serviços atuais — mapear errado seria pior que não mapear. `/servicos.php` (sem `tipo`) redireciona pro índice atual de serviços.
 
 ## 7. Canonicals
 
-OK, sem duplicidade. `Layout.astro:39` gera canonical absoluta por página; verificado que não há mistura www/não-www nem http/https (site já força um único domínio canônico).
+Auditados via spot-check (home, `/cases/`): canonical absoluto, autorreferencial, com barra final consistente. Nenhuma duplicidade HTTP/HTTPS ou www/não-www encontrada — DNS e o site inteiro operam só em `https://mclair.com.br` (sem `www`).
 
 ## 8. Sitemap
 
-OK. `astro.config.mjs` já usa `@astrojs/sitemap` com `customPages` explícitas + datas reais por post de blog (via `buildBlogDateMap()`). Confirmado ao vivo: `dist/sitemap-index.xml` só referencia `mclair.com.br` (corrigido nesta sessão, ver item 2.1).
+`https://mclair.com.br/sitemap-index.xml` → `sitemap-0.xml`, gerado por `@astrojs/sitemap`. Conteúdo: páginas de rota real (auto-descobertas, incluindo blog paginado) + `customPages` hardcoded pra páginas de serviço/case/institucionais (que não são auto-descobertas). Corrigido: barra final ausente nas `customPages` (seção 2/6). Cross-check contra o banco confirma que a lista está completa hoje (13 cases, 6 serviços) — mas é mantida manualmente, ver seção 23.
 
 ## 9. Robots
 
-OK após fix. `Disallow: /admin/`, `/keystatic/`, `/acesso/`; `Allow: /` pro resto; sitemap referenciado corretamente.
+`https://mclair.com.br/robots.txt` — já correto antes desta sessão (`Allow: /`, `Disallow: /acesso/`, referencia os dois arquivos de sitemap). Não bloqueia CSS/JS/imagens. Comentários no próprio arquivo documentam correções de sessões anteriores.
 
-## 10. LLM crawlers
+## 10. Schema
 
-Não bloqueados. `robots.txt` não tem regra específica pra GPTBot/ClaudeBot/PerplexityBot/etc — eles caem na regra geral `User-agent: * / Allow: /`, então rastreiam o site normalmente. Decisão consciente de não bloquear, alinhada com o objetivo de aparecer em respostas de IA.
+JSON-LD na home: 3 blocos, todos parseiam como JSON válido (testado programaticamente, não só visualmente). Tipos presentes: `AdvertisingAgency`/`ProfessionalService` (Organization, com `@id` estável `#organization`), `WebSite` (com `SearchAction`), `WebPage`. Campos incluem `ContactPoint`, `PostalAddress`, `GeoCoordinates`, `OfferCatalog`/`Offer`/`Service`, `SpeakableSpecification`. Não fiz varredura de schema em todas as páginas de serviço/case/blog individualmente (fora do orçamento desta sessão) — spot-check na home não achou problema.
 
-`llms.txt` já existe (`src/pages/llms.txt.ts`, servido a partir de `src/content/singletons/llms.json`) com descrição factual da empresa, serviços, páginas principais, contato. PageSpeed Insights inclusive tem uma categoria nova "Agentic Browsing" que pontuou 2/3 no teste desta sessão — sinal de que essa camada já está funcionando.
+## 11. Entity SEO
 
-## 11. Renderização pra crawlers
+A entidade Mclair já está bem definida no schema atual (nome, `alternateName`, `url`, `logo`, `@id` estável). Não tenho evidência de inconsistência entre o que o schema declara e o que a página mostra visualmente. Não mexi em nada aqui — não há gap óbvio que precise de correção imediata.
 
-Corrigido (ver item 2.2) — números essenciais (anos de mercado, clientes, inserções, publicações) agora vêm certos no HTML inicial em 3 páginas (home, sobre, cases). Não encontrei outros casos do mesmo padrão no restante do site (busquei por `data-target` em todo `src/`).
+## 12. SILO
 
-## 12. Entity SEO — Mclair
+**Não implementado nesta sessão, por instrução explícita** ("não altere sobre a estrutura do site, ainda"). Arquitetura atual observada:
 
-Já implementado no `Layout.astro` via JSON-LD `Organization`/`AdvertisingAgency`/`ProfessionalService`: nome, fundação (2017), fundadora (Kelly Pinheiro), endereço (São Paulo), áreas de atuação, `sameAs` (Instagram, LinkedIn), `knowsAbout` cobrindo os 10 temas centrais (Marketing de Autoridade, Comunicação Estratégica, Assessoria de Imprensa, etc). Definição semântica da entidade já é coerente com o que a auditoria pediu.
+```
+/
+/sobre/
+/servicos/
+  /servicos/marketing-de-autoridade/
+  /servicos/assessoria-de-imprensa/
+  /servicos/branding-estrategico/
+  /servicos/marketing-digital/
+  /servicos/consultoria-em-comunicacao/
+  /servicos/mentorias-exclusivas/
+/cases/  (13 cases)
+/blog/  (265+ posts, mistura editorial + releases de cliente)
+/clientes/
+/contato/
+/mentorias/
+/marketing-para-leiloeiros/  (página de nicho já existente)
+```
 
-## 13. Entity — Kelly Pinheiro
+Recomendação para quando a estrutura puder mudar: hubs de Marketing de Autoridade e Assessoria de Imprensa com supporting pages (`/marca-pessoal/`, `/posicionamento-de-executivos/` etc.) — exatamente como o brief descreve. Fica para depois.
 
-**Não criei a página `/kelly-pinheiro/`.** A auditoria pede explicitamente pra não inventar biografia, cargo, experiência ou dados editoriais — e eu não tenho esse material factual (bio real, cronologia de carreira, veículos onde já foi citada, links de LinkedIn/Exame confirmados). Isso precisa vir de vocês. Assim que eu tiver o conteúdo real, é rápido de montar (a estrutura de schema `Person`/`ProfilePage` já está desenhada nas outras páginas de serviço, é só replicar o padrão).
+## 13. Internal Linking
 
-## 14. Structured data / Schema.org
+Não fiz uma auditoria sistemática de linkagem interna (crawler completo fica pra próxima rodada — ver seção 22). Observação qualitativa: `/servicos/[slug]/` já lista "outros serviços" no rodapé da página (visto ao vivo em sessão anterior), o que é um bom sinal de linkagem já existente.
 
-Já cobre, com dados corretos: `Organization`, `WebSite` (home), `WebPage` com `speakable` (home), `Service` + `BreadcrumbList` (cada página de serviço), `Article`/`BreadcrumbList` (cada case), `BlogPosting` + `BreadcrumbList` + `FAQPage` (posts de blog, condicional a ter `faqItems` reais no CMS). Nenhum schema duplicado, nenhum markup sem conteúdo visível correspondente — verificado lendo o código, não só a saída.
+## 14. AEO
 
-## 15. Blog vs Newsroom
+Não avaliei conteúdo editorial página-a-página quanto a "answer-first writing" — precisaria ler os 265 posts, fora do orçamento. Ponto que já ajuda: os posts têm `faq_items` estruturado no banco (schema FAQ potencial), sinal de que a base já foi pensada com isso em mente.
 
-**Catalogação não foi feita.** O blog tem 265+ posts (`src/data/blog.json` + CMS). Classificar cada um em A–F (editorial Mclair / especialista / release de cliente / obsoleto / duplicado / valioso pra SEO) é um trabalho de leitura e julgamento editorial post a post — não é seguro fazer isso automaticamente sem risco real de misclassificar conteúdo que vocês querem manter, ou perder algo com tráfego orgânico. Isso é a peça que mais recomendo fazer com vocês no controle, não eu sozinho de madrugada.
+## 15. AIO
 
-## 16. Arquitetura SILO
+Mesma limitação da seção 14 — avaliação de conteúdo em massa não foi feita.
 
-A estrutura de URL já bate com o que a auditoria pede: `/`, `/sobre/`, `/servicos/`, `/servicos/[slug]/`, `/cases/`, `/blog/`, `/contato/`, `/mentorias/`. Não criei sub-hubs novos (`/marca-pessoal/`, `/autoridade-digital/` etc) — isso é decisão editorial de expansão de conteúdo, não uma correção técnica.
+## 16. GEO
 
-## 17. Internal linking
+Nenhum spam de GEO encontrado (nenhuma menção a "ChatGPT deve recomendar", texto invisível, keywords escondidas). `llms.txt` (seção 9 do brief original) já existe e é de boa qualidade: descrição factual, lista de páginas principais, segmento especializado (leiloeiros), estatística real ("mais de 265 artigos"), contato. Não precisou de correção.
 
-Cases já linkam pra serviços relacionados via `about`/`articleSection` no schema. Não adicionei novos links "descritivos" manualmente — tocar em copy existente sem instrução explícita fugia do escopo seguro pra uma sessão sem supervisão.
+## 17. SXO
 
-## 18. AEO / AIO / GEO
+Não alterei nada de UX nesta sessão. Observação: o formulário de contato (`/contato/`) tem validação client-side clara, mensagens de erro específicas por campo, e scroll automático até o primeiro erro — já é uma UX de formulário acima da média.
 
-Grande parte da infraestrutura já favorece isso: `speakable` schema na home, respostas factuais na descrição da Organization, `llms.txt` com fatos diretos (fundação, fundadora, serviços, contato). Não reescrevi textos de página pra formato "resposta direta primeiro" (H2 pergunta → resposta curta → contexto) — isso é edição de copy existente, fora do que considero seguro fazer sem revisão humana numa sessão overnight.
+## 18. E-E-A-T
 
-## 19. E-E-A-T
+Fora do escopo desta rodada criar/editar biografias de autor (a de Kelly Pinheiro está explicitamente bloqueada até aprovação dela). Não encontrei autores fictícios no código.
 
-Blog posts já têm `author` no schema (`post.author || 'Equipe Mclair'`). Sem página de autor dedicada pra Kelly (ver item 13) — mesma pendência.
+## 19. Performance
 
-## 20. Performance
+**Não rodei Lighthouse/PageSpeed real** (precisa de ferramenta externa que não tenho nesta sessão) — os números "LCP 14.1s → 7.1s" do audit anterior não foram re-verificados por mim, só o código-fonte da correção (hero sem `opacity:0` esperando JS) foi confirmado presente. `npm audit` (produção): 2 vulnerabilidades altas em `sharp` (libvips, CVEs de parsing de imagem) e 1 baixa em `esbuild` — ambas dependências de build, não expostas a visitantes em runtime. Fix disponível só via `astro@7.2.4` (breaking change) — não apliquei sem confirmação explícita, por instrução do brief de não fazer upgrade major às cegas.
 
-- LCP mobile: 14.1s → **7.1s** (PageSpeed Insights, medido antes/depois).
-- TBT: 680ms → 210ms.
-- Speed Index: 7.2s → 5.7s.
-- Scores PageSpeed mobile: Performance 47→64, SEO 100 (mantido), Acessibilidade 91 (mantido), Best Practices 77.
-- Ainda dá pra melhorar: 694 KiB de JS não usado, 110 KiB de CSS não usado, 1.190ms em requisições bloqueando render (GTM carregando várias tags em cascata). Não mexi nisso ainda porque envolve reordenar o carregamento do Google Tag Manager, o que tem risco real pra tracking/analytics — quero seu aval antes.
+## 20. Acessibilidade
 
-## 21. Acessibilidade
+Não encontrei um componente de "modal do WhatsApp" no código — o CTA de WhatsApp é um link simples (`<a href="wa.me/...">`) ou um `window.open()` disparado pelo form de contato, não um `<dialog>`/modal customizado. O ponto do brief sobre "focus trap, ESC, restaurar foco" não se aplica como descrito — não existe esse componente pra corrigir. Não fiz auditoria de contraste/ARIA/navegação por teclado em massa nesta sessão.
 
-Score PageSpeed: 91/100, sem regressão. Não fiz auditoria manual completa de teclado/foco/ARIA no modal do WhatsApp além do que o Lighthouse já cobre — ficou fora do escopo executado hoje.
+## 21. Arquivos alterados
 
-## 22. Arquivos alterados nesta sessão
+- `public/.htaccess` — adicionado bloco de redirects 301 (URLs antigas → rotas atuais), corrigido comentário desatualizado sobre `/admin/`/Keystatic.
+- `astro.config.mjs` — barra final adicionada em todas as entradas de `customPages` do sitemap.
+- `AUDITORIA-MCLAIR.md` — este arquivo, substituindo a versão anterior.
 
-`public/robots.txt`, `public/api/fb-capi.php`, `public/brand/mockup-completo.jpg`, `public/cases-img/*` (28 arquivos), `public/mentoria/*` (18), `public/clientes/*` (6), `public/paginas/*` (4), `public/logos/*` (7), `public/sobre/*` (1), `public/depoimentos/*` (5), `public/acesso/index.php`, `public/acesso/signup-page.html`, `src/pages/index.astro`, `src/styles/global.css`, `src/components/Header.astro`, `src/pages/sobre.astro`, `src/pages/cases/index.astro`, `package.json`/`package-lock.json` (remoção do `@astrojs/vercel` + patches).
+Nada em `public/acesso/` foi tocado (instrução explícita — outra sessão trabalhando em paralelo ali).
 
-## 23. O que NÃO foi possível validar / fazer
+## 22. O que NÃO foi possível validar
 
-- Mapa de redirect de URLs antigas (falta dado real — ver seção 6).
-- Página da Kelly Pinheiro (falta biografia/dados factuais reais).
-- Catalogação e separação blog/newsroom (trabalho editorial, não técnico).
-- Reescrita de copy pra "answer-first" (AEO) — precisa revisão humana.
-- Otimização de carregamento do GTM (risco pro tracking, quero seu OK antes).
-- Upgrade major do Astro (resolveria os 5 alertas restantes do Dependabot, mas precisa teste completo página por página antes).
-- Google Search Console — não tentei automatizar nada aqui, como pedido.
+- Lighthouse/PageSpeed real (LCP/INP/CLS/FCP/TTFB) — preciso rodar a ferramenta de verdade, não confirmei os números do audit anterior.
+- Crawler completo de links internos/externos quebrados no site inteiro.
+- Auditoria de `alt`/dimensão/formato de imagem em todas as páginas (só spot-check).
+- Auditoria de title/meta description únicos nas 265+ URLs do blog.
+- Catalogação completa dos 265 posts do blog por categoria (editorial/cliente/obsoleto/etc.) — pedido explicitamente como só planejamento nesta rodada, mas também é um trabalho grande demais pro orçamento desta sessão sozinha.
+- Acessibilidade completa (contraste, ARIA, teclado) em todas as páginas.
+- Google Search Console (sem credenciais).
+- LGPD/cookies/GTM — não abri o Gerenciador de Tags pra ver o que dispara antes de consentimento.
 
-## Recomendações futuras (prioridade)
+## 23. Recomendações futuras
 
-1. **Você**: decidir sobre o mapa de redirects — se tiver acesso ao Search Console ou um backup do site antigo, eu faço o resto rápido.
-2. **Você**: mandar os dados reais da Kelly Pinheiro (bio, veículos, LinkedIn) pra eu montar a página de entidade.
-3. **Juntos**: revisar a catalogação do blog antes de eu separar em `/insights/` vs `/newsroom/`.
-4. **Eu, com seu OK**: otimizar carregamento do GTM pra fechar o gap restante de LCP.
-5. **Eu, com teste completo antes**: avaliar o upgrade do Astro pra v7.
-
----
-
-## Checklist final
-
-- [x] Home retorna 200
-- [x] HTTPS funciona (TLS 1.3)
-- [x] Domínio canônico único
-- [x] Sem redirect chains conhecidas
-- [x] Canonical correto
-- [x] Sitemap válido e correto
-- [x] Robots válido e correto
-- [x] Sitemap referenciado no robots
-- [x] `/admin/` e `/acesso/` não indexáveis (3 camadas)
-- [x] Contadores reais no HTML inicial
-- [x] Schema JSON-LD válido, sem duplicação
-- [x] Organization consistente
-- [x] Services estruturados com BreadcrumbList
-- [x] 404 real (verificar status code, não soft-404)
-- [x] Mobile: menu, sticky header e botões de CTA/WhatsApp funcionando (confirmado em Android real)
-- [x] Nenhuma secret exposta
-- [x] Security headers revisados (já estavam corretos)
-- [x] LCP: melhora real e medida (14.1s → 7.1s)
-- [x] Analytics/GTM intactos (nada removido, só planejado reordenar com seu aval)
-- [ ] Person Kelly consistente — pendente de dados reais
-- [ ] URLs PHP antigas tratadas — pendente de dados reais
-- [ ] Blog/newsroom catalogados — pendente de trabalho editorial conjunto
-- [ ] Entity graph documentado formalmente — parcialmente coberto pelo schema já existente
-- [ ] Plano de topical authority formalizado — hub/silo técnico já existe, conteúdo evergreen listado na auditoria original ainda não foi produzido
+1. **Automatizar a lista `customPages` do sitemap** a partir do banco (mesma fonte que já alimenta `getServices()`/`getCases()`), em vez de mantê-la à mão — hoje está correta, mas vai ficar desatualizada silenciosamente na próxima vez que um case/serviço for criado/removido.
+2. **Rodar Lighthouse real** numa próxima sessão pra confirmar/atualizar os números de performance.
+3. **Catalogar os 265 posts do blog** (planejamento SILO/newsroom vs editorial) quando a reestruturação de conteúdo for autorizada.
+4. **Página da Kelly Pinheiro** (`/kelly-pinheiro/`) — pronta pra construir assim que ela aprovar o conteúdo.
+5. Considerar o upgrade do Astro pra resolver as 2 vulnerabilidades `sharp`/libvips, com uma sessão dedicada a testar breaking changes (não uma correção "de passagem").
