@@ -1,5 +1,5 @@
 ---
-import { getCases } from '../utils/cmsApi';
+import { getCases, getMenuTree } from '../utils/cmsApi';
 
 const allCases = await getCases().catch(() => []);
 const caseLinks = (allCases as any[])
@@ -11,14 +11,12 @@ const caseLinks = (allCases as any[])
     img:   c.img ?? '',
   }));
 
-const svcLinks = [
-  { label:'Marketing de Autoridade', href:'/servicos/marketing-de-autoridade' },
-  { label:'Assessoria de Imprensa', href:'/servicos/assessoria-de-imprensa' },
-  { label:'Branding Estratégico', href:'/servicos/branding-estrategico' },
-  { label:'Marketing Digital Integrado', href:'/servicos/marketing-digital' },
-  { label:'Consultoria em Comunicação', href:'/servicos/consultoria-em-comunicacao' },
-  { label:'Mentorias Exclusivas', href:'/servicos/mentorias-exclusivas' },
-];
+// Nav structure (top-level items + dropdown children) comes from the admin's
+// Menu screen (cmstest_menu) -- edits there ship on the next rebuild, no
+// template changes needed. Cases keeps its own rich mega-menu below instead
+// of a plain dropdown, regardless of what's in the menu tree for it, since
+// it's already always in sync with the real case list.
+const menu = await getMenuTree().catch(() => []);
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 ---
@@ -31,64 +29,60 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
-      <a href="/" class="nav-link">Início</a>
-      <a href="/sobre" class="nav-link">Sobre</a>
-
-      <!-- Serviços dropdown -->
-      <div class="nav-drop-wrap">
-        <a href="/servicos" class="nav-link nav-parent">
-          Serviços
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-        </a>
-        <div class="nav-dropdown">
-          {svcLinks.map(s => (
-            <a href={s.href} class="nd-item">{s.label}</a>
-          ))}
-        </div>
-      </div>
-
-      <!-- Cases mega menu -->
-      <div class="nav-drop-wrap" id="cases-drop-wrap">
-        <a href="/cases" class="nav-link nav-parent">
-          Cases
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
-        </a>
-        <div class="nav-dropdown nd-cases" id="cases-mega">
-          <!-- Preview image panel -->
-          <div class="nd-preview" aria-hidden="true">
-            <img id="case-preview-img" src={caseLinks[0]?.img ?? ''} alt="" class="nd-preview-img" loading="eager" />
-            <div class="nd-preview-overlay">
-              <span class="nd-preview-tag">Case</span>
-              <strong id="case-preview-name">{caseLinks[0]?.label ?? ''}</strong>
+      {menu.map(node => node.href === '/cases' ? (
+        <!-- Cases mega menu -->
+        <div class="nav-drop-wrap" id="cases-drop-wrap">
+          <a href="/cases" class="nav-link nav-parent">
+            {node.label}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </a>
+          <div class="nav-dropdown nd-cases" id="cases-mega">
+            <!-- Preview image panel -->
+            <div class="nd-preview" aria-hidden="true">
+              <img id="case-preview-img" src={caseLinks[0]?.img ?? ''} alt="" class="nd-preview-img" loading="eager" />
+              <div class="nd-preview-overlay">
+                <span class="nd-preview-tag">Case</span>
+                <strong id="case-preview-name">{caseLinks[0]?.label ?? ''}</strong>
+              </div>
+            </div>
+            <!-- Links list -->
+            <div class="nd-cases-list">
+              <div class="nd-cases-grid">
+                {caseLinks.map((c, i) => (
+                  <a
+                    href={c.href}
+                    class={`nd-item nd-case-item${i === 0 ? ' nd-case-active' : ''}`}
+                    data-img={c.img}
+                    data-name={c.label}
+                  >
+                    <span class="nd-name">{c.label}</span>
+                    <span class="nd-tag">{c.tag}</span>
+                  </a>
+                ))}
+              </div>
+              <a href="/cases" class="nd-all-cases">
+                Ver todos os cases
+                <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+              </a>
             </div>
           </div>
-          <!-- Links list -->
-          <div class="nd-cases-list">
-            <div class="nd-cases-grid">
-              {caseLinks.map((c, i) => (
-                <a
-                  href={c.href}
-                  class={`nd-item nd-case-item${i === 0 ? ' nd-case-active' : ''}`}
-                  data-img={c.img}
-                  data-name={c.label}
-                >
-                  <span class="nd-name">{c.label}</span>
-                  <span class="nd-tag">{c.tag}</span>
-                </a>
-              ))}
-            </div>
-            <a href="/cases" class="nd-all-cases">
-              Ver todos os cases
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-            </a>
+        </div>
+      ) : node.children.length > 0 ? (
+        <!-- Generic dropdown (e.g. Serviços) -->
+        <div class="nav-drop-wrap">
+          <a href={node.href} class="nav-link nav-parent">
+            {node.label}
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
+          </a>
+          <div class="nav-dropdown">
+            {node.children.map(s => (
+              <a href={s.href} class="nd-item">{s.label}</a>
+            ))}
           </div>
         </div>
-      </div>
-
-      <a href="/clientes" class="nav-link">Clientes</a>
-      <a href="/blog" class="nav-link">Blog</a>
-      <a href="/mentorias" class="nav-link">Mentorias</a>
-      <a href="/contato" class="nav-link">Contato</a>
+      ) : (
+        <a href={node.href} class="nav-link">{node.label}</a>
+      ))}
     </nav>
 
     <div class="header-cta-wrap">
@@ -113,24 +107,23 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
       </button>
     </div>
     <nav class="drawer-nav">
-      <a href="/" class="drawer-link" style="--i:0">Início</a>
-      <a href="/sobre" class="drawer-link" style="--i:1">Sobre</a>
-      <div class="drawer-group" style="--i:2">
-        <a href="/servicos" class="drawer-link">Serviços</a>
-        <div class="drawer-sub">
-          {svcLinks.map(s => <a href={s.href} class="drawer-sub-link">{s.label}</a>)}
+      {menu.map((node, i) => node.href === '/cases' ? (
+        <div class="drawer-group" style={`--i:${i}`}>
+          <a href="/cases" class="drawer-link">{node.label}</a>
+          <div class="drawer-sub">
+            {caseLinks.map(c => <a href={c.href} class="drawer-sub-link">{c.label}</a>)}
+          </div>
         </div>
-      </div>
-      <div class="drawer-group" style="--i:3">
-        <a href="/cases" class="drawer-link">Cases</a>
-        <div class="drawer-sub">
-          {caseLinks.map(c => <a href={c.href} class="drawer-sub-link">{c.label}</a>)}
+      ) : node.children.length > 0 ? (
+        <div class="drawer-group" style={`--i:${i}`}>
+          <a href={node.href} class="drawer-link">{node.label}</a>
+          <div class="drawer-sub">
+            {node.children.map(s => <a href={s.href} class="drawer-sub-link">{s.label}</a>)}
+          </div>
         </div>
-      </div>
-      <a href="/clientes" class="drawer-link" style="--i:4">Clientes</a>
-      <a href="/blog" class="drawer-link" style="--i:5">Blog</a>
-      <a href="/mentorias" class="drawer-link" style="--i:6">Mentorias</a>
-      <a href="/contato" class="drawer-link" style="--i:7">Contato</a>
+      ) : (
+        <a href={node.href} class="drawer-link" style={`--i:${i}`}>{node.label}</a>
+      ))}
     </nav>
     <div class="drawer-footer">
       <a href={WA} class="btn-primary" target="_blank" rel="noopener">

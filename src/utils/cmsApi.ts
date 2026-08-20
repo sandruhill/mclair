@@ -101,3 +101,52 @@ export async function getSingleton(slug: string): Promise<any> {
   const all = await getSingletons();
   return all.find((s) => s.slug === slug)?.data ?? {};
 }
+
+export type DbMenuItem = {
+  id: number;
+  parent_id: number | null;
+  label: string;
+  link_type: 'singleton' | 'service' | 'blog_index' | 'custom';
+  link_value: string;
+  sort_order: number;
+};
+
+export type MenuNode = { id: number; label: string; href: string; children: MenuNode[] };
+
+// Fixed routes for the handful of institutional singleton pages the menu
+// builder can point at -- keep in sync with pages.php's $MENU_PAGES.
+const SINGLETON_ROUTES: Record<string, string> = {
+  homepage: '/',
+  sobre: '/sobre',
+  clientes: '/clientes',
+  contato: '/contato',
+  mentorias: '/mentorias',
+};
+
+function resolveMenuHref(item: DbMenuItem): string {
+  switch (item.link_type) {
+    case 'singleton': return SINGLETON_ROUTES[item.link_value] ?? '/';
+    case 'service': return `/servicos/${item.link_value}`;
+    case 'blog_index': return '/blog';
+    default: return item.link_value || '#';
+  }
+}
+
+export const getMenuItems = () => fetchType<DbMenuItem>('menu');
+
+// Builds the parent/child tree the public nav renders from -- editing the
+// Menu screen in the admin changes this directly, live, on the next build.
+export async function getMenuTree(): Promise<MenuNode[]> {
+  const items = await getMenuItems();
+  const byParent = new Map<number | null, DbMenuItem[]>();
+  for (const it of items) {
+    const key = it.parent_id ?? null;
+    if (!byParent.has(key)) byParent.set(key, []);
+    byParent.get(key)!.push(it);
+  }
+  const build = (parentId: number | null): MenuNode[] =>
+    (byParent.get(parentId) ?? [])
+      .sort((a, b) => a.sort_order - b.sort_order)
+      .map((it) => ({ id: it.id, label: it.label, href: resolveMenuHref(it), children: build(it.id) }));
+  return build(null);
+}

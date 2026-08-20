@@ -21,6 +21,7 @@ $allowed = [
     'services'   => 'SELECT * FROM cmstest_services ORDER BY num',
     'cases'      => 'SELECT * FROM cmstest_cases ORDER BY num',
     'singletons' => 'SELECT * FROM cmstest_singletons',
+    'menu'       => 'SELECT id, parent_id, label, link_type, link_value, sort_order FROM cmstest_menu ORDER BY parent_id IS NOT NULL, sort_order',
 ];
 
 if (!isset($allowed[$type])) {

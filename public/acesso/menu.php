@@ -5,8 +5,6 @@ require_once __DIR__ . '/_layout_top.php';
 cmsRequireRole(['admin', 'editor']);
 $pdo = cmsDb();
 
-// NOTE: no queueRebuild() here on purpose — cmstest_menu doesn't feed the
-// Astro build yet; wiring the public Header to this table is a later step.
 
 $MENU_PAGES = [
     'homepage'  => 'Home',
@@ -44,7 +42,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($action === 'delete') {
         // FK is ON DELETE SET NULL: children become top-level automatically.
         $pdo->prepare('DELETE FROM cmstest_menu WHERE id = ?')->execute([(int) ($_POST['id'] ?? 0)]);
-        header('Location: menu?removed=1');
+        queueRebuild();
+        header('Location: menu?removed=1&t=' . time());
         exit;
     }
 
@@ -65,6 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $upd->execute([$pos, $ids[$swap]]);
             }
         }
+        queueRebuild();
         header('Location: menu');
         exit;
     }
@@ -125,7 +125,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $pdo->prepare('INSERT INTO cmstest_menu (parent_id, label, link_type, link_value, sort_order) VALUES (?, ?, ?, ?, ?)')
                 ->execute([$parentId, $label, $type, $value, (int) $stmt->fetchColumn()]);
         }
-        header('Location: menu?saved=1');
+        queueRebuild();
+        header('Location: menu?saved=1&t=' . time());
         exit;
     }
 }
@@ -170,11 +171,11 @@ function menuRenderRows(array $byParent, int $parentKey, int $depth, array $page
     }
 }
 
-adminLayoutTop('menu', 'Menu');
+adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok">Item salvo. O menu do site publicado ainda não muda — essa ligação vem depois.</div><?php endif; ?>
-<?php if (isset($_GET['removed'])): ?><div class="msg ok">Item removido. Os itens filhos, se havia, agora estão no topo do menu.</div><?php endif; ?>
+<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item salvo.</span></div><?php endif; ?>
+<?php if (isset($_GET['removed'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item removido. Os itens filhos, se havia, agora estão no topo do menu.</span></div><?php endif; ?>
 <?php if (isset($_GET['err'])): ?><div class="msg err">Preencha o rótulo e o destino do link antes de salvar.</div><?php endif; ?>
 
 <style>
