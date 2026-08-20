@@ -150,7 +150,11 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     position: fixed; top:0; left:0; right:0; z-index:500;
     background: transparent;
     border-bottom: 1px solid transparent;
-    transition: background .4s ease, border-color .4s ease, box-shadow .4s ease;
+    /* No transition on background: a fade here can get caught mid-scroll
+       (rAF throttling / momentum scroll on mobile) and freeze the header at a
+       half-transparent alpha with page content bleeding through. Snapping
+       instantly guarantees the header is always fully solid or fully clear. */
+    transition: border-color .4s ease, box-shadow .4s ease;
   }
   #site-header.scrolled {
     /* Solid, no backdrop-filter -- blur() on a position:fixed element is a
