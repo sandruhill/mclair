@@ -32,6 +32,11 @@
     <input id="email" type="email" placeholder="seunome@mclair.com.br" required />
     <label for="github">Usuário do GitHub</label>
     <input id="github" type="text" placeholder="seu-usuario" required />
+    <!-- Honeypot: invisible to real users, bots that auto-fill every field trip it -->
+    <div style="position:absolute;left:-9999px;top:-9999px" aria-hidden="true">
+      <label for="empresa">Empresa</label>
+      <input id="empresa" name="empresa" type="text" tabindex="-1" autocomplete="off" />
+    </div>
     <button type="submit">Enviar código</button>
   </form>
 
@@ -75,13 +80,14 @@
     e.preventDefault();
     email = document.getElementById('email').value.trim();
     github = document.getElementById('github').value.trim();
+    const empresa = document.getElementById('empresa').value;
     showMsg('Enviando...', '');
     setButtonDisabled(step1, true);
     try {
       const res = await fetch('/solicitar-codigo', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, githubUsername: github }),
+        body: JSON.stringify({ email, githubUsername: github, empresa }),
       });
       const data = await res.json();
       if (data.ok) {

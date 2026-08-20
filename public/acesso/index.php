@@ -56,6 +56,13 @@ function handleSolicitarCodigo(PDO $pdo, string $ip): void {
     $email = strtolower(trim($input['email'] ?? ''));
     $githubUsername = trim($input['githubUsername'] ?? '');
 
+    // Honeypot — real users never see or fill this field. A bot that
+    // auto-fills every input trips it; pretend success so it doesn't learn
+    // to skip the field next time, but never actually send anything.
+    if (trim($input['empresa'] ?? '') !== '') {
+        jsonResponse(['ok' => true]);
+    }
+
     if ($email === '' || !isValidMclairEmail($email)) {
         jsonResponse(['ok' => false, 'error' => 'Precisa ser um e-mail @mclair.com.br.']);
     }
