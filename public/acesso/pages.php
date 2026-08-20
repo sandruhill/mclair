@@ -5,6 +5,10 @@ require_once __DIR__ . '/_layout_top.php';
 cmsRequireRole(['admin', 'editor']);
 $pdo = cmsDb();
 
+// Real case list, used to turn the "case" field (client -> case link) into a
+// picker instead of a free-text path -- avoids typos in a hand-typed slug.
+$GLOBALS['PAGES_CASE_OPTIONS'] = $pdo->query('SELECT slug, client FROM cmstest_cases ORDER BY num')->fetchAll(PDO::FETCH_KEY_PAIR);
+
 $PAGES = [
     'homepage'  => 'Home',
     'sobre'     => 'Sobre',
@@ -93,6 +97,13 @@ function pagesFieldsGrid(string $prefix, array $keys, array $values, array $long
             echo '<textarea name="' . $name . '" style="min-height:110px;font-size:.88rem">' . htmlspecialchars($val) . '</textarea>';
         } elseif ($long) {
             echo '<textarea name="' . $name . '" style="min-height:90px;font-size:.88rem">' . htmlspecialchars($val) . '</textarea>';
+        } elseif ($sk === 'case') {
+            echo '<select name="' . $name . '"><option value="">— nenhum —</option>';
+            foreach ($GLOBALS['PAGES_CASE_OPTIONS'] as $caseSlug => $caseClient) {
+                $caseHref = '/cases/' . $caseSlug;
+                echo '<option value="' . htmlspecialchars($caseHref) . '"' . ($val === $caseHref ? ' selected' : '') . '>' . htmlspecialchars($caseClient) . '</option>';
+            }
+            echo '</select>';
         } else {
             $imgClass = pagesIsImgKey((string) $sk) ? ' class="img-url"' : '';
             echo '<input type="text"' . $imgClass . ' name="' . $name . '" value="' . htmlspecialchars($val) . '" />';
