@@ -207,6 +207,34 @@ ul, ol { list-style:none; }
 [data-delay="3"] { transition-delay: .3s; }
 [data-delay="4"] { transition-delay: .4s; }
 [data-delay="5"] { transition-delay: .5s; }
+
+/* Hero content sits above the fold on first paint, so it must not wait on
+   JS/IntersectionObserver like the rest of [data-anim] — that gate was
+   adding 3+ seconds of pure render delay to the page's LCP element. Same
+   motion, but a plain CSS animation that starts as soon as the stylesheet
+   loads, no script execution required. */
+@keyframes heroFadeUp { from { opacity:0; transform:translateY(36px); } to { opacity:1; transform:none; } }
+@keyframes heroFadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes heroSlideX { from { opacity:0; transform:translateX(var(--hero-slide-x, 40px)); } to { opacity:1; transform:none; } }
+@keyframes heroWordUp { from { transform:translateY(110%); } to { transform:none; } }
+
+.hero-instant[data-anim]        { animation: heroFadeUp .7s cubic-bezier(.22,1,.36,1) both; }
+.hero-instant[data-anim="fade"] { animation-name: heroFadeIn; }
+.hero-instant[data-anim="left"] { --hero-slide-x: -40px; animation-name: heroSlideX; }
+.hero-instant[data-anim="right"] { --hero-slide-x: 40px; animation-name: heroSlideX; }
+.hero-instant[data-delay="3"] { animation-delay: .3s; }
+.hero-instant[data-delay="4"] { animation-delay: .4s; }
+.hero-instant[data-delay="5"] { animation-delay: .5s; }
+
+.hero-instant.word-reveal .word-inner { animation: heroWordUp .7s cubic-bezier(.22,1,.36,1) both; }
+.hero-instant.word-reveal .word:nth-child(1) .word-inner { animation-delay: 0s; }
+.hero-instant.word-reveal .word:nth-child(2) .word-inner { animation-delay: .06s; }
+.hero-instant.word-reveal .word:nth-child(3) .word-inner { animation-delay: .12s; }
+.hero-instant.word-reveal .word:nth-child(4) .word-inner { animation-delay: .18s; }
+.hero-instant.word-reveal.wr-delay .word:nth-child(1) .word-inner { animation-delay: .12s; }
+.hero-instant.word-reveal.wr-delay .word:nth-child(2) .word-inner { animation-delay: .18s; }
+.hero-instant.word-reveal.wr-delay .word:nth-child(3) .word-inner { animation-delay: .24s; }
+.hero-instant.word-reveal.wr-delay .word:nth-child(4) .word-inner { animation-delay: .30s; }
 [data-delay="6"] { transition-delay: .6s; }
 [data-delay="7"] { transition-delay: .7s; }
 
