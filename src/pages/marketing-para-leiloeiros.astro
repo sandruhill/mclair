@@ -1,9 +1,12 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import fidalgoCase from '../content/cases/fidalgo.json';
-import globoCase from '../content/cases/globo-leiloes.json';
-import vipCase from '../content/cases/vip-leiloes.json';
+import { getCases } from '../utils/cmsApi';
+
+const allCases = await getCases();
+const fidalgoCase = allCases.find((c) => c.slug === 'fidalgo');
+const globoCase = allCases.find((c) => c.slug === 'globo-leiloes');
+const vipCase = allCases.find((c) => c.slug === 'vip-leiloes');
 
 const CASES_BG_VIDEO_ID = 'ZsbxCdWN-7Q';
 

@@ -1,16 +1,14 @@
 ---
-import { createReader } from '@keystatic/core/reader';
-import keystaticConfig from '../../keystatic.config';
+import { getCases } from '../utils/cmsApi';
 
-const reader = createReader(process.cwd(), keystaticConfig);
-const allCases = await reader.collections.cases.all().catch(() => []);
+const allCases = await getCases().catch(() => []);
 const caseLinks = (allCases as any[])
-  .sort((a, b) => (a.entry.num ?? '').localeCompare(b.entry.num ?? ''))
+  .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''))
   .map(c => ({
-    label: c.entry.client,
+    label: c.client,
     href:  `/cases/${c.slug}`,
-    tag:   c.entry.sector ?? '',
-    img:   c.entry.img ?? '',
+    tag:   c.sector ?? '',
+    img:   c.img ?? '',
   }));
 
 const svcLinks = [

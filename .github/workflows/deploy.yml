@@ -46,9 +46,9 @@ jobs:
           define('GITHUB_OAUTH_CLIENT_SECRET', '${{ secrets.ACESSO_GITHUB_OAUTH_CLIENT_SECRET }}');
           PHP
 
-      - name: Write cms-test config (not committed to git)
+      - name: Write admin CMS config (not committed to git)
         run: |
-          cat > dist/cms-test/config.php <<PHP
+          cat > dist/admin/config.php <<PHP
           <?php
           define('DB_HOST', '${{ secrets.ACESSO_DB_HOST }}');
           define('DB_NAME', '${{ secrets.ACESSO_DB_NAME }}');
