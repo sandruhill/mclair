@@ -7,8 +7,8 @@ $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
-    $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, updated_by = ? WHERE slug = ?');
-    $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_SESSION['cms_user_id'], $slug]);
+    $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, image = ?, updated_by = ? WHERE slug = ?');
+    $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_POST['image'], $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
     header('Location: servicos?slug=' . urlencode($slug) . '&saved=1');
     exit;
@@ -63,6 +63,8 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
     <input type="text" name="title" value="<?= htmlspecialchars($item['title']) ?>" />
     <label>Headline</label>
     <input type="text" name="headline" value="<?= htmlspecialchars($item['headline']) ?>" />
+    <label>Imagem de capa (URL)</label>
+    <input type="text" name="image" class="img-url" value="<?= htmlspecialchars($item['image'] ?? '') ?>" placeholder="/uploads/exemplo.jpg" />
     <label>Introdução</label>
     <textarea name="intro" style="min-height:100px"><?= htmlspecialchars($item['intro']) ?></textarea>
     <label>Descrição completa</label>

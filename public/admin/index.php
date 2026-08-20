@@ -70,10 +70,10 @@ adminLayoutTop('blog', 'Posts do blog');
   <td><?= htmlspecialchars($p['author']) ?></td>
   <td class="dt-actions">
     <a href="posts/editar?slug=<?= urlencode($p['slug']) ?>">editar</a>
-    <form method="post" style="display:inline" onsubmit="return confirm('Apagar este post do banco?');">
+    <form method="post" style="display:inline">
       <input type="hidden" name="action" value="delete" />
       <input type="hidden" name="slug" value="<?= htmlspecialchars($p['slug']) ?>" />
-      <button type="submit" class="del">apagar</button>
+      <button type="button" class="del" data-confirm="Apagar este post do banco?" onclick="askConfirm(this)">apagar</button>
     </form>
   </td>
 </tr>

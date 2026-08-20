@@ -15,8 +15,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
-    $stmt = $pdo->prepare('UPDATE cmstest_cases SET client = ?, sector = ?, challenge = ?, solution = ?, updated_by = ? WHERE slug = ?');
-    $stmt->execute([$_POST['client'], $_POST['sector'], $_POST['challenge'], $_POST['solution'], $_SESSION['cms_user_id'], $slug]);
+    $stmt = $pdo->prepare('UPDATE cmstest_cases SET client = ?, sector = ?, challenge = ?, solution = ?, img = ?, updated_by = ? WHERE slug = ?');
+    $stmt->execute([$_POST['client'], $_POST['sector'], $_POST['challenge'], $_POST['solution'], $_POST['img'], $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
     header('Location: casos?slug=' . urlencode($slug) . '&saved=1');
     exit;
@@ -58,10 +58,10 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <td><span class="badge"><?= htmlspecialchars($c['sector']) ?></span></td>
     <td class="dt-actions">
       <a href="casos?slug=<?= urlencode($c['slug']) ?>">editar</a>
-      <form method="post" style="display:inline" onsubmit="return confirm('Apagar este case?');">
+      <form method="post" style="display:inline">
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="slug" value="<?= htmlspecialchars($c['slug']) ?>" />
-        <button type="submit" class="del">apagar</button>
+        <button type="button" class="del" data-confirm="Apagar este case?" onclick="askConfirm(this)">apagar</button>
       </form>
     </td>
   </tr>
@@ -80,6 +80,8 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <input type="text" name="client" value="<?= htmlspecialchars($item['client']) ?>" />
     <label>Setor</label>
     <input type="text" name="sector" value="<?= htmlspecialchars($item['sector']) ?>" />
+    <label>Imagem de capa (URL)</label>
+    <input type="text" name="img" class="img-url" value="<?= htmlspecialchars($item['img'] ?? '') ?>" placeholder="/uploads/exemplo.jpg" />
     <label>Desafio</label>
     <textarea name="challenge" style="min-height:100px"><?= htmlspecialchars($item['challenge']) ?></textarea>
     <label>Solução</label>

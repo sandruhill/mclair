@@ -64,10 +64,10 @@ adminLayoutTop('users', 'Usuários');
   <td><?= htmlspecialchars($u['last_login_at'] ?? 'nunca') ?></td>
   <td class="dt-actions">
     <?php if ((int)$u['id'] !== (int)$_SESSION['cms_user_id']): ?>
-    <form method="post" style="display:inline" onsubmit="return confirm('Remover este usuário?');">
+    <form method="post" style="display:inline">
       <input type="hidden" name="action" value="delete" />
       <input type="hidden" name="id" value="<?= (int)$u['id'] ?>" />
-      <button type="submit" class="del">remover</button>
+      <button type="button" class="del" data-confirm="Remover este usuário?" data-yes="sim, remover" onclick="askConfirm(this)">remover</button>
     </form>
     <?php else: ?>
     <em style="color:#999">você</em>

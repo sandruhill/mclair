@@ -135,7 +135,154 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   .side-sec { border-top:1px solid var(--line); margin-top:18px; padding-top:14px; }
   .side-sec:first-child { border-top:none; margin-top:0; padding-top:0; }
   .side-sec > strong { font-size:.8rem; text-transform:uppercase; letter-spacing:.06em; color:var(--ink); }
+
+  /* Drag-and-drop image upload (pairs with an image-URL text input) */
+  .imgdrop { margin-top:8px; border:1.5px dashed var(--line); border-radius:8px; background:var(--paper); padding:14px; text-align:center; cursor:pointer; }
+  .imgdrop.over { border-color:var(--red); background:rgba(200,16,46,.04); }
+  .imgdrop img { display:block; margin:0 auto 10px; max-width:100%; max-height:120px; object-fit:cover; border-radius:8px; border:1px solid var(--line); }
+  .imgdrop .imgdrop-msg { font-size:.76rem; font-weight:600; color:var(--ink-3); }
+  .imgdrop-err { font-size:.74rem; font-weight:600; color:var(--red); margin:6px 0 0; }
+
+  /* Inline confirmation (replaces native confirm()) */
+  .ci { display:inline-flex; align-items:center; gap:8px; font-size:.78rem; }
+  .ci .ci-msg { color:#9a1f1f; font-weight:600; }
+  .ci button.ci-yes { background:var(--red); color:#fff; border:none; padding:4px 10px; border-radius:6px; font-family:inherit; font-size:.76rem; font-weight:700; cursor:pointer; }
+  .ci button.ci-no { background:none; border:none; padding:0; color:var(--ink-3); text-decoration:underline; font-family:inherit; font-size:.76rem; font-weight:700; cursor:pointer; }
+
+  /* Inline URL ask (replaces native prompt()) */
+  .urlask { display:inline-flex; align-items:center; gap:4px; }
+  .urlask input[type=text] { width:220px; padding:5px 8px; font-size:.8rem; }
 </style>
+<script>
+// ---- Drag-and-drop image upload ----
+// Enhances an image-URL text input (class "img-url") with a drop zone that
+// POSTs to /admin/upload.php and keeps a live thumbnail preview in sync.
+// data-imgdrop-nothumb skips the thumbnail (when a bigger preview exists).
+function imgDrop(input) {
+  if (input.dataset.imgdrop) return; // idempotent: safe to re-init a container
+  input.dataset.imgdrop = '1';
+  var noThumb = input.hasAttribute('data-imgdrop-nothumb');
+
+  var zone = document.createElement('div');
+  zone.className = 'imgdrop';
+  var img = document.createElement('img');
+  img.alt = '';
+  var msg = document.createElement('div');
+  msg.className = 'imgdrop-msg';
+  var err = document.createElement('p');
+  err.className = 'imgdrop-err';
+  err.style.display = 'none';
+  var file = document.createElement('input');
+  file.type = 'file';
+  file.accept = 'image/*';
+  file.style.display = 'none';
+  zone.append(img, msg, file);
+  input.after(zone, err);
+
+  function render() {
+    var url = input.value.trim();
+    var show = url !== '' && !noThumb;
+    img.style.display = show ? '' : 'none';
+    if (show) img.src = url;
+    msg.textContent = 'Arraste uma imagem aqui ou clique para escolher';
+  }
+
+  function fail(text) {
+    err.textContent = text;
+    err.style.display = '';
+    render();
+  }
+
+  function upload(f) {
+    if (!f) return;
+    err.style.display = 'none';
+    msg.textContent = 'Enviando...';
+    var fd = new FormData();
+    fd.append('file', f);
+    fetch('/admin/upload.php', { method: 'POST', body: fd })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        if (!res.ok || !res.j.url) { fail(res.j.error || 'Falha no upload.'); return; }
+        input.value = res.j.url;
+        // fires any oninput preview (renderHero etc.) the input already has
+        input.dispatchEvent(new Event('input', { bubbles: true }));
+        render();
+      })
+      .catch(function () { fail('Falha de rede ao enviar. Tente de novo.'); });
+  }
+
+  zone.addEventListener('click', function () { file.click(); });
+  file.addEventListener('change', function () { upload(file.files[0]); file.value = ''; });
+  zone.addEventListener('dragover', function (e) { e.preventDefault(); zone.classList.add('over'); });
+  zone.addEventListener('dragleave', function () { zone.classList.remove('over'); });
+  zone.addEventListener('drop', function (e) {
+    e.preventDefault();
+    zone.classList.remove('over');
+    upload(e.dataTransfer.files[0]);
+  });
+  input.addEventListener('input', render);
+  render();
+}
+function imgDropInit(root) {
+  root.querySelectorAll('input.img-url').forEach(imgDrop);
+}
+document.addEventListener('DOMContentLoaded', function () { imgDropInit(document); });
+
+// ---- Inline delete confirmation (replaces native confirm()) ----
+// Delete buttons are type="button" with onclick="askConfirm(this)"; the first
+// click swaps in "mensagem + sim / cancelar", the second actually submits.
+function askConfirm(btn) {
+  var box = document.createElement('span');
+  box.className = 'ci';
+  var m = document.createElement('span');
+  m.className = 'ci-msg';
+  m.textContent = btn.dataset.confirm || 'Tem certeza?';
+  var yes = document.createElement('button');
+  yes.type = 'button';
+  yes.className = 'ci-yes';
+  yes.textContent = btn.dataset.yes || 'sim, apagar';
+  var no = document.createElement('button');
+  no.type = 'button';
+  no.className = 'ci-no';
+  no.textContent = 'cancelar';
+  yes.addEventListener('click', function () { btn.form.submit(); });
+  no.addEventListener('click', function () { box.remove(); btn.style.display = ''; });
+  box.append(m, yes, no);
+  btn.style.display = 'none';
+  btn.after(box);
+}
+
+// ---- Inline URL ask (replaces native prompt(); used by the md toolbars) ----
+function askUrl(anchor, cb) {
+  var old = document.querySelector('.urlask');
+  if (old) old.remove();
+  var box = document.createElement('span');
+  box.className = 'urlask';
+  var inp = document.createElement('input');
+  inp.type = 'text';
+  inp.value = 'https://';
+  var ok = document.createElement('button');
+  ok.type = 'button';
+  ok.textContent = 'OK';
+  var no = document.createElement('button');
+  no.type = 'button';
+  no.textContent = '✕';
+  ok.addEventListener('click', function () {
+    var u = inp.value.trim();
+    box.remove();
+    if (u && u !== 'https://') cb(u);
+  });
+  no.addEventListener('click', function () { box.remove(); });
+  inp.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter') { e.preventDefault(); ok.click(); }
+    if (e.key === 'Escape') box.remove();
+  });
+  box.append(inp, ok, no);
+  anchor.after(box);
+  inp.focus();
+  inp.setSelectionRange(inp.value.length, inp.value.length);
+}
+</script>
 </head>
 <body>
 <div class="shell">

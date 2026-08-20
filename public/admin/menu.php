@@ -162,9 +162,9 @@ function menuRenderRows(array $byParent, int $parentKey, int $depth, array $page
         echo '<form method="post"><input type="hidden" name="action" value="move" /><input type="hidden" name="id" value="' . $id . '" /><input type="hidden" name="dir" value="down" />'
            . '<button type="submit" title="Mover para baixo"' . ($i === $n - 1 ? ' disabled' : '') . '>&darr;</button></form>';
         echo '<a href="menu?edit=' . $id . '">editar</a>';
-        echo '<form method="post" onsubmit="return confirm(\'Remover este item? Se remover, os itens filhos passam a ficar no topo do menu.\')">'
+        echo '<form method="post">'
            . '<input type="hidden" name="action" value="delete" /><input type="hidden" name="id" value="' . $id . '" />'
-           . '<button type="submit" class="del">remover</button></form>';
+           . '<button type="button" class="del" data-confirm="Remover? Os itens filhos passam a ficar no topo do menu." data-yes="sim, remover" onclick="askConfirm(this)">remover</button></form>';
         echo '</div></div>';
         menuRenderRows($byParent, $id, $depth + 1, $pages, $services);
     }

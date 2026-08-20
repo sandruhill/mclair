@@ -37,6 +37,11 @@ function pagesLabel(string $key): string {
     return $GLOBALS['PAGES_LABELS'][$key] ?? $key;
 }
 
+// Keys whose value is an image URL -> get the drag-and-drop upload widget.
+function pagesIsImgKey(string $key): bool {
+    return in_array($key, ['photo', 'logo', 'ogImage'], true);
+}
+
 function pagesIsList(array $a): bool {
     return $a === [] || array_keys($a) === range(0, count($a) - 1);
 }
@@ -86,7 +91,8 @@ function pagesFieldsGrid(string $prefix, array $keys, array $values, array $long
         } elseif ($long) {
             echo '<textarea name="' . $name . '" style="min-height:90px;font-size:.88rem">' . htmlspecialchars($val) . '</textarea>';
         } else {
-            echo '<input type="text" name="' . $name . '" value="' . htmlspecialchars($val) . '" />';
+            $imgClass = pagesIsImgKey((string) $sk) ? ' class="img-url"' : '';
+            echo '<input type="text"' . $imgClass . ' name="' . $name . '" value="' . htmlspecialchars($val) . '" />';
         }
         echo '</div>';
     }
@@ -204,7 +210,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
           <?php if (mb_strlen($v) > 120 || strpos($v, "\n") !== false): ?>
             <textarea name="f[<?= htmlspecialchars($key) ?>]" style="min-height:100px"><?= htmlspecialchars($v) ?></textarea>
           <?php else: ?>
-            <input type="text" name="f[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars($v) ?>" />
+            <input type="text"<?= pagesIsImgKey($key) ? ' class="img-url"' : '' ?> name="f[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars($v) ?>" />
           <?php endif; ?>
 
         <?php elseif (!pagesIsList($orig)): ?>
@@ -261,6 +267,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     var i = parseInt(rep.dataset.next, 10);
     rep.dataset.next = i + 1;
     rep.insertAdjacentHTML('beforeend', tpl.innerHTML.replace(/__i__/g, i));
+    imgDropInit(rep); // enhance image-URL inputs in the freshly cloned item
   }
   function repDel(btn) {
     btn.closest('.rep-item').remove();
@@ -295,13 +302,13 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
   }
 
   function mdLink(btn) {
-    var url = prompt('URL do link:', 'https://');
-    if (!url) return;
     var ta = mdTa(btn);
-    ta.focus();
     var s = ta.selectionStart, e = ta.selectionEnd;
-    var sel = ta.value.substring(s, e) || 'texto do link';
-    ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
+    askUrl(btn, function (url) {
+      var sel = ta.value.substring(s, e) || 'texto do link';
+      ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
+      ta.focus();
+    });
   }
   </script>
 <?php endif; ?>

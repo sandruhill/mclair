@@ -85,7 +85,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
       </div>
       <div id="paneImage">
         <label style="margin-top:0">Imagem de capa (URL)</label>
-        <input type="text" name="featured_image" id="featuredImage" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
+        <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
       </div>
       <div id="paneVideo">
         <label style="margin-top:0">Vídeo de capa (URL — YouTube ou arquivo .mp4)</label>
@@ -110,7 +110,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
           <button type="button" title="Título (H2)" onclick="mdLine('## ')">H2</button>
           <button type="button" title="Subtítulo (H3)" onclick="mdLine('### ')">H3</button>
           <span class="div"></span>
-          <button type="button" title="Link" onclick="mdLink()">🔗</button>
+          <button type="button" title="Link" onclick="mdLink(this)">🔗</button>
           <span class="div"></span>
           <button type="button" title="Lista" onclick="mdLine('- ')">•&nbsp;Lista</button>
           <button type="button" title="Lista numerada" onclick="mdLine('1. ', true)">1.&nbsp;Lista</button>
@@ -239,13 +239,13 @@ function mdLine(prefix, numbered) {
   ta.setRangeText(out, ls, le, 'select');
 }
 
-function mdLink() {
-  var url = prompt('URL do link:', 'https://');
-  if (!url) return;
-  ta.focus();
+function mdLink(btn) {
   var s = ta.selectionStart, e = ta.selectionEnd;
-  var sel = ta.value.substring(s, e) || 'texto do link';
-  ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
+  askUrl(btn, function (url) {
+    var sel = ta.value.substring(s, e) || 'texto do link';
+    ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
+    ta.focus();
+  });
 }
 </script>
 
