@@ -1,0 +1,89 @@
+name: CMS Test DB Setup (temporary)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create schema via SSH
+        uses: appleboy/ssh-action@v1.0.3
+        env:
+          DB_PASS: ${{ secrets.ACESSO_DB_PASS }}
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          port: ${{ secrets.SSH_PORT }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          envs: DB_PASS
+          script: |
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso <<'SQL'
+            CREATE TABLE IF NOT EXISTS cmstest_singletons (
+              slug VARCHAR(50) PRIMARY KEY,
+              data JSON NOT NULL,
+              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS cmstest_services (
+              slug VARCHAR(255) PRIMARY KEY,
+              num VARCHAR(10),
+              color VARCHAR(50),
+              accent VARCHAR(20),
+              bg VARCHAR(50),
+              title VARCHAR(255) NOT NULL,
+              headline TEXT,
+              intro TEXT,
+              full_desc TEXT,
+              home_desc TEXT,
+              items JSON,
+              image VARCHAR(500),
+              cta VARCHAR(255),
+              meta_description VARCHAR(500),
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS cmstest_cases (
+              slug VARCHAR(255) PRIMARY KEY,
+              client VARCHAR(255) NOT NULL,
+              num VARCHAR(10),
+              color VARCHAR(50),
+              accent VARCHAR(20),
+              sector VARCHAR(255),
+              challenge TEXT,
+              solution TEXT,
+              results JSON,
+              tags JSON,
+              img VARCHAR(500),
+              logo VARCHAR(500),
+              gallery JSON,
+              home_result VARCHAR(500),
+              meta_description VARCHAR(500),
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS cmstest_blog_posts (
+              slug VARCHAR(255) PRIMARY KEY,
+              title VARCHAR(500) NOT NULL,
+              subtitle TEXT,
+              meta_description VARCHAR(500),
+              post_date DATE,
+              author VARCHAR(255),
+              featured_image VARCHAR(500),
+              image_url VARCHAR(500),
+              hero_video VARCHAR(500),
+              category VARCHAR(100),
+              keywords JSON,
+              about_topics JSON,
+              faq_items JSON,
+              content_md LONGTEXT,
+              created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+              updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+              INDEX idx_date (post_date),
+              INDEX idx_category (category)
+            );
+            SQL
+            echo "schema created"
+            mysql -u u229450165_acesso -p"$DB_PASS" u229450165_acesso -e "SHOW TABLES LIKE 'cmstest_%';"
