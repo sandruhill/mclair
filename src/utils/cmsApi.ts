@@ -1,6 +1,6 @@
 // Fetches content from the MySQL-backed export API at build time.
 // Used by every page that used to read from Keystatic/git-tracked files.
-const EXPORT_URL = 'https://mclair.com.br/admin/api-export.php';
+const EXPORT_URL = 'https://mclair.com.br/acesso/api-export.php';
 
 // Building now runs on the same server that serves this API, and every page/component
 // that needs a content type calls its getter independently -- without caching, a full
