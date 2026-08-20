@@ -22,13 +22,13 @@ if (empty($_SESSION['cms_user_id'])) {
     ?>
     <!doctype html>
     <html lang="pt-BR"><head><meta charset="utf-8" /><meta name="robots" content="noindex" />
-    <title>CMS Teste — login</title>
-    <style>body{font-family:-apple-system,sans-serif;max-width:360px;margin:100px auto;padding:0 20px;}
-    input{width:100%;padding:10px;border:1px solid #D6C9A8;border-radius:6px;margin-top:8px;box-sizing:border-box}
-    button{margin-top:12px;background:#C8102E;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer}
+    <title>Painel Mclair — login</title>
+    <style>body{font-family:-apple-system,sans-serif;max-width:360px;margin:100px auto;padding:0 20px;background:#F6F7F9;color:#1A1B1E}
+    input{width:100%;padding:10px;border:1px solid #E5E7EB;border-radius:6px;margin-top:8px;box-sizing:border-box}
+    button{margin-top:12px;background:#C8102E;color:#fff;border:none;padding:10px 20px;border-radius:6px;cursor:pointer;font-weight:700}
     .err{color:#C8102E}</style></head>
     <body>
-    <h2>CMS Teste — Mclair</h2>
+    <h2>Painel Mclair</h2>
     <?php if (isset($authError)): ?><p class="err"><?= htmlspecialchars($authError) ?></p><?php endif; ?>
     <form method="post">
       <input type="text" name="username" placeholder="Usuário ou e-mail" autofocus />
