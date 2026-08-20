@@ -61,7 +61,7 @@ adminLayoutTop('blog', 'Posts do blog');
 <div class="tablecard-head"><div><strong>Posts</strong><span class="count"><?= $total ?></span></div></div>
 <table class="dt">
 <tr><th>Capa</th><th>Título</th><th>Categoria</th><th class="s">Data</th><th>Autor</th><th>Ações</th></tr>
-<?php foreach ($posts as $p): $img = $p['featured_image'] ?: $p['image_url']; ?>
+<?php foreach ($posts as $p): $img = $p['featured_image'] ?: (str_contains((string) $p['image_url'], '/images/galeria/') ? '' : $p['image_url']); ?>
 <tr>
   <td><?php if ($img): ?><img class="dt-thumb" src="<?= htmlspecialchars($img) ?>" alt="" /><?php else: ?><div class="dt-thumb-empty"></div><?php endif; ?></td>
   <td><?= htmlspecialchars($p['title']) ?></td>

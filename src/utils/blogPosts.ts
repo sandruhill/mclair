@@ -1,4 +1,4 @@
-import { getBlogPosts } from './cmsApi';
+import { getBlogPosts, resolveBlogImage } from './cmsApi';
 
 export interface BlogPostSummary {
   slug: string;
@@ -31,7 +31,7 @@ export async function getLatestPosts(limit = 3): Promise<BlogPostSummary[]> {
     title: p.title,
     date: p.post_date ?? '',
     author: p.author ?? 'Equipe Mclair',
-    image: p.featured_image ?? p.image_url ?? '',
+    image: resolveBlogImage(p.featured_image, p.image_url),
   }));
   return summaries.sort((a, b) => toTimestamp(b.date) - toTimestamp(a.date)).slice(0, limit);
 }

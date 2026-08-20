@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <radialGradient id="glow" cx="82%" cy="12%" r="70%">
+      <stop offset="0%" stop-color="#C8102E" stop-opacity="0.35" />
+      <stop offset="100%" stop-color="#C8102E" stop-opacity="0" />
+    </radialGradient>
+  </defs>
+  <rect width="1200" height="630" fill="#151210" />
+  <rect width="1200" height="630" fill="url(#glow)" />
+  <g transform="translate(600,315)" text-anchor="middle">
+    <text y="-8" font-family="-apple-system,Helvetica,Arial,sans-serif" font-size="86" font-weight="800" fill="#ffffff">Mclair</text>
+    <text y="42" font-family="-apple-system,Helvetica,Arial,sans-serif" font-size="20" font-weight="600" letter-spacing="4" fill="#C8102E">COMUNICAÇÃO ESTRATÉGICA</text>
+  </g>
+</svg>

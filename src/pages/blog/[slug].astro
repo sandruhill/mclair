@@ -2,7 +2,7 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
-import { getBlogPosts } from '../../utils/cmsApi';
+import { getBlogPosts, resolveBlogImage } from '../../utils/cmsApi';
 import type { DbBlogPost } from '../../utils/cmsApi';
 
 export async function getStaticPaths() {
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
     metaDescription: p.meta_description ?? '',
     date: p.post_date ?? '',
     author: p.author ?? 'Equipe Mclair',
-    image: p.featured_image ?? p.image_url ?? '',
+    image: resolveBlogImage(p.featured_image, p.image_url),
     content: marked.parse(p.content_md ?? '') as string,
     keywords: p.keywords ?? [],
     aboutTopics: p.about_topics ?? [],

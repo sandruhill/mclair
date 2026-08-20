@@ -3,7 +3,7 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths({ paginate }) {
-  const { getBlogPosts } = await import('../../utils/cmsApi');
+  const { getBlogPosts, resolveBlogImage } = await import('../../utils/cmsApi');
   const { marked } = await import('marked');
   const posts = await getBlogPosts();
 
@@ -18,7 +18,7 @@ export async function getStaticPaths({ paginate }) {
       subtitle: p.subtitle ?? '',
       date: p.post_date ?? '',
       author: p.author ?? 'Equipe Mclair',
-      image: p.featured_image ?? p.image_url ?? '',
+      image: resolveBlogImage(p.featured_image, p.image_url),
       content: marked.parse(p.content_md ?? '') as string,
       category: p.category ?? 'geral',
     }))

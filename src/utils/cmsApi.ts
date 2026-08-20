@@ -77,6 +77,21 @@ export type DbCase = {
 
 export type DbSingleton = { slug: string; data: any };
 
+// Every blog post migrated from the old CMS carries an `image_url` pointing at
+// mclair.com.br/images/galeria/... -- a folder that lived on the previous host
+// (Locaweb) and was never part of this repo, so it 404s now that DNS points
+// here. There's no way to recover those specific files, so any post without a
+// real featured_image (and none currently have one) falls back to a shared
+// branded placeholder instead of a broken image icon.
+const BROKEN_IMAGE_URL_PATTERN = '/images/galeria/';
+const DEFAULT_BLOG_IMAGE = '/blog-images/capa-padrao.svg';
+
+export function resolveBlogImage(featuredImage?: string | null, imageUrl?: string | null): string {
+  if (featuredImage) return featuredImage;
+  if (imageUrl && !imageUrl.includes(BROKEN_IMAGE_URL_PATTERN)) return imageUrl;
+  return DEFAULT_BLOG_IMAGE;
+}
+
 export const getBlogPosts = () => fetchType<DbBlogPost>('blog_posts');
 export const getServices = () => fetchType<DbService>('services');
 export const getCases = () => fetchType<DbCase>('cases');
