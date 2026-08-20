@@ -41,6 +41,7 @@ export type DbBlogPost = {
 
 export type DbService = {
   slug: string;
+  parent_slug: string | null;
   num: string;
   color: string;
   accent: string;

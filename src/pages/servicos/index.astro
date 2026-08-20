@@ -7,6 +7,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20so
 
 const allServicos = await getServices().catch(() => []);
 const services = (allServicos as any[])
+  .filter(s => !s.parent_slug) // only top-level services show on the main index; children live under their parent's page
   .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''))
   .map(s => ({
     num:      s.num ?? '',

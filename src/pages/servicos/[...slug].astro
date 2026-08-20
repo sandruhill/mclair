@@ -7,27 +7,48 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20sa
 export async function getStaticPaths() {
   const { getServices } = await import('../../utils/cmsApi');
   const rows = await getServices();
+  const bySlug = new Map(rows.map((r: any) => [r.slug, r]));
+
+  // Walk each service's parent_slug chain to build its full nested path and
+  // breadcrumb ancestors (e.g. marketing-digital/seo for a child of marketing-digital).
+  function ancestry(slug: string): any[] {
+    const chain: any[] = [];
+    let cur = bySlug.get(slug);
+    const seen = new Set<string>(); // guards against an accidental parent cycle
+    while (cur && !seen.has(cur.slug)) {
+      seen.add(cur.slug);
+      chain.unshift(cur);
+      cur = cur.parent_slug ? bySlug.get(cur.parent_slug) : undefined;
+    }
+    return chain;
+  }
 
   const services = rows
     .sort((a: any, b: any) => (a.num ?? '').localeCompare(b.num ?? ''))
-    .map((s: any) => ({
-      slug:        s.slug,
-      num:         s.num ?? '',
-      color:       s.color || 'var(--red)',
-      accent:      s.accent || '#C8102E',
-      bg:          s.bg || 'var(--red-soft)',
-      title:       String(s.title),
-      headline:    s.headline ?? '',
-      intro:       s.intro ?? '',
-      desc:        s.full_desc ?? '',
-      items:       (s.items ?? []) as string[],
-      cta:         s.cta ?? '',
-      description: s.meta_description ?? '',
-    }));
+    .map((s: any) => {
+      const chain = ancestry(s.slug);
+      return {
+        slug:        s.slug,
+        parentSlug:  s.parent_slug ?? null,
+        path:        chain.map((c: any) => c.slug).join('/'),
+        ancestors:   chain.slice(0, -1).map((c: any) => ({ slug: c.slug, title: c.title, path: chain.slice(0, chain.indexOf(c) + 1).map((x: any) => x.slug).join('/') })),
+        num:         s.num ?? '',
+        color:       s.color || 'var(--red)',
+        accent:      s.accent || '#C8102E',
+        bg:          s.bg || 'var(--red-soft)',
+        title:       String(s.title),
+        headline:    s.headline ?? '',
+        intro:       s.intro ?? '',
+        desc:        s.full_desc ?? '',
+        items:       (s.items ?? []) as string[],
+        cta:         s.cta ?? '',
+        description: s.meta_description ?? '',
+      };
+    });
 
   return services.map((s: any) => ({
-    params: { slug: s.slug },
-    props: { s, others: services.filter((x: any) => x.slug !== s.slug).slice(0, 3) },
+    params: { slug: s.path },
+    props: { s, others: services.filter((x: any) => x.slug !== s.slug && !x.parentSlug).slice(0, 3) },
   }));
 }
 
@@ -43,11 +64,11 @@ const { s, others } = Astro.props;
     {
       '@context': 'https://schema.org',
       '@type': 'Service',
-      '@id': `https://mclair.com.br/servicos/${s.slug}#service`,
+      '@id': `https://mclair.com.br/servicos/${s.path}#service`,
       name: s.title,
       description: s.description || s.intro || s.headline,
       provider: { '@id': 'https://mclair.com.br/#organization' },
-      url: `https://mclair.com.br/servicos/${s.slug}`,
+      url: `https://mclair.com.br/servicos/${s.path}`,
       areaServed: { '@type': 'Country', name: 'Brasil' },
       inLanguage: 'pt-BR',
       ...(s.items?.length ? {
@@ -67,7 +88,10 @@ const { s, others } = Astro.props;
       itemListElement: [
         { '@type': 'ListItem', position: 1, name: 'Início', item: 'https://mclair.com.br' },
         { '@type': 'ListItem', position: 2, name: 'Serviços', item: 'https://mclair.com.br/servicos' },
-        { '@type': 'ListItem', position: 3, name: s.title, item: `https://mclair.com.br/servicos/${s.slug}` },
+        ...s.ancestors.map((a: any, i: number) => ({
+          '@type': 'ListItem', position: 3 + i, name: a.title, item: `https://mclair.com.br/servicos/${a.path}`,
+        })),
+        { '@type': 'ListItem', position: 3 + s.ancestors.length, name: s.title, item: `https://mclair.com.br/servicos/${s.path}` },
       ],
     },
   ]}
@@ -83,6 +107,12 @@ const { s, others } = Astro.props;
     <div class="sh-content">
       <div class="sh-breadcrumb" data-anim>
         <a href="/servicos">Serviços</a>
+        {s.ancestors.map((a: any) => (
+          <>
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+            <a href={`/servicos/${a.path}`}>{a.title}</a>
+          </>
+        ))}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
@@ -155,7 +185,7 @@ const { s, others } = Astro.props;
     <h2 class="os-title" data-anim>Outros serviços Mclair</h2>
     <div class="os-grid stagger-children">
       {others.map(os => (
-        <a href={`/servicos/${os.slug}`} class="os-card">
+        <a href={`/servicos/${os.path}`} class="os-card">
           <h3 class="os-title-inner" style={`color:${os.accent}`}>{os.title}</h3>
           <p class="os-desc">{os.headline}</p>
           <span class="os-arrow">
