@@ -38,8 +38,17 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases');
 
 <?php if (!$slug): ?>
   <?php if (isset($_GET['deleted'])): ?><div class="msg ok">Case removido.</div><?php endif; ?>
+  <?php
+  $sectors = count(array_unique(array_filter(array_column($list, 'sector'))));
+  adminStatCards([
+      ['num' => count($list), 'lbl' => 'Cases no total'],
+      ['num' => $sectors, 'lbl' => 'Setores atendidos'],
+  ]);
+  ?>
+  <div class="tablecard">
+  <div class="tablecard-head"><div><strong>Cases</strong><span class="count"><?= count($list) ?></span></div></div>
   <table class="dt">
-  <tr><th>Capa</th><th>#</th><th>Cliente</th><th>Setor</th><th>Ações</th></tr>
+  <tr><th>Capa</th><th class="s">#</th><th>Cliente</th><th>Setor</th><th>Ações</th></tr>
   <?php foreach ($list as $c): ?>
   <tr>
     <td><?php if ($c['img']): ?><img class="dt-thumb" src="<?= htmlspecialchars($c['img']) ?>" alt="" /><?php else: ?><div class="dt-thumb-empty"></div><?php endif; ?></td>
@@ -57,6 +66,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases');
   </tr>
   <?php endforeach; ?>
   </table>
+  </div>
 <?php else: ?>
   <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
   <div class="card">

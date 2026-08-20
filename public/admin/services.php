@@ -29,8 +29,17 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços');
 ?>
 
 <?php if (!$slug): ?>
+  <?php
+  $withImg = count(array_filter(array_column($list, 'image')));
+  adminStatCards([
+      ['num' => count($list), 'lbl' => 'Serviços no total'],
+      ['num' => $withImg, 'lbl' => 'Com imagem de capa'],
+  ]);
+  ?>
+  <div class="tablecard">
+  <div class="tablecard-head"><div><strong>Serviços</strong><span class="count"><?= count($list) ?></span></div></div>
   <table class="dt">
-  <tr><th>Capa</th><th>#</th><th>Título</th><th>Ações</th></tr>
+  <tr><th>Capa</th><th class="s">#</th><th>Título</th><th>Ações</th></tr>
   <?php foreach ($list as $s): ?>
   <tr>
     <td><?php if ($s['image']): ?><img class="dt-thumb" src="<?= htmlspecialchars($s['image']) ?>" alt="" /><?php else: ?><div class="dt-thumb-empty"></div><?php endif; ?></td>
@@ -40,6 +49,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços');
   </tr>
   <?php endforeach; ?>
   </table>
+  </div>
 <?php else: ?>
   <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
   <div class="card">

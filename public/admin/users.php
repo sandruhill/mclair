@@ -53,8 +53,10 @@ adminLayoutTop('users', 'Usuários');
 <?php if (isset($_GET['deleted'])): ?><div class="msg ok">Usuário removido.</div><?php endif; ?>
 <?php if ($error): ?><div class="msg err"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
-<table class="dt" style="margin-bottom:24px">
-<tr><th>Usuário</th><th>Permissão</th><th>Criado em</th><th>Último login</th><th>Ações</th></tr>
+<div class="tablecard" style="margin-bottom:24px">
+<div class="tablecard-head"><div><strong>Usuários</strong><span class="count"><?= count($users) ?></span></div></div>
+<table class="dt">
+<tr><th>Usuário</th><th>Permissão</th><th class="s">Criado em</th><th>Último login</th><th>Ações</th></tr>
 <?php foreach ($users as $u): ?>
 <tr>
   <td><?= htmlspecialchars($u['username']) ?></td>
@@ -75,6 +77,7 @@ adminLayoutTop('users', 'Usuários');
 </tr>
 <?php endforeach; ?>
 </table>
+</div>
 
 <div class="card" style="max-width:420px">
   <strong>Novo usuário</strong>
