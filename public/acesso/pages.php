@@ -117,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
         $data = json_encode((string) ($_POST['content'] ?? ''), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         $pdo->prepare('UPDATE cmstest_singletons SET data = ? WHERE slug = ?')->execute([$data, $slug]);
         queueRebuild();
-        header('Location: paginas?slug=' . urlencode($slug) . '&saved=1');
+        header('Location: paginas?slug=' . urlencode($slug) . '&saved=1&t=' . time());
         exit;
     }
 
@@ -157,7 +157,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $data = json_encode($new, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     $pdo->prepare('UPDATE cmstest_singletons SET data = ? WHERE slug = ?')->execute([$data, $slug]);
     queueRebuild();
-    header('Location: paginas?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: paginas?slug=' . urlencode($slug) . '&saved=1&t=' . time());
     exit;
 }
 
@@ -178,7 +178,10 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
   </table>
   </div>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
+  <?php
+  $pagesLiveUrl = $slug === 'homepage' ? 'https://mclair.com.br/' : ($slug === 'llms' ? '' : 'https://mclair.com.br/' . urlencode($slug));
+  ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok"<?= $pagesLiveUrl ? ' id="savedMsg" data-live-url="' . htmlspecialchars($pagesLiveUrl) . '"' : '' ?>><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
 
   <style>
     .objbox, .rep-item { border:1px solid var(--line); border-radius:10px; background:#FAFBFC; padding:2px 16px 16px; }

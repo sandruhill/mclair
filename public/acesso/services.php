@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, image = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_POST['image'], $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
-    header('Location: servicos?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: servicos?slug=' . urlencode($slug) . '&saved=1&t=' . time());
     exit;
 }
 
@@ -52,7 +52,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
   </table>
   </div>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/servicos/<?= urlencode($slug) ?>"><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
   <div class="card">
   <p style="font-size:.82rem;color:var(--ink-3);margin-top:0">
     <?php if ($item['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>

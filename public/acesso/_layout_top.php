@@ -22,7 +22,14 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   /* Sidebar */
   .sidebar { width:236px; background:var(--sidebar); color:var(--ink); flex-shrink:0; display:flex; flex-direction:column; padding:22px 12px 14px; border-right:1px solid var(--line); }
   .sidebar-brand { display:flex; align-items:center; gap:10px; padding:0 10px 26px; }
-  .sidebar-brand .dot { width:26px; height:26px; border-radius:8px; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; }
+  .sidebar-brand .logo-link { position:relative; width:26px; height:26px; flex-shrink:0; }
+  .sidebar-brand .logo-link img { width:26px; height:26px; object-fit:contain; display:block; }
+  .sidebar-brand .logo-link .tip {
+    position:absolute; top:calc(100% + 6px); left:50%; transform:translateX(-50%);
+    background:var(--ink); color:#fff; font-size:.68rem; font-weight:600; white-space:nowrap;
+    padding:4px 8px; border-radius:6px; opacity:0; pointer-events:none; transition:opacity .15s; z-index:20;
+  }
+  .sidebar-brand .logo-link:hover .tip { opacity:1; }
   .sidebar-brand strong { font-size:.95rem; letter-spacing:.01em; }
   .sidebar-brand small { display:block; font-size:.66rem; color:var(--ink-3); font-weight:600; letter-spacing:.06em; text-transform:uppercase; }
   .nav-label { padding:14px 10px 6px; font-size:.64rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:#9CA3AF; }
@@ -62,9 +69,12 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null): vo
   .content { padding:28px; max-width:1200px; }
 
   /* Shared widgets */
-  .msg { padding:10px 16px; border-radius:8px; margin-bottom:18px; font-size:.88rem; }
+  .msg { padding:10px 16px; border-radius:8px; margin-bottom:18px; font-size:.88rem; display:flex; align-items:center; gap:10px; }
   .msg.ok { background:#2F7D4F; color:#fff; }
   .msg.err { background:var(--red); color:#fff; }
+  .msg .spin { width:13px; height:13px; border-radius:50%; border:2px solid rgba(255,255,255,.4); border-top-color:#fff; animation:msgspin .7s linear infinite; flex-shrink:0; }
+  @keyframes msgspin { to { transform:rotate(360deg); } }
+  .msg a { color:#fff; font-weight:700; text-decoration:underline; }
 
   /* Stat cards */
   .stats { display:grid; grid-template-columns:repeat(auto-fit, minmax(180px, 1fr)); gap:14px; margin-bottom:22px; }
@@ -234,6 +244,44 @@ function imgDropInit(root) {
 }
 document.addEventListener('DOMContentLoaded', function () { imgDropInit(document); });
 
+// ---- "Ver ao vivo" -- watches the rebuild actually finish after a save ----
+// The save itself only queues a rebuild (~1min cron); this polls a small
+// timestamp file rebuild.sh writes on every successful publish and swaps the
+// static "Salvo no banco." message for a live link once that build is newer
+// than this save (?t=<serverUnixTime set at save-redirect time>).
+(function () {
+  var el = document.getElementById('savedMsg');
+  if (!el) return;
+  var liveUrl = el.getAttribute('data-live-url');
+  var t = parseInt(new URLSearchParams(location.search).get('t') || '0', 10);
+  if (!liveUrl || !t) return;
+
+  var textEl = el.querySelector('.msg-text');
+  var spin = document.createElement('span');
+  spin.className = 'spin';
+  el.prepend(spin);
+  textEl.textContent = 'Salvo. Publicando no site...';
+
+  var elapsed = 0;
+  var iv = setInterval(function () {
+    elapsed += 3000;
+    fetch('/acesso/build-status.json?_=' + Date.now(), { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (data) {
+        if (data && data.builtAt >= t) {
+          clearInterval(iv);
+          spin.remove();
+          textEl.innerHTML = 'Publicado! <a href="' + liveUrl + '" target="_blank" rel="noopener">Ver ao vivo →</a>';
+        } else if (elapsed >= 120000) {
+          clearInterval(iv);
+          spin.remove();
+          textEl.textContent = 'Salvo. Ainda publicando -- deve aparecer no site em instantes.';
+        }
+      })
+      .catch(function () {});
+  }, 3000);
+})();
+
 // ---- Inline delete confirmation (replaces native confirm()) ----
 // Delete buttons are type="button" with onclick="askConfirm(this)"; the first
 // click swaps in "mensagem + sim / cancelar", the second actually submits.
@@ -294,7 +342,10 @@ function askUrl(anchor, cb) {
 <div class="shell">
   <aside class="sidebar">
     <div class="sidebar-brand">
-      <span class="dot">M</span>
+      <a class="logo-link" href="https://mclair.com.br/" target="_blank" rel="noopener">
+        <img src="https://mclair.com.br/logos/logo-icone-M.png" alt="Mclair" />
+        <span class="tip">ir para o site</span>
+      </a>
       <div><strong>Mclair</strong><small>Painel de conteúdo</small></div>
     </div>
     <nav>

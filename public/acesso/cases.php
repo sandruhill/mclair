@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_cases SET client = ?, sector = ?, challenge = ?, solution = ?, img = ?, gallery = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['client'], $_POST['sector'], $_POST['challenge'], $_POST['solution'], $_POST['img'], $galleryJson, $_SESSION['cms_user_id'], $slug]);
     queueRebuild();
-    header('Location: casos?slug=' . urlencode($slug) . '&saved=1');
+    header('Location: casos?slug=' . urlencode($slug) . '&saved=1&t=' . time());
     exit;
 }
 
@@ -81,7 +81,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
   </table>
   </div>
 <?php else: ?>
-  <?php if (isset($_GET['saved'])): ?><div class="msg ok">Salvo no banco.</div><?php endif; ?>
+  <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/cases/<?= urlencode($slug) ?>"><span class="msg-text">Salvo no banco.</span></div><?php endif; ?>
   <?php $gal = json_decode($item['gallery'] ?? '', true); if (!is_array($gal)) $gal = []; ?>
   <style>
     .rep { margin-top:6px; }
