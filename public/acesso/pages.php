@@ -81,7 +81,10 @@ function pagesFieldsGrid(string $prefix, array $keys, array $values, array $long
     echo '<div class="rep-fields">';
     foreach ($keys as $sk) {
         $val  = (string) ($values[$sk] ?? '');
-        $long = isset($longKeys[$sk]);
+        // Image URLs are single-line by nature -- a long descriptive filename
+        // shouldn't ever downgrade the field to a plain textarea and lose
+        // the drag-and-drop/preview widget.
+        $long = isset($longKeys[$sk]) && !pagesIsImgKey((string) $sk);
         $name = htmlspecialchars($prefix . '[' . $sk . ']');
         echo '<div' . ($long ? ' class="fw"' : '') . '>';
         echo '<label>' . htmlspecialchars(pagesLabel((string) $sk)) . '</label>';
@@ -208,7 +211,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
 
         <?php if (!is_array($orig)): ?>
           <?php $v = (string) $orig; ?>
-          <?php if (mb_strlen($v) > 120 || strpos($v, "\n") !== false): ?>
+          <?php if (!pagesIsImgKey($key) && (mb_strlen($v) > 120 || strpos($v, "\n") !== false)): ?>
             <textarea name="f[<?= htmlspecialchars($key) ?>]" style="min-height:100px"><?= htmlspecialchars($v) ?></textarea>
           <?php else: ?>
             <input type="text"<?= pagesIsImgKey($key) ? ' class="img-url"' : '' ?> name="f[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars($v) ?>" />
