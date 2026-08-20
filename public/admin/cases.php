@@ -8,6 +8,7 @@ $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM cmstest_cases WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
+    queueRebuild();
     header('Location: cases.php?deleted=1');
     exit;
 }
@@ -15,6 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delet
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_cases SET client = ?, sector = ?, challenge = ?, solution = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['client'], $_POST['sector'], $_POST['challenge'], $_POST['solution'], $_SESSION['cms_user_id'], $slug]);
+    queueRebuild();
     header('Location: cases.php?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }

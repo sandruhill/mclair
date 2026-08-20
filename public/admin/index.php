@@ -13,6 +13,7 @@ if (isset($_GET['logout'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
+    queueRebuild();
     header('Location: index.php?deleted=1');
     exit;
 }

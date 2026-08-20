@@ -12,3 +12,12 @@ function cmsDb(): PDO {
     );
     return $pdo;
 }
+
+// Signals the server-side cron (see ~/mclair-build/rebuild.sh) to rebuild and
+// republish the static site. Just drops a flag file — actual build/deploy
+// happens outside PHP since exec()/shell_exec() are disabled on this host.
+function queueRebuild(): void {
+    $dir = '/home/u229450165/mclair-build/queue';
+    if (!is_dir($dir)) return;
+    @touch($dir . '/pending');
+}

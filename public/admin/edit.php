@@ -11,6 +11,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $_POST['title'], $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
         $_POST['featured_image'], $_POST['content_md'], $_SESSION['cms_user_id'], $slug,
     ]);
+    queueRebuild();
     header('Location: edit.php?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }

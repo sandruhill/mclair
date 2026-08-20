@@ -8,6 +8,7 @@ $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_SESSION['cms_user_id'], $slug]);
+    queueRebuild();
     header('Location: services.php?slug=' . urlencode($slug) . '&saved=1');
     exit;
 }
