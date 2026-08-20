@@ -252,8 +252,29 @@ function imgDrop(input) {
         // fires any oninput preview (renderHero etc.) the input already has
         input.dispatchEvent(new Event('input', { bubbles: true }));
         render();
+        checkRatio(res.j.url);
       })
       .catch(function () { fail('Falha de rede ao enviar. Tente de novo.'); });
+  }
+
+  // Soft warning (doesn't block the upload) when the field has a known
+  // consistent shape (data-imgdrop-ratio="W:H", e.g. square logos/headshots)
+  // and the new image doesn't match it -- easy to miss otherwise since the
+  // preview box crops/contains the image either way.
+  function checkRatio(url) {
+    var spec = input.getAttribute('data-imgdrop-ratio');
+    if (!spec) return;
+    var parts = spec.split(':').map(Number);
+    var expected = parts[0] / parts[1];
+    var probe = new Image();
+    probe.onload = function () {
+      var actual = probe.naturalWidth / probe.naturalHeight;
+      if (Math.abs(actual - expected) / expected > 0.1) {
+        err.textContent = 'Aviso: essa imagem é ' + probe.naturalWidth + '×' + probe.naturalHeight + ', as demais deste campo são ' + spec + '. Pode enviar mesmo assim, mas o enquadramento pode ficar diferente.';
+        err.style.display = '';
+      }
+    };
+    probe.src = url;
   }
 
   zone.addEventListener('click', function () { file.click(); });

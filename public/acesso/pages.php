@@ -46,6 +46,268 @@ function pagesIsImgKey(string $key): bool {
     return in_array($key, ['photo', 'logo', 'ogImage'], true);
 }
 
+// Expected aspect ratio for fields whose existing images are consistently
+// one shape (logos, headshots are square) -- gets a soft warning on upload
+// if a new image doesn't match. Fields with no consistent existing shape
+// (case covers, galleries) are intentionally left unset.
+function pagesImgRatio(string $key): ?string {
+    return in_array($key, ['photo', 'logo'], true) ? '1:1' : null;
+}
+
+function pagesCaseOptionsHtml(string $selected = ''): string {
+    $html = '<option value="">— nenhum —</option>';
+    foreach ($GLOBALS['PAGES_CASE_OPTIONS'] as $caseSlug => $caseClient) {
+        $href = '/cases/' . $caseSlug;
+        $html .= '<option value="' . htmlspecialchars($href) . '"' . ($selected === $href ? ' selected' : '') . '>' . htmlspecialchars($caseClient) . '</option>';
+    }
+    return $html;
+}
+
+// Clients (68+ logos) get their own manager instead of the generic repeater:
+// bulk logo upload, grid/list view, and inline edit/delete over fetch() so
+// touching one client doesn't reload/resubmit the other 67.
+function clientsManagerRender(array $clients): void {
+?>
+<div id="cm" data-case-options="<?= htmlspecialchars(pagesCaseOptionsHtml(), ENT_QUOTES) ?>">
+  <div class="cm-toolbar">
+    <div class="cm-view-toggle">
+      <button type="button" class="on" data-view="grid" onclick="cmSetView('grid')">Quadrado</button>
+      <button type="button" data-view="list" onclick="cmSetView('list')">Lista</button>
+    </div>
+    <div class="cm-bulk-actions" id="cmBulkActions" style="display:none">
+      <span id="cmSelCount"></span>
+      <button type="button" class="del" onclick="cmDeleteSelected()">Apagar selecionados</button>
+    </div>
+  </div>
+
+  <div class="cm-bulk-drop" id="cmBulkDrop">
+    <input type="file" id="cmBulkFile" accept="image/*" multiple style="display:none" />
+    <div class="cm-bulk-msg">Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo</div>
+  </div>
+  <p class="imgdrop-err" id="cmErr" style="display:none"></p>
+
+  <div class="cm-list" id="cmList"></div>
+  <button type="button" class="btn secondary" style="margin-top:14px" onclick="cmAddBlank()">+ Adicionar cliente</button>
+</div>
+
+<script>
+(function () {
+  var clients = <?= json_encode(array_values($clients), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
+  var caseOptionsHtml = document.getElementById('cm').dataset.caseOptions;
+  var view = 'grid';
+  var editingIndex = null;
+  var selected = new Set();
+
+  function esc(s) {
+    var d = document.createElement('div');
+    d.textContent = s || '';
+    return d.innerHTML;
+  }
+
+  function showErr(msg) {
+    var el = document.getElementById('cmErr');
+    el.textContent = msg;
+    el.style.display = msg ? '' : 'none';
+  }
+
+  function caseLabel(href) {
+    if (!href) return '';
+    var opt = document.createElement('div');
+    opt.innerHTML = caseOptionsHtml;
+    var match = Array.from(opt.querySelectorAll('option')).find(function (o) { return o.value === href; });
+    return match ? match.textContent : href;
+  }
+
+  function render() {
+    var list = document.getElementById('cmList');
+    list.className = 'cm-list cm-view-' + view;
+    list.innerHTML = '';
+    clients.forEach(function (c, i) {
+      var card = document.createElement('div');
+      card.className = 'cm-item';
+      if (selected.has(i)) card.classList.add('cm-selected');
+      if (editingIndex === i) {
+        card.innerHTML = editForm(c, i);
+      } else {
+        card.innerHTML =
+          '<label class="cm-check"><input type="checkbox" ' + (selected.has(i) ? 'checked' : '') + ' onchange="cmToggleSelect(' + i + ')" /></label>' +
+          '<img class="cm-logo" src="' + esc(c.logo) + '" alt="" />' +
+          '<div class="cm-info"><strong>' + esc(c.name) + '</strong>' +
+          (c.case ? '<span class="cm-case-badge">' + esc(caseLabel(c.case)) + '</span>' : '<span class="cm-case-badge cm-empty">sem case</span>') +
+          '</div>' +
+          '<div class="cm-actions"><a href="#" onclick="cmEdit(' + i + ');return false">editar</a><a href="#" class="del" onclick="cmDelete(' + i + ');return false">apagar</a></div>';
+      }
+      list.appendChild(card);
+    });
+    if (!clients.length) list.innerHTML = '<p class="hint">Nenhum cliente ainda. Arraste logos acima para adicionar.</p>';
+    imgDropInit(list);
+    updateBulkBar();
+  }
+
+  function editForm(c, i) {
+    return '' +
+      '<div class="cm-edit">' +
+      '<label>Nome</label><input type="text" value="' + esc(c.name) + '" data-f="name" />' +
+      '<label>Logo</label><input type="text" class="img-url" value="' + esc(c.logo) + '" data-f="logo" />' +
+      '<label>Case</label><select data-f="case">' + caseOptionsWithSelected(c.case) + '</select>' +
+      '<div class="cm-edit-actions">' +
+      '<button type="button" class="btn" onclick="cmSave(' + i + ')">Salvar</button>' +
+      '<button type="button" class="btn secondary" onclick="cmCancelEdit()">Cancelar</button>' +
+      '</div></div>';
+  }
+
+  function caseOptionsWithSelected(val) {
+    var d = document.createElement('div');
+    d.innerHTML = caseOptionsHtml;
+    d.querySelectorAll('option').forEach(function (o) { o.selected = (o.value === (val || '')); });
+    return d.innerHTML;
+  }
+
+  function updateBulkBar() {
+    var bar = document.getElementById('cmBulkActions');
+    bar.style.display = selected.size ? '' : 'none';
+    document.getElementById('cmSelCount').textContent = selected.size + ' selecionado(s)';
+  }
+
+  window.cmSetView = function (v) {
+    view = v;
+    document.querySelectorAll('.cm-view-toggle button').forEach(function (b) {
+      b.classList.toggle('on', b.dataset.view === v);
+    });
+    render();
+  };
+
+  window.cmEdit = function (i) { editingIndex = i; render(); };
+  window.cmCancelEdit = function () { editingIndex = null; render(); };
+
+  window.cmToggleSelect = function (i) {
+    if (selected.has(i)) selected.delete(i); else selected.add(i);
+    updateBulkBar();
+  };
+
+  window.cmAddBlank = function () {
+    clients.push({ name: '', logo: '', case: '' });
+    editingIndex = clients.length - 1;
+    render();
+  };
+
+  window.cmSave = function (i) {
+    var card = document.querySelectorAll('.cm-item')[i];
+    var fields = {};
+    card.querySelectorAll('[data-f]').forEach(function (el) { fields[el.dataset.f] = el.value.trim(); });
+    if (!fields.name) { showErr('Nome é obrigatório.'); return; }
+    showErr('');
+    var fd = new FormData();
+    fd.append('action', 'save');
+    fd.append('index', i);
+    fd.append('name', fields.name);
+    fd.append('logo', fields.logo || '');
+    fd.append('case', fields.case || '');
+    fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) { showErr(res.error || 'Falha ao salvar.'); return; }
+        clients = res.clients;
+        editingIndex = null;
+        render();
+      })
+      .catch(function () { showErr('Falha de rede ao salvar.'); });
+  };
+
+  window.cmDelete = function (i) {
+    var card = document.querySelectorAll('.cm-item')[i];
+    if (!card.classList.contains('cm-confirm-del')) {
+      card.classList.add('cm-confirm-del');
+      var link = card.querySelector('a.del');
+      link.textContent = 'confirmar?';
+      return;
+    }
+    var fd = new FormData();
+    fd.append('action', 'delete');
+    fd.append('index', i);
+    fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) { showErr(res.error || 'Falha ao apagar.'); return; }
+        clients = res.clients;
+        selected.clear();
+        render();
+      })
+      .catch(function () { showErr('Falha de rede ao apagar.'); });
+  };
+
+  window.cmDeleteSelected = function () {
+    if (!selected.size) return;
+    var fd = new FormData();
+    fd.append('action', 'delete_many');
+    fd.append('indexes', JSON.stringify(Array.from(selected)));
+    fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
+      .then(function (r) { return r.json(); })
+      .then(function (res) {
+        if (!res.ok) { showErr(res.error || 'Falha ao apagar.'); return; }
+        clients = res.clients;
+        selected.clear();
+        render();
+      })
+      .catch(function () { showErr('Falha de rede ao apagar.'); });
+  };
+
+  function nameFromFilename(fn) {
+    return fn.replace(/\.[^.]+$/, '').replace(/[-_]+/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+
+  function bulkUpload(files) {
+    if (!files.length) return;
+    showErr('');
+    var drop = document.getElementById('cmBulkDrop');
+    drop.querySelector('.cm-bulk-msg').textContent = 'Enviando ' + files.length + ' imagem(ns)...';
+    var uploads = Array.from(files).map(function (f) {
+      var fd = new FormData();
+      fd.append('file', f);
+      return fetch('/acesso/upload.php', { method: 'POST', body: fd })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j, name: f.name }; }); });
+    });
+    Promise.all(uploads).then(function (results) {
+      var items = [];
+      var errors = [];
+      results.forEach(function (r) {
+        if (r.ok && r.j.url) items.push({ name: nameFromFilename(r.name), logo: r.j.url });
+        else errors.push(r.name);
+      });
+      if (errors.length) showErr('Falha ao enviar: ' + errors.join(', '));
+      if (!items.length) { drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo'; return; }
+      var fd = new FormData();
+      fd.append('action', 'add_many');
+      fd.append('items', JSON.stringify(items));
+      return fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
+        .then(function (r) { return r.json(); })
+        .then(function (res) {
+          drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher — cada imagem enviada vira um cliente novo';
+          if (!res.ok) { showErr(res.error || 'Falha ao salvar.'); return; }
+          clients = res.clients;
+          render();
+        });
+    }).catch(function () { showErr('Falha de rede no envio em lote.'); });
+  }
+
+  var bulkDrop = document.getElementById('cmBulkDrop');
+  var bulkFile = document.getElementById('cmBulkFile');
+  bulkDrop.addEventListener('click', function () { bulkFile.click(); });
+  bulkFile.addEventListener('change', function () { bulkUpload(bulkFile.files); bulkFile.value = ''; });
+  bulkDrop.addEventListener('dragover', function (e) { e.preventDefault(); bulkDrop.classList.add('over'); });
+  bulkDrop.addEventListener('dragleave', function () { bulkDrop.classList.remove('over'); });
+  bulkDrop.addEventListener('drop', function (e) {
+    e.preventDefault();
+    bulkDrop.classList.remove('over');
+    bulkUpload(e.dataTransfer.files);
+  });
+
+  render();
+})();
+</script>
+<?php
+}
+
 function pagesIsList(array $a): bool {
     return $a === [] || array_keys($a) === range(0, count($a) - 1);
 }
@@ -98,15 +360,12 @@ function pagesFieldsGrid(string $prefix, array $keys, array $values, array $long
         } elseif ($long) {
             echo '<textarea name="' . $name . '" style="min-height:90px;font-size:.88rem">' . htmlspecialchars($val) . '</textarea>';
         } elseif ($sk === 'case') {
-            echo '<select name="' . $name . '"><option value="">— nenhum —</option>';
-            foreach ($GLOBALS['PAGES_CASE_OPTIONS'] as $caseSlug => $caseClient) {
-                $caseHref = '/cases/' . $caseSlug;
-                echo '<option value="' . htmlspecialchars($caseHref) . '"' . ($val === $caseHref ? ' selected' : '') . '>' . htmlspecialchars($caseClient) . '</option>';
-            }
-            echo '</select>';
+            echo '<select name="' . $name . '">' . pagesCaseOptionsHtml($val) . '</select>';
         } else {
             $imgClass = pagesIsImgKey((string) $sk) ? ' class="img-url"' : '';
-            echo '<input type="text"' . $imgClass . ' name="' . $name . '" value="' . htmlspecialchars($val) . '" />';
+            $ratio = pagesImgRatio((string) $sk);
+            $ratioAttr = $ratio ? ' data-imgdrop-ratio="' . htmlspecialchars($ratio) . '"' : '';
+            echo '<input type="text"' . $imgClass . $ratioAttr . ' name="' . $name . '" value="' . htmlspecialchars($val) . '" />';
         }
         echo '</div>';
     }
@@ -138,6 +397,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     // Rebuild the object following the ORIGINAL key order/shape from the DB row.
     $new = [];
     foreach ($decoded as $key => $orig) {
+        // clients is managed live via clients-api.php (fetch, no page reload)
+        // and never gets <input name="f[clients]..."> fields -- keep it as is
+        // instead of reconstructing from an empty POST and wiping all 68.
+        if ($slug === 'clientes' && $key === 'clients') { $new[$key] = $orig; continue; }
         $posted = $_POST['f'][$key] ?? null;
         if (!is_array($orig)) {
             $new[$key] = (string) (is_array($posted) ? '' : ($posted ?? ''));
@@ -207,6 +470,45 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     .rep-fields .fw { grid-column:1 / -1; }
     .rep-add { margin-top:4px; }
     label.sec { font-size:.82rem; color:var(--ink); margin-top:22px; }
+
+    /* Clients manager */
+    .cm-toolbar { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-bottom:10px; }
+    .cm-view-toggle { display:inline-flex; background:var(--soft); border-radius:8px; padding:3px; }
+    .cm-view-toggle button { border:none; background:none; padding:6px 14px; border-radius:6px; font-size:.78rem; font-weight:700; color:var(--ink-3); cursor:pointer; font-family:inherit; }
+    .cm-view-toggle button.on { background:#fff; color:var(--ink); box-shadow:0 1px 2px rgba(0,0,0,.08); }
+    .cm-bulk-actions { display:flex; align-items:center; gap:10px; font-size:.8rem; color:var(--ink-3); }
+    .cm-bulk-actions button.del { background:var(--red); color:#fff; border:none; padding:6px 12px; border-radius:6px; font-size:.76rem; font-weight:700; cursor:pointer; font-family:inherit; }
+
+    .cm-bulk-drop { border:1.5px dashed var(--line); border-radius:10px; padding:18px; text-align:center; cursor:pointer; background:var(--paper); margin-bottom:14px; }
+    .cm-bulk-drop.over { border-color:var(--red); background:rgba(200,16,46,.04); }
+    .cm-bulk-msg { font-size:.8rem; font-weight:600; color:var(--ink-3); }
+
+    .cm-list { display:grid; grid-template-columns:repeat(auto-fill, minmax(180px, 1fr)); gap:12px; }
+    .cm-item { border:1px solid var(--line); border-radius:10px; background:#FAFBFC; padding:12px; position:relative; }
+    .cm-item.cm-selected { border-color:var(--red); background:rgba(200,16,46,.03); }
+    .cm-check { position:absolute; top:8px; left:8px; }
+    .cm-logo { width:100%; height:80px; object-fit:contain; background:#fff; border:1px solid var(--line); border-radius:8px; padding:8px; box-sizing:border-box; }
+    .cm-info { margin-top:8px; text-align:center; }
+    .cm-info strong { display:block; font-size:.82rem; }
+    .cm-case-badge { display:inline-block; margin-top:4px; font-size:.68rem; font-weight:700; color:var(--ink-3); background:var(--soft); padding:2px 8px; border-radius:99px; }
+    .cm-case-badge.cm-empty { opacity:.55; }
+    .cm-actions { display:flex; justify-content:center; gap:10px; margin-top:8px; font-size:.76rem; font-weight:700; }
+    .cm-actions a { color:var(--red); }
+    .cm-actions a.del { color:var(--ink-3); }
+
+    /* List view: rows instead of a grid */
+    .cm-list.cm-view-list { display:flex; flex-direction:column; gap:6px; }
+    .cm-view-list .cm-item { display:flex; align-items:center; gap:12px; padding:8px 12px; }
+    .cm-view-list .cm-check { position:static; }
+    .cm-view-list .cm-logo { width:36px; height:36px; padding:3px; flex-shrink:0; }
+    .cm-view-list .cm-info { margin-top:0; text-align:left; flex:1; display:flex; align-items:center; gap:10px; }
+    .cm-view-list .cm-info strong { display:inline; }
+    .cm-view-list .cm-actions { margin-top:0; }
+    .cm-view-list .cm-edit { grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); display:grid; gap:0 14px; align-items:end; width:100%; }
+
+    .cm-edit { display:flex; flex-direction:column; gap:8px; }
+    .cm-edit label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin:0; }
+    .cm-edit-actions { display:flex; gap:8px; margin-top:4px; }
   </style>
 
   <div class="card">
@@ -219,6 +521,10 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     <?php else: ?>
       <?php $first = true; foreach ($decoded as $key => $orig): ?>
         <label class="sec"<?= $first ? ' style="margin-top:0"' : '' ?>><?= htmlspecialchars(pagesLabel($key)) ?></label>
+
+        <?php if ($slug === 'clientes' && $key === 'clients'): ?>
+          <?php clientsManagerRender($orig); $first = false; continue; ?>
+        <?php endif; ?>
 
         <?php if (!is_array($orig)): ?>
           <?php $v = (string) $orig; ?>
