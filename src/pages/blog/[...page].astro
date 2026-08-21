@@ -174,10 +174,10 @@ function formatDate(d: string) {
         </article>
       )}
 
-      <!-- Posts 1-9: 2-col swipe carousel -->
+      <!-- Posts 1-16: swipe carousel, 2 rows per swipe -->
       {page.data.length > 1 && (
         <div class="blog-swipe-wrap">
-          {page.data.slice(1, 10).map((post) => (
+          {page.data.slice(1, 17).map((post) => (
             <article class="blog-card blog-swipe-card">
               <a href={`/blog/${post.slug}/`} class="bc-link">
                 {post.image ? (
@@ -203,10 +203,10 @@ function formatDate(d: string) {
         </div>
       )}
 
-      <!-- Posts 10+: hidden, shown on "Carregar mais" -->
-      {page.data.length > 10 && (
+      <!-- Posts 17+: hidden, shown on "Carregar mais" -->
+      {page.data.length > 17 && (
         <div class="blog-more-wrap" id="blog-more-wrap" aria-hidden="true">
-          {page.data.slice(10).map((post) => (
+          {page.data.slice(17).map((post) => (
             <article class="blog-card">
               <a href={`/blog/${post.slug}/`} class="bc-link">
                 {post.image ? (
@@ -232,7 +232,7 @@ function formatDate(d: string) {
         </div>
       )}
 
-      {page.data.length > 10 && (
+      {page.data.length > 17 && (
         <button class="blog-load-btn" id="blog-load-btn">
           Carregar mais
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -258,6 +258,7 @@ function formatDate(d: string) {
           </a>
         ))}
       </div>
+      <span class="pag-status">Página {page.currentPage} de {page.lastPage}</span>
       {page.url.next && (
         <a href={page.url.next} class="pag-btn pag-next">
           Próxima →
@@ -425,6 +426,11 @@ function formatDate(d: string) {
   background: var(--red); color: #fff !important;
   border-color: var(--red) !important;
 }
+.pag-status {
+  display: none;
+  font-size: .82rem; font-weight: 700; color: var(--ink-2);
+  white-space: nowrap;
+}
 
 /* ═══ RESPONSIVE ═══ */
 @media (max-width: 960px) {
@@ -437,9 +443,14 @@ function formatDate(d: string) {
   /* Featured post */
   .blog-card-featured { margin-bottom: 16px; }
 
-  /* Swipe carousel */
+  /* Swipe carousel -- 2 stacked rows per swipe "column", so each horizontal
+     swipe reveals a pair of cards instead of just one, without shrinking
+     card width back down (that was the original "linguiça" complaint). */
   .blog-swipe-wrap {
-    display: flex;
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, 1fr);
+    grid-auto-columns: calc(80% - 6px);
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
@@ -450,15 +461,14 @@ function formatDate(d: string) {
   }
   .blog-swipe-wrap::-webkit-scrollbar { display: none; }
   .blog-swipe-card {
-    flex: 0 0 calc(80% - 6px);
     min-width: 0;
     scroll-snap-align: start;
   }
-  .blog-swipe-card .bc-img-wrap { height: 180px; }
-  .blog-swipe-card .bc-img-placeholder { height: 180px; }
-  .blog-swipe-card .bc-body { padding: 18px 18px 22px; }
-  .blog-swipe-card .bc-title { font-size: 1rem; }
-  .blog-swipe-card .bc-excerpt { font-size: .85rem; }
+  .blog-swipe-card .bc-img-wrap { height: 130px; }
+  .blog-swipe-card .bc-img-placeholder { height: 130px; }
+  .blog-swipe-card .bc-body { padding: 14px 16px 18px; }
+  .blog-swipe-card .bc-title { font-size: .95rem; }
+  .blog-swipe-card .bc-excerpt { font-size: .82rem; -webkit-line-clamp: 2; display: -webkit-box; -webkit-box-orient: vertical; overflow: hidden; }
 
   /* More posts grid (hidden until loaded) -- single column, full width
      cards read much better than a cramped 2-up grid on a narrow screen. */
@@ -497,6 +507,14 @@ function formatDate(d: string) {
     transition: border-color .2s, color .2s, background .2s;
   }
   .blog-load-btn:hover { border-color: var(--red); color: var(--red); background: var(--red-soft); }
+
+  /* Pagination -- a dozen+ numbered squares wraps into a messy pile on a
+     narrow screen. Swap for a compact "Página X de Y" label instead,
+     keeping just the prev/next arrows as the actual navigation. */
+  .pagination { gap: 14px; }
+  .pag-pages { display: none; }
+  .pag-status { display: block; }
+  .pag-btn { padding: .6rem 1.1rem; font-size: .7rem; }
 }
 </style>
 
