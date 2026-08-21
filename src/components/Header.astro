@@ -398,49 +398,72 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 
 <script is:inline>
 (function() {
-  var hdr = document.getElementById('site-header');
-  var burger = document.getElementById('burger');
-  var mNav = document.getElementById('mobile-nav');
-  var overlay = document.getElementById('mobile-overlay');
-  var closeBtn = document.getElementById('drawer-close');
-  if (!hdr || !burger || !mNav) return;
+  // Header/mobile-nav are NOT actually kept alive across client-side
+  // transitions (transition:persist on them didn't stop the ClientRouter
+  // from swapping in fresh nodes -- confirmed live: a marker attribute set
+  // on the burger before navigating was gone after), so every handler here
+  // has to be re-bound on every astro:page-load, same pattern already used
+  // by initPageEffects/bindWaLinks/initCmsEditFab elsewhere in this layout.
+  // Without this, the burger button and the scroll-triggered header
+  // background both go dead after the first internal link click.
+  function initHeader() {
+    var hdr = document.getElementById('site-header');
+    var burger = document.getElementById('burger');
+    var mNav = document.getElementById('mobile-nav');
+    var overlay = document.getElementById('mobile-overlay');
+    var closeBtn = document.getElementById('drawer-close');
+    if (!hdr || !burger || !mNav) return;
 
-  window.addEventListener('scroll', function() {
     hdr.classList.toggle('scrolled', window.scrollY > 30);
-  }, { passive: true });
 
-  function openMenu() { mNav.classList.add('open'); burger.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
-  function closeMenu() { mNav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
-  burger.addEventListener('click', function() { mNav.classList.contains('open') ? closeMenu() : openMenu(); });
-  if (overlay) overlay.addEventListener('click', closeMenu);
-  if (closeBtn) closeBtn.addEventListener('click', closeMenu);
-  mNav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
+    function openMenu() { mNav.classList.add('open'); burger.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
+    function closeMenu() { mNav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
+    burger.addEventListener('click', function() { mNav.classList.contains('open') ? closeMenu() : openMenu(); });
+    if (overlay) overlay.addEventListener('click', closeMenu);
+    if (closeBtn) closeBtn.addEventListener('click', closeMenu);
+    mNav.querySelectorAll('a').forEach(function(a) { a.addEventListener('click', closeMenu); });
 
-  // Cases mega menu — image preview on hover
-  var previewImg  = document.getElementById('case-preview-img');
-  var previewName = document.getElementById('case-preview-name');
-  var caseItems   = document.querySelectorAll('.nd-case-item');
-  var fadeTimer;
+    // Cases mega menu — image preview on hover
+    var previewImg  = document.getElementById('case-preview-img');
+    var previewName = document.getElementById('case-preview-name');
+    var caseItems   = document.querySelectorAll('.nd-case-item');
+    var fadeTimer;
 
-  caseItems.forEach(function(item) {
-    item.addEventListener('mouseenter', function() {
-      var newImg  = item.dataset.img;
-      var newName = item.dataset.name;
+    caseItems.forEach(function(item) {
+      item.addEventListener('mouseenter', function() {
+        var newImg  = item.dataset.img;
+        var newName = item.dataset.name;
 
-      // Active state
-      caseItems.forEach(function(el) { el.classList.remove('nd-case-active'); });
-      item.classList.add('nd-case-active');
+        // Active state
+        caseItems.forEach(function(el) { el.classList.remove('nd-case-active'); });
+        item.classList.add('nd-case-active');
 
-      // Cross-fade image — pula se já é a mesma imagem
-      if (previewImg.getAttribute('src') === newImg) return;
-      clearTimeout(fadeTimer);
-      previewImg.classList.add('fading');
-      fadeTimer = setTimeout(function() {
-        previewImg.src = newImg;
-        previewName.textContent = newName;
-        previewImg.classList.remove('fading');
-      }, 60);
+        // Cross-fade image — pula se já é a mesma imagem
+        if (previewImg.getAttribute('src') === newImg) return;
+        clearTimeout(fadeTimer);
+        previewImg.classList.add('fading');
+        fadeTimer = setTimeout(function() {
+          previewImg.src = newImg;
+          previewName.textContent = newName;
+          previewImg.classList.remove('fading');
+        }, 60);
+      });
     });
-  });
+  }
+
+  initHeader();
+  document.addEventListener('astro:page-load', initHeader);
+
+  // window itself is never replaced by a transition, so this listener only
+  // needs binding once -- it always looks up the CURRENT header element
+  // (whatever node the last initHeader() ran against) rather than closing
+  // over a reference that a later swap would make stale.
+  if (!window.__mclairHeaderScrollBound) {
+    window.__mclairHeaderScrollBound = true;
+    window.addEventListener('scroll', function() {
+      var hdr = document.getElementById('site-header');
+      if (hdr) hdr.classList.toggle('scrolled', window.scrollY > 30);
+    }, { passive: true });
+  }
 })();
 </script>
