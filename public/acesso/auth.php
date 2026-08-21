@@ -9,25 +9,65 @@ session_set_cookie_params([
 require_once __DIR__ . '/db.php';
 session_start();
 
-if (isset($_POST['username'], $_POST['password'])) {
-    // Fixed delay regardless of outcome, so response time can't be used to
-    // tell "user doesn't exist" apart from "wrong password".
-    $loginStart = microtime(true);
-    $stmt = cmsDb()->prepare('SELECT id, username, password_hash FROM cmstest_users WHERE username = ?');
-    $stmt->execute([trim($_POST['username'])]);
-    $user = $stmt->fetch();
+const LOGIN_MAX_ATTEMPTS = 8;
+const LOGIN_WINDOW_MINUTES = 15;
 
-    if ($user && password_verify($_POST['password'], $user['password_hash'])) {
-        session_regenerate_id(true);
-        $_SESSION['cms_user_id'] = $user['id'];
-        $_SESSION['cms_username'] = $user['username'];
-        $upd = cmsDb()->prepare('UPDATE cmstest_users SET last_login_at = NOW() WHERE id = ?');
-        $upd->execute([$user['id']]);
-        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
-        exit;
+// Lockout by IP, counting failures in a rolling window. Table is created
+// lazily (CREATE TABLE IF NOT EXISTS is cheap and idempotent) since this
+// project has no migration tooling -- one less thing to remember to run
+// by hand before this code can work.
+function cmsRateLimitTable(PDO $pdo): void {
+    $pdo->exec("CREATE TABLE IF NOT EXISTS cmstest_login_attempts (
+        id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+        ip VARCHAR(45) NOT NULL,
+        username VARCHAR(190) NOT NULL,
+        attempted_at DATETIME NOT NULL,
+        INDEX ip_time (ip, attempted_at)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+}
+
+function cmsClientIp(): string {
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
+function cmsRecentFailedAttempts(PDO $pdo, string $ip): int {
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM cmstest_login_attempts WHERE ip = ? AND attempted_at > (NOW() - INTERVAL ' . LOGIN_WINDOW_MINUTES . ' MINUTE)'
+    );
+    $stmt->execute([$ip]);
+    return (int) $stmt->fetchColumn();
+}
+
+$pdo = cmsDb();
+cmsRateLimitTable($pdo);
+$clientIp = cmsClientIp();
+$lockedOut = cmsRecentFailedAttempts($pdo, $clientIp) >= LOGIN_MAX_ATTEMPTS;
+
+if (isset($_POST['username'], $_POST['password'])) {
+    if ($lockedOut) {
+        $authError = 'Muitas tentativas de login. Aguarde ' . LOGIN_WINDOW_MINUTES . ' minutos e tente novamente.';
+    } else {
+        // Fixed delay regardless of outcome, so response time can't be used to
+        // tell "user doesn't exist" apart from "wrong password".
+        $loginStart = microtime(true);
+        $stmt = $pdo->prepare('SELECT id, username, password_hash FROM cmstest_users WHERE username = ?');
+        $stmt->execute([trim($_POST['username'])]);
+        $user = $stmt->fetch();
+
+        if ($user && password_verify($_POST['password'], $user['password_hash'])) {
+            session_regenerate_id(true);
+            $_SESSION['cms_user_id'] = $user['id'];
+            $_SESSION['cms_username'] = $user['username'];
+            $upd = $pdo->prepare('UPDATE cmstest_users SET last_login_at = NOW() WHERE id = ?');
+            $upd->execute([$user['id']]);
+            header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
+            exit;
+        }
+        $insertAttempt = $pdo->prepare('INSERT INTO cmstest_login_attempts (ip, username, attempted_at) VALUES (?, ?, NOW())');
+        $insertAttempt->execute([$clientIp, trim($_POST['username'])]);
+        usleep(max(0, 300000 - (int) ((microtime(true) - $loginStart) * 1000000)));
+        $authError = 'Usuário ou senha incorretos.';
     }
-    usleep(max(0, 300000 - (int) ((microtime(true) - $loginStart) * 1000000)));
-    $authError = 'Usuário ou senha incorretos.';
 }
 
 if (empty($_SESSION['cms_user_id'])) {

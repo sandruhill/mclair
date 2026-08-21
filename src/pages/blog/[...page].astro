@@ -115,7 +115,7 @@ function formatDate(d: string) {
       <p class="page-label">Página {page.currentPage}</p>
     )}
 
-    <div class="blog-grid stagger-children">
+    <div class="blog-grid blog-grid-desktop stagger-children">
       {page.data.map((post: any, i: number) => (
         <article class="blog-card" data-anim data-delay={((i % 3) + 1).toString()}>
           <a href={`/blog/${post.slug}/`} class="bc-link">
