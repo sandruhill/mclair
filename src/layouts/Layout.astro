@@ -369,10 +369,26 @@ const websiteSchema = {
         });
 
         // ── Number counters ──
+        // The animation overwrites el's text every frame starting from 0, so
+        // anything reading the DOM mid-animation (a crawler's snapshot isn't
+        // guaranteed to wait for it to finish) can see 0 or some in-between
+        // value instead of the real figure -- even though the server-
+        // rendered HTML had the correct number to start with. Fix: put the
+        // real value in a permanent sr-only node before the animation ever
+        // touches el, and mark el itself decorative (aria-hidden) so it's
+        // never the thing being read as the actual content.
         function animateCounter(el) {
           var target = parseInt(el.getAttribute('data-target') || '0');
           var prefix = el.getAttribute('data-prefix') || '';
           var suffix = el.getAttribute('data-suffix') || '';
+          var realText = prefix + target.toLocaleString('pt-BR') + suffix;
+
+          var sr = document.createElement('span');
+          sr.className = 'sr-only';
+          sr.textContent = realText;
+          el.setAttribute('aria-hidden', 'true');
+          el.before(sr);
+
           var duration = 2000;
           var start = performance.now();
           function easeOut(t) { return 1 - Math.pow(1 - t, 4); }

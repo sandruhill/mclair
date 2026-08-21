@@ -4,6 +4,21 @@
 
 @import url('https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300;1,400&display=swap');
 
+/* Visually hidden but present in the DOM/text -- for screen readers and,
+   critically, for anything reading the real figure behind an animated
+   counter (see animateCounter() in Layout.astro). display:none or an
+   empty element would be invisible to text extraction too, defeating
+   the point; this stays in the accessibility tree and in page text. */
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  padding: 0; margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 :root {
   /* Backgrounds */
   --cream:      #FAFAF8;
