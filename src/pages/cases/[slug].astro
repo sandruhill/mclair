@@ -4,28 +4,55 @@ import Layout from '../../layouts/Layout.astro';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20resultados%20como%20esse.';
 
+// Blog "Author" é texto livre no CMS, sem chave real ligando ao cliente do
+// case. Nomes de autor batidos manualmente contra o cliente de cada case
+// (ver TOPICAL-MAP-MCLAIR.md), pra fechar o loop case → prova social →
+// conteúdo sem precisar de um campo novo no banco.
+const CASE_BLOG_AUTHORS: Record<string, string[]> = {
+  'claudia-elisa': ['Claudia Elisa Soares'],
+  'fidalgo': ['Fidalgo Leilões'],
+  'bms-abimaq': ['BMS: Brazil Machinery Solutions', 'Brazil Machinery Solutions (BMS)'],
+  'alexandre-magno': ['Alexandre Magno'],
+  'elemar-jr': ['Elemar Júnior'],
+  'diego-nogare': ['Diego Nogare'],
+  'lambda3': ['Lambda3'],
+  'zbra': ['Zbra'],
+  'nexinvoice': ['Guiando'],
+  'vip-leiloes': ['Leilão Vip'],
+};
+
 export async function getStaticPaths() {
-  const { getCases } = await import('../../utils/cmsApi');
-  const rows = await getCases();
+  const { getCases, getBlogPosts } = await import('../../utils/cmsApi');
+  const [rows, posts] = await Promise.all([getCases(), getBlogPosts()]);
 
   const allCases = rows
     .sort((a: any, b: any) => (a.num ?? '').localeCompare(b.num ?? ''))
-    .map((c: any) => ({
-      slug:        c.slug,
-      num:         c.num ?? '',
-      color:       c.color || 'var(--red)',
-      accent:      c.accent || '#C8102E',
-      client:      c.client,
-      sector:      c.sector ?? '',
-      challenge:   c.challenge ?? '',
-      solution:    c.solution ?? '',
-      results:     (c.results ?? []) as { v: string; l: string }[],
-      tags:        (c.tags ?? []) as string[],
-      description: c.meta_description ?? '',
-      heroImg:     c.img ?? '',
-      logo:        c.logo ?? '',
-      gallery:     (c.gallery ?? []) as { src: string; caption: string }[],
-    }));
+    .map((c: any) => {
+      const authors = CASE_BLOG_AUTHORS[c.slug] ?? [];
+      const relatedPosts = posts
+        .filter((p: any) => authors.includes(p.author))
+        .sort((a: any, b: any) => (b.post_date ?? '').localeCompare(a.post_date ?? ''))
+        .slice(0, 3)
+        .map((p: any) => ({ slug: p.slug, title: p.title, post_date: p.post_date }));
+
+      return {
+        slug:        c.slug,
+        num:         c.num ?? '',
+        color:       c.color || 'var(--red)',
+        accent:      c.accent || '#C8102E',
+        client:      c.client,
+        sector:      c.sector ?? '',
+        challenge:   c.challenge ?? '',
+        solution:    c.solution ?? '',
+        results:     (c.results ?? []) as { v: string; l: string }[],
+        tags:        (c.tags ?? []) as string[],
+        description: c.meta_description ?? '',
+        heroImg:     c.img ?? '',
+        logo:        c.logo ?? '',
+        gallery:     (c.gallery ?? []) as { src: string; caption: string }[],
+        relatedPosts,
+      };
+    });
 
   return allCases.map((c: any) => ({
     params: { slug: c.slug },
@@ -188,6 +215,32 @@ const { c, otherCases } = Astro.props;
     <div class="cg-lb-dots" id="cg-lb-dots"></div>
   </div>
 </div>
+
+<!-- RELATED POSTS -->
+{c.relatedPosts && c.relatedPosts.length > 0 && (
+  <section class="related-press">
+    <div class="container">
+      <div class="rp-header" data-anim>
+        <div class="rp-label">
+          <span class="rp-dot" style={`background:${c.accent}`}></span>
+          Imprensa &amp; Conteúdo
+        </div>
+        <h2 class="rp-title">Publicações de {c.client}</h2>
+      </div>
+      <div class="rp-grid stagger-children">
+        {c.relatedPosts.map((p: { slug: string; title: string; post_date: string }) => (
+          <a href={`/blog/${p.slug}/`} class="rp-card">
+            <span class="rp-date">{new Date(p.post_date).toLocaleDateString('pt-BR', { day: '2-digit', month: 'short', year: 'numeric' })}</span>
+            <h3 class="rp-post-title">{p.title}</h3>
+            <span class="rp-arrow">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
+            </span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+)}
 
 <!-- OTHER CASES -->
 <section class="other-cases">
@@ -389,6 +442,31 @@ const { c, otherCases } = Astro.props;
 @media (max-width: 700px) {
   .cg-cols-2 { grid-template-columns: 1fr; }
 }
+
+/* RELATED POSTS */
+.related-press { background: #fff; padding: clamp(52px,7vw,84px) 0; border-bottom: 1px solid var(--line); }
+.rp-header { margin-bottom: 32px; }
+.rp-label {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: .65rem; font-weight: 700; letter-spacing: .18em; text-transform: uppercase;
+  color: var(--ink-4); margin-bottom: 10px;
+}
+.rp-dot { width: 6px; height: 6px; border-radius: 50%; flex-shrink: 0; }
+.rp-title { font-size: clamp(1.3rem,2.6vw,1.8rem); font-weight: 800; color: var(--ink); letter-spacing: -.02em; }
+.rp-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+.rp-card {
+  background: var(--cream); border: 1px solid var(--line); border-radius: var(--r-lg);
+  padding: 26px 24px; display: flex; flex-direction: column; gap: 10px;
+  text-decoration: none; position: relative;
+  transition: border-color .2s, box-shadow .2s, transform .2s;
+}
+.rp-card:hover { border-color: var(--red); box-shadow: var(--shadow-md); transform: translateY(-3px); }
+.rp-date { font-size: .68rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-4); }
+.rp-post-title { font-size: .95rem; font-weight: 700; color: var(--ink); line-height: 1.4; }
+.rp-arrow { position: absolute; top: 22px; right: 20px; color: var(--ink-4); transition: color .2s, transform .2s; }
+.rp-card:hover .rp-arrow { color: var(--red); transform: translate(2px,-2px); }
+@media (max-width: 900px) { .rp-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .rp-grid { grid-template-columns: 1fr; } }
 
 /* OTHER CASES */
 .other-cases { background: var(--cream-2); padding: clamp(52px,7vw,84px) 0; }
