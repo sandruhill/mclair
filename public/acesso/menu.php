@@ -191,7 +191,8 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
         background:var(--paper); border:1px solid var(--line); border-radius:10px;
         padding:10px 14px; margin-bottom:8px; box-shadow:0 1px 3px rgba(0,0,0,.04);
         transition:opacity .15s, box-shadow .15s, border-color .15s; }
-  .mi-handle { display:flex; align-items:center; color:var(--line); cursor:grab; flex-shrink:0; touch-action:none; }
+  .mi-handle { display:flex; align-items:center; color:var(--line); cursor:grab; flex-shrink:0; touch-action:none; user-select:none; -webkit-user-select:none; }
+  .mi-handle svg { pointer-events:none; }
   .mi-handle:hover { color:var(--ink-3); }
   .mi.dragging { opacity:.5; box-shadow:0 4px 12px rgba(0,0,0,.1); }
   .mi-info { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
@@ -293,6 +294,7 @@ setLinkType(document.getElementById('linkType').value);
   document.addEventListener('pointerdown', function (e) {
     var handle = e.target.closest('.mi-handle');
     if (!handle || e.button !== 0) return;
+    e.preventDefault(); // stop text selection / native image drag from starting
     dragged = handle.closest('.mi-node');
     container = dragged.parentElement;
     startY = e.clientY;
