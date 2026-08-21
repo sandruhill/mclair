@@ -449,6 +449,8 @@ function askUrl(anchor, cb) {
       <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['cms_username'] ?? '?', 0, 1))) ?></div>
       <div class="who">
         <strong><?= htmlspecialchars($_SESSION['cms_username'] ?? '') ?></strong>
+        <a href="/acesso/manual.php" target="_blank" rel="noopener">manual</a>
+        <span style="color:var(--ink-3);font-size:.7rem">·</span>
         <a href="/acesso/posts?logout=1">sair do painel</a>
       </div>
     </div>
