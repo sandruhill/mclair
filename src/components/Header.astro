@@ -416,6 +416,15 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 
     hdr.classList.toggle('scrolled', window.scrollY > 30);
 
+    // astro:page-load also fires on the very first load, not just on later
+    // transitions -- without this guard, initHeader() ran twice against the
+    // same burger node (direct call + the event) and attached the click
+    // listener twice, so a single click opened then immediately re-closed
+    // the drawer in the same event (confirmed live: reproduced this exact
+    // open+close cancel-out by double-attaching the listener manually).
+    if (hdr.dataset.headerBound) return;
+    hdr.dataset.headerBound = 'true';
+
     function openMenu() { mNav.classList.add('open'); burger.setAttribute('aria-expanded','true'); document.body.style.overflow='hidden'; }
     function closeMenu() { mNav.classList.remove('open'); burger.setAttribute('aria-expanded','false'); document.body.style.overflow=''; }
     burger.addEventListener('click', function() { mNav.classList.contains('open') ? closeMenu() : openMenu(); });
