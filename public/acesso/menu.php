@@ -160,7 +160,7 @@ function menuRenderRows(array $byParent, int $parentKey, array $pages, array $se
     foreach ($sibs as $it) {
         $id = (int) $it['id'];
         echo '<div class="mi-node" data-id="' . $id . '">';
-        echo '<div class="mi" draggable="true">';
+        echo '<div class="mi">';
         echo '<span class="mi-handle" title="Arraste para reordenar"><svg width="10" height="16" viewBox="0 0 10 16" fill="currentColor"><circle cx="2" cy="2" r="1.5"/><circle cx="8" cy="2" r="1.5"/><circle cx="2" cy="8" r="1.5"/><circle cx="8" cy="8" r="1.5"/><circle cx="2" cy="14" r="1.5"/><circle cx="8" cy="14" r="1.5"/></svg></span>';
         echo '<div class="mi-info"><strong>' . htmlspecialchars($it['label']) . '</strong>';
         echo '<span class="badge">' . htmlspecialchars(menuTargetBadge($it, $pages, $services)) . '</span></div>';
@@ -193,8 +193,7 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
         transition:opacity .15s, box-shadow .15s, border-color .15s; }
   .mi-handle { display:flex; align-items:center; color:var(--line); cursor:grab; flex-shrink:0; touch-action:none; }
   .mi-handle:hover { color:var(--ink-3); }
-  .mi.dragging { opacity:.4; }
-  .mi-node.drag-over > .mi { border-color:var(--red); box-shadow:0 0 0 2px rgba(200,16,46,.12); }
+  .mi.dragging { opacity:.5; box-shadow:0 4px 12px rgba(0,0,0,.1); }
   .mi-info { display:flex; align-items:center; gap:10px; min-width:0; flex:1; }
   .mi-info strong { font-size:.88rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .mi-actions { display:flex; align-items:center; gap:10px; flex-shrink:0; }
@@ -282,49 +281,77 @@ function setLinkType(t) {
 setLinkType(document.getElementById('linkType').value);
 
 // ---- Drag-and-drop reorder (siblings only, same parent) ----
+// Pointer Events instead of HTML5 native drag-and-drop -- the native API is
+// inconsistent enough across browsers (drag images, drop-target quirks,
+// touch support) that it's not worth the trouble here.
 (function () {
-  var dragged = null;
+  var dragged = null;      // the .mi-node being moved
+  var container = null;    // its .mi-children (siblings live here)
+  var startY = 0;
+  var moved = false;       // past the drag threshold, vs. just a click
 
-  document.addEventListener('dragstart', function (e) {
+  document.addEventListener('pointerdown', function (e) {
     var handle = e.target.closest('.mi-handle');
-    if (!handle) { e.preventDefault(); return; }
+    if (!handle || e.button !== 0) return;
     dragged = handle.closest('.mi-node');
-    dragged.querySelector('.mi').classList.add('dragging');
-    e.dataTransfer.effectAllowed = 'move';
+    container = dragged.parentElement;
+    startY = e.clientY;
+    moved = false;
+    document.addEventListener('pointermove', onMove);
+    document.addEventListener('pointerup', onUp, { once: true });
   });
 
-  document.addEventListener('dragend', function () {
-    if (dragged) dragged.querySelector('.mi').classList.remove('dragging');
-    document.querySelectorAll('.mi-node.drag-over').forEach(function (n) { n.classList.remove('drag-over'); });
+  // FLIP: siblings that get pushed aside slide into place instead of
+  // snapping there -- the dragged item itself just follows the cursor.
+  function reorder(target, before) {
+    var siblings = Array.from(container.children).filter(function (n) { return n !== dragged; });
+    var firstRects = new Map(siblings.map(function (n) { return [n, n.getBoundingClientRect()]; }));
+    if (before) container.insertBefore(dragged, target);
+    else container.insertBefore(dragged, target.nextSibling);
+    siblings.forEach(function (n) {
+      var first = firstRects.get(n);
+      var last = n.getBoundingClientRect();
+      var dy = first.top - last.top;
+      if (!dy) return;
+      n.style.transition = 'none';
+      n.style.transform = 'translateY(' + dy + 'px)';
+      requestAnimationFrame(function () {
+        n.style.transition = 'transform .18s ease';
+        n.style.transform = '';
+      });
+    });
+  }
+
+  function onMove(e) {
+    if (!dragged) return;
+    if (!moved) {
+      if (Math.abs(e.clientY - startY) < 4) return; // small threshold: distinguishes drag from click
+      moved = true;
+      dragged.querySelector('.mi').classList.add('dragging');
+    }
+    e.preventDefault();
+    var siblings = Array.from(container.children).filter(function (n) { return n !== dragged; });
+    for (var i = 0; i < siblings.length; i++) {
+      var rect = siblings[i].getBoundingClientRect();
+      var mid = rect.top + rect.height / 2;
+      if (e.clientY < mid) {
+        if (dragged.nextSibling !== siblings[i]) reorder(siblings[i], true);
+        return;
+      }
+    }
+    // past every sibling's midpoint -> belongs at the end
+    if (container.lastElementChild !== dragged && siblings.length) reorder(siblings[siblings.length - 1], false);
+  }
+
+  function onUp() {
+    document.removeEventListener('pointermove', onMove);
+    if (dragged) {
+      dragged.querySelector('.mi').classList.remove('dragging');
+      if (moved) saveOrder(container);
+    }
     dragged = null;
-  });
-
-  document.addEventListener('dragover', function (e) {
-    if (!dragged) return;
-    var node = e.target.closest('.mi-node');
-    if (!node || node === dragged) return;
-    // Only siblings: the target must live in the same .mi-children as dragged.
-    if (node.parentElement !== dragged.parentElement) return;
-    e.preventDefault();
-    var rect = node.getBoundingClientRect();
-    var before = (e.clientY - rect.top) < rect.height / 2;
-    document.querySelectorAll('.mi-node.drag-over').forEach(function (n) { if (n !== node) n.classList.remove('drag-over'); });
-    node.classList.add('drag-over');
-    node.dataset.dropBefore = before ? '1' : '0';
-  });
-
-  document.addEventListener('drop', function (e) {
-    if (!dragged) return;
-    var node = e.target.closest('.mi-node');
-    if (!node || node === dragged || node.parentElement !== dragged.parentElement) return;
-    e.preventDefault();
-    var before = node.dataset.dropBefore === '1';
-    var container = node.parentElement;
-    if (before) container.insertBefore(dragged, node);
-    else container.insertBefore(dragged, node.nextSibling);
-    node.classList.remove('drag-over');
-    saveOrder(container);
-  });
+    container = null;
+  }
 
   function saveOrder(container) {
     var ids = Array.from(container.children).map(function (n) { return n.dataset.id; });

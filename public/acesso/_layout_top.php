@@ -18,6 +18,13 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
 <meta name="robots" content="noindex" />
 <title><?= htmlspecialchars($title) ?> · Painel Mclair</title>
 <style>
+  /* Smooth cross-page navigation (native browser feature, no JS/SPA needed --
+     same underlying API the public site's Astro ClientRouter uses). Falls
+     back to a normal instant page load on browsers that don't support it. */
+  @view-transition { navigation: auto; }
+  .sidebar { view-transition-name: admin-sidebar; }
+  .topbar { view-transition-name: admin-topbar; }
+
   :root { --red:#C8102E; --ink:#1A1B1E; --ink-3:#6B7280; --line:#E5E7EB; --bg:#F6F7F9; --soft:#F1F2F4; --sidebar:#ffffff; --paper:#fff; }
   * { box-sizing: border-box; }
   body { margin:0; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; background:var(--bg); color:var(--ink); }
