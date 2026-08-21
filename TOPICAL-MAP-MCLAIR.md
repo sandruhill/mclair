@@ -1,93 +1,143 @@
 # Mapa Topical -- Mclair (blog)
-
-Gerado a partir dos 265 posts do blog atualmente publicados, classificados por palavra-chave no título. É uma primeira aproximação automatizada -- não substitui leitura editorial completa dos 265 posts, que fica fora do orçamento de uma única sessão.
-
-**Não implementa SILO novo.** Apenas mapeia o que já existe.
-
-## Distribuição por cluster
-
-| Cluster | Posts | % do total |
+Recatalogação completa dos 265 posts do blog, 2026-08-21. Substitui a primeira versão deste documento (classificação por palavra-chave que não conseguiu agrupar 233/265 posts). Duas dimensões usadas: **Type** (quem o conteúdo serve) e **Topic** (assunto real do post).
+## Type: Editorial Mclair vs. Newsroom/Cliente
+| Type | Posts | % |
 |---|---|---|
-| Marketing de Autoridade | 8 | 3.0% |
-| Assessoria de Imprensa | 1 | 0.4% |
-| Branding Estratégico | 3 | 1.1% |
-| Marca Pessoal | 1 | 0.4% |
-| Gestão de Crise | 0 | 0.0% |
-| Gestão de Reputação | 0 | 0.0% |
-| Marketing Digital | 14 | 5.3% |
-| Comunicação Estratégica | 1 | 0.4% |
-| Conteúdo de cliente | 4 | 1.5% |
-| Outros / Indeterminado | 233 | 87.9% |
+| Newsroom/Cliente | 133 | 50.2% |
+| Editorial Mclair | 132 | 49.8% |
 
-## Detalhe por cluster
+- **Editorial Mclair**: conteúdo com a voz da própria Mclair (Claudia Elisa Soares, Mclair Comunicação, e um pool de colunistas/redatores convidados escrevendo sobre negócios, RH, tecnologia, carreira). Não promove um cliente específico, existe pra autoridade/SEO da própria Mclair.
+- **Newsroom/Cliente**: publicado sob o nome de um cliente (BMS, Lambda3, Elemar Jr., Guiando, Fidalgo, Zbra, StartupHero, Emergee, Abrolhos Filmes, etc.), é entrega de Assessoria de Imprensa/conteúdo de marca pessoal daquele cliente específico, mesmo quando o texto não é uma "notícia" no sentido estrito.
 
-### Marketing de Autoridade (8)
+## Distribuição por Topic
+| Topic | Posts | % do total |
+|---|---|---|
+| Notícias de Cliente | 77 | 29.1% |
+| Editorial Geral / Outros | 55 | 20.8% |
+| Tecnologia & Transformação Digital | 40 | 15.1% |
+| RH & Gestão de Pessoas | 28 | 10.6% |
+| Audiovisual & Cultura Pop | 21 | 7.9% |
+| Marketing de Autoridade & Marca Pessoal | 15 | 5.7% |
+| Cibersegurança & Privacidade | 10 | 3.8% |
+| Growth, Vendas & Startups | 10 | 3.8% |
+| Leilões | 8 | 3.0% |
+| Comunicação & Assessoria de Imprensa | 1 | 0.4% |
 
-Páginas mais linkadas internamente neste cluster:
+## Detalhe por Topic
+### Notícias de Cliente (77)
+Type: Newsroom/Cliente (77)
+Autores mais frequentes: BMS: Brazil Machinery Solutions (23), Lambda3 (12), Elemar Júnior (11), Abrolhos Filmes (8)
+Exemplos:
+- [4 características comuns em produtos na era da](https://mclair.com.br/blog/4-caracteristicas-comuns-em-produtos-na-era-da/) — Elemar Júnior, 592 palavras
+- [4 erros comuns ao implementar produtos digitais](https://mclair.com.br/blog/4-erros-comuns-ao-implementar-produtos-digitais/) — Lambda3, 945 palavras
+- [5 áreas do varejo que podem se beneficiar da automaç…](https://mclair.com.br/blog/5-areas-do-varejo-que-podem-se-beneficiar-da-automacao/) — Guiando, 705 palavras
+- [6 atitudes essenciais para os profissionais ágeis](https://mclair.com.br/blog/6-atitudes-essenciais-para-os-profissionais-ageis/) — Alexandre Magno, 782 palavras
+- [14/09 - Lambda3 completa 12 anos e lança podcast com…](https://mclair.com.br/blog/14-09-lambda3-completa-12-anos-e-lanca-podcast-com-olhar-sobre-negocio/) — Lambda3, 498 palavras
 
-- [Diversidade nas lideranças é fundamental para as açõ… | Mclair](https://mclair.com.br/blog/diversidade-nas-liderancas-e-fundamental-para-as-acoes-de-esg/) -- 69 links internos recebidos+enviados, 593 palavras
-- [Do estágio à liderança: empresa cria novos caminhos… | Mclair](https://mclair.com.br/blog/do-estagio-a-lideranca-empresa-cria-novos-caminhos-para-o-crescimento-/) -- 69 links internos recebidos+enviados, 777 palavras
-- [Liderança: 5 dicas para quem deseja assumir o posto | Blog Mclair](https://mclair.com.br/blog/lideranca-5-dicas-para-quem-deseja-assumir-o-posto/) -- 69 links internos recebidos+enviados, 748 palavras
-- [Liderança de times de engenharia de software é tema… | Mclair](https://mclair.com.br/blog/lideranca-de-times-de-engenharia-de-software-e-tema-de-debate-na-codec/) -- 69 links internos recebidos+enviados, 495 palavras
-- [Lideranças femininas: profissionais inspiradoras exp… | Mclair](https://mclair.com.br/blog/liderancas-femininas-profissionais-inspiradoras-explicam-os-principais/) -- 69 links internos recebidos+enviados, 946 palavras
+### Editorial Geral / Outros (55)
+Type: Editorial Mclair (55)
+Autores mais frequentes: Claudia Elisa Soares (24), Mclair Comunicação (15), Carolina Fernandes (3), Fernando Neiva Paiva (1)
+Exemplos:
+- [Lambda3 abre 28 vagas para desenvolvedores](https://mclair.com.br/blog/lambda3-abre-28-vagas-para-desenvolvedores/) — Mclair Comunicação, 746 palavras
+- [3 dicas para equilibrar o controle e velocidade nas…](https://mclair.com.br/blog/3-dicas-para-equilibrar-o-controle-e-velocidade-nas-tomadas-de-decisao/) — Claudia Elisa Soares, 743 palavras
+- [5 recomendações práticas para facilitar o trabalho r…](https://mclair.com.br/blog/5-recomendacoes-praticas-para-facilitar-o-trabalho-remoto-de-times-de-/) — Fernando Neiva Paiva, 1158 palavras
+- [8 em cada 10 brasileiros já utilizaram Inteligência…](https://mclair.com.br/blog/8-em-cada-10-brasileiros-ja-utilizaram-inteligencia-artificial-ao-meno/) — Mclair Comunicação, 623 palavras
+- [A armadilha do déjà vu na gestão de um negócio](https://mclair.com.br/blog/a-armadilha-do-deja-vu-na-gestao-de-um-negocio/) — Claudia Elisa Soares, 586 palavras
 
-### Assessoria de Imprensa (1)
+### Tecnologia & Transformação Digital (40)
+Type: Newsroom/Cliente (23), Editorial Mclair (17)
+Autores mais frequentes: Guiando (7), Lambda3 (6), Eduardo Camargo (6), Elemar Júnior (4)
+Exemplos:
+- [3 soluções para a transformação digital da construçã…](https://mclair.com.br/blog/3-solucoes-para-a-transformacao-digital-da-construcao-civil/) — Guiando, 553 palavras
+- [5 desafios para área de Dados e IA](https://mclair.com.br/blog/5-desafios-para-area-de-dados-e-ia/) — Lambda3, 823 palavras
+- [5 tecnologias  que se consolidaram na pandemia](https://mclair.com.br/blog/5-tecnologias-que-se-consolidaram-na-pandemia/) — Guiando, 695 palavras
+- [7 razões para implementar a automação de processos n…](https://mclair.com.br/blog/7-razoes-para-implementar-a-automacao-de-processos-na-sua-empresa/) — Guiando, 751 palavras
+- [A complexa relação entre a tecnologia e as viagens p…](https://mclair.com.br/blog/a-complexa-relacao-entre-a-tecnologia-e-as-viagens-pos-pandemia/) — Elemar Júnior, 618 palavras
 
-Páginas mais linkadas internamente neste cluster:
+### RH & Gestão de Pessoas (28)
+Type: Editorial Mclair (24), Newsroom/Cliente (4)
+Autores mais frequentes: Claudia Elisa Soares (8), Rubiana Cruz (6), Patrícia Kost (3), Carolina Fernandes (2)
+Exemplos:
+- [A maternidade e os desafios para a carreira da mulhe…](https://mclair.com.br/blog/a-maternidade-e-os-desafios-para-a-carreira-da-mulher/) — Rubiana Cruz, 636 palavras
+- [As lições sobre adaptabilidade e gestão de pessoas n…](https://mclair.com.br/blog/as-licoes-sobre-adaptabilidade-e-gestao-de-pessoas-na-era-do-home-offi/) — Rubiana Cruz, 659 palavras
+- [Boa gestão de pessoas ajuda a reduzir o déficit de p…](https://mclair.com.br/blog/boa-gestao-de-pessoas-ajuda-a-reduzir-o-deficit-de-profissionais-de-ti/) — Rodrigo Schittini, 778 palavras
+- [Como a gamificação tornou-se estratégia People First…](https://mclair.com.br/blog/como-a-gamificacao-tornou-se-estrategia-people-first-na-era-digital/) — Rubiana Cruz, 669 palavras
+- [Como atrair os Zillennials para a sua marca por meio…](https://mclair.com.br/blog/como-atrair-os-zillennials-para-a-sua-marca-por-meio-do-marketing-digi/) — Carolina Fernandes, 579 palavras
 
-- [Mclair Comunicação é a nova assessoria de imprensa d… | Mclair](https://mclair.com.br/blog/mclair-comunicacao-e-a-nova-assessoria-de-imprensa-do-programa-brazil-/) -- 69 links internos recebidos+enviados, 351 palavras
+### Audiovisual & Cultura Pop (21)
+Type: Newsroom/Cliente (11), Editorial Mclair (10)
+Autores mais frequentes: Abrolhos Filmes (8), Carolina Fernandes (3), Claudia Elisa Soares (2), Rafael Lage (1)
+Exemplos:
+- [3 setores beneficiados pelo audiovisual em 2021](https://mclair.com.br/blog/3-setores-beneficiados-pelo-audiovisual-em-2021/) — Rafael Lage, 650 palavras
+- [4 filmes e séries sobre tecnologia para maratonar na…](https://mclair.com.br/blog/4-filmes-e-series-sobre-tecnologia-para-maratonar-nas-ferias/) — Lambda3, 701 palavras
+- [5 filmes e séries para inspirar os amantes da comuni…](https://mclair.com.br/blog/5-filmes-e-series-para-inspirar-os-amantes-da-comunicacao/) — Mclair Comunicação, 852 palavras
+- [5 séries e filmes impactantes sobre ESG para maraton…](https://mclair.com.br/blog/5-series-e-filmes-impactantes-sobre-esg-para-maratonar-no-feriado/) — Claudia Elisa Soares, 617 palavras
+- [7 tendências de video content para 2021](https://mclair.com.br/blog/7-tendencias-de-video-content-para-2021/) — Abrolhos Filmes, 817 palavras
 
-### Branding Estratégico (3)
+### Marketing de Autoridade & Marca Pessoal (15)
+Type: Editorial Mclair (15)
+Autores mais frequentes: Claudia Elisa Soares (9), Kelly Pinheiro (4), Rafael Nanis (1), Vanda Lohn (1)
+Exemplos:
+- [5 dicas para criar um conselho para sua startup](https://mclair.com.br/blog/5-dicas-para-criar-um-conselho-para-sua-startup/) — Claudia Elisa Soares, 963 palavras
+- [5 passos para tornar as práticas de ESG uma realidad…](https://mclair.com.br/blog/5-passos-para-tornar-as-praticas-de-esg-uma-realidade-em-sua-empresa/) — Claudia Elisa Soares, 862 palavras
+- [5 perguntas cruciais antes de formar um Conselho Adm…](https://mclair.com.br/blog/5-perguntas-cruciais-antes-de-formar-um-conselho-administrativo-ou-con/) — Claudia Elisa Soares, 1115 palavras
+- [A importância dos 3 C"s para a implementação do ESG…](https://mclair.com.br/blog/a-importancia-dos-3-c-s-para-a-implementacao-do-esg-nas-organizacoes/) — Claudia Elisa Soares, 699 palavras
+- [As 5 vantagens em ter um Conselho diverso](https://mclair.com.br/blog/as-5-vantagens-em-ter-um-conselho-diverso/) — Claudia Elisa Soares, 666 palavras
 
-Páginas mais linkadas internamente neste cluster:
+### Cibersegurança & Privacidade (LGPD) (10)
+Type: Editorial Mclair (7), Newsroom/Cliente (3)
+Autores mais frequentes: Lambda3 (2), Victor Hugo Germano (2), Giovanni Bassi (2), Thiago Padilha (1)
+Exemplos:
+- [4 formas de evitar o vazamento de dados](https://mclair.com.br/blog/4-formas-de-evitar-o-vazamento-de-dados/) — Lambda3, 705 palavras
+- [6 dicas para lidar com invasões hackers](https://mclair.com.br/blog/6-dicas-para-lidar-com-invasoes-hackers/) — Lambda3, 779 palavras
+- [Apps de reconhecimento facial alertam para riscos de…](https://mclair.com.br/blog/apps-de-reconhecimento-facial-alertam-para-riscos-de-controle-governam/) — Victor Hugo Germano, 1006 palavras
+- [As ameaças e os benefícios do reconhecimento facial](https://mclair.com.br/blog/as-ameacas-e-os-beneficios-do-reconhecimento-facial/) — Victor Hugo Germano, 914 palavras
+- [Avanço da LGPD é essencial para sucesso do 5G no Bra…](https://mclair.com.br/blog/avanco-da-lgpd-e-essencial-para-sucesso-do-5g-no-brasil/) — Thiago Padilha, 713 palavras
 
-- [Cubo Comunicação anuncia rebranding e plano de expan… | Mclair](https://mclair.com.br/blog/cubo-comunicacao-anuncia-rebranding-e-plano-de-expansao-para-a-europa/) -- 69 links internos recebidos+enviados, 344 palavras
-- [Dona Coruja e sua marca própria | Blog Mclair](https://mclair.com.br/blog/dona-coruja-e-sua-marca-propria/) -- 69 links internos recebidos+enviados, 287 palavras
-- [ZBRA anuncia rebranding com reforço do posicionament… | Mclair](https://mclair.com.br/blog/zbra-anuncia-rebranding-com-reforco-do-posicionamento-para-o-mercado-t/) -- 69 links internos recebidos+enviados, 607 palavras
+### Growth, Vendas & Startups (10)
+Type: Newsroom/Cliente (7), Editorial Mclair (3)
+Autores mais frequentes: StartupHero (6), Mclair Comunicação (2), Emergee (1), Rafael Nanis (1)
+Exemplos:
+- [5 passos para ter sucesso na venda de uma PME](https://mclair.com.br/blog/5-passos-para-ter-sucesso-na-venda-de-uma-pme/) — StartupHero, 695 palavras
+- [6 dicas para PMEs e startups atraírem investimento](https://mclair.com.br/blog/6-dicas-para-pmes-e-startups-atrairem-investimento/) — StartupHero, 753 palavras
+- [Cannabis: Valuation de qualidade e transparência são…](https://mclair.com.br/blog/cannabis-valuation-de-qualidade-e-transparencia-sao-diferenciais-para-/) — StartupHero, 612 palavras
+- [Itaú Unibanco incorpora startup Emergee, especializa…](https://mclair.com.br/blog/itau-unibanco-incorpora-startup-emergee-especializada-em-metodos-para-/) — Emergee, 463 palavras
+- [Lambda3 mira fintechs de investimento e prevê cresci…](https://mclair.com.br/blog/lambda3-mira-fintechs-de-investimento-e-preve-crescimento-de-25-em-202/) — Mclair Comunicação, 605 palavras
 
-### Marca Pessoal (1)
+### Leilões (8)
+Type: Newsroom/Cliente (8)
+Autores mais frequentes: Fidalgo Leilões (6), Leilão Vip (2)
+Exemplos:
+- [Leilão do Bradesco traz 52 imóveis com preços a part…](https://mclair.com.br/blog/leilao-do-bradesco-traz-52-imoveis-com-precos-a-partir-de-r-40-mil/) — Leilão Vip, 516 palavras
+- [Caixa leiloa 400 imóveis com descontos de até 60% em…](https://mclair.com.br/blog/caixa-leiloa-400-imoveis-com-descontos-de-ate-60-em-todo-o-pais/) — Fidalgo Leilões, 545 palavras
+- [Caixa realiza leilão de imóveis online no Centro-Oes…](https://mclair.com.br/blog/caixa-realiza-leilao-de-imoveis-online-no-centro-oeste-com-descontos-d/) — Fidalgo Leilões, 717 palavras
+- [De imóveis a veículos, o leilão da Justiça do Trabal…](https://mclair.com.br/blog/de-imoveis-a-veiculos-o-leilao-da-justica-do-trabalho-de-sp-oferece-va/) — Leilão Vip, 722 palavras
+- [Justiça Federal: leilão com descontos de até 50% ofe…](https://mclair.com.br/blog/justica-federal-leilao-com-descontos-de-ate-50-oferece-imoveis-e-veicu/) — Fidalgo Leilões, 784 palavras
 
-Páginas mais linkadas internamente neste cluster:
+### Comunicação & Assessoria de Imprensa (1)
+Type: Editorial Mclair (1)
+Autores mais frequentes: Mclair Comunicação (1)
+Exemplos:
+- [Mclair Comunicação é a nova assessoria de imprensa d…](https://mclair.com.br/blog/mclair-comunicacao-e-a-nova-assessoria-de-imprensa-do-programa-brazil-/) — Mclair Comunicação, 351 palavras
 
-- [A maternidade e os desafios para a carreira da mulhe… | Mclair](https://mclair.com.br/blog/a-maternidade-e-os-desafios-para-a-carreira-da-mulher/) -- 69 links internos recebidos+enviados, 636 palavras
+## Possíveis duplicatas encontradas
+- **Exportação: indústria de máquinas e equipamentos est…** ([2023-04-24](https://mclair.com.br/blog/exportacao-industria-de-maquinas-e-equipamentos-estima-faturamento-de-/)) vs. **Mineração: indústria de máquinas e equipamentos esti…** ([2023-06-26](https://mclair.com.br/blog/mineracao-industria-de-maquinas-e-equipamentos-estima-us-11-6-milhoes-/))
+- **Guiando tem 20 vagas abertas 100% remoto** ([2021-01-12](https://mclair.com.br/blog/guiando-tem-20-vagas-abertas-100-remoto-1/)) vs. **Guiando tem 20 vagas abertas 100% remoto** ([2021-05-04](https://mclair.com.br/blog/guiando-tem-20-vagas-abertas-100-remoto/))
+- **Projeto Zé Conecta amplia a inclusão digital para al…** ([2021-08-05](https://mclair.com.br/blog/projeto-ze-conecta-amplia-a-inclusao-digital-para-alunos-da-fundacao-j/)) vs. **Projeto Zé Conecta amplia inclusão digital a alunos…** ([2021-08-06](https://mclair.com.br/blog/projeto-ze-conecta-amplia-inclusao-digital-a-alunos-em-situacao-vulner/))
 
-### Marketing Digital (14)
+## Recomendação de SILO
+Com o conteúdo real mapeado (em vez de 88% "indeterminado"), dá pra propor uma estrutura de fato:
 
-Páginas mais linkadas internamente neste cluster:
+1. **Separar Newsroom/Cliente de Editorial Mclair na navegação.** Hoje os 265 posts vivem todos juntos em `/blog/`, misturando notícia de cliente (133 posts, 50%) com conteúdo autoral da Mclair (132 posts, 50%). São públicos e propósitos diferentes: quem chega via Google buscando "Fidalgo leilão imóveis" não tem interesse no post de RH da Claudia Elisa, e vice-versa. Vale considerar uma categoria/filtro visível "Notícias de Cliente" vs. "Conteúdo Mclair" dentro do blog, ou um newsroom separado (`/imprensa/` ou `/cases/<cliente>/#imprensa`) linkado a partir do case correspondente.
 
-- [3 soluções para a transformação digital da construçã… | Mclair](https://mclair.com.br/blog/3-solucoes-para-a-transformacao-digital-da-construcao-civil/) -- 69 links internos recebidos+enviados, 553 palavras
-- [A experiência, o Marketing Digital e os festivais de… | Mclair](https://mclair.com.br/blog/a-experiencia-o-marketing-digital-e-os-festivais-de-musica/) -- 69 links internos recebidos+enviados, 707 palavras
-- [A transformação digital começa na cultura empresaria… | Mclair](https://mclair.com.br/blog/a-transformacao-digital-comeca-na-cultura-empresarial/) -- 69 links internos recebidos+enviados, 637 palavras
-- [BBB: a guerra de ADMs e o sucesso nas redes sociais | Blog Mclair](https://mclair.com.br/blog/bbb-a-guerra-de-adms-e-o-sucesso-nas-redes-sociais/) -- 69 links internos recebidos+enviados, 986 palavras
-- [Daniel Calero é o novo BDM do portfólio digital da T… | Mclair](https://mclair.com.br/blog/daniel-calero-e-o-novo-bdm-do-portfolio-digital-da-tivit/) -- 69 links internos recebidos+enviados, 474 palavras
+2. **Os 4 maiores Topics viram hub de conteúdo (landing/categoria) com link interno de verdade:**
+   - **Notícias de Cliente** (77 posts) — já é grande o bastante pra pedir paginação/filtro por cliente.
+   - **Editorial Geral / Outros** (55 posts) — bucket genérico de carreira/gestão/liderança, é o maior grupo editorial puro, merece uma categoria própria ("Gestão & Carreira") em vez de ficar solto.
+   - **Tecnologia & Transformação Digital** (40 posts) — cluster natural pra linkar direto dos serviços de Marketing Digital.
+   - **RH & Gestão de Pessoas** (28 posts) — cluster natural, pode linkar da mentoria/serviço de employer branding se existir.
 
-### Comunicação Estratégica (1)
+3. **Leilões (8 posts) e Audiovisual & Cultura Pop (21 posts) são verticais de nicho fortes o bastante pra ganhar link direto dos cases correspondentes** (Fidalgo/VIP Leilões e Abrolhos Filmes), fechando o loop case→prova social→conteúdo que hoje não existe.
 
-Páginas mais linkadas internamente neste cluster:
+4. **Não force um cluster único pra "Editorial Geral / Outros".** Diferente da primeira tentativa (que forçava 7 clusters fixos e sobrava 88% fora), aqui os 55 posts desse bucket são legitimamente diversos (governança, carreira, cultura organizacional). Só vale subdividir mais se/quando a Mclair decidir investir em SEO temático específico pra um desses subtemas.
 
-- [Final de ano: Otimismo, Youtube e narrativas mais hu… | Mclair](https://mclair.com.br/blog/final-de-ano-otimismo-youtube-e-narrativas-mais-humanas-como-estrategi/) -- 69 links internos recebidos+enviados, 537 palavras
-
-### Conteúdo de cliente (4)
-
-Páginas mais linkadas internamente neste cluster:
-
-- [Caixa realiza leilão de imóveis online no Centro-Oes… | Mclair](https://mclair.com.br/blog/caixa-realiza-leilao-de-imoveis-online-no-centro-oeste-com-descontos-d/) -- 69 links internos recebidos+enviados, 717 palavras
-- [Guiando tem 20 vagas abertas 100% remoto | Blog Mclair](https://mclair.com.br/blog/guiando-tem-20-vagas-abertas-100-remoto-1/) -- 69 links internos recebidos+enviados, 405 palavras
-- [Guiando tem 20 vagas abertas 100% remoto | Blog Mclair](https://mclair.com.br/blog/guiando-tem-20-vagas-abertas-100-remoto/) -- 69 links internos recebidos+enviados, 295 palavras
-- [Lambda3 abre vagas para times de tecnologia | Blog Mclair](https://mclair.com.br/blog/lambda3-abre-vagas-para-times-de-tecnologia/) -- 69 links internos recebidos+enviados, 473 palavras
-
-### Outros / Indeterminado (233)
-
-Páginas mais linkadas internamente neste cluster:
-
-- [3 dicas para equilibrar o controle e velocidade nas… | Mclair](https://mclair.com.br/blog/3-dicas-para-equilibrar-o-controle-e-velocidade-nas-tomadas-de-decisao/) -- 69 links internos recebidos+enviados, 743 palavras
-- [3 setores beneficiados pelo audiovisual em 2021 | Blog Mclair](https://mclair.com.br/blog/3-setores-beneficiados-pelo-audiovisual-em-2021/) -- 69 links internos recebidos+enviados, 650 palavras
-- [4 características comuns em produtos na era da | Blog Mclair](https://mclair.com.br/blog/4-caracteristicas-comuns-em-produtos-na-era-da/) -- 69 links internos recebidos+enviados, 592 palavras
-- [4 erros comuns ao implementar produtos digitais | Blog Mclair](https://mclair.com.br/blog/4-erros-comuns-ao-implementar-produtos-digitais/) -- 69 links internos recebidos+enviados, 945 palavras
-- [4 filmes e séries sobre tecnologia para maratonar na… | Mclair](https://mclair.com.br/blog/4-filmes-e-series-sobre-tecnologia-para-maratonar-nas-ferias/) -- 69 links internos recebidos+enviados, 701 palavras
-
-## Lacunas observadas
-
-- "Outros / Indeterminado" concentra a maioria dos posts (233 de 265) -- são majoritariamente releases de clientes específicos (leilões, vagas, notícias pontuais de empresas atendidas) que não se encaixam nos 6 pilares de serviço da Mclair. Isso é esperado dado o modelo de negócio (assessoria de imprensa gera muito conteúdo *sobre* o cliente, não *sobre* a Mclair), mas confirma o diagnóstico já feito na primeira auditoria: o blog mistura editorial próprio com releases de terceiros sem distinção visual/estrutural -- ponto já documentado para a decisão de SILO/newsroom (fora do escopo desta rodada).
-- **Assessoria de Imprensa** e **Marketing de Autoridade**, os dois serviços-carro-chefe segundo o posicionamento da agência, têm muito poucos posts próprios classificados diretamente sob esse rótulo -- a maior parte do conteúdo sobre esses temas provavelmente está nas páginas de serviço, não no blog. Oportunidade de conteúdo (não implementada nesta rodada -- é decisão editorial).
-- **Canibalização real encontrada**: ver `CANIBALIZACAO-SEO.csv` -- casos concretos de dois posts cobrindo o mesmo evento/anúncio (ex: GPT-W Lambda3, Projeto Zé Conecta, exportações de máquinas). Marcados para revisão humana, não consolidados automaticamente.
+**O que isso NÃO é:** uma reestruturação de URL ou implementação. É o inventário que faltava pra decidir se/como reorganizar, a decisão de mudar estrutura/SILO continua sendo do Sandru.
