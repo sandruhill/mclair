@@ -571,7 +571,7 @@ const websiteSchema = {
     </style>
 
     <!-- WhatsApp Popup -->
-    <div id="wa-modal" class="wa-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="wa-title">
+    <div id="wa-modal" class="wa-modal" aria-hidden="true" inert role="dialog" aria-modal="true" aria-labelledby="wa-title">
       <div class="wa-glass">
         <button class="wa-x" id="wa-x" aria-label="Fechar">×</button>
         <div class="wa-icon">
@@ -617,12 +617,14 @@ const websiteSchema = {
       function openModal() {
         modal.classList.add('wa-open');
         modal.setAttribute('aria-hidden','false');
+        modal.removeAttribute('inert');
         document.body.style.overflow = 'hidden';
         setTimeout(function(){ if(nameEl) nameEl.focus(); }, 350);
       }
       function closeModal() {
         modal.classList.remove('wa-open');
         modal.setAttribute('aria-hidden','true');
+        modal.setAttribute('inert','');
         document.body.style.overflow = '';
       }
 
