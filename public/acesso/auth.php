@@ -1,20 +1,32 @@
 <?php
+session_set_cookie_params([
+    'lifetime' => 0,
+    'path' => '/acesso/',
+    'secure' => true,
+    'httponly' => true,
+    'samesite' => 'Lax',
+]);
 require_once __DIR__ . '/db.php';
 session_start();
 
 if (isset($_POST['username'], $_POST['password'])) {
+    // Fixed delay regardless of outcome, so response time can't be used to
+    // tell "user doesn't exist" apart from "wrong password".
+    $loginStart = microtime(true);
     $stmt = cmsDb()->prepare('SELECT id, username, password_hash FROM cmstest_users WHERE username = ?');
     $stmt->execute([trim($_POST['username'])]);
     $user = $stmt->fetch();
 
     if ($user && password_verify($_POST['password'], $user['password_hash'])) {
+        session_regenerate_id(true);
         $_SESSION['cms_user_id'] = $user['id'];
         $_SESSION['cms_username'] = $user['username'];
         $upd = cmsDb()->prepare('UPDATE cmstest_users SET last_login_at = NOW() WHERE id = ?');
         $upd->execute([$user['id']]);
-        header('Location: ' . $_SERVER['REQUEST_URI']);
+        header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
         exit;
     }
+    usleep(max(0, 300000 - (int) ((microtime(true) - $loginStart) * 1000000)));
     $authError = 'Usuário ou senha incorretos.';
 }
 
@@ -59,6 +71,7 @@ if (empty($_SESSION['cms_user_id'])) {
       button { width:100%; margin-top:22px; background:var(--red); color:#fff; border:none; padding:12px 20px; border-radius:8px; cursor:pointer; font-weight:700; font-size:.92rem; }
       button:hover { opacity:.92; }
       .err { background:var(--red); color:#fff; padding:9px 13px; border-radius:8px; font-size:.82rem; margin-bottom:16px; }
+      .ok { background:#1E7F4D; color:#fff; padding:9px 13px; border-radius:8px; font-size:.82rem; margin-bottom:16px; }
       .image-side {
         flex:1; position:relative; overflow:hidden; display:none;
         background:#211B14 url('/brand/mockup-completo.jpg') center/cover no-repeat;
@@ -82,7 +95,8 @@ if (empty($_SESSION['cms_user_id'])) {
           <div class="brand"><span class="dot">M</span><strong>Painel Mclair</strong></div>
           <h1>Bem-vindo de volta</h1>
           <p class="sub">Entre com sua conta para gerenciar o site.</p>
-          <?php if (isset($authError)): ?><div class="err"><?= htmlspecialchars($authError) ?></div><?php endif; ?>
+          <?php if (isset($authError)): ?><div class="err"><?= htmlspecialchars($authError) ?></div>
+          <?php elseif (isset($_GET['loggedout'])): ?><div class="ok">Você saiu do painel. Faça login novamente.</div><?php endif; ?>
           <form method="post">
             <label>Usuário ou e-mail</label>
             <input type="text" name="username" autofocus />

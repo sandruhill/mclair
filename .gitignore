@@ -9,3 +9,4 @@ dist/
 *.log
 .superpowers/
 .secrets/
+public/acesso/config.php
