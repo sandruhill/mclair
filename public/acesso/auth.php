@@ -9,7 +9,7 @@ session_set_cookie_params([
 require_once __DIR__ . '/db.php';
 session_start();
 
-const LOGIN_MAX_ATTEMPTS = 8;
+const LOGIN_MAX_ATTEMPTS = 3;
 const LOGIN_WINDOW_MINUTES = 15;
 
 // Lockout by IP, counting failures in a rolling window. Table is created
