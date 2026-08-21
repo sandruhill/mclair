@@ -250,7 +250,7 @@ function formatDate(d: string) {
       <div class="pag-pages">
         {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(n => (
           <a
-            href={n === 1 ? '/blog' : `/blog/${n}`}
+            href={n === 1 ? '/blog/' : `/blog/${n}/`}
             class={`pag-num ${n === page.currentPage ? 'pag-active' : ''}`}
             aria-current={n === page.currentPage ? 'page' : undefined}
           >

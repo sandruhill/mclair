@@ -130,6 +130,11 @@ const customPages = await buildCustomPages();
 export default defineConfig({
   site: 'https://mclair.com.br',
   output: 'static',
+  // Every canonical URL on the site is trailing-slash form and the server
+  // 301s the bare form to it -- without this, Astro's own paginate() helper
+  // (page.url.prev/next) generates URLs without the slash, so blog
+  // pagination links were paying that redirect on every click.
+  trailingSlash: 'always',
   integrations: [
     sitemap({
       changefreq: 'weekly',
