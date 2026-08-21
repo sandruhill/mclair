@@ -4,26 +4,26 @@ import Layout from '../../layouts/Layout.astro';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20resultados%20como%20esse.';
 
-// Blog "Author" é texto livre no CMS, sem chave real ligando ao cliente do
-// case. Nomes de autor batidos manualmente contra o cliente de cada case
-// (ver TOPICAL-MAP-MCLAIR.md), pra fechar o loop case → prova social →
-// conteúdo sem precisar de um campo novo no banco.
-const CASE_BLOG_AUTHORS: Record<string, string[]> = {
-  'claudia-elisa': ['Claudia Elisa Soares'],
-  'fidalgo': ['Fidalgo Leilões'],
-  'bms-abimaq': ['BMS: Brazil Machinery Solutions', 'Brazil Machinery Solutions (BMS)'],
-  'alexandre-magno': ['Alexandre Magno'],
-  'elemar-jr': ['Elemar Júnior'],
-  'diego-nogare': ['Diego Nogare'],
-  'lambda3': ['Lambda3'],
-  'zbra': ['Zbra'],
-  'nexinvoice': ['Guiando'],
-  'vip-leiloes': ['Leilão Vip'],
-};
-
 export async function getStaticPaths() {
   const { getCases, getBlogPosts } = await import('../../utils/cmsApi');
   const [rows, posts] = await Promise.all([getCases(), getBlogPosts()]);
+
+  // Blog "Author" é texto livre no CMS, sem chave real ligando ao cliente do
+  // case. Nomes de autor batidos manualmente contra o cliente de cada case
+  // (ver TOPICAL-MAP-MCLAIR.md), pra fechar o loop case → prova social →
+  // conteúdo sem precisar de um campo novo no banco.
+  const CASE_BLOG_AUTHORS: Record<string, string[]> = {
+    'claudia-elisa': ['Claudia Elisa Soares'],
+    'fidalgo': ['Fidalgo Leilões'],
+    'bms-abimaq': ['BMS: Brazil Machinery Solutions', 'Brazil Machinery Solutions (BMS)'],
+    'alexandre-magno': ['Alexandre Magno'],
+    'elemar-jr': ['Elemar Júnior'],
+    'diego-nogare': ['Diego Nogare'],
+    'lambda3': ['Lambda3'],
+    'zbra': ['Zbra'],
+    'nexinvoice': ['Guiando'],
+    'vip-leiloes': ['Leilão Vip'],
+  };
 
   const allCases = rows
     .sort((a: any, b: any) => (a.num ?? '').localeCompare(b.num ?? ''))
