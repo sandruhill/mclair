@@ -1,0 +1,259 @@
+---
+export const prerender = true;
+import Layout from '../../../../layouts/Layout.astro';
+
+const CATEGORIES: Record<string, string> = {
+  'noticias-de-cliente': 'Notícias de Cliente',
+  'gestao-carreira': 'Gestão & Carreira',
+  'tecnologia-transformacao-digital': 'Tecnologia & Transf. Digital',
+  'rh-gestao-de-pessoas': 'RH & Gestão de Pessoas',
+  'audiovisual-cultura-pop': 'Audiovisual & Cultura Pop',
+  'marketing-de-autoridade-marca-pessoal': 'Marketing de Autoridade',
+  'ciberseguranca-lgpd': 'Cibersegurança & LGPD',
+  'growth-vendas-startups': 'Growth & Startups',
+  'leiloes': 'Leilões',
+};
+
+export async function getStaticPaths({ paginate }: any) {
+  const { getBlogPosts, resolveBlogImage } = await import('../../../../utils/cmsApi');
+  const { marked } = await import('marked');
+  const topicsBySlug = (await import('../../../../data/blog-topics.json')).default as Record<string, string>;
+  const posts = await getBlogPosts();
+
+  function ts(d: string) {
+    return d ? new Date(d).getTime() : 0;
+  }
+
+  const merged = posts
+    .map((p: any) => ({
+      slug: p.slug,
+      title: p.title,
+      subtitle: p.subtitle ?? '',
+      date: p.post_date ?? '',
+      author: p.author ?? 'Equipe Mclair',
+      image: resolveBlogImage(p.featured_image, p.image_url),
+      content: marked.parse(p.content_md ?? '') as string,
+      categoria: topicsBySlug[p.slug],
+    }))
+    .filter((p: any) => p.categoria)
+    .sort((a: any, b: any) => ts(b.date) - ts(a.date));
+
+  // Local copy: module-scope CATEGORIES doesn't reliably survive Astro's
+  // chunk-splitting for getStaticPaths (seen earlier this session with a
+  // similar lookup table on the case pages -- "X is not defined" at runtime
+  // on the server, even though local build looks fine).
+  const categorySlugs = [
+    'noticias-de-cliente', 'gestao-carreira', 'tecnologia-transformacao-digital',
+    'rh-gestao-de-pessoas', 'audiovisual-cultura-pop', 'marketing-de-autoridade-marca-pessoal',
+    'ciberseguranca-lgpd', 'growth-vendas-startups', 'leiloes',
+  ];
+
+  return categorySlugs.flatMap((categoria) => {
+    const filtered = merged.filter((p: any) => p.categoria === categoria);
+    return paginate(filtered, { pageSize: 12, params: { categoria } });
+  });
+}
+
+const { page } = Astro.props;
+const { categoria } = Astro.params;
+const label = CATEGORIES[categoria as string] ?? categoria;
+const BASE = 'https://mclair.com.br';
+
+function stripHtml(html: string) {
+  return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+function excerpt(html: string, len = 110) {
+  const text = stripHtml(html);
+  return text.length > len ? text.slice(0, len).trimEnd() + '…' : text;
+}
+function formatDate(d: string) {
+  if (!d) return '';
+  let dd: string, mm: string, yy: string;
+  if (d.includes('-')) {
+    [yy, mm, dd] = d.split('-');
+  } else {
+    [dd, mm, yy] = d.split('/');
+  }
+  const months = ['jan','fev','mar','abr','mai','jun','jul','ago','set','out','nov','dez'];
+  return `${parseInt(dd)} ${months[parseInt(mm)-1]} ${yy}`;
+}
+
+function pageHref(n: number) {
+  return n === 1 ? `/blog/categoria/${categoria}/` : `/blog/categoria/${categoria}/${n}/`;
+}
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Início', item: BASE },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE}/blog` },
+    { '@type': 'ListItem', position: 3, name: label, item: `${BASE}/blog/categoria/${categoria}` },
+  ],
+};
+---
+
+<Layout
+  title={`${label}${page.currentPage > 1 ? ` | Página ${page.currentPage}` : ''} | Blog Mclair`}
+  description={`Posts do blog Mclair sobre ${label}. ${page.total} artigo${page.total === 1 ? '' : 's'} publicados.`}
+  ogImage="https://mclair.com.br/paginas/sobre-estrategia-comunicacao-mclair.jpg"
+  prevUrl={page.url.prev || undefined}
+  nextUrl={page.url.next || undefined}
+  schema={breadcrumbSchema}
+>
+
+<!-- HERO -->
+<section class="cat-hero">
+  <div class="container cat-hero-inner">
+    <p class="cat-breadcrumb">
+      <a href="/blog/">Blog</a>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+      <span>{label}</span>
+    </p>
+    <h1 class="cat-title">{label}</h1>
+    <p class="cat-count">{page.total} artigo{page.total === 1 ? '' : 's'}</p>
+  </div>
+</section>
+
+<!-- POSTS GRID -->
+<section class="section cat-section">
+  <div class="container">
+    <div class="cat-grid stagger-children">
+      {page.data.map((post: any, i: number) => (
+        <article class="blog-card" data-anim data-delay={((i % 3) + 1).toString()}>
+          <a href={`/blog/${post.slug}/`} class="bc-link">
+            {post.image ? (
+              <div class="bc-img-wrap">
+                <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
+              </div>
+            ) : (
+              <div class="bc-img-placeholder">
+                <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" opacity=".3"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></svg>
+              </div>
+            )}
+            <div class="bc-body">
+              <div class="bc-meta">
+                <time class="bc-date">{formatDate(post.date)}</time>
+                {post.author && <span class="bc-dot">·</span>}
+                {post.author && <span class="bc-author">{post.author}</span>}
+              </div>
+              <h2 class="bc-title">{post.title}</h2>
+              {post.subtitle && <p class="bc-subtitle">{post.subtitle}</p>}
+              <p class="bc-excerpt">{excerpt(post.content)}</p>
+              <span class="bc-read">Ler artigo →</span>
+            </div>
+          </a>
+        </article>
+      ))}
+    </div>
+
+    <!-- PAGINATION -->
+    {page.lastPage > 1 && (
+      <nav class="pagination" aria-label={`Páginas de ${label}`}>
+        {page.url.prev && (
+          <a href={page.url.prev} class="pag-btn pag-prev">← Anterior</a>
+        )}
+        <div class="pag-pages">
+          {Array.from({ length: page.lastPage }, (_, i) => i + 1).map(n => (
+            <a
+              href={pageHref(n)}
+              class={`pag-num ${n === page.currentPage ? 'pag-active' : ''}`}
+              aria-current={n === page.currentPage ? 'page' : undefined}
+            >
+              {n}
+            </a>
+          ))}
+        </div>
+        <span class="pag-status">Página {page.currentPage} de {page.lastPage}</span>
+        {page.url.next && (
+          <a href={page.url.next} class="pag-btn pag-next">Próxima →</a>
+        )}
+      </nav>
+    )}
+  </div>
+</section>
+
+</Layout>
+
+<style>
+.cat-hero {
+  background: var(--dark);
+  padding-top: 128px; padding-bottom: 48px;
+}
+.cat-hero-inner { position: relative; z-index: 1; }
+.cat-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: 16px;
+}
+.cat-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
+.cat-breadcrumb a:hover { color: #fff; }
+.cat-title {
+  font-size: clamp(2rem,4.5vw,3.2rem); font-weight: 900; letter-spacing: -.03em;
+  color: #fff; margin-bottom: 10px;
+}
+.cat-count { font-size: .85rem; color: rgba(255,255,255,.45); font-weight: 300; }
+
+.cat-section { background: #fff; padding-top: 64px; padding-bottom: 96px; }
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 32px;
+}
+@media (max-width: 960px) { .cat-grid { grid-template-columns: repeat(2, 1fr); gap: 24px; } }
+@media (max-width: 600px) { .cat-grid { grid-template-columns: 1fr; } }
+
+/* Card, same visual language as /blog/ */
+.blog-card {
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  border: 1.5px solid var(--line);
+  background: #fff;
+  transition: box-shadow .3s, transform .3s cubic-bezier(.22,1,.36,1), border-color .25s;
+}
+.blog-card:hover {
+  box-shadow: 0 16px 48px rgba(0,0,0,.1);
+  transform: translateY(-4px);
+  border-color: rgba(200,16,46,.2);
+}
+.bc-link { display: flex; flex-direction: column; height: 100%; color: inherit; text-decoration: none; }
+.bc-img-wrap { width: 100%; height: 200px; overflow: hidden; flex-shrink: 0; background: var(--cream); }
+.bc-img { width: 100%; height: 100%; object-fit: cover; object-position: center top; transition: transform .5s cubic-bezier(.22,1,.36,1); }
+.blog-card:hover .bc-img { transform: scale(1.04); }
+.bc-img-placeholder { width: 100%; height: 200px; background: var(--cream); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bc-body { display: flex; flex-direction: column; padding: 24px 24px 28px; flex: 1; }
+.bc-meta { display: flex; align-items: center; gap: 6px; margin-bottom: 12px; }
+.bc-date { font-size: .65rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-3); }
+.bc-dot { color: var(--ink-3); font-size: .65rem; }
+.bc-author { font-size: .65rem; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; color: var(--red); }
+.bc-title { font-size: 1.05rem; font-weight: 800; line-height: 1.3; letter-spacing: -.02em; color: var(--ink); margin-bottom: 8px; }
+.bc-subtitle { font-size: .82rem; font-weight: 600; color: var(--red); line-height: 1.4; margin-bottom: 8px; }
+.bc-excerpt { font-size: .82rem; color: var(--ink-3); line-height: 1.65; flex: 1; margin-bottom: 18px; }
+.bc-read { font-size: .7rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--red); }
+
+/* Pagination, same as /blog/ */
+.pagination { display: flex; align-items: center; justify-content: center; gap: 12px; margin-top: 72px; flex-wrap: wrap; }
+.pag-btn {
+  font-size: .75rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: var(--r-sm); padding: .65rem 1.4rem;
+  transition: border-color .2s, color .2s, background .2s; text-decoration: none;
+}
+.pag-btn:hover { border-color: var(--red); color: var(--red); }
+.pag-pages { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; }
+.pag-num {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 40px; height: 40px; border-radius: var(--r-sm);
+  font-size: .8rem; font-weight: 700; border: 1.5px solid var(--line); color: var(--ink);
+  transition: border-color .2s, color .2s, background .2s; text-decoration: none;
+}
+.pag-num:hover { border-color: var(--red); color: var(--red); }
+.pag-active { background: var(--red); color: #fff !important; border-color: var(--red) !important; }
+.pag-status { display: none; font-size: .82rem; font-weight: 700; color: var(--ink-2); white-space: nowrap; }
+@media (max-width: 600px) {
+  .pagination { gap: 14px; }
+  .pag-pages { display: none; }
+  .pag-status { display: block; }
+  .pag-btn { padding: .6rem 1.1rem; font-size: .7rem; }
+}
+</style>
