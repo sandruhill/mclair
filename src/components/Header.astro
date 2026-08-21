@@ -21,7 +21,7 @@ const menu = await getMenuTree().catch((e) => { console.error('[Header] getMenuT
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 ---
 
-<header id="site-header">
+<header id="site-header" transition:persist>
   <div class="header-inner">
     <a href="/" class="logo-link" aria-label="Mclair home">
       <img src="/logos/logo-color.png" alt="Mclair" class="logo-default" />
@@ -93,7 +93,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 </header>
 
 <!-- Mobile drawer -->
-<div id="mobile-nav" class="mobile-nav" role="dialog" aria-modal="true" aria-label="Menu">
+<div id="mobile-nav" class="mobile-nav" role="dialog" aria-modal="true" aria-label="Menu" transition:persist>
   <div class="mobile-overlay" id="mobile-overlay"></div>
   <div class="mobile-drawer">
     <div class="drawer-header">
