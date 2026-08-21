@@ -30,14 +30,12 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
 
     <nav class="nav" aria-label="Navegação principal">
       {menu.map(node => node.href === '/cases' ? (
-        <!-- Cases mega menu -->
         <div class="nav-drop-wrap" id="cases-drop-wrap">
           <a href="/cases" class="nav-link nav-parent">
             {node.label}
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
           </a>
           <div class="nav-dropdown nd-cases" id="cases-mega">
-            <!-- Preview image panel -->
             <div class="nd-preview" aria-hidden="true">
               <img id="case-preview-img" src={caseLinks[0]?.img ?? ''} alt="" class="nd-preview-img" loading="eager" />
               <div class="nd-preview-overlay">
@@ -45,7 +43,6 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
                 <strong id="case-preview-name">{caseLinks[0]?.label ?? ''}</strong>
               </div>
             </div>
-            <!-- Links list -->
             <div class="nd-cases-list">
               <div class="nd-cases-grid">
                 {caseLinks.map((c, i) => (
@@ -68,7 +65,6 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
           </div>
         </div>
       ) : node.children.length > 0 ? (
-        <!-- Generic dropdown (e.g. Serviços) -->
         <div class="nav-drop-wrap">
           <a href={node.href} class="nav-link nav-parent">
             {node.label}

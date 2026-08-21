@@ -15,8 +15,9 @@
   },
   "dependencies": {
     "@astrojs/sitemap": "^3.7.3",
-    "astro": "^6.4.7",
-    "marked": "^18.0.10"
+    "astro": "^7.2.4",
+    "marked": "^18.0.10",
+    "sharp": "^0.35.3"
   },
   "devDependencies": {
     "@remotion/cli": "^4.0.513",
