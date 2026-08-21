@@ -110,25 +110,25 @@ const ogImg = s.image
   </div>
   <div class="container sh-inner">
     <div class="sh-content">
-      <div class="sh-breadcrumb" data-anim>
-        <a href="/servicos">Serviços</a>
+      <div class="sh-breadcrumb hero-instant" data-anim>
+        <a href="/servicos/">Serviços</a>
         {s.ancestors.map((a: any) => (
           <>
             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-            <a href={`/servicos/${a.path}`}>{a.title}</a>
+            <a href={`/servicos/${a.path}/`}>{a.title}</a>
           </>
         ))}
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
-      <h1 class="sh-title" data-anim data-delay="1">{s.title}</h1>
-      <p class="sh-intro" data-anim data-delay="3">{s.intro}</p>
-      <div class="sh-actions" data-anim data-delay="4">
+      <h1 class="sh-title hero-instant" data-anim data-delay="1">{s.title}</h1>
+      <p class="sh-intro hero-instant" data-anim data-delay="3">{s.intro}</p>
+      <div class="sh-actions hero-instant" data-anim data-delay="4">
         <a href={WA} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
-        <a href="/contato" class="btn-ghost-white">Ver todos os serviços</a>
+        <a href="/contato/" class="btn-ghost-white">Ver todos os serviços</a>
       </div>
     </div>
-    <div class="sh-card" data-anim="right" data-delay="2">
+    <div class="sh-card hero-instant" data-anim="right" data-delay="2">
       <div class="sc-inner">
         <h2 class="sc-title">{s.title}</h2>
         <div class="sc-divider"></div>
@@ -148,7 +148,7 @@ const ogImg = s.image
 <!-- CONTENT -->
 <section class="svc-content-section">
   <div class="container svc-content-grid">
-    <div class="sc-left" data-anim="left">
+    <div class="sc-left hero-instant" data-anim="left">
       <h2 class="scl-title">{s.headline}</h2>
       <p class="scl-desc">{s.desc}</p>
       <ul class="scl-items stagger-children">
@@ -190,7 +190,7 @@ const ogImg = s.image
     <h2 class="os-title" data-anim>Outros serviços Mclair</h2>
     <div class="os-grid stagger-children">
       {others.map(os => (
-        <a href={`/servicos/${os.path}`} class="os-card">
+        <a href={`/servicos/${os.path}/`} class="os-card">
           <h3 class="os-title-inner" style={`color:${os.accent}`}>{os.title}</h3>
           <p class="os-desc">{os.headline}</p>
           <span class="os-arrow">

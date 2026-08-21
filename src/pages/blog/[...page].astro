@@ -95,13 +95,13 @@ function formatDate(d: string) {
     <div class="bh-grid"></div>
   </div>
   <div class="container bh-inner">
-    <p class="eyebrow" data-anim style="justify-content:flex-start">
+    <p class="eyebrow hero-instant" data-anim style="justify-content:flex-start">
       Conteúdo que gera autoridade
     </p>
-    <h1 class="bh-title" data-anim data-delay="1">
+    <h1 class="bh-title hero-instant" data-anim data-delay="1">
       Blog <span>Mclair</span>
     </h1>
-    <p class="bh-lead" data-anim data-delay="2">
+    <p class="bh-lead hero-instant" data-anim data-delay="2">
       Insights, tendências e estratégias de marketing, comunicação e branding para quem quer se destacar.
     </p>
   </div>
@@ -118,7 +118,7 @@ function formatDate(d: string) {
     <div class="blog-grid stagger-children">
       {page.data.map((post: any, i: number) => (
         <article class="blog-card" data-anim data-delay={((i % 3) + 1).toString()}>
-          <a href={`/blog/${post.slug}`} class="bc-link">
+          <a href={`/blog/${post.slug}/`} class="bc-link">
             {post.image ? (
               <div class="bc-img-wrap">
                 <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
@@ -149,7 +149,7 @@ function formatDate(d: string) {
       <!-- Post 0: featured full-width -->
       {page.data.length > 0 && (
         <article class="blog-card blog-card-featured">
-          <a href={`/blog/${page.data[0].slug}`} class="bc-link">
+          <a href={`/blog/${page.data[0].slug}/`} class="bc-link">
             {page.data[0].image ? (
               <div class="bc-img-wrap">
                 <img src={page.data[0].image} alt={page.data[0].title} class="bc-img" loading="eager" onerror="this.parentElement.style.display='none'" />
@@ -179,7 +179,7 @@ function formatDate(d: string) {
         <div class="blog-swipe-wrap">
           {page.data.slice(1, 10).map((post) => (
             <article class="blog-card blog-swipe-card">
-              <a href={`/blog/${post.slug}`} class="bc-link">
+              <a href={`/blog/${post.slug}/`} class="bc-link">
                 {post.image ? (
                   <div class="bc-img-wrap">
                     <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />
@@ -208,7 +208,7 @@ function formatDate(d: string) {
         <div class="blog-more-wrap" id="blog-more-wrap" aria-hidden="true">
           {page.data.slice(10).map((post) => (
             <article class="blog-card">
-              <a href={`/blog/${post.slug}`} class="bc-link">
+              <a href={`/blog/${post.slug}/`} class="bc-link">
                 {post.image ? (
                   <div class="bc-img-wrap">
                     <img src={post.image} alt={post.title} class="bc-img" loading="lazy" onerror="this.parentElement.style.display='none'" />

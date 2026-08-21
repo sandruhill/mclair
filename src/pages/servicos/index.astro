@@ -74,21 +74,21 @@ const services = (allServicos as any[])
   </div>
   <div class="container ph-inner">
     <div class="ph-content">
-      <p class="eyebrow" data-anim style="color:rgba(255,255,255,.5)">
+      <p class="eyebrow hero-instant" data-anim style="color:rgba(255,255,255,.5)">
         Nossas soluções
       </p>
-      <h1 class="ph-title" data-anim data-delay="1">
+      <h1 class="ph-title hero-instant" data-anim data-delay="1">
         Comunicação Estratégica<br/>e <span>Marketing de Autoridade</span>
       </h1>
-      <p class="ph-sub" data-anim data-delay="2">
+      <p class="ph-sub hero-instant" data-anim data-delay="2">
         6 soluções integradas para posicionar sua marca como referência. Da Assessoria de Imprensa com 11.600+ inserções ao Branding Estratégico e Marketing de Autoridade: cada estratégia é construída com dados, propósito e foco em resultados reais.
       </p>
-      <div class="ph-actions" data-anim data-delay="3">
+      <div class="ph-actions hero-instant" data-anim data-delay="3">
         <a href={WA} class="btn-white" target="_blank" rel="noopener">Solicitar Proposta</a>
-        <a href="/cases" class="btn-ghost">Ver Cases de Autoridade</a>
+        <a href="/cases/" class="btn-ghost">Ver Cases de Autoridade</a>
       </div>
     </div>
-    <div class="ph-grid-visual stagger-children" data-anim="right" data-delay="2">
+    <div class="ph-grid-visual stagger-children hero-instant" data-anim="right" data-delay="2">
       {services.slice(0,3).map(s => (
         <div class="phgv-item">
           <span class="phgv-title">{s.title}</span>
@@ -123,7 +123,7 @@ const services = (allServicos as any[])
               {s.cta}
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
             </a>
-            <a href={`/servicos/${s.slug}`} class="sc-ver">
+            <a href={`/servicos/${s.slug}/`} class="sc-ver">
               Ver serviço completo
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
             </a>

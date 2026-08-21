@@ -65,16 +65,16 @@ const allCasesForSchema = sorted.map((c, i) => ({
     <div class="ph-blob-1"></div>
   </div>
   <div class="container ph-inner">
-    <p class="eyebrow" data-anim style="color:rgba(255,255,255,.5)">
+    <p class="eyebrow hero-instant" data-anim style="color:rgba(255,255,255,.5)">
       Resultados reais
     </p>
-    <h1 class="ph-title" data-anim data-delay="1">
+    <h1 class="ph-title hero-instant" data-anim data-delay="1">
       Cases de Sucesso em<br/><span>Marketing de Autoridade</span><br/>e Comunicação Estratégica
     </h1>
-    <p class="ph-sub" data-anim data-delay="2">
+    <p class="ph-sub hero-instant" data-anim data-delay="2">
       Resultados falam mais alto. Navegue por nossos cases e veja como a Mclair ajudou marcas e profissionais a fortalecer sua reputação e alcançar objetivos reais.
     </p>
-    <div class="ph-stats stagger-children" data-anim data-delay="3">
+    <div class="ph-stats stagger-children hero-instant" data-anim data-delay="3">
       <div class="phs-item">
         <strong class="counter" data-target="11600" data-suffix="+">11.600+</strong>
         <span>Inserções na mídia</span>
@@ -144,7 +144,7 @@ const allCasesForSchema = sorted.map((c, i) => ({
                 Quero Resultado Assim
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
-              <a href={`/cases/${c.slug}`} class="cbr-ver">
+              <a href={`/cases/${c.slug}/`} class="cbr-ver">
                 Ver case completo
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
               </a>
@@ -168,7 +168,7 @@ const allCasesForSchema = sorted.map((c, i) => ({
     </div>
     <div class="compact-grid">
       {compactCases.map((c) => (
-        <a href={`/cases/${c.slug}`} class="compact-card" data-anim style={`--acc:${c.accent}`}>
+        <a href={`/cases/${c.slug}/`} class="compact-card" data-anim style={`--acc:${c.accent}`}>
           <div class="cc-head">
             <span class="cc-sector">{c.sector}</span>
           </div>

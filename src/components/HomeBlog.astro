@@ -20,7 +20,7 @@ const posts = await getLatestPosts(3);
 
       <div class="hb-grid stagger-children">
         {posts.map((post) => (
-          <a href={`/blog/${post.slug}`} class="hb-card" data-anim>
+          <a href={`/blog/${post.slug}/`} class="hb-card" data-anim>
             <div class="hb-thumb">
               {post.image ? (
                 <img

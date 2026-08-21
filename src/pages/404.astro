@@ -43,18 +43,18 @@ const services = (allServices as any[])
     <p class="nf-services-label">Nossos serviços</p>
     <div class="nf-services-grid">
       {services.map(s => (
-        <a href={`/servicos/${s.slug}`} class="nf-service-card" style={`--sc:${s.color};--sbg:${s.bg}`}>
+        <a href={`/servicos/${s.slug}/`} class="nf-service-card" style={`--sc:${s.color};--sbg:${s.bg}`}>
           <span class="nf-service-title">{s.title}</span>
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       ))}
     </div>
     <nav class="nf-links" aria-label="Outras páginas">
-      <a href="/sobre">Sobre</a>
-      <a href="/cases">Cases</a>
-      <a href="/blog">Blog</a>
-      <a href="/mentorias">Mentorias</a>
-      <a href="/clientes">Clientes</a>
+      <a href="/sobre/">Sobre</a>
+      <a href="/cases/">Cases</a>
+      <a href="/blog/">Blog</a>
+      <a href="/mentorias/">Mentorias</a>
+      <a href="/clientes/">Clientes</a>
       <a href="/contato">Contato</a>
     </nav>
   </div>

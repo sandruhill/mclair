@@ -6,7 +6,7 @@ const caseLinks = (allCases as any[])
   .sort((a, b) => (a.num ?? '').localeCompare(b.num ?? ''))
   .map(c => ({
     label: c.client,
-    href:  `/cases/${c.slug}`,
+    href:  `/cases/${c.slug}/`,
     tag:   c.sector ?? '',
     img:   c.img ?? '',
   }));
@@ -31,7 +31,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     <nav class="nav" aria-label="Navegação principal">
       {menu.map(node => node.href === '/cases' ? (
         <div class="nav-drop-wrap" id="cases-drop-wrap">
-          <a href="/cases" class="nav-link nav-parent">
+          <a href="/cases/" class="nav-link nav-parent">
             {node.label}
             <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m6 9 6 6 6-6"/></svg>
           </a>
@@ -57,7 +57,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
                   </a>
                 ))}
               </div>
-              <a href="/cases" class="nd-all-cases">
+              <a href="/cases/" class="nd-all-cases">
                 Ver todos os cases
                 <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
               </a>
@@ -105,7 +105,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     <nav class="drawer-nav">
       {menu.map((node, i) => node.href === '/cases' ? (
         <div class="drawer-group" style={`--i:${i}`}>
-          <a href="/cases" class="drawer-link">{node.label}</a>
+          <a href="/cases/" class="drawer-link">{node.label}</a>
           <div class="drawer-sub">
             {caseLinks.map(c => <a href={c.href} class="drawer-sub-link">{c.label}</a>)}
           </div>

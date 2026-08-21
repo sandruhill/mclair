@@ -18,7 +18,7 @@ const services = (allServicos as any[])
     title: String(s.title),
     desc:  s.home_desc || s.intro || '',
     color: s.color || 'var(--red)',
-    href:  `/servicos/${s.slug}`,
+    href:  `/servicos/${s.slug}/`,
   }));
 
 const allCases = await getCases().catch(() => []);
@@ -50,7 +50,6 @@ const cases = (allCases as any[])
     url: 'https://mclair.com.br/',
     isPartOf: { '@id': 'https://mclair.com.br/#website' },
     about: { '@id': 'https://mclair.com.br/#organization' },
-    speakable: { '@type': 'SpeakableSpecification', cssSelector: ['.hero-title', '.section-title'] },
   }}
 >
 
@@ -116,7 +115,7 @@ const cases = (allCases as any[])
       </p>
 
       <div class="hero-actions hero-instant" data-anim data-delay="5">
-        <a href="/cases" class="btn-hero-primary">
+        <a href="/cases/" class="btn-hero-primary">
           Cases de Sucesso
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -209,7 +208,7 @@ const cases = (allCases as any[])
         <span class="pill">Assessoria de Imprensa</span>
         <span class="pill">Branding Estratégico</span>
       </div>
-      <a href="/sobre" class="btn-text" data-anim data-delay="4" style="margin-top:28px">
+      <a href="/sobre/" class="btn-text" data-anim data-delay="4" style="margin-top:28px">
         Conheça Nossa Abordagem
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -227,7 +226,7 @@ const cases = (allCases as any[])
           Do Branding Estratégico<br/>ao <span>Marketing de Autoridade</span>
         </h2>
       </div>
-      <a href="/servicos" class="btn-text" data-anim data-delay="2" style="align-self:flex-end">
+      <a href="/servicos/" class="btn-text" data-anim data-delay="2" style="align-self:flex-end">
         Ver todos os serviços
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -249,7 +248,7 @@ const cases = (allCases as any[])
       ))}
     </div>
     <div style="text-align:center;margin-top:40px">
-      <a href="/servicos" class="btn-text">
+      <a href="/servicos/" class="btn-text">
         Ver todos os serviços
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -280,7 +279,7 @@ const cases = (allCases as any[])
   <div class="container" style="padding-top:64px;padding-bottom:80px">
     <div class="cases-list">
       {cases.map((c, i) => (
-        <a href={`/cases/${c.slug}`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()} data-img={c.img} data-challenge={c.challenge}>
+        <a href={`/cases/${c.slug}/`} class="case-row" style={`--accent:${c.accent}`} data-anim data-delay={(i % 2 + 1).toString()} data-img={c.img} data-challenge={c.challenge}>
           <div class="case-row-inner">
             <div class="case-info">
               <span class="case-sector tag" style={`color:${c.accent};border-color:${c.accent}28`}>{c.sector}</span>
@@ -305,7 +304,7 @@ const cases = (allCases as any[])
     </div>
 
     <div class="cases-cta-row" data-anim>
-      <a href="/cases" class="btn-teal">
+      <a href="/cases/" class="btn-teal">
         Ver todos os cases
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -350,7 +349,7 @@ const cases = (allCases as any[])
           <li>Conteúdo de autoridade</li>
           <li>Presença digital estratégica</li>
         </ul>
-        <a href="/mentorias" class="mtpc-cta">
+        <a href="/mentorias/" class="mtpc-cta">
           Conhecer o Bolder
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -368,7 +367,7 @@ const cases = (allCases as any[])
           <li>Pautas irresistíveis</li>
           <li>Assessoria 4.0 com IA</li>
         </ul>
-        <a href="/mentorias" class="mtpc-cta mtpc-cta-2">
+        <a href="/mentorias/" class="mtpc-cta mtpc-cta-2">
           Conhecer o Bolder Press
           <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
@@ -526,10 +525,10 @@ const cases = (allCases as any[])
     linear-gradient(90deg, rgba(200,16,46,.06) 1px, transparent 1px);
   background-size: 72px 72px;
 }
-.hero-blob { position:absolute; border-radius:50%; filter:blur(90px); animation: blob-float 8s ease-in-out infinite; }
+.hero-blob { position:absolute; border-radius:50%; filter:blur(90px); animation: blob-float 8s ease-in-out infinite; will-change:transform; }
 .hero-blob-1 { width:500px;height:500px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(200,16,46,.12) 0%,transparent 70%); }
 .hero-blob-2 { width:300px;height:300px;bottom:-60px;left:-40px;background:radial-gradient(circle,rgba(27,138,118,.07) 0%,transparent 70%);animation-delay:-4s; }
-@keyframes blob-float { 0%,100%{transform:translateY(0) scale(1)} 50%{transform:translateY(-20px) scale(1.03)} }
+@keyframes blob-float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
 
 .hero-inner {
   flex:1; display:grid; grid-template-columns:1fr 380px;

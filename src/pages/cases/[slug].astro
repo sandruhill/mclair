@@ -82,14 +82,14 @@ const { c, otherCases } = Astro.props;
     <div class="ch-overlay"></div>
   </div>
   <div class="container ch-inner">
-    <div class="ch-breadcrumb" data-anim>
-      <a href="/cases">Cases</a>
+    <div class="ch-breadcrumb hero-instant" data-anim>
+      <a href="/cases/">Cases</a>
       <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
       <span>{c.client}</span>
     </div>
-    <div class="ch-badge" data-anim data-delay="1">{c.sector}</div>
-    <h1 class="ch-title" data-anim data-delay="2">{c.client}</h1>
-    <div class="ch-tags stagger-children" data-anim data-delay="3">
+    <div class="ch-badge hero-instant" data-anim data-delay="1">{c.sector}</div>
+    <h1 class="ch-title hero-instant" data-anim data-delay="2">{c.client}</h1>
+    <div class="ch-tags stagger-children hero-instant" data-anim data-delay="3">
       {c.tags.map(t => <span class="ch-tag">{t}</span>)}
     </div>
   </div>
@@ -195,7 +195,7 @@ const { c, otherCases } = Astro.props;
     <h2 class="oc-title" data-anim>Outros cases de sucesso</h2>
     <div class="oc-grid stagger-children">
       {otherCases.slice(0,3).map(oc => (
-        <a href={`/cases/${oc.slug}`} class="oc-card">
+        <a href={`/cases/${oc.slug}/`} class="oc-card">
           <h3 class="oc-client">{oc.client}</h3>
           <span class="oc-sector">{oc.sector}</span>
           <span class="oc-arrow">

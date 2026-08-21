@@ -10,3 +10,4 @@ dist/
 .superpowers/
 .secrets/
 public/acesso/config.php
+audit-out/

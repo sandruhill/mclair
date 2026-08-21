@@ -84,7 +84,11 @@ export type DbSingleton = { slug: string; data: any };
 // real featured_image (and none currently have one) falls back to a shared
 // branded placeholder instead of a broken image icon.
 const BROKEN_IMAGE_URL_PATTERN = '/images/galeria/';
-const DEFAULT_BLOG_IMAGE = '/blog-images/capa-padrao.svg';
+// Absolute + PNG (not the site's own SVG) because Facebook/Twitter/LinkedIn
+// crawlers don't reliably resolve relative og:image URLs and don't support
+// SVG there at all -- a relative SVG here silently means no preview image
+// on every post lacking its own featured_image.
+const DEFAULT_BLOG_IMAGE = 'https://mclair.com.br/blog-images/capa-padrao-og.png';
 
 export function resolveBlogImage(featuredImage?: string | null, imageUrl?: string | null): string {
   if (featuredImage) return featuredImage;
@@ -117,17 +121,21 @@ export type MenuNode = { id: number; label: string; href: string; children: Menu
 // builder can point at -- keep in sync with pages.php's $MENU_PAGES.
 const SINGLETON_ROUTES: Record<string, string> = {
   homepage: '/',
-  sobre: '/sobre',
-  clientes: '/clientes',
-  contato: '/contato',
-  mentorias: '/mentorias',
+  sobre: '/sobre/',
+  clientes: '/clientes/',
+  contato: '/contato/',
+  mentorias: '/mentorias/',
 };
 
+// Every route below is canonicalized WITH a trailing slash (confirmed via
+// crawl: the server 301s the no-slash form) -- building hrefs without it
+// meant every nav click paid for an extra redirect hop before landing on
+// the real page.
 function resolveMenuHref(item: DbMenuItem): string {
   switch (item.link_type) {
     case 'singleton': return SINGLETON_ROUTES[item.link_value] ?? '/';
-    case 'service': return `/servicos/${item.link_value}`;
-    case 'blog_index': return '/blog';
+    case 'service': return `/servicos/${item.link_value}/`;
+    case 'blog_index': return '/blog/';
     default: return item.link_value || '#';
   }
 }

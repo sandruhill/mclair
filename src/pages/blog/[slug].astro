@@ -189,7 +189,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     </div>
   )}
   <div class="container ph-inner">
-    <a href="/blog" class="back-link">← Blog</a>
+    <a href="/blog/" class="back-link">← Blog</a>
     <div class="ph-meta">
       {post.date && <time class="ph-date">{formatDate(post.date)}</time>}
       {post.author && <span class="ph-author">por {post.author}</span>}
@@ -258,7 +258,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
       <h2 class="related-title">Mais artigos</h2>
       <div class="related-grid">
         {relatedPosts.map(p => (
-          <a href={`/blog/${p.slug}`} class="rel-card">
+          <a href={`/blog/${p.slug}/`} class="rel-card">
             {p.image && (
               <div class="rel-img-wrap">
                 <img src={p.image} alt={p.title} class="rel-img" loading="lazy"

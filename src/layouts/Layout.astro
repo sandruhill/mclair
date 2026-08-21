@@ -38,6 +38,11 @@ const {
   schema,
   cmsEdit,
 } = Astro.props;
+// Social crawlers (Facebook/Twitter/LinkedIn) don't reliably resolve a
+// relative og:image, and CMS-editable image fields store paths relative to
+// site root (e.g. /uploads/x.jpg) -- normalize here once instead of at
+// every call site.
+const absoluteOgImage = ogImage.startsWith('http') ? ogImage : `${BASE}${ogImage}`;
 const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
 const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
 
@@ -132,11 +137,6 @@ const websiteSchema = {
   name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
   description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
   publisher: { '@id': `${BASE}/#organization` },
-  potentialAction: {
-    '@type': 'SearchAction',
-    target: `${BASE}/contato?q={search_term_string}`,
-    'query-input': 'required name=search_term_string',
-  },
   inLanguage: 'pt-BR',
 };
 ---
@@ -176,7 +176,7 @@ const websiteSchema = {
     <meta property="og:url"           content={canonicalURL} />
     <meta property="og:title"         content={title} />
     <meta property="og:description"   content={description} />
-    <meta property="og:image"         content={ogImage} />
+    <meta property="og:image"         content={absoluteOgImage} />
     <meta property="og:image:width"   content="1200" />
     <meta property="og:image:height"  content="630" />
     <meta property="og:image:alt"     content={ogImageAlt} />
@@ -199,7 +199,7 @@ const websiteSchema = {
     <meta name="twitter:card"         content="summary_large_image" />
     <meta name="twitter:title"        content={title} />
     <meta name="twitter:description"  content={description} />
-    <meta name="twitter:image"        content={ogImage} />
+    <meta name="twitter:image"        content={absoluteOgImage} />
     <meta name="twitter:image:alt"    content={ogImageAlt} />
     <meta name="twitter:site"         content="@mclaircomunicacao" />
     {articleAuthor && <meta name="twitter:creator" content={`@${articleAuthor.toLowerCase().replace(/\s+/g,'')}`} />}

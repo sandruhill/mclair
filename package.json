@@ -23,6 +23,7 @@
     "@remotion/cli": "^4.0.513",
     "@types/react": "^19.2.18",
     "@types/react-dom": "^19.2.4",
+    "cheerio": "^1.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "remotion": "^4.0.513"

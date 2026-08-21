@@ -237,6 +237,8 @@ ul, ol { list-style:none; }
 .hero-instant[data-anim="fade"] { animation-name: heroFadeIn; }
 .hero-instant[data-anim="left"] { --hero-slide-x: -40px; animation-name: heroSlideX; }
 .hero-instant[data-anim="right"] { --hero-slide-x: 40px; animation-name: heroSlideX; }
+.hero-instant[data-delay="1"] { animation-delay: .1s; }
+.hero-instant[data-delay="2"] { animation-delay: .2s; }
 .hero-instant[data-delay="3"] { animation-delay: .3s; }
 .hero-instant[data-delay="4"] { animation-delay: .4s; }
 .hero-instant[data-delay="5"] { animation-delay: .5s; }

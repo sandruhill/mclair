@@ -158,18 +158,18 @@ const desafios = [
     <div class="lh-blob lh-blob-2"></div>
   </div>
   <div class="container lh-hero-inner">
-    <p class="eyebrow eyebrow-light" data-anim style="justify-content:flex-start">
+    <p class="eyebrow eyebrow-light hero-instant" data-anim style="justify-content:flex-start">
       Marketing para Leiloeiros · por Mclair
     </p>
-    <h1 class="lh-title" data-anim data-delay="1">
+    <h1 class="lh-title hero-instant" data-anim data-delay="1">
       Seu leilão merece<br/>
       mais que curtidas.<br/>
       Merece <em>disputa por lance.</em>
     </h1>
-    <p class="lh-sub" data-anim data-delay="2">
+    <p class="lh-sub hero-instant" data-anim data-delay="2">
       A Mclair é especialista em comunicação para o mercado de leilões. Unimos assessoria de imprensa, growth e conteúdo para transformar visibilidade em arrematantes reais.
     </p>
-    <div class="lh-actions" data-anim data-delay="3">
+    <div class="lh-actions hero-instant" data-anim data-delay="3">
       <a href="#form" class="btn-primary">
         Quero atrair mais arrematantes
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
@@ -189,7 +189,7 @@ const desafios = [
     <div class="lh-logos-track">
       {[...logos, ...logos].map((l, i) => {
         const Tag = l.slug ? 'a' : 'div';
-        const linkProps = l.slug ? { href: `/cases/${l.slug}` } : {};
+        const linkProps = l.slug ? { href: `/cases/${l.slug}/` } : {};
         return (
           <Tag class="lh-logo-item" aria-hidden={i >= logos.length ? 'true' : undefined} tabindex={i >= logos.length ? -1 : undefined} {...linkProps}>
             <img src={l.logo} alt={l.name} title={l.name} loading="lazy" />
@@ -337,7 +337,7 @@ const desafios = [
       ))}
     </div>
     <div class="lh-cases-all-link-wrap">
-      <a href="/cases" class="btn-text lh-cases-all-link">
+      <a href="/cases/" class="btn-text lh-cases-all-link">
         Ver todos os cases de clientes
         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
       </a>
@@ -377,7 +377,7 @@ const desafios = [
         <div class="lh-modal-tags">
           {c.tags.map(t => <span class="lh-modal-tag-pill">{t}</span>)}
         </div>
-        <a href={`/cases/${c.slug}`} class="btn-outline lh-modal-link">
+        <a href={`/cases/${c.slug}/`} class="btn-outline lh-modal-link">
           Ver case completo na página
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17L17 7M7 7h10v10"/></svg>
         </a>
@@ -617,10 +617,10 @@ const desafios = [
   background-image: linear-gradient(rgba(200,16,46,.06) 1px, transparent 1px), linear-gradient(90deg, rgba(200,16,46,.06) 1px, transparent 1px);
   background-size: 72px 72px;
 }
-.lh-blob { position: absolute; border-radius: 50%; filter: blur(90px); animation: blob-float 8s ease-in-out infinite; }
+.lh-blob { position: absolute; border-radius: 50%; filter: blur(90px); animation: blob-float 8s ease-in-out infinite; will-change: transform; }
 .lh-blob-1 { width: 500px; height: 500px; top: -100px; right: -100px; background: radial-gradient(circle, rgba(200,16,46,.14) 0%, transparent 70%); }
 .lh-blob-2 { width: 320px; height: 320px; bottom: -80px; left: -60px; background: radial-gradient(circle, rgba(27,138,118,.08) 0%, transparent 70%); animation-delay: -4s; }
-@keyframes blob-float { 0%,100% { transform: translateY(0) scale(1); } 50% { transform: translateY(-20px) scale(1.03); } }
+@keyframes blob-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
 
 .lh-hero-inner { position: relative; z-index: 2; padding-top: 88px; padding-bottom: 88px; max-width: 860px; }
 .eyebrow-light { color: rgba(255,255,255,.5) !important; }
