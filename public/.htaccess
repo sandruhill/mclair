@@ -109,7 +109,7 @@ ErrorDocument 404 /404.html
 Options -Indexes
 
 # Block access to sensitive files
-<FilesMatch "(^\.env|^\.git|\.sql|\.bak|\.zip|\.tar|\.tar\.gz)$">
+<FilesMatch "(^\.env|^\.git|\.sql|\.bak|\.zip|\.tar|\.tar\.gz|^\.user\.ini)$">
   Require all denied
 </FilesMatch>
 
