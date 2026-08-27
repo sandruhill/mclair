@@ -204,6 +204,7 @@ function clientsManagerRender(array $clients): void {
     if (!fields.name) { showErr('Nome é obrigatório.'); return; }
     showErr('');
     var fd = new FormData();
+    fd.append('csrf', CMS_CSRF);
     fd.append('action', 'save');
     fd.append('index', i);
     fd.append('name', fields.name);
@@ -229,6 +230,7 @@ function clientsManagerRender(array $clients): void {
       return;
     }
     var fd = new FormData();
+    fd.append('csrf', CMS_CSRF);
     fd.append('action', 'delete');
     fd.append('index', i);
     fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
@@ -245,6 +247,7 @@ function clientsManagerRender(array $clients): void {
   window.cmDeleteSelected = function () {
     if (!selected.size) return;
     var fd = new FormData();
+    fd.append('csrf', CMS_CSRF);
     fd.append('action', 'delete_many');
     fd.append('indexes', JSON.stringify(Array.from(selected)));
     fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
@@ -270,6 +273,7 @@ function clientsManagerRender(array $clients): void {
     var uploads = Array.from(files).map(function (f) {
       var fd = new FormData();
       fd.append('file', f);
+      fd.append('csrf', CMS_CSRF);
       return fetch('/acesso/upload.php', { method: 'POST', body: fd })
         .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j, name: f.name }; }); });
     });
@@ -283,6 +287,7 @@ function clientsManagerRender(array $clients): void {
       if (errors.length) showErr('Falha ao enviar: ' + errors.join(', '));
       if (!items.length) { drop.querySelector('.cm-bulk-msg').textContent = 'Arraste vários logos aqui ou clique para escolher. Cada imagem enviada vira um cliente novo.'; return; }
       var fd = new FormData();
+      fd.append('csrf', CMS_CSRF);
       fd.append('action', 'add_many');
       fd.append('items', JSON.stringify(items));
       return fetch('/acesso/clients-api.php', { method: 'POST', body: fd })
@@ -389,6 +394,11 @@ if ($slug) {
     $item = $stmt->fetch();
     if (!$item) { http_response_code(404); die('Página não encontrada'); }
     if ($slug !== 'llms') $decoded = json_decode($item['data'], true);
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
@@ -530,6 +540,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
 
   <div class="card">
   <form method="post">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
     <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
 
     <?php if ($slug === 'llms'): ?>

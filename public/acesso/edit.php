@@ -7,6 +7,11 @@ $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 $myId = (int) $_SESSION['cms_user_id'];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+    }
+
     // keywords: comma-separated text -> JSON array (stored format used by the build)
     $kwArr = array_values(array_filter(array_map('trim', explode(',', $_POST['keywords'] ?? '')), 'strlen'));
     $kwJson = json_encode($kwArr, JSON_UNESCAPED_UNICODE);
@@ -56,6 +61,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
 <?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
 
 <form method="post">
+  <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
   <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
 
   <div class="editor-grid">

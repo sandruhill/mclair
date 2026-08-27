@@ -15,6 +15,11 @@ if (isset($_GET['logout'])) {
     exit;
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM cmstest_blog_posts WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
@@ -65,6 +70,7 @@ adminLayoutTop('blog', 'Posts do blog');
   <td class="dt-actions">
     <a href="posts/editar?slug=<?= urlencode($p['slug']) ?>">editar</a>
     <form method="post" style="display:inline">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
       <input type="hidden" name="action" value="delete" />
       <input type="hidden" name="slug" value="<?= htmlspecialchars($p['slug']) ?>" />
       <button type="button" class="del" data-confirm="Apagar este post do banco?" onclick="askConfirm(this)">apagar</button>

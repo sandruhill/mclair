@@ -37,6 +37,10 @@ function menuReorderSiblings(PDO $pdo, ?int $parentId): array {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+    }
     $action = $_POST['action'] ?? '';
 
     if ($action === 'delete') {
@@ -167,6 +171,7 @@ function menuRenderRows(array $byParent, int $parentKey, array $pages, array $se
         echo '<div class="mi-actions">';
         echo '<a href="menu?edit=' . $id . '">editar</a>';
         echo '<form method="post">'
+           . '<input type="hidden" name="csrf" value="' . htmlspecialchars(cmsCsrfToken()) . '" />'
            . '<input type="hidden" name="action" value="delete" /><input type="hidden" name="id" value="' . $id . '" />'
            . '<button type="button" class="del" data-confirm="Remover? Os itens filhos passam a ficar no topo do menu." data-yes="sim, remover" onclick="askConfirm(this)">remover</button></form>';
         echo '</div></div>';
@@ -224,6 +229,7 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
   <div class="card">
     <strong style="font-size:.9rem"><?= $editItem ? 'Editando: ' . htmlspecialchars($editItem['label']) : 'Adicionar item' ?></strong>
     <form method="post">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
       <input type="hidden" name="action" value="save" />
       <input type="hidden" name="id" value="<?= $editItem ? (int) $editItem['id'] : 0 ?>" />
 
@@ -363,6 +369,7 @@ setLinkType(document.getElementById('linkType').value);
   function saveOrder(container) {
     var ids = Array.from(container.children).map(function (n) { return n.dataset.id; });
     var fd = new FormData();
+    fd.append('csrf', CMS_CSRF);
     fd.append('action', 'reorder');
     fd.append('parent_id', container.dataset.parent === '0' ? '' : container.dataset.parent);
     fd.append('ids', JSON.stringify(ids));

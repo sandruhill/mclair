@@ -6,6 +6,11 @@ cmsRequireRole(['admin', 'editor']);
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && $slug) {
     $stmt = $pdo->prepare('UPDATE cmstest_services SET title = ?, headline = ?, intro = ?, full_desc = ?, image = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([$_POST['title'], $_POST['headline'], $_POST['intro'], $_POST['full_desc'], $_POST['image'], $_SESSION['cms_user_id'], $slug]);
@@ -58,6 +63,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
     <?php if ($item['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
   </p>
   <form method="post">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
     <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
     <label>Título</label>
     <input type="text" name="title" value="<?= htmlspecialchars($item['title']) ?>" />

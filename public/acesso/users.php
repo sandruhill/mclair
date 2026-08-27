@@ -8,6 +8,10 @@ $myId = (int) $_SESSION['cms_user_id'];
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+    }
     $action = $_POST['action'] ?? '';
 
     if ($action === 'create') {
@@ -157,6 +161,7 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
     <a href="usuarios?edit=<?= (int)$u['id'] ?>">editar</a>
     <?php if ((int)$u['id'] !== (int)$_SESSION['cms_user_id']): ?>
     <form method="post" style="display:inline">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
       <input type="hidden" name="action" value="delete" />
       <input type="hidden" name="id" value="<?= (int)$u['id'] ?>" />
       <button type="button" class="del" data-confirm="Remover este usuário?" data-yes="sim, remover" onclick="askConfirm(this)">remover</button>
@@ -174,6 +179,7 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
 <div class="card" style="max-width:420px">
   <strong><?= !$isAdmin ? 'Meu perfil' : ($editUser ? 'Editar usuário' : 'Novo usuário') ?></strong>
   <form method="post">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
     <input type="hidden" name="action" value="<?= $editUser ? 'update' : 'create' ?>" />
     <?php if ($editUser): ?><input type="hidden" name="id" value="<?= (int)$editUser['id'] ?>" /><?php endif; ?>
     <label>E-mail (@mclair.com.br)</label>

@@ -5,6 +5,13 @@ cmsRequireRole(['admin', 'editor']);
 
 header('Content-Type: application/json; charset=utf-8');
 
+// Every action here mutates -- the endpoint is POST-only in practice.
+if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.']);
+    exit;
+}
+
 $pdo = cmsDb();
 $stmt = $pdo->prepare('SELECT data FROM cmstest_singletons WHERE slug = ?');
 $stmt->execute(['clientes']);

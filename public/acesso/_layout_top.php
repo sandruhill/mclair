@@ -300,6 +300,10 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   }
 </style>
 <script>
+// CSRF token for fetch()-based POSTs (upload.php, clients-api.php, menu
+// reorder). Regular forms carry the same token as a hidden input.
+var CMS_CSRF = <?= json_encode(cmsCsrfToken()) ?>;
+
 // ---- Drag-and-drop image upload ----
 // Enhances an image-URL text input (class "img-url") with a drop zone that
 // POSTs to /acesso/upload.php and keeps a live thumbnail preview in sync.
@@ -347,6 +351,7 @@ function imgDrop(input) {
     msg.textContent = 'Enviando...';
     var fd = new FormData();
     fd.append('file', f);
+    fd.append('csrf', CMS_CSRF);
     fetch('/acesso/upload.php', { method: 'POST', body: fd })
       .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
       .then(function (res) {
@@ -520,6 +525,7 @@ function askUrl(anchor, cb) {
     <h2>Troque sua senha</h2>
     <p>Por segurança, você precisa definir uma senha própria antes de continuar usando o painel.</p>
     <form method="post" action="/acesso/usuarios" style="margin-top:14px">
+      <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
       <input type="hidden" name="action" value="password" />
       <input type="hidden" name="redirect_to" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" />
       <label>Nova senha (mín. 8 caracteres)</label>

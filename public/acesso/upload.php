@@ -14,6 +14,12 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_FILES['file'])) {
     exit;
 }
 
+if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    echo json_encode(['error' => 'Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.']);
+    exit;
+}
+
 $file = $_FILES['file'];
 if ($file['error'] !== UPLOAD_ERR_OK) {
     http_response_code(400);

@@ -25,6 +25,10 @@ $LABELS = [
 $config = json_decode($row['data'], true);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
+        http_response_code(403);
+        die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+    }
     $new = [];
     foreach ($config as $key => $orig) {
         $new[$key] = (string) ($_POST['f'][$key] ?? $orig);
@@ -43,6 +47,7 @@ adminLayoutTop('settings', 'Configurações');
 
 <div class="card" style="max-width:520px">
 <form method="post">
+  <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
   <?php $first = true; foreach ($config as $key => $val): ?>
     <label<?= $first ? ' style="margin-top:0"' : '' ?>><?= htmlspecialchars($LABELS[$key] ?? $key) ?></label>
     <?php if ($key === 'corPrincipal'): ?>

@@ -4,7 +4,7 @@ session_set_cookie_params([
     'path' => '/acesso/',
     'secure' => true,
     'httponly' => true,
-    'samesite' => 'Lax',
+    'samesite' => 'Strict',
 ]);
 require_once __DIR__ . '/db.php';
 session_start();
@@ -198,6 +198,24 @@ $_SESSION['cms_display_name'] = $cmsUserRow['display_name'] ?? null;
 $_SESSION['cms_avatar_url'] = $cmsUserRow['avatar_url'] ?? null;
 $_SESSION['cms_pw_changed'] = $cmsUserRow['password_changed_at'] !== null;
 $_SESSION['cms_pw_login_count'] = (int) ($cmsUserRow['login_count_since_reset'] ?? 0);
+
+// One CSRF token per login session, lazily minted. Rendered as a hidden
+// <input name="csrf"> in every POST form (and as the CMS_CSRF JS global for
+// fetch()-based endpoints) and checked by cmsCsrfValidate() on every POST.
+function cmsCsrfToken(): string {
+    if (empty($_SESSION['cms_csrf'])) {
+        $_SESSION['cms_csrf'] = bin2hex(random_bytes(32));
+    }
+    return $_SESSION['cms_csrf'];
+}
+
+// Returns true/false only -- each call site decides how to reject (plain
+// die() on form pages, JSON error on the fetch endpoints).
+function cmsCsrfValidate(string $token): bool {
+    return $token !== '' && hash_equals(cmsCsrfToken(), $token);
+}
+
+cmsCsrfToken(); // ensure it exists before any page renders its forms
 
 function cmsRole(): string {
     return $_SESSION['cms_role'] ?? 'author';

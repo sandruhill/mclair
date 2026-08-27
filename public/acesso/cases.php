@@ -6,6 +6,11 @@ cmsRequireRole(['admin', 'editor']);
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !cmsCsrfValidate($_POST['csrf'] ?? '')) {
+    http_response_code(403);
+    die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['action'] ?? '') === 'delete') {
     $stmt = $pdo->prepare('DELETE FROM cmstest_cases WHERE slug = ?');
     $stmt->execute([$_POST['slug']]);
@@ -71,6 +76,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <td class="dt-actions">
       <a href="casos?slug=<?= urlencode($c['slug']) ?>">editar</a>
       <form method="post" style="display:inline">
+        <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
         <input type="hidden" name="action" value="delete" />
         <input type="hidden" name="slug" value="<?= htmlspecialchars($c['slug']) ?>" />
         <button type="button" class="del" data-confirm="Apagar este case?" onclick="askConfirm(this)">apagar</button>
@@ -96,6 +102,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     <?php if ($item['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($item['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
   </p>
   <form method="post">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
     <input type="hidden" name="slug" value="<?= htmlspecialchars($slug) ?>" />
     <label>Cliente</label>
     <input type="text" name="client" value="<?= htmlspecialchars($item['client']) ?>" />
