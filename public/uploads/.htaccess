@@ -1,0 +1,23 @@
+# Uploaded files are user content, never executable code -- this directory
+# only ever receives images (upload.php whitelists jpg/png/webp/gif/svg), so
+# nothing here should ever run as a script even if a bad file somehow got
+# past that check. Defense in depth, not a substitute for upload.php's own
+# validation.
+
+<FilesMatch "\.(php|php[3-8]?|phtml|pht|phar|cgi|pl|py|sh|asp|aspx|jsp)$">
+  Require all denied
+</FilesMatch>
+
+<IfModule mod_php7.c>
+  php_flag engine off
+</IfModule>
+<IfModule mod_php.c>
+  php_flag engine off
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Content-Security-Policy "default-src 'none'; style-src 'unsafe-inline'; sandbox"
+</IfModule>
+
+Options -Indexes -ExecCGI
