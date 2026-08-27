@@ -92,6 +92,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new = $_POST['new_password'] ?? '';
         $confirm = $_POST['confirm_password'] ?? '';
         $redirectTo = $_POST['redirect_to'] ?? 'usuarios';
+        // Only relative paths within the panel -- never an absolute or
+        // protocol-relative URL (open-redirect hardening).
+        if (preg_match('#^(?:[a-z][a-z0-9+.-]*:|//)#i', $redirectTo)) $redirectTo = 'usuarios';
         if (strlen($new) < 8) {
             $error = 'A nova senha precisa ter pelo menos 8 caracteres.';
         } elseif ($new !== $confirm) {
@@ -146,7 +149,7 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
 <?php foreach ($users as $u): ?>
 <tr>
   <td><?php if (!empty($u['display_name'])): ?><strong><?= htmlspecialchars($u['display_name']) ?></strong><br><span style="color:var(--ink-3);font-size:.78rem"><?= htmlspecialchars($u['username']) ?></span><?php else: ?><?= htmlspecialchars($u['username']) ?><?php endif; ?></td>
-  <?php $roleLabels = ['admin' => 'Administrador', 'editor' => 'Editor', 'author' => 'Autor']; ?>
+  <?php $roleLabels = ['admin' => 'Administrador', 'editor' => 'Editor', 'author' => 'Escritor']; ?>
   <td><span class="badge" style="<?= $u['role']==='admin' ? 'background:var(--red);color:#fff' : '' ?>"><?= $roleLabels[$u['role']] ?? $u['role'] ?></span></td>
   <td><?= htmlspecialchars($u['created_at']) ?></td>
   <td><?= htmlspecialchars($u['last_login_at'] ?? 'nunca') ?></td>
@@ -189,7 +192,7 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
     <?php if ($isAdmin): ?>
     <label>Permissão</label>
     <select name="role">
-      <option value="author" <?= ($editUser['role'] ?? '') === 'author' ? 'selected' : '' ?>>Autor (edita só os próprios posts do blog)</option>
+      <option value="author" <?= ($editUser['role'] ?? '') === 'author' ? 'selected' : '' ?>>Escritor (edita todo o blog, sem acesso ao resto do site)</option>
       <option value="editor" <?= ($editUser['role'] ?? '') === 'editor' ? 'selected' : '' ?>>Editor (edita todo o conteúdo)</option>
       <option value="admin" <?= ($editUser['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Administrador (edita tudo + gerencia usuários)</option>
     </select>

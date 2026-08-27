@@ -5,28 +5,14 @@ require_once __DIR__ . '/_layout_top.php';
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 $myId = (int) $_SESSION['cms_user_id'];
-$isAuthorRole = cmsRole() === 'author';
-
-// "Autor" role can only ever touch their own posts.
-if ($isAuthorRole) {
-    $owns = $pdo->prepare('SELECT 1 FROM cmstest_blog_posts WHERE slug = ? AND author_id = ?');
-    $owns->execute([$slug, $myId]);
-    if (!$owns->fetchColumn()) { http_response_code(403); die('Você só pode editar os seus próprios posts.'); }
-}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // keywords: comma-separated text -> JSON array (stored format used by the build)
     $kwArr = array_values(array_filter(array_map('trim', explode(',', $_POST['keywords'] ?? '')), 'strlen'));
     $kwJson = json_encode($kwArr, JSON_UNESCAPED_UNICODE);
 
-    if ($isAuthorRole) {
-        // authorship stays locked to themselves regardless of what's posted
-        $authorId = $myId;
-        $authorName = $_SESSION['cms_username'];
-    } else {
-        $authorId = $_POST['author_id'] !== '' ? (int) $_POST['author_id'] : null;
-        $authorName = $authorId ? null : trim($_POST['author_other'] ?? '');
-    }
+    $authorId = $_POST['author_id'] !== '' ? (int) $_POST['author_id'] : null;
+    $authorName = $authorId ? null : trim($_POST['author_other'] ?? '');
     if ($authorId) {
         $u = $pdo->prepare('SELECT username FROM cmstest_users WHERE id = ?');
         $u->execute([$authorId]);
@@ -139,20 +125,16 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
           <label>Subtítulo</label>
           <input type="text" name="subtitle" value="<?= htmlspecialchars($post['subtitle']) ?>" />
           <label>Autor</label>
-          <?php if ($isAuthorRole): ?>
-            <input type="text" value="<?= htmlspecialchars($_SESSION['cms_username']) ?>" disabled />
-          <?php else: ?>
-            <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
-              <option value="">Outro (digitar abaixo)</option>
-              <?php foreach ($authorOptions as $u): ?>
-                <option value="<?= (int) $u['id'] ?>" <?= (int) $post['author_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['username']) ?></option>
-              <?php endforeach; ?>
-            </select>
-            <div id="authorOtherWrap" style="<?= $post['author_id'] ? 'display:none' : '' ?>">
-              <input type="text" name="author_other" value="<?= htmlspecialchars($post['author_id'] ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
-              <p class="hint">Para autores sem login no painel (colaboradores externos, etc).</p>
-            </div>
-          <?php endif; ?>
+          <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
+            <option value="">Outro (digitar abaixo)</option>
+            <?php foreach ($authorOptions as $u): ?>
+              <option value="<?= (int) $u['id'] ?>" <?= (int) $post['author_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['username']) ?></option>
+            <?php endforeach; ?>
+          </select>
+          <div id="authorOtherWrap" style="<?= $post['author_id'] ? 'display:none' : '' ?>">
+            <input type="text" name="author_other" value="<?= htmlspecialchars($post['author_id'] ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
+            <p class="hint">Para autores sem login no painel (colaboradores externos, etc).</p>
+          </div>
           <label>Categoria</label>
           <select name="category">
             <?php foreach ($categories as $cat): ?>

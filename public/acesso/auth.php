@@ -89,6 +89,9 @@ if (isset($_POST['username'], $_POST['password'])) {
         }
         $insertAttempt = $pdo->prepare('INSERT INTO cmstest_login_attempts (ip, username, attempted_at) VALUES (?, ?, NOW())');
         $insertAttempt->execute([$clientIp, $submittedUsername]);
+        // Housekeeping: rows outside any possible lockout window are dead weight,
+        // prune them here so the table can't grow unbounded (no cron needed).
+        $pdo->exec('DELETE FROM cmstest_login_attempts WHERE attempted_at < (NOW() - INTERVAL 1 DAY)');
         usleep(max(0, 300000 - (int) ((microtime(true) - $loginStart) * 1000000)));
         $authError = 'Usuário ou senha incorretos.';
     }
