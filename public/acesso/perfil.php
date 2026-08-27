@@ -6,11 +6,10 @@ $pdo = cmsDb();
 $userId = (int) $_SESSION['cms_user_id'];
 
 $error = '';
-$saved = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
-    $redirectTo = $_POST['redirect_to'] ?? 'perfil.php?saved=1';
+    $redirectTo = $_POST['redirect_to'] ?? 'perfil.php';
 
     if ($action === 'profile') {
         $displayName = trim($_POST['display_name'] ?? '');
@@ -32,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $hash = password_hash($new, PASSWORD_DEFAULT);
             $stmt = $pdo->prepare('UPDATE cmstest_users SET password_hash = ?, password_changed_at = NOW(), login_count_since_reset = 0 WHERE id = ?');
             $stmt->execute([$hash, $userId]);
-            header('Location: ' . $redirectTo);
+            $sep = str_contains($redirectTo, '?') ? '&' : '?';
+            header('Location: ' . $redirectTo . $sep . 'pw_changed=1');
             exit;
         }
     }
@@ -45,7 +45,6 @@ $me = $stmt->fetch();
 adminLayoutTop('profile', 'Meu perfil');
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok">Perfil atualizado.</div><?php endif; ?>
 <?php if ($error): ?><div class="msg err"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
 <div class="editor-grid">
@@ -67,6 +66,7 @@ adminLayoutTop('profile', 'Meu perfil');
       <strong>Trocar senha</strong>
       <form method="post">
         <input type="hidden" name="action" value="password" />
+        <input type="hidden" name="redirect_to" value="perfil.php" />
         <label>Nova senha (mín. 8 caracteres)</label>
         <input type="password" name="new_password" minlength="8" required />
         <label>Confirmar nova senha</label>
