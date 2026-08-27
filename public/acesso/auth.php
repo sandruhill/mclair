@@ -212,17 +212,7 @@ function cmsCsrfToken(): string {
 // Returns true/false only -- each call site decides how to reject (plain
 // die() on form pages, JSON error on the fetch endpoints).
 function cmsCsrfValidate(string $token): bool {
-    $result = $token !== '' && hash_equals(cmsCsrfToken(), $token);
-    // TEMP DEBUG -- remove after diagnosing the csrf-mismatch report.
-    @file_put_contents(__DIR__ . '/csrf-debug.log',
-        date('H:i:s.') . substr(microtime(), 2, 3)
-        . ' sid=' . session_id()
-        . ' uri=' . ($_SERVER['REQUEST_URI'] ?? '')
-        . ' expected=' . cmsCsrfToken()
-        . ' got=' . $token
-        . ' result=' . ($result ? '1' : '0') . "\n",
-        FILE_APPEND);
-    return $result;
+    return $token !== '' && hash_equals(cmsCsrfToken(), $token);
 }
 
 cmsCsrfToken(); // ensure it exists before any page renders its forms
