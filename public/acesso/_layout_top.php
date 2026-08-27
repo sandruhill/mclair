@@ -140,7 +140,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   .card { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:22px; box-shadow:0 1px 3px rgba(0,0,0,.04); }
   label { display:block; font-weight:700; margin:14px 0 5px; font-size:.78rem; text-transform:uppercase; letter-spacing:.03em; color:var(--ink-3); }
   .hint { font-size:.72rem; color:var(--ink-3); margin:4px 0 0; }
-  input[type=text], input[type=password], input[type=date], select, textarea {
+  input[type=text], input[type=password], input[type=date], input[type=email], select, textarea {
     width:100%; padding:10px 12px; border:1px solid var(--line); border-radius:8px;
     font-family:inherit; font-size:.9rem; box-sizing:border-box; background:var(--paper);
   }
@@ -232,6 +232,72 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   @keyframes toastIn { from { opacity:0; transform:translateY(-10px); } to { opacity:1; transform:translateY(0); } }
   @keyframes toastOut { to { opacity:0; transform:translateY(-10px); } }
   .pw-banner .pw-banner-links { display:flex; gap:16px; flex-shrink:0; }
+
+  /* ---- Responsive: phone/tablet ---- */
+  .nav-toggle { display:none; align-items:center; justify-content:center; width:44px; height:44px; margin-left:-8px; padding:0; border:none; background:none; border-radius:8px; cursor:pointer; color:var(--ink); flex-shrink:0; }
+  .nav-toggle svg { width:22px; height:22px; }
+  .nav-backdrop { position:fixed; inset:0; background:rgba(26,27,30,.45); z-index:55; opacity:0; pointer-events:none; transition:opacity .2s; }
+  .nav-backdrop.show { opacity:1; pointer-events:auto; }
+  .topbar-left { display:flex; align-items:center; gap:8px; min-width:0; }
+  .topbar-left > div { min-width:0; }
+
+  @media (max-width: 768px) {
+    /* Sidebar becomes an off-canvas drawer, opened by the topbar hamburger */
+    .nav-toggle { display:inline-flex; }
+    .sidebar { position:fixed; top:0; bottom:0; left:0; z-index:60; width:min(300px, 85vw); transform:translateX(-105%); transition:transform .25s ease; overflow-y:auto; }
+    .sidebar.open { transform:none; box-shadow:0 10px 40px rgba(0,0,0,.25); }
+    body.nav-open { overflow:hidden; }
+    .sidebar nav a { padding:13px 12px; font-size:.95rem; }
+    .nav-tree a { padding:11px 10px; font-size:.88rem; }
+    .sidebar-user .who a { display:inline-block; padding:4px 0; }
+
+    .topbar { padding:12px 16px; gap:10px; }
+    .topbar h1 { font-size:1rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .topbar .btn.secondary { padding:10px 14px !important; }
+    .content { padding:16px; }
+
+    /* iOS Safari force-zooms the page when a focused field is under 16px */
+    input[type=text], input[type=password], input[type=date], input[type=email], select, textarea { font-size:16px !important; }
+
+    /* Tables scroll sideways inside the card instead of squishing */
+    .tablecard { overflow-x:auto; -webkit-overflow-scrolling:touch; }
+    .tablecard-head { position:sticky; left:0; }
+    table.dt { min-width:600px; }
+    .dt-actions a, .dt-actions button { display:inline-block; padding:10px 0; margin-right:16px; }
+
+    .btn { padding:12px 18px; }
+    .pagination { flex-wrap:wrap; }
+    .pagination a, .pagination span { padding:10px 14px; }
+    .hero-tabs button { padding:9px 16px; }
+
+    /* Markdown toolbar: one swipeable row of finger-sized buttons that
+       sticks to the top of the screen while writing */
+    .mdbar { flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; position:sticky; top:0; z-index:5; }
+    .mdbar button { min-width:44px; min-height:44px; padding:8px 12px; font-size:.9rem; flex-shrink:0; }
+    .mdbar .div { flex-shrink:0; }
+    .urlask input[type=text] { width:min(220px, 55vw); }
+    .editor-grid { gap:16px; }
+
+    /* Save bar: editor-form actions pin to the bottom of the viewport so
+       Salvar never needs a long scroll to reach */
+    .editor-actions { position:fixed; bottom:0; left:0; right:0; z-index:40; display:flex; gap:10px; margin:0; padding:10px 14px calc(10px + env(safe-area-inset-bottom)); background:var(--paper); border-top:1px solid var(--line); box-shadow:0 -6px 20px rgba(0,0,0,.06); }
+    .editor-actions .btn { margin:0 !important; flex:1; justify-content:center; white-space:nowrap; }
+    .content:has(.editor-actions) { padding-bottom:88px; }
+  }
+
+  @media (max-width: 480px) {
+    .content { padding:12px; }
+    .card { padding:16px; }
+    .topbar { padding:10px 12px; }
+    .topbar .meta { display:none; }
+    .stats { gap:10px; grid-template-columns:repeat(auto-fit, minmax(96px, 1fr)); }
+    .stat { padding:12px 14px 10px; }
+    .stat .num { font-size:1.4rem; }
+    .stat .lbl { font-size:.7rem; }
+    .tablecard-head { padding:12px 14px; }
+    .toast { left:12px; right:12px; }
+    .pw-banner { flex-wrap:wrap; }
+  }
 </style>
 <script>
 // ---- Drag-and-drop image upload ----
@@ -393,6 +459,17 @@ function askConfirm(btn) {
   btn.after(box);
 }
 
+// ---- Mobile nav drawer (sidebar is off-canvas below 768px) ----
+function navDrawer(open) {
+  document.querySelector('.sidebar').classList.toggle('open', open);
+  document.getElementById('navBackdrop').classList.toggle('show', open);
+  document.body.classList.toggle('nav-open', open);
+}
+document.addEventListener('DOMContentLoaded', function () {
+  var sb = document.querySelector('.sidebar');
+  if (sb) sb.addEventListener('click', function (e) { if (e.target.closest('a')) navDrawer(false); });
+});
+
 // ---- Inline URL ask (replaces native prompt(); used by the md toolbars) ----
 function askUrl(anchor, cb) {
   var old = document.querySelector('.urlask');
@@ -462,6 +539,7 @@ function askUrl(anchor, cb) {
   </div>
 </div>
 <?php endif; ?>
+<div class="nav-backdrop" id="navBackdrop" onclick="navDrawer(false)"></div>
 <div class="shell">
   <aside class="sidebar">
     <div class="sidebar-brand">
@@ -531,11 +609,16 @@ function askUrl(anchor, cb) {
   </aside>
   <div class="main">
     <div class="topbar">
-      <div>
-        <?php if ($crumb): ?>
-        <div class="breadcrumb"><a href="<?= htmlspecialchars($crumb['href']) ?>"><?= htmlspecialchars($crumb['label']) ?></a><span>/</span></div>
-        <?php endif; ?>
-        <h1><?= htmlspecialchars($title) ?></h1>
+      <div class="topbar-left">
+        <button type="button" class="nav-toggle" onclick="navDrawer(true)" aria-label="Abrir menu">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+        </button>
+        <div>
+          <?php if ($crumb): ?>
+          <div class="breadcrumb"><a href="<?= htmlspecialchars($crumb['href']) ?>"><?= htmlspecialchars($crumb['label']) ?></a><span>/</span></div>
+          <?php endif; ?>
+          <h1><?= htmlspecialchars($title) ?></h1>
+        </div>
       </div>
       <div style="display:flex;align-items:center;gap:14px">
         <?php if ($liveUrl): ?>

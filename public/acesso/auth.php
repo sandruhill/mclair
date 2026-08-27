@@ -149,6 +149,8 @@ if (empty($_SESSION['cms_user_id'])) {
       .image-overlay .who strong { display:block; font-size:.85rem; }
       .image-overlay .who span { font-size:.72rem; color:rgba(255,255,255,.65); }
       @media (min-width: 760px) { .image-side { display:block; } }
+      /* iOS Safari force-zooms the page when a focused field is under 16px */
+      @media (max-width: 760px) { input { font-size:16px; } }
     </style>
     </head>
     <body>

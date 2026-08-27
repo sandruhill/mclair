@@ -69,7 +69,7 @@ adminLayoutTop('services', $slug ? "Editando: {$item['title']}" : 'Serviços', $
     <textarea name="intro" style="min-height:100px"><?= htmlspecialchars($item['intro']) ?></textarea>
     <label>Descrição completa</label>
     <textarea name="full_desc" style="min-height:140px"><?= htmlspecialchars($item['full_desc']) ?></textarea>
-    <button type="submit" class="btn" style="margin-top:16px">Salvar</button>
+    <div class="editor-actions"><button type="submit" class="btn" style="margin-top:16px">Salvar</button></div>
   </form>
   </div>
 <?php endif; ?>

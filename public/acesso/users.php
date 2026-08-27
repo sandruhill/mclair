@@ -181,7 +181,7 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
     <label>Foto de perfil</label>
     <input type="text" class="img-url" data-imgdrop-ratio="1:1" name="avatar_url" value="<?= htmlspecialchars($editUser['avatar_url'] ?? '') ?>" />
     <label>Senha<?= $editUser ? ' (deixe em branco pra manter a atual)' : ' (mín. 8 caracteres)' ?></label>
-    <div style="display:flex;gap:8px">
+    <div style="display:flex;gap:8px;flex-wrap:wrap">
       <input type="text" name="password" id="newPassword" minlength="8" <?= $editUser ? '' : 'required' ?> style="font-family:ui-monospace,monospace" />
       <button type="button" class="btn secondary" style="white-space:nowrap" onclick="generatePassword()">Gerar senha</button>
     </div>
@@ -194,8 +194,10 @@ adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
       <option value="admin" <?= ($editUser['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Administrador (edita tudo + gerencia usuários)</option>
     </select>
     <?php endif; ?>
-    <button type="submit" class="btn" style="margin-top:16px"><?= $editUser ? 'Salvar alterações' : 'Criar usuário' ?></button>
-    <?php if ($isAdmin && $editUser): ?><a href="usuarios" class="btn secondary" style="margin-top:16px;margin-left:8px">Cancelar</a><?php endif; ?>
+    <div class="editor-actions">
+      <button type="submit" class="btn" style="margin-top:16px"><?= $editUser ? 'Salvar alterações' : 'Criar usuário' ?></button>
+      <?php if ($isAdmin && $editUser): ?><a href="usuarios" class="btn secondary" style="margin-top:16px;margin-left:8px">Cancelar</a><?php endif; ?>
+    </div>
   </form>
 </div>
 

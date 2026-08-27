@@ -177,8 +177,10 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
           <p class="hint" style="margin:0 0 12px">
             <?php if ($post['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($post['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
           </p>
-          <button type="submit" class="btn" style="width:100%;justify-content:center">Salvar</button>
-          <a href="/acesso/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
+          <div class="editor-actions">
+            <button type="submit" class="btn" style="width:100%;justify-content:center">Salvar</button>
+            <a href="/acesso/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
+          </div>
         </div>
       </div>
     </div>

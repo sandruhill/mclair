@@ -51,7 +51,7 @@ adminLayoutTop('settings', 'Configurações');
       <input type="text" name="f[<?= htmlspecialchars($key) ?>]" value="<?= htmlspecialchars((string) $val) ?>" />
     <?php endif; ?>
   <?php $first = false; endforeach; ?>
-  <button type="submit" class="btn" style="margin-top:16px">Salvar</button>
+  <div class="editor-actions"><button type="submit" class="btn" style="margin-top:16px">Salvar</button></div>
 </form>
 </div>
 

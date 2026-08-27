@@ -204,6 +204,11 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
   .mi-actions button:hover, .mi-actions a:hover { color:var(--ink); }
   .mi-actions a { color:var(--red); }
   .mi-actions button.del { color:#9a1f1f; text-decoration:underline; }
+  @media (max-width: 768px) {
+    .mi-actions { gap:14px; }
+    .mi-actions button, .mi-actions a { padding:10px 0; }
+    .mi-children[data-parent]:not([data-parent="0"]) { margin-left:18px; }
+  }
 </style>
 
 <div class="editor-grid">
@@ -265,7 +270,7 @@ adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
       </select>
       <p class="hint">Escolha um item do topo para criar um sub-item dele.</p>
 
-      <div style="margin-top:20px">
+      <div class="editor-actions" style="margin-top:20px">
         <button type="submit" class="btn"><?= $editItem ? 'Salvar' : 'Adicionar' ?></button>
         <?php if ($editItem): ?><a href="menu" class="btn secondary" style="margin-left:8px">Cancelar</a><?php endif; ?>
       </div>

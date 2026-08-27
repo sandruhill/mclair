@@ -137,7 +137,7 @@ adminLayoutTop('cases', $slug ? "Editando: {$item['client']}" : 'Cases', $slug ?
     </template>
     <button type="button" class="btn secondary rep-add" onclick="galAdd()">+ Adicionar foto</button>
 
-    <div><button type="submit" class="btn" style="margin-top:16px">Salvar</button></div>
+    <div class="editor-actions"><button type="submit" class="btn" style="margin-top:16px">Salvar</button></div>
   </form>
   <script>
   // Same repeater pattern as pages.php.

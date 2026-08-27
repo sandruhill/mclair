@@ -520,6 +520,12 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
     .cm-edit-fields { flex:1; display:flex; flex-direction:column; gap:8px; min-width:0; }
     .cm-edit label { font-size:.7rem; font-weight:800; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-3); margin:0; }
     .cm-edit-actions { display:flex; gap:8px; margin-top:4px; }
+
+    @media (max-width: 560px) {
+      .cm-edit { flex-direction:column; }
+      .cm-edit-logo { width:100%; }
+      .cm-toolbar { justify-content:flex-start; flex-wrap:wrap; gap:10px; }
+    }
   </style>
 
   <div class="card">
@@ -593,7 +599,7 @@ adminLayoutTop('pages', $slug ? "Editando: {$PAGES[$slug]}" : 'Páginas', $slug 
       <?php $first = false; endforeach; ?>
     <?php endif; ?>
 
-    <div>
+    <div class="editor-actions">
       <button type="submit" class="btn" style="margin-top:20px">Salvar</button>
       <a href="paginas" class="btn secondary" style="margin-top:20px;margin-left:8px">Cancelar</a>
     </div>
