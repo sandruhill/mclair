@@ -2,14 +2,16 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
-cmsRequireRole(['admin']);
 $pdo = cmsDb();
+$isAdmin = cmsRole() === 'admin';
+$myId = (int) $_SESSION['cms_user_id'];
 
 $error = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $action = $_POST['action'] ?? '';
 
     if ($action === 'create') {
+        if (!$isAdmin) { http_response_code(403); die('Você não tem permissão pra criar usuários.'); }
         $username = trim(strtolower($_POST['username'] ?? ''));
         $password = $_POST['password'] ?? '';
         $role = in_array($_POST['role'] ?? '', ['admin', 'editor', 'author'], true) ? $_POST['role'] : 'author';
@@ -31,11 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Edits both "admin editing anyone" and "anyone editing their own record"
+    // (the same form drives both -- see the card below). A non-admin can only
+    // ever target their own id, and can never touch the role column.
     if ($action === 'update') {
-        $id = (int) ($_POST['id'] ?? 0);
+        $id = $isAdmin ? (int) ($_POST['id'] ?? 0) : $myId;
         $username = trim(strtolower($_POST['username'] ?? ''));
         $displayName = trim($_POST['display_name'] ?? '');
-        $role = in_array($_POST['role'] ?? '', ['admin', 'editor', 'author'], true) ? $_POST['role'] : 'author';
+        $avatarUrl = trim($_POST['avatar_url'] ?? '');
         $password = $_POST['password'] ?? '';
 
         if ($username === '') {
@@ -45,16 +50,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($password !== '' && strlen($password) < 8) {
             $error = 'Senha precisa ter pelo menos 8 caracteres (ou deixe em branco pra manter a atual).';
         } else {
-            try {
-                if ($password !== '') {
-                    $hash = password_hash($password, PASSWORD_DEFAULT);
-                    $stmt = $pdo->prepare('UPDATE cmstest_users SET username = ?, display_name = ?, role = ?, password_hash = ?, password_changed_at = NULL, login_count_since_reset = 0 WHERE id = ?');
-                    $stmt->execute([$username, $displayName !== '' ? $displayName : null, $role, $hash, $id]);
+            $fields = ['username = ?', 'display_name = ?', 'avatar_url = ?'];
+            $params = [$username, $displayName !== '' ? $displayName : null, $avatarUrl !== '' ? $avatarUrl : null];
+
+            if ($isAdmin) {
+                $role = in_array($_POST['role'] ?? '', ['admin', 'editor', 'author'], true) ? $_POST['role'] : 'author';
+                $fields[] = 'role = ?';
+                $params[] = $role;
+            }
+
+            if ($password !== '') {
+                $fields[] = 'password_hash = ?';
+                $params[] = password_hash($password, PASSWORD_DEFAULT);
+                if ($isAdmin && $id !== $myId) {
+                    // Admin resetting someone else's password: force the popup again.
+                    $fields[] = 'password_changed_at = NULL';
+                    $fields[] = 'login_count_since_reset = 0';
                 } else {
-                    $stmt = $pdo->prepare('UPDATE cmstest_users SET username = ?, display_name = ?, role = ? WHERE id = ?');
-                    $stmt->execute([$username, $displayName !== '' ? $displayName : null, $role, $id]);
+                    // Changing your own password: you obviously know it now.
+                    $fields[] = 'password_changed_at = NOW()';
                 }
-                header('Location: usuarios?updated=1');
+            }
+
+            $params[] = $id;
+            try {
+                $stmt = $pdo->prepare('UPDATE cmstest_users SET ' . implode(', ', $fields) . ' WHERE id = ?');
+                $stmt->execute($params);
+                $qs = $id === $myId ? ($password !== '' ? 'pw_changed=1' : 'saved=1') : 'updated=1';
+                header('Location: usuarios?' . $qs);
                 exit;
             } catch (PDOException $e) {
                 $error = str_contains($e->getMessage(), 'Duplicate') ? 'Esse usuário já existe.' : 'Erro ao atualizar usuário.';
@@ -62,9 +85,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Lightweight password-only change: used by the forced/reminder popup that
+    // can show up on any admin page, which doesn't carry the full edit form's
+    // other fields. Always targets your own account.
+    if ($action === 'password') {
+        $new = $_POST['new_password'] ?? '';
+        $confirm = $_POST['confirm_password'] ?? '';
+        $redirectTo = $_POST['redirect_to'] ?? 'usuarios';
+        if (strlen($new) < 8) {
+            $error = 'A nova senha precisa ter pelo menos 8 caracteres.';
+        } elseif ($new !== $confirm) {
+            $error = 'As senhas não coincidem.';
+        } else {
+            $hash = password_hash($new, PASSWORD_DEFAULT);
+            $stmt = $pdo->prepare('UPDATE cmstest_users SET password_hash = ?, password_changed_at = NOW(), login_count_since_reset = 0 WHERE id = ?');
+            $stmt->execute([$hash, $myId]);
+            $sep = str_contains($redirectTo, '?') ? '&' : '?';
+            header('Location: ' . $redirectTo . $sep . 'pw_changed=1');
+            exit;
+        }
+    }
+
     if ($action === 'delete') {
+        if (!$isAdmin) { http_response_code(403); die('Você não tem permissão pra remover usuários.'); }
         $id = (int) $_POST['id'];
-        if ($id !== (int) $_SESSION['cms_user_id']) {
+        if ($id !== $myId) {
             $stmt = $pdo->prepare('DELETE FROM cmstest_users WHERE id = ?');
             $stmt->execute([$id]);
         }
@@ -73,16 +118,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$users = $pdo->query('SELECT id, username, display_name, role, created_at, last_login_at FROM cmstest_users ORDER BY created_at')->fetchAll();
+$users = $isAdmin ? $pdo->query('SELECT id, username, display_name, role, created_at, last_login_at FROM cmstest_users ORDER BY created_at')->fetchAll() : [];
 
+// Non-admins only ever see/edit their own record here; admins can edit
+// anyone via ?edit=<id>, or land on the blank "novo usuário" form.
+$editId = $isAdmin ? (int) ($_GET['edit'] ?? 0) : $myId;
 $editUser = null;
-if (isset($_GET['edit'])) {
-    $stmt = $pdo->prepare('SELECT id, username, display_name, role FROM cmstest_users WHERE id = ?');
-    $stmt->execute([(int) $_GET['edit']]);
+if ($editId) {
+    $stmt = $pdo->prepare('SELECT id, username, display_name, avatar_url, role FROM cmstest_users WHERE id = ?');
+    $stmt->execute([$editId]);
     $editUser = $stmt->fetch() ?: null;
 }
 
-adminLayoutTop('users', 'Usuários');
+adminLayoutTop('users', $isAdmin ? 'Usuários' : 'Meu perfil');
 ?>
 
 <?php if (isset($_GET['created'])): ?><div class="msg ok">Usuário criado.</div><?php endif; ?>
@@ -90,6 +138,7 @@ adminLayoutTop('users', 'Usuários');
 <?php if (isset($_GET['deleted'])): ?><div class="msg ok">Usuário removido.</div><?php endif; ?>
 <?php if ($error): ?><div class="msg err"><?= htmlspecialchars($error) ?></div><?php endif; ?>
 
+<?php if ($isAdmin): ?>
 <div class="tablecard" style="margin-bottom:24px">
 <div class="tablecard-head"><div><strong>Usuários</strong><span class="count"><?= count($users) ?></span></div></div>
 <table class="dt">
@@ -117,9 +166,10 @@ adminLayoutTop('users', 'Usuários');
 <?php endforeach; ?>
 </table>
 </div>
+<?php endif; ?>
 
 <div class="card" style="max-width:420px">
-  <strong><?= $editUser ? 'Editar usuário' : 'Novo usuário' ?></strong>
+  <strong><?= !$isAdmin ? 'Meu perfil' : ($editUser ? 'Editar usuário' : 'Novo usuário') ?></strong>
   <form method="post">
     <input type="hidden" name="action" value="<?= $editUser ? 'update' : 'create' ?>" />
     <?php if ($editUser): ?><input type="hidden" name="id" value="<?= (int)$editUser['id'] ?>" /><?php endif; ?>
@@ -128,20 +178,24 @@ adminLayoutTop('users', 'Usuários');
     <p class="hint">Só e-mails da Mclair podem ser cadastrados.</p>
     <label>Nome de exibição</label>
     <input type="text" name="display_name" value="<?= htmlspecialchars($editUser['display_name'] ?? '') ?>" placeholder="opcional" />
+    <label>Foto de perfil</label>
+    <input type="text" class="img-url" data-imgdrop-ratio="1:1" name="avatar_url" value="<?= htmlspecialchars($editUser['avatar_url'] ?? '') ?>" />
     <label>Senha<?= $editUser ? ' (deixe em branco pra manter a atual)' : ' (mín. 8 caracteres)' ?></label>
     <div style="display:flex;gap:8px">
       <input type="text" name="password" id="newPassword" minlength="8" <?= $editUser ? '' : 'required' ?> style="font-family:ui-monospace,monospace" />
       <button type="button" class="btn secondary" style="white-space:nowrap" onclick="generatePassword()">Gerar senha</button>
     </div>
-    <p class="hint"><?= $editUser ? 'Trocar a senha aqui força o usuário a defini-la de novo no próximo login.' : 'Clique em "Gerar senha" pra criar uma senha forte automaticamente. Copie antes de salvar, ela não aparece de novo depois.' ?></p>
+    <p class="hint"><?= ($isAdmin && $editUser && (int)$editUser['id'] !== $myId) ? 'Trocar a senha aqui força o usuário a defini-la de novo no próximo login.' : ($editUser ? 'Deixe em branco pra manter a senha atual.' : 'Clique em "Gerar senha" pra criar uma senha forte automaticamente. Copie antes de salvar, ela não aparece de novo depois.') ?></p>
+    <?php if ($isAdmin): ?>
     <label>Permissão</label>
     <select name="role">
       <option value="author" <?= ($editUser['role'] ?? '') === 'author' ? 'selected' : '' ?>>Autor (edita só os próprios posts do blog)</option>
       <option value="editor" <?= ($editUser['role'] ?? '') === 'editor' ? 'selected' : '' ?>>Editor (edita todo o conteúdo)</option>
       <option value="admin" <?= ($editUser['role'] ?? '') === 'admin' ? 'selected' : '' ?>>Administrador (edita tudo + gerencia usuários)</option>
     </select>
+    <?php endif; ?>
     <button type="submit" class="btn" style="margin-top:16px"><?= $editUser ? 'Salvar alterações' : 'Criar usuário' ?></button>
-    <?php if ($editUser): ?><a href="usuarios" class="btn secondary" style="margin-top:16px;margin-left:8px">Cancelar</a><?php endif; ?>
+    <?php if ($isAdmin && $editUser): ?><a href="usuarios" class="btn secondary" style="margin-top:16px;margin-left:8px">Cancelar</a><?php endif; ?>
   </form>
 </div>
 

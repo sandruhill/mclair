@@ -15,7 +15,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
 
     $toastMsg = null;
     if (isset($_GET['pw_changed'])) $toastMsg = 'Senha atualizada com sucesso.';
-    elseif ($active === 'profile' && isset($_GET['saved'])) $toastMsg = 'Perfil atualizado.';
+    elseif ($active === 'users' && isset($_GET['saved'])) $toastMsg = 'Perfil atualizado.';
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -442,7 +442,7 @@ function askUrl(anchor, cb) {
   <div class="pw-modal">
     <h2>Troque sua senha</h2>
     <p>Por segurança, você precisa definir uma senha própria antes de continuar usando o painel.</p>
-    <form method="post" action="/acesso/perfil.php" style="margin-top:14px">
+    <form method="post" action="/acesso/usuarios" style="margin-top:14px">
       <input type="hidden" name="action" value="password" />
       <input type="hidden" name="redirect_to" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" />
       <label>Nova senha (mín. 8 caracteres)</label>
@@ -457,7 +457,7 @@ function askUrl(anchor, cb) {
 <div class="pw-banner">
   <span>Você ainda está usando a senha inicial. Recomendamos trocar por uma sua.</span>
   <div class="pw-banner-links">
-    <a href="/acesso/perfil.php">trocar agora</a>
+    <a href="/acesso/usuarios?edit=<?= (int)($_SESSION['cms_user_id'] ?? 0) ?>">trocar agora</a>
     <a href="?dismiss_pw_reminder=1">lembrar depois</a>
   </div>
 </div>
@@ -512,8 +512,9 @@ function askUrl(anchor, cb) {
       <?php endif; ?>
     </nav>
     <?php $meName = $_SESSION['cms_display_name'] ?? $_SESSION['cms_username'] ?? ''; ?>
+    <?php $meHref = '/acesso/usuarios?edit=' . (int) ($_SESSION['cms_user_id'] ?? 0); ?>
     <div class="sidebar-user">
-      <a class="avatar" href="/acesso/perfil.php">
+      <a class="avatar" href="<?= htmlspecialchars($meHref) ?>">
         <?php if (!empty($_SESSION['cms_avatar_url'])): ?>
         <img src="<?= htmlspecialchars($_SESSION['cms_avatar_url']) ?>" alt="" />
         <?php else: ?>
@@ -521,7 +522,7 @@ function askUrl(anchor, cb) {
         <?php endif; ?>
       </a>
       <div class="who">
-        <a href="/acesso/perfil.php"><strong><?= htmlspecialchars($meName) ?></strong></a>
+        <a href="<?= htmlspecialchars($meHref) ?>"><strong><?= htmlspecialchars($meName) ?></strong></a>
         <a href="/acesso/manual.php" target="_blank" rel="noopener">manual</a>
         <span style="color:var(--ink-3);font-size:.7rem">·</span>
         <a href="/acesso/posts?logout=1">sair do painel</a>
