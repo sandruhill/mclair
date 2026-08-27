@@ -40,6 +40,7 @@ function cmsRecentFailedAttempts(PDO $pdo, string $ip): int {
 
 $pdo = cmsDb();
 cmsRateLimitTable($pdo);
+cmsEnsureUserProfileColumns($pdo);
 $clientIp = cmsClientIp();
 $lockedOut = cmsRecentFailedAttempts($pdo, $clientIp) >= LOGIN_MAX_ATTEMPTS;
 
@@ -50,7 +51,7 @@ if (isset($_POST['username'], $_POST['password'])) {
         // Fixed delay regardless of outcome, so response time can't be used to
         // tell "user doesn't exist" apart from "wrong password".
         $loginStart = microtime(true);
-        $stmt = $pdo->prepare('SELECT id, username, password_hash FROM cmstest_users WHERE username = ?');
+        $stmt = $pdo->prepare('SELECT id, username, password_hash, password_changed_at FROM cmstest_users WHERE username = ?');
         $stmt->execute([trim($_POST['username'])]);
         $user = $stmt->fetch();
 
@@ -58,7 +59,11 @@ if (isset($_POST['username'], $_POST['password'])) {
             session_regenerate_id(true);
             $_SESSION['cms_user_id'] = $user['id'];
             $_SESSION['cms_username'] = $user['username'];
-            $upd = $pdo->prepare('UPDATE cmstest_users SET last_login_at = NOW() WHERE id = ?');
+            if ($user['password_changed_at'] === null) {
+                $upd = $pdo->prepare('UPDATE cmstest_users SET last_login_at = NOW(), login_count_since_reset = login_count_since_reset + 1 WHERE id = ?');
+            } else {
+                $upd = $pdo->prepare('UPDATE cmstest_users SET last_login_at = NOW() WHERE id = ?');
+            }
             $upd->execute([$user['id']]);
             header('Location: ' . strtok($_SERVER['REQUEST_URI'], '?'));
             exit;
@@ -158,11 +163,17 @@ if (empty($_SESSION['cms_user_id'])) {
     exit;
 }
 
-// Re-read the role on every request (not just at login) so a demotion/promotion
-// takes effect immediately instead of waiting for the session to expire.
-$stmt = cmsDb()->prepare('SELECT role FROM cmstest_users WHERE id = ?');
+// Re-read the role (and profile/password-prompt state) on every request, not
+// just at login, so a demotion/promotion or a self-service profile edit takes
+// effect immediately instead of waiting for the session to expire.
+$stmt = cmsDb()->prepare('SELECT role, display_name, avatar_url, password_changed_at, login_count_since_reset FROM cmstest_users WHERE id = ?');
 $stmt->execute([$_SESSION['cms_user_id']]);
-$_SESSION['cms_role'] = $stmt->fetchColumn() ?: 'author';
+$cmsUserRow = $stmt->fetch() ?: [];
+$_SESSION['cms_role'] = $cmsUserRow['role'] ?? 'author';
+$_SESSION['cms_display_name'] = $cmsUserRow['display_name'] ?? null;
+$_SESSION['cms_avatar_url'] = $cmsUserRow['avatar_url'] ?? null;
+$_SESSION['cms_pw_changed'] = $cmsUserRow['password_changed_at'] !== null;
+$_SESSION['cms_pw_login_count'] = (int) ($cmsUserRow['login_count_since_reset'] ?? 0);
 
 function cmsRole(): string {
     return $_SESSION['cms_role'] ?? 'author';
@@ -173,4 +184,12 @@ function cmsRequireRole(array $allowed): void {
         http_response_code(403);
         die('Você não tem permissão para acessar esta página.');
     }
+}
+
+// 'force'  -- password never changed, still within the first 3 logins: blocking modal.
+// 'remind' -- password never changed, past the 3rd login: dismissible nag.
+// 'none'   -- password already changed at least once.
+function cmsPasswordPromptState(): string {
+    if (!empty($_SESSION['cms_pw_changed'])) return 'none';
+    return ($_SESSION['cms_pw_login_count'] ?? 0) <= 3 ? 'force' : 'remind';
 }

@@ -9,6 +9,9 @@ function cmsCheckIcon(): string {
 }
 
 function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?string $liveUrl = null): void {
+    if (isset($_GET['dismiss_pw_reminder'])) $_SESSION['cms_pw_reminder_dismissed'] = true;
+    $pwState = $active === 'profile' ? 'none' : cmsPasswordPromptState();
+    if ($pwState === 'remind' && !empty($_SESSION['cms_pw_reminder_dismissed'])) $pwState = 'none';
 ?>
 <!doctype html>
 <html lang="pt-BR">
@@ -66,7 +69,9 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   .sidebar-user .avatar {
     width:32px; height:32px; border-radius:50%; background:var(--red); color:#fff;
     display:flex; align-items:center; justify-content:center; font-weight:800; font-size:.85rem; flex-shrink:0;
+    overflow:hidden;
   }
+  .sidebar-user .avatar img { width:100%; height:100%; object-fit:cover; display:block; }
   .sidebar-user .who { min-width:0; }
   .sidebar-user .who strong { display:block; font-size:.82rem; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
   .sidebar-user .who a { font-size:.72rem; color:var(--ink-3); font-weight:600; }
@@ -202,6 +207,18 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   /* Inline URL ask (replaces native prompt()) */
   .urlask { display:inline-flex; align-items:center; gap:4px; }
   .urlask input[type=text] { width:220px; padding:5px 8px; font-size:.8rem; }
+
+  /* Forced password-change modal (first 3 logins after a create/reset) --
+     no close button, no backdrop-click dismiss, on purpose. */
+  .pw-modal-backdrop { position:fixed; inset:0; background:rgba(20,16,12,.55); z-index:100; display:flex; align-items:center; justify-content:center; padding:24px; }
+  .pw-modal { background:var(--paper); border-radius:14px; width:100%; max-width:380px; padding:26px; box-shadow:0 30px 70px -24px rgba(20,16,12,.4); }
+  .pw-modal h2 { margin:0 0 6px; font-size:1.05rem; }
+  .pw-modal p { margin:0 0 4px; font-size:.85rem; color:var(--ink-3); }
+
+  /* Soft reminder banner (after the 3rd forced login) -- dismissible */
+  .pw-banner { display:flex; align-items:center; justify-content:space-between; gap:12px; background:#FFF4E5; color:#7A4A00; border:1px solid #F3D9A4; padding:10px 16px; font-size:.85rem; }
+  .pw-banner a { font-weight:700; text-decoration:underline; }
+  .pw-banner .pw-banner-links { display:flex; gap:16px; flex-shrink:0; }
 </style>
 <script>
 // ---- Drag-and-drop image upload ----
@@ -396,6 +413,31 @@ function askUrl(anchor, cb) {
 </script>
 </head>
 <body>
+<?php if ($pwState === 'force'): ?>
+<div class="pw-modal-backdrop">
+  <div class="pw-modal">
+    <h2>Troque sua senha</h2>
+    <p>Por segurança, você precisa definir uma senha própria antes de continuar usando o painel.</p>
+    <form method="post" action="/acesso/perfil.php" style="margin-top:14px">
+      <input type="hidden" name="action" value="password" />
+      <input type="hidden" name="redirect_to" value="<?= htmlspecialchars($_SERVER['REQUEST_URI']) ?>" />
+      <label>Nova senha (mín. 8 caracteres)</label>
+      <input type="password" name="new_password" minlength="8" required autofocus />
+      <label>Confirmar nova senha</label>
+      <input type="password" name="confirm_password" minlength="8" required />
+      <button type="submit" class="btn" style="width:100%;margin-top:16px">Trocar senha</button>
+    </form>
+  </div>
+</div>
+<?php elseif ($pwState === 'remind'): ?>
+<div class="pw-banner">
+  <span>Você ainda está usando a senha inicial. Recomendamos trocar por uma sua.</span>
+  <div class="pw-banner-links">
+    <a href="/acesso/perfil.php">trocar agora</a>
+    <a href="?dismiss_pw_reminder=1">lembrar depois</a>
+  </div>
+</div>
+<?php endif; ?>
 <div class="shell">
   <aside class="sidebar">
     <div class="sidebar-brand">
@@ -445,10 +487,19 @@ function askUrl(anchor, cb) {
       </a>
       <?php endif; ?>
     </nav>
+    <?php $meName = $_SESSION['cms_display_name'] ?? $_SESSION['cms_username'] ?? ''; ?>
     <div class="sidebar-user">
-      <div class="avatar"><?= htmlspecialchars(mb_strtoupper(mb_substr($_SESSION['cms_username'] ?? '?', 0, 1))) ?></div>
+      <div class="avatar">
+        <?php if (!empty($_SESSION['cms_avatar_url'])): ?>
+        <img src="<?= htmlspecialchars($_SESSION['cms_avatar_url']) ?>" alt="" />
+        <?php else: ?>
+        <?= htmlspecialchars(mb_strtoupper(mb_substr($meName ?: '?', 0, 1))) ?>
+        <?php endif; ?>
+      </div>
       <div class="who">
-        <strong><?= htmlspecialchars($_SESSION['cms_username'] ?? '') ?></strong>
+        <strong><?= htmlspecialchars($meName) ?></strong>
+        <a href="/acesso/perfil.php">editar perfil</a>
+        <span style="color:var(--ink-3);font-size:.7rem">·</span>
         <a href="/acesso/manual.php" target="_blank" rel="noopener">manual</a>
         <span style="color:var(--ink-3);font-size:.7rem">·</span>
         <a href="/acesso/posts?logout=1">sair do painel</a>
