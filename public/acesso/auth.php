@@ -24,6 +24,11 @@ function cmsRateLimitTable(PDO $pdo): void {
         attempted_at DATETIME NOT NULL,
         INDEX ip_time (ip, attempted_at)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
+    $indexes = $pdo->query("SHOW INDEX FROM cmstest_login_attempts WHERE Key_name = 'username_time'")->fetchAll();
+    if (!$indexes) {
+        $pdo->exec('ALTER TABLE cmstest_login_attempts ADD INDEX username_time (username, attempted_at)');
+    }
 }
 
 function cmsClientIp(): string {
@@ -38,13 +43,27 @@ function cmsRecentFailedAttempts(PDO $pdo, string $ip): int {
     return (int) $stmt->fetchColumn();
 }
 
+// Same window/threshold as the IP-based check, but keyed on the submitted
+// username instead -- stops a distributed (many-IPs) brute force against one
+// account. The same generic lockout message is used for both, so this can't
+// be used to probe whether an account exists.
+function cmsRecentFailedAttemptsForAccount(PDO $pdo, string $username): int {
+    $stmt = $pdo->prepare(
+        'SELECT COUNT(*) FROM cmstest_login_attempts WHERE username = ? AND attempted_at > (NOW() - INTERVAL ' . LOGIN_WINDOW_MINUTES . ' MINUTE)'
+    );
+    $stmt->execute([$username]);
+    return (int) $stmt->fetchColumn();
+}
+
 $pdo = cmsDb();
 cmsRateLimitTable($pdo);
 cmsEnsureUserProfileColumns($pdo);
 $clientIp = cmsClientIp();
-$lockedOut = cmsRecentFailedAttempts($pdo, $clientIp) >= LOGIN_MAX_ATTEMPTS;
 
 if (isset($_POST['username'], $_POST['password'])) {
+    $submittedUsername = trim($_POST['username']);
+    $lockedOut = cmsRecentFailedAttempts($pdo, $clientIp) >= LOGIN_MAX_ATTEMPTS
+        || cmsRecentFailedAttemptsForAccount($pdo, $submittedUsername) >= LOGIN_MAX_ATTEMPTS;
     if ($lockedOut) {
         $authError = 'Muitas tentativas de login. Aguarde ' . LOGIN_WINDOW_MINUTES . ' minutos e tente novamente.';
     } else {
@@ -52,7 +71,7 @@ if (isset($_POST['username'], $_POST['password'])) {
         // tell "user doesn't exist" apart from "wrong password".
         $loginStart = microtime(true);
         $stmt = $pdo->prepare('SELECT id, username, password_hash, password_changed_at FROM cmstest_users WHERE username = ?');
-        $stmt->execute([trim($_POST['username'])]);
+        $stmt->execute([$submittedUsername]);
         $user = $stmt->fetch();
 
         if ($user && password_verify($_POST['password'], $user['password_hash'])) {
@@ -69,7 +88,7 @@ if (isset($_POST['username'], $_POST['password'])) {
             exit;
         }
         $insertAttempt = $pdo->prepare('INSERT INTO cmstest_login_attempts (ip, username, attempted_at) VALUES (?, ?, NOW())');
-        $insertAttempt->execute([$clientIp, trim($_POST['username'])]);
+        $insertAttempt->execute([$clientIp, $submittedUsername]);
         usleep(max(0, 300000 - (int) ((microtime(true) - $loginStart) * 1000000)));
         $authError = 'Usuário ou senha incorretos.';
     }
