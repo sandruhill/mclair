@@ -14,15 +14,15 @@
     "remotion:render": "remotion render remotion/index.ts PainelFlow out/painel-flow.mp4"
   },
   "dependencies": {
-    "@astrojs/sitemap": "^3.7.3",
-    "astro": "^7.2.4",
-    "marked": "^18.0.10",
+    "@astrojs/sitemap": "^3.7.4",
+    "astro": "^7.2.10",
+    "marked": "^18.0.11",
     "sharp": "^0.35.3"
   },
   "devDependencies": {
-    "@remotion/cli": "^4.0.513",
+    "@remotion/cli": "^4.0.519",
     "@types/react": "^19.2.18",
-    "@types/react-dom": "^19.2.4",
+    "@types/react-dom": "^19.2.5",
     "cheerio": "^1.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
