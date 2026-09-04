@@ -25,7 +25,21 @@ const services = (allServices as any[])
 <section class="nf-hero">
   <div class="nf-glow" aria-hidden="true"></div>
   <div class="container nf-inner">
-    <p class="nf-code" aria-hidden="true">404</p>
+    <div class="nf-stage" aria-hidden="true">
+      <div class="nf-rings">
+        <span class="nf-ring"></span>
+        <span class="nf-ring"></span>
+        <span class="nf-ring"></span>
+      </div>
+      <svg class="nf-signal" viewBox="0 0 1200 200" fill="none" preserveAspectRatio="none" focusable="false">
+        <path vector-effect="non-scaling-stroke" class="nf-signal-base" d="M0 100H300l10-34 10 62 10-74 10 68 10-40 10 22 10-10 10 4H565"/>
+        <path vector-effect="non-scaling-stroke" class="nf-signal-lost" d="M635 100h24l6-9 6 18 6-9h523"/>
+        <path vector-effect="non-scaling-stroke" class="nf-signal-pulse" pathLength="1000" d="M0 100H300l10-34 10 62 10-74 10 68 10-40 10 22 10-10 10 4H565M635 100h24l6-9 6 18 6-9h523"/>
+      </svg>
+      <p class="nf-code">
+        <span class="nf-digit" data-d="4">4</span><span class="nf-digit" data-d="0">0</span><span class="nf-digit" data-d="4">4</span>
+      </p>
+    </div>
     <h1 class="nf-title">Essa página saiu de cena</h1>
     <p class="nf-sub">O link pode estar quebrado ou a página foi movida. Volte para o início, converse com a gente ou veja o que fazemos.</p>
     <div class="nf-actions">
@@ -71,18 +85,73 @@ const services = (allServices as any[])
 }
 .nf-glow {
   position: absolute;
-  top: -20%; left: 50%; transform: translateX(-50%);
+  top: -20%; left: 50%; transform: translate(-50%, 0);
   width: 900px; height: 700px;
   background: radial-gradient(circle, rgba(200,16,46,.22) 0%, rgba(200,16,46,0) 70%);
   pointer-events: none;
+  will-change: transform, opacity;
 }
 .nf-inner { position: relative; max-width: 640px; margin: 0 auto; text-align: center; }
+
+/* Stage: rings + signal line sit behind the numerals, all absolutely positioned
+   so nothing here can shift the layout of the text below. */
+.nf-stage { position: relative; }
+.nf-rings {
+  position: absolute; left: 50%; top: 50%;
+  width: min(64vw, 440px); aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+}
+.nf-ring {
+  position: absolute; inset: 0; border-radius: 50%;
+  border: 1px solid rgba(255,255,255,.35);
+  will-change: transform, opacity;
+}
+/* Static fallback (reduced motion, or before animation kicks in): three faint concentric rings. */
+.nf-ring:nth-child(1) { transform: scale(.5);  opacity: .16; }
+.nf-ring:nth-child(2) { transform: scale(.85); opacity: .09; }
+.nf-ring:nth-child(3) { transform: scale(1.2); opacity: .04; }
+
+.nf-signal {
+  position: absolute; left: 50%; top: 0;
+  width: 100vw; height: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  overflow: visible;
+}
+.nf-signal path { stroke-linecap: round; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.nf-signal-base { stroke: rgba(255,255,255,.16); stroke-width: 1.5; }
+.nf-signal-lost { stroke: rgba(255,255,255,.1); stroke-width: 1.5; stroke-dasharray: 2 7; }
+.nf-signal-pulse {
+  stroke: var(--red); stroke-width: 2;
+  stroke-dasharray: 70 1000;
+  stroke-dashoffset: 1060;
+  opacity: 0;
+}
+
 .nf-code {
+  position: relative; z-index: 1;
   font-size: clamp(4.5rem, 14vw, 8rem); font-weight: 900; line-height: 1;
   letter-spacing: -.04em; margin: 0;
   color: transparent;
   -webkit-text-stroke: 1.5px rgba(255,255,255,.25);
 }
+.nf-digit {
+  position: relative; z-index: 0;
+  display: inline-block;
+  will-change: transform;
+}
+/* Red stroke echo behind each numeral, offset like a misregistered print. */
+.nf-digit::after {
+  content: attr(data-d);
+  position: absolute; inset: 0; z-index: -1;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(200,16,46,.6);
+  transform: translate(3px, 3px);
+  opacity: .5;
+  pointer-events: none;
+}
+
 .nf-title {
   font-size: clamp(1.8rem, 4.5vw, 2.75rem); font-weight: 900;
   letter-spacing: -.03em; color: #fff; margin: 8px 0 16px;
@@ -95,6 +164,64 @@ const services = (allServices as any[])
 }
 .nf-outline { border-color: rgba(255,255,255,.3); color: #fff; }
 .nf-outline:hover { border-color: #fff; color: #fff; }
+
+/* Motion. Everything below is transform / opacity / stroke-dashoffset only,
+   so it never reflows the hero. Users who ask for reduced motion get the
+   static composition above: glow, faint rings, the broken line, the red echo. */
+@media (prefers-reduced-motion: no-preference) {
+  @keyframes nfUp {
+    from { opacity: 0; transform: translateY(24px); }
+    to   { opacity: 1; transform: none; }
+  }
+  @keyframes nfBreathe {
+    0%, 100% { transform: translate(-50%, 0) scale(1);        opacity: .8; }
+    50%      { transform: translate(-46%, 3%) scale(1.12);    opacity: 1; }
+  }
+  @keyframes nfRing {
+    from { transform: scale(.3);  opacity: .55; }
+    to   { transform: scale(1.3); opacity: 0; }
+  }
+  @keyframes nfFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-7px); }
+  }
+  @keyframes nfEcho {
+    0%, 100% { transform: translate(3px, 3px);  opacity: .5; }
+    38%      { transform: translate(5px, -2px); opacity: .35; }
+    44%      { transform: translate(-5px, 2px); opacity: .8; }
+    46%      { transform: translate(6px, -3px); opacity: .3; }
+    48%      { transform: translate(4px, -1px); opacity: .45; }
+    72%      { transform: translate(2px, 4px);  opacity: .55; }
+  }
+  @keyframes nfPulse {
+    from { stroke-dashoffset: 1060; }
+    to   { stroke-dashoffset: 0; }
+  }
+
+  .nf-glow { animation: nfBreathe 9s ease-in-out infinite; }
+
+  .nf-ring { animation: nfRing 5.4s cubic-bezier(.22,1,.36,1) infinite; }
+  .nf-ring:nth-child(1) { animation-delay: 0s; }
+  .nf-ring:nth-child(2) { animation-delay: -1.8s; }
+  .nf-ring:nth-child(3) { animation-delay: -3.6s; }
+
+  .nf-signal-pulse { opacity: 1; animation: nfPulse 4.5s linear infinite; }
+
+  .nf-digit { animation: nfFloat 6s ease-in-out infinite; }
+  .nf-digit:nth-child(1) { animation-delay: 0s; }
+  .nf-digit:nth-child(2) { animation-delay: -2s; }
+  .nf-digit:nth-child(3) { animation-delay: -4s; }
+
+  .nf-digit::after { animation: nfEcho 7s ease-in-out infinite; }
+  .nf-digit:nth-child(1)::after { animation-delay: -2.3s; }
+  .nf-digit:nth-child(2)::after { animation-delay: 0s; }
+  .nf-digit:nth-child(3)::after { animation-delay: -4.7s; }
+
+  .nf-stage   { animation: nfUp .8s cubic-bezier(.22,1,.36,1) both; }
+  .nf-title   { animation: nfUp .8s cubic-bezier(.22,1,.36,1) .1s both; }
+  .nf-sub     { animation: nfUp .8s cubic-bezier(.22,1,.36,1) .2s both; }
+  .nf-actions { animation: nfUp .8s cubic-bezier(.22,1,.36,1) .3s both; }
+}
 
 .nf-services { background: var(--cream); padding-block: clamp(56px, 8vw, 80px); }
 .nf-services-label {

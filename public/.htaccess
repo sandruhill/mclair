@@ -13,6 +13,17 @@
   RewriteRule ^servicos\.php$ /servicos/ [R=301,L,QSD]
   RewriteRule ^blog\.php$ /blog/ [R=301,L,QSD]
   RewriteRule ^index\.php$ / [R=301,L,QSD]
+  RewriteRule ^team-classic\.html$ /sobre/ [R=301,L,QSD]
+
+  # Malformed old link some page built as "index.php/servicos.php?tipo=..."
+  # (relative link resolved against the wrong base) -- confirmed 404ing in
+  # Search Console's own coverage report, not just a guess.
+  RewriteRule ^index\.php/servicos\.php$ /servicos/ [R=301,L,QSD]
+
+  # Old lead-magnet URL for the authority-marketing ebook -> its current
+  # service page (confirmed live in GA as a real single referral hit, not
+  # bot noise like the /images/galeria/ scanner traffic below).
+  RewriteRule ^ebooks/marketing-de-autoridade/?$ /servicos/marketing-de-autoridade/ [R=301,L,QSD]
 
   # blog-detalhe.php?id=N -> matching current post, recovered from Wayback
   # Machine archives (old site never preserved these ids in the DB). Ids
