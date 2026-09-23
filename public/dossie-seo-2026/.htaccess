@@ -1,0 +1,18 @@
+# Dossiê interno — não deve ser listado por buscador nenhum.
+#
+# O noindex é enviado por cabeçalho, e NÃO por Disallow no robots.txt de
+# propósito: um robots bloqueado impede o rastreador de entrar e, portanto,
+# de ler o próprio noindex, o que deixa a URL elegível a aparecer na busca
+# sem descrição. Deixando entrar, ele lê a instrução e não indexa.
+<IfModule mod_headers.c>
+    Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+    Header always set Referrer-Policy "no-referrer"
+</IfModule>
+
+# O markdown de carga inicial só interessa ao PHP; servi-lo cru entregaria o
+# mesmo conteúdo por um caminho que não passa pelos cabeçalhos acima.
+<FilesMatch "\.(md|log)$">
+    Require all denied
+</FilesMatch>
+
+DirectoryIndex index.php
