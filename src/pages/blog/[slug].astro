@@ -2,6 +2,7 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { marked } from 'marked';
+import { embutirVideos, htmlDaCapaEmVideo } from '../../utils/videoEmbed';
 import { getBlogPosts, resolveBlogImage } from '../../utils/cmsApi';
 import type { DbBlogPost } from '../../utils/cmsApi';
 
@@ -17,7 +18,8 @@ export async function getStaticPaths() {
     date: p.post_date ?? '',
     author: p.author ?? 'Equipe Mclair',
     image: resolveBlogImage(p.featured_image, p.image_url),
-    content: marked.parse(p.content_md ?? '') as string,
+    video: p.hero_video ?? '',
+    content: embutirVideos(marked.parse(p.content_md ?? '') as string),
     keywords: p.keywords ?? [],
     aboutTopics: p.about_topics ?? [],
     faqItems: p.faq_items ?? [],
@@ -31,6 +33,7 @@ export async function getStaticPaths() {
 }
 
 const { post, source, allPosts } = Astro.props;
+const capaEmVideo = htmlDaCapaEmVideo(post.video ?? '');
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
 const canonicalURL = `${BASE}/blog/${post.slug}`;
 
@@ -198,6 +201,14 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     {post.subtitle && <p class="ph-subtitle">{post.subtitle}</p>}
   </div>
 </section>
+
+{capaEmVideo && (
+  <section class="post-video-capa">
+    <div class="container">
+      <Fragment set:html={capaEmVideo} />
+    </div>
+  </section>
+)}
 
 <!-- ARTICLE BODY -->
 <article class="post-body-section">
@@ -400,6 +411,44 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 }
 .prose :global(pre) { background: var(--dark); border-radius: var(--r-md); padding: 1.4rem; margin: 1.6rem 0; overflow-x: auto; }
 .prose :global(pre code) { background: none; color: rgba(255,255,255,.85); padding: 0; font-size: .9rem; }
+
+/* Player de vídeo vindo de um link colado sozinho numa linha (utils/videoEmbed). */
+.prose :global(.video-embed) {
+  position: relative;
+  margin: 2rem 0;
+  border-radius: var(--r-md);
+  overflow: hidden;
+  background: var(--dark);
+  aspect-ratio: 16 / 9;
+}
+.prose :global(.video-embed iframe) {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+/* Shorts, Reels e TikTok são verticais: 9:16 e largura contida, senão viram
+   uma coluna gigante no meio do texto. */
+/* Capa em vídeo: entra entre o título e o texto, porque player atrás do
+   título deixaria o texto ilegível. */
+.post-video-capa { margin: 2.5rem 0 -1rem; }
+.post-video-capa .video-embed {
+  position: relative; border-radius: var(--r-md); overflow: hidden;
+  background: var(--dark); aspect-ratio: 16 / 9; max-width: 860px; margin-inline: auto;
+}
+.post-video-capa .video-embed-vertical { aspect-ratio: 9 / 16; max-width: 380px; }
+.post-video-capa :global(iframe), .post-video-capa :global(video) {
+  position: absolute; inset: 0; width: 100%; height: 100%; border: 0; display: block;
+}
+.prose :global(.video-embed-arquivo video) { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+.prose :global(.video-embed-vertical) {
+  aspect-ratio: 9 / 16;
+  max-width: 340px;
+  margin-inline: auto;
+}
 
 /* ═══ SIDEBAR ═══ */
 .post-sidebar {

@@ -204,8 +204,9 @@ adminLayoutTop(
                 <button type="button" id="tabVideo" onclick="setHeroMode('video')">Vídeo</button>
               </div>
               <div id="paneImage">
-                <label style="margin-top:0">Endereço da imagem</label>
-                <input type="text" name="featured_image" id="featuredImage" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
+                <input type="hidden" name="featured_image" id="featuredImage" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" oninput="renderHero()" />
+                <p class="hint" style="margin-top:0">Arraste a imagem na área acima, ou clique nela para escolher do computador.</p>
+                <button type="button" class="btn secondary" id="removerCapa" style="display:none;margin-top:8px;width:100%;justify-content:center">Remover capa</button>
               </div>
               <div id="paneVideo">
                 <label style="margin-top:0">Vídeo de capa (URL do YouTube ou .mp4)</label>
@@ -494,6 +495,7 @@ campoMd.form.addEventListener('submit', function () {
         campoUrl.value = res.j.url;
         campoUrl.dispatchEvent(new Event('input', { bubbles: true }));
         setHeroMode('image');
+        sincronizarRemover();
         dica.querySelector('strong').textContent = 'Arraste uma imagem aqui';
         dica.querySelector('span').textContent = 'ou clique para trocar';
       })
@@ -503,6 +505,19 @@ campoMd.form.addEventListener('submit', function () {
         dica.querySelector('span').textContent = 'Tente de novo';
       });
   }
+
+  var botaoRemover = document.getElementById('removerCapa');
+  function sincronizarRemover() {
+    botaoRemover.style.display = campoUrl.value.trim() ? '' : 'none';
+  }
+  botaoRemover.addEventListener('click', function (ev) {
+    ev.stopPropagation();
+    campoUrl.value = '';
+    campoUrl.dispatchEvent(new Event('input', { bubbles: true }));
+    sincronizarRemover();
+  });
+  campoUrl.addEventListener('input', sincronizarRemover);
+  sincronizarRemover();
 
   zona.addEventListener('click', function () { arquivo.click(); });
   arquivo.addEventListener('change', function () { subir(arquivo.files[0]); arquivo.value = ''; });

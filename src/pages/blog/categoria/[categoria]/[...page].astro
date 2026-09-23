@@ -17,6 +17,7 @@ const CATEGORIES: Record<string, string> = {
 export async function getStaticPaths({ paginate }: any) {
   const { getBlogPosts, resolveBlogImage } = await import('../../../../utils/cmsApi');
   const { marked } = await import('marked');
+  const { embutirVideos } = await import('../../../../utils/videoEmbed');
   const topicsBySlug = (await import('../../../../data/blog-topics.json')).default as Record<string, string>;
   const posts = await getBlogPosts();
 
@@ -32,7 +33,7 @@ export async function getStaticPaths({ paginate }: any) {
       date: p.post_date ?? '',
       author: p.author ?? 'Equipe Mclair',
       image: resolveBlogImage(p.featured_image, p.image_url),
-      content: marked.parse(p.content_md ?? '') as string,
+      content: embutirVideos(marked.parse(p.content_md ?? '') as string),
       categoria: topicsBySlug[p.slug],
     }))
     .filter((p: any) => p.categoria)
