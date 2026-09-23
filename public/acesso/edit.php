@@ -6,6 +6,39 @@ $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 $myId = (int) $_SESSION['cms_user_id'];
 
+// Sem slug na URL = post novo. O editor atende os dois modos de propósito: duas
+// telas separadas divergiriam na primeira vez que alguém mexesse num campo.
+$isNew = ($slug === '');
+
+/** Título -> endereço do post: sem acento, sem pontuação, separado por hífen. */
+function cmsSlugify(string $texto): string {
+    $t = trim($texto);
+    if (function_exists('transliterator_transliterate')) {
+        $t = transliterator_transliterate('Any-Latin; Latin-ASCII', $t) ?: $t;
+    } else {
+        $t = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $t) ?: $t;
+    }
+    $t = preg_replace('/[^a-zA-Z0-9]+/', '-', strtolower($t));
+    $t = trim((string) $t, '-');
+    if (strlen($t) <= 80) return $t;
+    // Corta no último hífen antes do limite, para não partir palavra no meio.
+    $curto = substr($t, 0, 80);
+    $ultimo = strrpos($curto, '-');
+    return rtrim($ultimo > 40 ? substr($curto, 0, $ultimo) : $curto, '-');
+}
+
+/** slug é a chave primária, então um título repetido vira -2, -3, e assim por diante. */
+function cmsSlugUnico(PDO $pdo, string $base): string {
+    $stmt = $pdo->prepare('SELECT 1 FROM cmstest_blog_posts WHERE slug = ?');
+    $tentativa = $base;
+    for ($n = 2; $n <= 200; $n++) {
+        $stmt->execute([$tentativa]);
+        if (!$stmt->fetchColumn()) return $tentativa;
+        $tentativa = $base . '-' . $n;
+    }
+    return $base . '-' . bin2hex(random_bytes(3));
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
         http_response_code(403);
@@ -24,6 +57,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $authorName = $u->fetchColumn() ?: $authorName;
     }
 
+    if ($isNew) {
+        $titulo = trim((string) ($_POST['title'] ?? ''));
+        if ($titulo === '') {
+            http_response_code(422);
+            die('O post precisa de um título. Volte e preencha o campo.');
+        }
+        $base = cmsSlugify($titulo);
+        if ($base === '') $base = 'post-' . date('Y-m-d');
+        $slug = cmsSlugUnico($pdo, $base);
+
+        $stmt = $pdo->prepare('INSERT INTO cmstest_blog_posts (slug, title, subtitle, category, post_date, featured_image, hero_video, meta_description, keywords, content_md, author_id, author, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([
+            $slug, $titulo, $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
+            $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
+            $_POST['content_md'], $authorId, $authorName, $myId,
+        ]);
+        queueRebuild();
+        header('Location: editar?slug=' . urlencode($slug) . '&created=1&t=' . time());
+        exit;
+    }
+
     $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author_id = ?, author = ?, updated_by = ? WHERE slug = ?');
     $stmt->execute([
         $_POST['title'], $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
@@ -35,15 +89,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 
-$stmt = $pdo->prepare('
-  SELECT p.*, u.username AS updated_by_name
-  FROM cmstest_blog_posts p
-  LEFT JOIN cmstest_users u ON u.id = p.updated_by
-  WHERE p.slug = ?
-');
-$stmt->execute([$slug]);
-$post = $stmt->fetch();
-if (!$post) { http_response_code(404); die('Post não encontrado'); }
+if ($isNew) {
+    // Formulário em branco. O autor já vem marcado como quem está logado, que é
+    // o caso comum; dá para trocar no select.
+    $post = [
+        'title' => '', 'subtitle' => '', 'meta_description' => '',
+        'post_date' => date('Y-m-d'), 'author' => '', 'author_id' => $myId,
+        'featured_image' => '', 'hero_video' => '', 'category' => 'geral',
+        'keywords' => '', 'content_md' => '', 'updated_by_name' => null,
+    ];
+} else {
+    $stmt = $pdo->prepare('
+      SELECT p.*, u.username AS updated_by_name
+      FROM cmstest_blog_posts p
+      LEFT JOIN cmstest_users u ON u.id = p.updated_by
+      WHERE p.slug = ?
+    ');
+    $stmt->execute([$slug]);
+    $post = $stmt->fetch();
+    if (!$post) { http_response_code(404); die('Post não encontrado'); }
+}
 
 $authorOptions = $pdo->query('SELECT id, username FROM cmstest_users ORDER BY username')->fetchAll();
 
@@ -55,10 +120,16 @@ $kwText = is_array($kwDecoded) ? implode(', ', $kwDecoded) : (string) ($post['ke
 
 $heroMode = !empty($post['hero_video']) ? 'video' : 'image';
 
-adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '/acesso/posts'], 'https://mclair.com.br/blog/' . urlencode($slug));
+adminLayoutTop(
+    'blog',
+    $isNew ? 'Novo post' : 'Editando post',
+    ['label' => 'Posts do blog', 'href' => '/acesso/posts'],
+    $isNew ? null : 'https://mclair.com.br/blog/' . urlencode($slug)
+);
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
+<?php if (isset($_GET['created'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post criado. Entra no ar na próxima republicação, em alguns minutos.</span></div>
+<?php elseif (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
 
 <form method="post">
   <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
@@ -166,7 +237,7 @@ adminLayoutTop('blog', 'Editando post', ['label' => 'Posts do blog', 'href' => '
             <?php if ($post['updated_by_name']): ?>Última edição por <strong><?= htmlspecialchars($post['updated_by_name']) ?></strong><?php else: ?>Ainda sem edições registradas<?php endif; ?>
           </p>
           <div class="editor-actions">
-            <button type="submit" class="btn" style="width:100%;justify-content:center">Salvar</button>
+            <button type="submit" class="btn" style="width:100%;justify-content:center"><?= $isNew ? 'Criar post' : 'Salvar' ?></button>
             <a href="/acesso/posts" class="btn secondary" style="width:100%;justify-content:center;margin-top:8px">Cancelar</a>
           </div>
         </div>
