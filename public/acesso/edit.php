@@ -128,6 +128,35 @@ adminLayoutTop(
 );
 ?>
 
+<link rel="stylesheet" href="/acesso/vendor/toastui-editor.min.css" />
+<style>
+  /* Editor visual: encosta no visual do painel em vez do tema padrão da lib. */
+  #wysiwyg { margin-top: 0; }
+  .toastui-editor-defaultUI { border-radius: 8px; border-color: var(--line); font-family: inherit; }
+  .toastui-editor-defaultUI-toolbar { background: var(--soft); border-radius: 8px 8px 0 0; border-bottom: 1px solid var(--line); }
+  .toastui-editor-defaultUI .ProseMirror { font-family: inherit; font-size: .95rem; line-height: 1.7; }
+  .toastui-editor-mode-switch { border-radius: 0 0 8px 8px; }
+
+  /* Capa: a área preta inteira recebe a imagem arrastada. */
+  .hero-drop { position: relative; cursor: pointer; border-radius: 10px 10px 0 0; overflow: hidden; }
+  .hero-drop .hero-preview { pointer-events: none; }
+  .hero-drop-hint {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 3px; text-align: center;
+    padding: 12px; background: rgba(0,0,0,.55); color: #fff;
+    opacity: 0; transition: opacity .15s ease; pointer-events: none;
+  }
+  .hero-drop-hint strong { font-size: .85rem; font-weight: 700; }
+  .hero-drop-hint span { font-size: .75rem; opacity: .8; }
+  /* Sem imagem, a instrução fica sempre à vista; com imagem, aparece no hover. */
+  .hero-drop:hover .hero-drop-hint,
+  .hero-drop.arrastando .hero-drop-hint,
+  .hero-drop-hint.enviando { opacity: 1; }
+  .hero-drop:has(.hero-preview .empty) .hero-drop-hint { opacity: 1; }
+  .hero-drop.arrastando { outline: 2px dashed var(--red); outline-offset: -4px; }
+  .hero-drop:has(.hero-preview .empty) .hero-preview .empty { visibility: hidden; }
+</style>
+
 <?php if (isset($_GET['created'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post criado. Entra no ar na próxima republicação, em alguns minutos.</span></div>
 <?php elseif (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
 
@@ -142,30 +171,13 @@ adminLayoutTop(
         <label style="margin-top:0">Título</label>
         <input type="text" name="title" value="<?= htmlspecialchars($post['title']) ?>" />
 
-        <label>Conteúdo (markdown)</label>
-        <div class="mdbar" id="mdbar">
-          <button type="button" title="Negrito" onclick="mdWrap('**','**','texto em negrito')"><b>B</b></button>
-          <button type="button" title="Itálico" onclick="mdWrap('*','*','texto em itálico')"><i>I</i></button>
-          <button type="button" title="Riscado" onclick="mdWrap('~~','~~','texto riscado')"><s>S</s></button>
-          <span class="div"></span>
-          <button type="button" title="Título (H2)" onclick="mdLine('## ')">H2</button>
-          <button type="button" title="Subtítulo (H3)" onclick="mdLine('### ')">H3</button>
-          <button type="button" title="Subtítulo (H4)" onclick="mdLine('#### ')">H4</button>
-          <span class="div"></span>
-          <button type="button" title="Link" onclick="mdLink(this)">🔗</button>
-          <button type="button" title="Imagem" onclick="mdImage()">🖼&nbsp;Imagem</button>
-          <span class="div"></span>
-          <button type="button" title="Lista" onclick="mdLine('- ')">•&nbsp;Lista</button>
-          <button type="button" title="Lista numerada" onclick="mdLine('1. ', true)">1.&nbsp;Lista</button>
-          <button type="button" title="Citação" onclick="mdLine('> ')">&ldquo;&nbsp;Citação</button>
-          <span class="div"></span>
-          <button type="button" title="Código inline" onclick="mdWrap('`','`','código')">&lt;/&gt;</button>
-          <button type="button" title="Bloco de código" onclick="mdWrap('```\n','\n```','código')">```</button>
-          <span class="div"></span>
-          <button type="button" title="Tabela" onclick="mdTable()">⊞&nbsp;Tabela</button>
-          <button type="button" title="Linha divisória" onclick="mdBlock('---')">―</button>
-        </div>
-        <textarea name="content_md" id="contentMd" style="min-height:480px;font-family:ui-monospace,monospace;font-size:.85rem"><?= htmlspecialchars($post['content_md']) ?></textarea>
+        <label>Subtítulo</label>
+        <input type="text" name="subtitle" value="<?= htmlspecialchars($post['subtitle']) ?>" />
+        <p class="hint">Aparece logo abaixo do título no post publicado.</p>
+
+        <label>Conteúdo</label>
+        <div id="wysiwyg"></div>
+        <textarea name="content_md" id="contentMd" hidden><?= htmlspecialchars($post['content_md']) ?></textarea>
       </div>
     </div>
 
@@ -175,9 +187,16 @@ adminLayoutTop(
         <div class="side-sec">
           <strong>Capa</strong>
           <div class="hero-card" style="margin-top:10px;margin-bottom:0">
-            <div class="hero-preview" id="heroPreview" style="min-height:140px">
-              <span class="hero-chip" id="heroChip">Capa</span>
-              <div class="empty">Sem mídia de capa, cole uma URL abaixo</div>
+            <div class="hero-drop" id="heroDrop" title="Arraste uma imagem ou clique para escolher">
+              <div class="hero-preview" id="heroPreview" style="min-height:140px">
+                <span class="hero-chip" id="heroChip">Capa</span>
+                <div class="empty">Sem mídia de capa</div>
+              </div>
+              <div class="hero-drop-hint" id="heroDropHint">
+                <strong>Arraste uma imagem aqui</strong>
+                <span>ou clique para escolher do computador</span>
+              </div>
+              <input type="file" id="heroFile" accept="image/*" style="display:none" />
             </div>
             <div class="hero-controls">
               <div class="hero-tabs" role="tablist">
@@ -185,8 +204,8 @@ adminLayoutTop(
                 <button type="button" id="tabVideo" onclick="setHeroMode('video')">Vídeo</button>
               </div>
               <div id="paneImage">
-                <label style="margin-top:0">Imagem de capa</label>
-                <input type="text" name="featured_image" id="featuredImage" class="img-url" data-imgdrop-nothumb value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
+                <label style="margin-top:0">Endereço da imagem</label>
+                <input type="text" name="featured_image" id="featuredImage" value="<?= htmlspecialchars($post['featured_image'] ?? '') ?>" placeholder="/blog-images/exemplo.jpg" oninput="renderHero()" />
               </div>
               <div id="paneVideo">
                 <label style="margin-top:0">Vídeo de capa (URL do YouTube ou .mp4)</label>
@@ -199,8 +218,6 @@ adminLayoutTop(
 
         <div class="side-sec">
           <strong>Publicação</strong>
-          <label>Subtítulo</label>
-          <input type="text" name="subtitle" value="<?= htmlspecialchars($post['subtitle']) ?>" />
           <label>Autor</label>
           <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
             <option value="">Outro (digitar abaixo)</option>
@@ -281,6 +298,8 @@ adminLayoutTop(
   </div>
 </div>
 
+<script src="/acesso/vendor/toastui-editor-all.min.js"></script>
+<script src="/acesso/vendor/i18n-pt-br.js"></script>
 <script>
 // ---- Hero preview ----
 var heroMode = <?= json_encode($heroMode) ?>;
@@ -322,59 +341,13 @@ function renderHero() {
 setHeroMode(heroMode);
 
 // ---- Markdown toolbar ----
-var ta = document.getElementById('contentMd');
-
-function mdWrap(before, after, placeholder) {
-  ta.focus();
-  var s = ta.selectionStart, e = ta.selectionEnd;
-  var sel = ta.value.substring(s, e) || placeholder;
-  ta.setRangeText(before + sel + after, s, e, 'select');
-  ta.setSelectionRange(s + before.length, s + before.length + sel.length);
-}
-
-function mdLine(prefix, numbered) {
-  ta.focus();
-  var s = ta.selectionStart, e = ta.selectionEnd;
-  // expand to whole lines
-  var ls = ta.value.lastIndexOf('\n', s - 1) + 1;
-  var le = ta.value.indexOf('\n', e);
-  if (le === -1) le = ta.value.length;
-  var lines = ta.value.substring(ls, le).split('\n');
-  var out = lines.map(function (line, i) {
-    return (numbered ? (i + 1) + '. ' : prefix) + line;
-  }).join('\n');
-  ta.setRangeText(out, ls, le, 'select');
-}
-
-function mdLink(btn) {
-  var s = ta.selectionStart, e = ta.selectionEnd;
-  askUrl(btn, function (url) {
-    var sel = ta.value.substring(s, e) || 'texto do link';
-    ta.setRangeText('[' + sel + '](' + url + ')', s, e, 'select');
-    ta.focus();
-  });
-}
-
-// Inserts text as its own block at the cursor, padded with blank lines.
-function mdBlock(text) {
-  ta.focus();
-  ta.setRangeText('\n\n' + text + '\n\n', ta.selectionStart, ta.selectionEnd, 'end');
-}
-
-function mdTable() {
-  mdBlock('| Coluna 1 | Coluna 2 |\n| --- | --- |\n| valor | valor |\n| valor | valor |');
-}
-
 // ---- Media picker modal ----
-// Cursor position is captured when the modal opens (the textarea loses focus
-// once the modal takes over) and the insert happens at that saved range.
-var imgIns = { s: 0, e: 0 };
+// Galeria do site: o editor visual já traz upload por arrastar, isto aqui é
+// para reaproveitar imagem que já foi enviada antes.
 var imgCurTab = 'up';
 var imgPicked = '';
 
 function mdImage() {
-  imgIns.s = ta.selectionStart;
-  imgIns.e = ta.selectionEnd;
   imgPicked = '';
   document.getElementById('imgModalErr').textContent = '';
   document.getElementById('imgModal').classList.add('open');
@@ -435,10 +408,115 @@ function imgModalInsert() {
       : 'Clique numa imagem da galeria primeiro.';
     return;
   }
-  ta.setRangeText('![](' + url + ')', imgIns.s, imgIns.e, 'end');
-  ta.focus();
+  editor.exec('addImage', { imageUrl: url, altText: '' });
+  editor.focus();
   imgModalClose();
 }
+
+// ---- Editor visual ----
+// O banco guarda markdown (o build roda marked.parse em content_md), então o
+// editor abre em WYSIWYG mas o que vai no POST é sempre getMarkdown().
+// Botão extra na barra: abre a galeria de imagens já enviadas ao site.
+function botaoGaleria() {
+  var b = document.createElement('button');
+  b.type = 'button';
+  b.textContent = 'Galeria';
+  b.style.cssText = 'background:none;border:0;font:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0 6px;color:inherit';
+  b.addEventListener('click', function () { mdImage(); });
+  return b;
+}
+
+var campoMd = document.getElementById('contentMd');
+var editor = new toastui.Editor({
+  el: document.getElementById('wysiwyg'),
+  height: '560px',
+  initialEditType: 'wysiwyg',
+  previewStyle: 'vertical',
+  initialValue: campoMd.value,
+  language: 'pt-BR',
+  usageStatistics: false,
+  autofocus: false,
+  toolbarItems: [
+    ['heading', 'bold', 'italic', 'strike'],
+    ['hr', 'quote'],
+    ['ul', 'ol'],
+    ['table', 'link'],
+    ['code', 'codeblock'],
+    [{ name: 'galeria', tooltip: 'Imagem já enviada', el: botaoGaleria() }]
+  ],
+  hooks: {
+    // Arrastar ou colar imagem dentro do texto: sobe pelo mesmo upload.php do painel.
+    addImageBlobHook: function (blob, callback) {
+      var fd = new FormData();
+      fd.append('file', blob);
+      fd.append('csrf', CMS_CSRF);
+      fetch('/acesso/upload.php', { method: 'POST', body: fd })
+        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (!res.ok || !res.j.url) { alert(res.j.error || 'Falha no upload da imagem.'); return; }
+          callback(res.j.url, '');
+        })
+        .catch(function () { alert('Falha de rede ao enviar a imagem.'); });
+      return false;
+    }
+  }
+});
+// O que o PHP recebe é o markdown, não o HTML do editor.
+campoMd.form.addEventListener('submit', function () {
+  campoMd.value = editor.getMarkdown();
+});
+
+// ---- Capa: a área preta é a zona de arrastar ----
+(function () {
+  var zona = document.getElementById('heroDrop');
+  var arquivo = document.getElementById('heroFile');
+  var campoUrl = document.getElementById('featuredImage');
+  var dica = document.getElementById('heroDropHint');
+  if (!zona) return;
+
+  function subir(f) {
+    if (!f) return;
+    dica.classList.add('enviando');
+    dica.querySelector('strong').textContent = 'Enviando...';
+    dica.querySelector('span').textContent = '';
+    var fd = new FormData();
+    fd.append('file', f);
+    fd.append('csrf', CMS_CSRF);
+    fetch('/acesso/upload.php', { method: 'POST', body: fd })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+      .then(function (res) {
+        dica.classList.remove('enviando');
+        if (!res.ok || !res.j.url) {
+          dica.querySelector('strong').textContent = res.j.error || 'Falha no upload.';
+          dica.querySelector('span').textContent = 'Tente de novo';
+          return;
+        }
+        campoUrl.value = res.j.url;
+        campoUrl.dispatchEvent(new Event('input', { bubbles: true }));
+        setHeroMode('image');
+        dica.querySelector('strong').textContent = 'Arraste uma imagem aqui';
+        dica.querySelector('span').textContent = 'ou clique para trocar';
+      })
+      .catch(function () {
+        dica.classList.remove('enviando');
+        dica.querySelector('strong').textContent = 'Falha de rede.';
+        dica.querySelector('span').textContent = 'Tente de novo';
+      });
+  }
+
+  zona.addEventListener('click', function () { arquivo.click(); });
+  arquivo.addEventListener('change', function () { subir(arquivo.files[0]); arquivo.value = ''; });
+  ['dragenter', 'dragover'].forEach(function (e) {
+    zona.addEventListener(e, function (ev) { ev.preventDefault(); zona.classList.add('arrastando'); });
+  });
+  ['dragleave', 'drop'].forEach(function (e) {
+    zona.addEventListener(e, function (ev) { ev.preventDefault(); zona.classList.remove('arrastando'); });
+  });
+  zona.addEventListener('drop', function (ev) {
+    var f = ev.dataTransfer && ev.dataTransfer.files && ev.dataTransfer.files[0];
+    if (f) subir(f);
+  });
+})();
 </script>
 
 <?php adminLayoutBottom(); ?>
