@@ -1,0 +1,142 @@
+---
+// Assinatura do autor, logo abaixo do fim do texto do artigo. Também serve de
+// cabeçalho da página /blog/autores/<slug>/ (variante "perfil", com a bio
+// completa e sem o link "todos os artigos").
+import type { DbBlogAuthor } from '../utils/cmsApi';
+import { linksSociais, primeiroNome, urlDoAutor, ROTULO_SOCIAL } from '../utils/blogAuthors';
+
+interface Props {
+  autor: DbBlogAuthor;
+  variante?: 'assinatura' | 'perfil';
+}
+
+const { autor, variante = 'assinatura' } = Astro.props;
+const url = urlDoAutor(autor.slug);
+const links = linksSociais(autor);
+const inicial = autor.name.trim().charAt(0).toUpperCase();
+const perfil = variante === 'perfil';
+const bio = perfil ? (autor.bio_long || autor.bio_short || '') : (autor.bio_short || '');
+const paragrafos = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
+
+// Ícones de traço, um por tipo de link. Nada de logotipo colorido: aqui é
+// texto com um sinal discreto na frente.
+const ICONES: Record<string, string> = {
+  linkedin: '<rect x="3" y="3" width="18" height="18" rx="3"/><path d="M8 10v7M8 7v.5M12 17v-4a2 2 0 0 1 4 0v4M12 10v7"/>',
+  instagram: '<rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><path d="M17 7v.5"/>',
+  x: '<path d="M5 4l14 16M19 4L5 20"/>',
+  facebook: '<path d="M14 4h3v4h-3a1 1 0 0 0-1 1v3h4l-1 4h-3v4h-4v-4H7v-4h2V9a5 5 0 0 1 5-5z"/>',
+  youtube: '<rect x="3" y="6" width="18" height="12" rx="4"/><path d="M10 9.5v5l4.5-2.5z"/>',
+  tiktok: '<path d="M14 4v9.5a3.5 3.5 0 1 1-3.5-3.5M14 4c0 2.5 2 4.5 4.5 4.5"/>',
+  site: '<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c3 3 3 15 0 18M12 3c-3 3-3 15 0 18"/>',
+  outro: '<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',
+};
+---
+
+<aside class:list={['autor-card', { 'autor-card-perfil': perfil }]} aria-label={`Sobre ${autor.name}`}>
+  {autor.photo_url ? (
+    <a href={url} rel="author" class="autor-foto" aria-hidden="true" tabindex="-1">
+      <img src={autor.photo_url} alt="" width="88" height="88" loading="lazy" />
+    </a>
+  ) : (
+    <span class="autor-foto autor-foto-inicial" aria-hidden="true">{inicial}</span>
+  )}
+
+  <div class="autor-texto">
+    {perfil ? (
+      <h1 class="autor-nome">{autor.name}</h1>
+    ) : (
+      <p class="autor-nome"><a href={url} rel="author">{autor.name}</a></p>
+    )}
+    {autor.job_title && <p class="autor-cargo">{autor.job_title}</p>}
+    {paragrafos.map((p) => <p class="autor-bio">{p}</p>)}
+
+    {links.length > 0 && (
+      <ul class="autor-links">
+        {links.map((l) => (
+          <li>
+            <a href={l.url} target="_blank" rel="noopener">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" set:html={ICONES[l.type] ?? ICONES.outro} />
+              {ROTULO_SOCIAL[l.type] ?? ROTULO_SOCIAL.outro}
+            </a>
+          </li>
+        ))}
+      </ul>
+    )}
+
+    {!perfil && (
+      <a class="autor-todos" href={url}>Todos os artigos de {primeiroNome(autor.name)}</a>
+    )}
+  </div>
+</aside>
+
+<style>
+.autor-card {
+  display: flex; gap: 24px; align-items: flex-start;
+  margin: 3rem 0 0;
+  padding: 28px;
+  background: var(--cream);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-lg);
+}
+.autor-card-perfil { margin: 0; background: #fff; }
+
+.autor-foto {
+  flex-shrink: 0;
+  width: 88px; height: 88px; border-radius: 50%;
+  overflow: hidden; background: var(--cream-2);
+  display: flex; align-items: center; justify-content: center;
+}
+.autor-foto img { width: 100%; height: 100%; object-fit: cover; }
+.autor-foto-inicial {
+  font-size: 2rem; font-weight: 900; color: var(--red);
+  background: var(--red-soft);
+}
+.autor-card-perfil .autor-foto { width: 120px; height: 120px; }
+
+.autor-texto { min-width: 0; flex: 1; }
+.autor-nome {
+  font-size: 1.1rem; font-weight: 800; letter-spacing: -.01em;
+  color: var(--ink); line-height: 1.25; margin: 0;
+  text-wrap: balance;
+}
+.autor-card-perfil .autor-nome { font-size: clamp(1.6rem, 3.5vw, 2.4rem); font-weight: 900; letter-spacing: -.03em; }
+.autor-nome a { color: inherit; text-decoration: none; }
+.autor-nome a:hover { color: var(--red); }
+.autor-cargo {
+  font-size: .82rem; font-weight: 700; color: var(--red);
+  margin: 4px 0 0; line-height: 1.4;
+  text-wrap: pretty;
+}
+.autor-bio {
+  font-size: .92rem; line-height: 1.7; color: var(--ink-2);
+  margin: 10px 0 0;
+  text-wrap: pretty;
+}
+.autor-card-perfil .autor-bio { font-size: 1rem; line-height: 1.8; }
+
+.autor-links {
+  list-style: none; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 6px 18px;
+  margin: 14px 0 0;
+}
+.autor-links a {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .78rem; font-weight: 700; color: var(--ink-2);
+  text-decoration: none; border-bottom: 1px solid var(--line-2);
+  padding-bottom: 1px;
+}
+.autor-links a:hover { color: var(--red); border-color: var(--red); }
+
+.autor-todos {
+  display: inline-block; margin-top: 16px;
+  font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--red); text-decoration: none;
+}
+.autor-todos:hover { text-decoration: underline; text-underline-offset: 3px; }
+
+@media (max-width: 600px) {
+  .autor-card { flex-direction: column; gap: 16px; padding: 22px 20px; }
+  .autor-foto { width: 72px; height: 72px; }
+  .autor-card-perfil .autor-foto { width: 96px; height: 96px; }
+}
+</style>

@@ -561,6 +561,11 @@ function askUrl(anchor, cb) {
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13v16H4z"/><path d="M8 8h5M8 12h5M8 16h3"/></svg>
         Posts do blog
       </a>
+      <?php if (in_array($active, ['blog', 'authors'], true)): ?>
+      <div class="nav-tree">
+        <a href="/acesso/autores" class="<?= $active === 'authors' ? 'active' : '' ?>">Autores</a>
+      </div>
+      <?php endif; ?>
       <?php if (cmsRole() !== 'author'): ?>
       <?php $pagesAreaOpen = in_array($active, ['pages', 'cases', 'services'], true); ?>
       <a href="/acesso/paginas" class="<?= $active === 'pages' ? 'active' : '' ?>">

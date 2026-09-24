@@ -2,6 +2,7 @@
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
+require_once __DIR__ . '/_author_modal.php';
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 $myId = (int) $_SESSION['cms_user_id'];
@@ -10,22 +11,9 @@ $myId = (int) $_SESSION['cms_user_id'];
 // telas separadas divergiriam na primeira vez que alguém mexesse num campo.
 $isNew = ($slug === '');
 
-/** Título -> endereço do post: sem acento, sem pontuação, separado por hífen. */
-function cmsSlugify(string $texto): string {
-    $t = trim($texto);
-    if (function_exists('transliterator_transliterate')) {
-        $t = transliterator_transliterate('Any-Latin; Latin-ASCII', $t) ?: $t;
-    } else {
-        $t = iconv('UTF-8', 'ASCII//TRANSLIT//IGNORE', $t) ?: $t;
-    }
-    $t = preg_replace('/[^a-zA-Z0-9]+/', '-', strtolower($t));
-    $t = trim((string) $t, '-');
-    if (strlen($t) <= 80) return $t;
-    // Corta no último hífen antes do limite, para não partir palavra no meio.
-    $curto = substr($t, 0, 80);
-    $ultimo = strrpos($curto, '-');
-    return rtrim($ultimo > 40 ? substr($curto, 0, $ultimo) : $curto, '-');
-}
+// Autores com assinatura (tabela de db/migrations/2026-09-25-blog-autores.sql).
+// Sem a migração, o campo volta a ser só o nome digitado, como sempre foi.
+$authorsReady = cmsAuthorsReady($pdo);
 
 /** slug é a chave primária, então um título repetido vira -2, -3, e assim por diante. */
 function cmsSlugUnico(PDO $pdo, string $base): string {
@@ -49,13 +37,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kwArr = array_values(array_filter(array_map('trim', explode(',', $_POST['keywords'] ?? '')), 'strlen'));
     $kwJson = json_encode($kwArr, JSON_UNESCAPED_UNICODE);
 
-    $authorId = $_POST['author_id'] !== '' ? (int) $_POST['author_id'] : null;
-    $authorName = $authorId ? null : trim($_POST['author_other'] ?? '');
-    if ($authorId) {
-        $u = $pdo->prepare('SELECT username FROM cmstest_users WHERE id = ?');
-        $u->execute([$authorId]);
-        $authorName = $u->fetchColumn() ?: $authorName;
+    // Autor: com a tabela de autores, o select manda o id e o nome de texto
+    // (`author`, usado nas listas e no JSON do site) vira o nome cadastrado.
+    // Sem autor escolhido, vale o nome digitado, como nos posts migrados.
+    $blogAuthorId = null;
+    $authorName = trim((string) ($_POST['author_other'] ?? ''));
+    if ($authorsReady && ($_POST['blog_author_id'] ?? '') !== '') {
+        $autor = cmsAuthorById($pdo, (int) $_POST['blog_author_id']);
+        if ($autor) {
+            $blogAuthorId = $autor['id'];
+            $authorName = $autor['name'];
+        }
     }
+    $authorName = $authorName !== '' ? $authorName : null;
+
+    // Rede de segurança no servidor para o problema dos parágrafos colados
+    // (ver cmsNormalizarParagrafos em db.php): o JS do editor já manda
+    // certo, mas o banco nunca mais recebe "a\nb" onde deveria ser "a\n\nb".
+    $conteudo = cmsNormalizarParagrafos((string) ($_POST['content_md'] ?? ''));
 
     if ($isNew) {
         $titulo = trim((string) ($_POST['title'] ?? ''));
@@ -67,23 +66,30 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($base === '') $base = 'post-' . date('Y-m-d');
         $slug = cmsSlugUnico($pdo, $base);
 
-        $stmt = $pdo->prepare('INSERT INTO cmstest_blog_posts (slug, title, subtitle, category, post_date, featured_image, hero_video, meta_description, keywords, content_md, author_id, author, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)');
-        $stmt->execute([
+        $cols = 'slug, title, subtitle, category, post_date, featured_image, hero_video, meta_description, keywords, content_md, author, updated_by';
+        $vals = [
             $slug, $titulo, $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
             $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
-            $_POST['content_md'], $authorId, $authorName, $myId,
-        ]);
+            $conteudo, $authorName, $myId,
+        ];
+        if ($authorsReady) { $cols .= ', blog_author_id'; $vals[] = $blogAuthorId; }
+        $stmt = $pdo->prepare('INSERT INTO cmstest_blog_posts (' . $cols . ') VALUES (' . implode(',', array_fill(0, count($vals), '?')) . ')');
+        $stmt->execute($vals);
         queueRebuild();
         header('Location: editar?slug=' . urlencode($slug) . '&created=1&t=' . time());
         exit;
     }
 
-    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author_id = ?, author = ?, updated_by = ? WHERE slug = ?');
-    $stmt->execute([
+    $set = 'title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author = ?, updated_by = ?';
+    $vals = [
         $_POST['title'], $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
         $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
-        $_POST['content_md'], $authorId, $authorName, $myId, $slug,
-    ]);
+        $conteudo, $authorName, $myId,
+    ];
+    if ($authorsReady) { $set .= ', blog_author_id = ?'; $vals[] = $blogAuthorId; }
+    $vals[] = $slug;
+    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET ' . $set . ' WHERE slug = ?');
+    $stmt->execute($vals);
     queueRebuild();
     header('Location: editar?slug=' . urlencode($slug) . '&saved=1&t=' . time());
     exit;
@@ -94,7 +100,7 @@ if ($isNew) {
     // o caso comum; dá para trocar no select.
     $post = [
         'title' => '', 'subtitle' => '', 'meta_description' => '',
-        'post_date' => date('Y-m-d'), 'author' => '', 'author_id' => $myId,
+        'post_date' => date('Y-m-d'), 'author' => '', 'blog_author_id' => null,
         'featured_image' => '', 'hero_video' => '', 'category' => 'geral',
         'keywords' => '', 'content_md' => '', 'updated_by_name' => null,
     ];
@@ -110,7 +116,8 @@ if ($isNew) {
     if (!$post) { http_response_code(404); die('Post não encontrado'); }
 }
 
-$authorOptions = $pdo->query('SELECT id, username FROM cmstest_users ORDER BY username')->fetchAll();
+$authorOptions = $authorsReady ? cmsAuthorsAll($pdo) : [];
+$postAuthorId = $authorsReady ? (int) ($post['blog_author_id'] ?? 0) : 0;
 
 $categories = ['assessoria-de-imprensa','marketing-de-autoridade','branding-estrategico','marketing-digital','comunicacao','marca-pessoal','negocios','geral'];
 
@@ -220,16 +227,25 @@ adminLayoutTop(
         <div class="side-sec">
           <strong>Publicação</strong>
           <label>Autor</label>
-          <select name="author_id" id="authorSelect" onchange="document.getElementById('authorOtherWrap').style.display = this.value === '' ? '' : 'none'">
-            <option value="">Outro (digitar abaixo)</option>
-            <?php foreach ($authorOptions as $u): ?>
-              <option value="<?= (int) $u['id'] ?>" <?= (int) $post['author_id'] === (int) $u['id'] ? 'selected' : '' ?>><?= htmlspecialchars($u['username']) ?></option>
-            <?php endforeach; ?>
-          </select>
-          <div id="authorOtherWrap" style="<?= $post['author_id'] ? 'display:none' : '' ?>">
-            <input type="text" name="author_other" value="<?= htmlspecialchars($post['author_id'] ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
-            <p class="hint">Para autores sem login no painel (colaboradores externos, etc).</p>
+          <?php if ($authorsReady): ?>
+          <div style="display:flex;gap:6px;align-items:stretch">
+            <select name="blog_author_id" id="authorSelect" onchange="autorMudou()" style="min-width:0">
+              <option value="">Sem autor cadastrado (só o nome abaixo)</option>
+              <?php foreach ($authorOptions as $a): ?>
+                <option value="<?= (int) $a['id'] ?>" <?= $postAuthorId === (int) $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars($a['name']) ?></option>
+              <?php endforeach; ?>
+            </select>
+            <button type="button" class="btn secondary" style="white-space:nowrap;padding:8px 12px;font-size:.78rem" onclick="autorModal.abrir(null, autorCriado)" title="Cadastrar um autor novo sem sair do post">+ novo autor</button>
           </div>
+          <p class="hint">Com um autor cadastrado, o artigo ganha a assinatura com foto e bio no fim do texto e entra na página dele no site. O cadastro fica em Posts do blog, Autores.</p>
+          <div id="authorOtherWrap" style="<?= $postAuthorId ? 'display:none' : '' ?>">
+            <input type="text" name="author_other" value="<?= htmlspecialchars($postAuthorId ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
+            <p class="hint">Só o nome, sem assinatura. É como estão os posts migrados do site antigo.</p>
+          </div>
+          <?php else: ?>
+          <input type="text" name="author_other" value="<?= htmlspecialchars($post['author'] ?? '') ?>" placeholder="Nome do autor" />
+          <p class="hint"><?= htmlspecialchars(CMS_AUTHORS_MIGRATION_HINT) ?></p>
+          <?php endif; ?>
           <label>Categoria</label>
           <select name="category">
             <?php foreach ($categories as $cat): ?>
@@ -462,10 +478,138 @@ var editor = new toastui.Editor({
     }
   }
 });
+// ---- Parágrafos: o que o editor mostra é o que o site publica ----
+// O Toast UI grava cada Enter como quebra simples de linha ("a\nb"), que para
+// o markdown do site é a mesma frase: o post inteiro saía num único <p>. E ao
+// abrir "a\n\nb" ele mostra um parágrafo vazio entre os dois. A tradução é
+// feita nos dois sentidos, direto no documento do editor (não em regex sobre
+// o texto), então lista, tabela, citação e código passam intactos:
+//  - ao abrir, os parágrafos vazios somem;
+//  - ao salvar, cada par de parágrafos ganha a linha em branco que o markdown
+//    exige, e parágrafos vazios (inclusive os de espaço em branco que o Word
+//    cola) são descartados.
+function ehParagrafo(n) { return n.type.name === 'paragraph'; }
+function ehParagrafoVazio(n) {
+  if (!ehParagrafo(n)) return false;
+  var soTexto = true;
+  n.forEach(function (f) { if (!f.isText) soTexto = false; });
+  return soTexto && n.textContent.replace(/[\s ]+/g, '') === '';
+}
+function semParagrafosVazios(node, comLinhaEmBranco) {
+  var tipo = node.type.name;
+  if (tipo !== 'doc' && tipo !== 'blockQuote') return node;
+  var filhos = [];
+  var anterior = null;
+  node.forEach(function (f) {
+    var atual = semParagrafosVazios(f, comLinhaEmBranco);
+    if (ehParagrafoVazio(atual)) return;
+    if (comLinhaEmBranco && anterior && ehParagrafo(anterior) && ehParagrafo(atual)) {
+      filhos.push(node.type.schema.nodes.paragraph.create());
+    }
+    filhos.push(atual);
+    anterior = atual;
+  });
+  if (!filhos.length) filhos.push(node.type.schema.nodes.paragraph.create());
+  return node.type.create(node.attrs, filhos, node.marks);
+}
+function markdownParaSalvar() {
+  try {
+    var doc = editor.wwEditor.getModel();
+    return editor.convertor.toMarkdownText(semParagrafosVazios(doc, true));
+  } catch (e) {
+    // Sem os internos do editor (versão diferente), vai o markdown cru; o
+    // PHP aplica a mesma regra ao salvar.
+    return editor.getMarkdown();
+  }
+}
+function compactarParaEdicao() {
+  try {
+    var view = editor.wwEditor.view;
+    var doc = view.state.doc;
+    var novo = semParagrafosVazios(doc, false);
+    if (novo.eq(doc)) return;
+    var tr = view.state.tr.replaceWith(0, doc.content.size, novo.content);
+    tr.setMeta('addToHistory', false);
+    view.dispatch(tr);
+  } catch (e) {}
+}
+compactarParaEdicao();
+
+// ---- Colagem do Word e do Google Docs ----
+// O Google Docs envolve tudo o que copia num <b style="font-weight:normal">,
+// e o editor lia isso como "tudo em negrito". O Word manda <o:p> e parágrafos
+// só com espaço. O HTML colado é limpo antes de entrar no editor; a colagem
+// em si continua sendo a do editor (o evento é reemitido já limpo).
+function limparHtmlColado(html) {
+  var doc = new DOMParser().parseFromString(html, 'text/html');
+  function desembrulhar(el) {
+    while (el.firstChild) el.parentNode.insertBefore(el.firstChild, el);
+    el.parentNode.removeChild(el);
+  }
+  function embrulhar(el, tag) {
+    var w = doc.createElement(tag);
+    el.parentNode.insertBefore(w, el);
+    w.appendChild(el);
+  }
+  doc.querySelectorAll('b[id^="docs-internal-guid"], b[style*="font-weight:normal"], b[style*="font-weight: normal"], b[style*="font-weight:400"], b[style*="font-weight: 400"]').forEach(desembrulhar);
+  doc.querySelectorAll('span[style]').forEach(function (s) {
+    var peso = s.style.fontWeight;
+    if (peso === 'bold' || peso === 'bolder' || parseInt(peso, 10) >= 600) embrulhar(s, 'strong');
+    if (s.style.fontStyle === 'italic') embrulhar(s, 'em');
+  });
+  doc.querySelectorAll('meta, style, script, link, o\\:p').forEach(function (n) { n.parentNode.removeChild(n); });
+  return doc.body.innerHTML;
+}
+(function () {
+  var view;
+  try { view = editor.wwEditor.view; } catch (e) { return; }
+  if (!view || !view.dom) return;
+  var reemitindo = false;
+  view.dom.addEventListener('paste', function (ev) {
+    if (reemitindo) return;
+    var cd = ev.clipboardData;
+    if (!cd) return;
+    if (cd.files && cd.files.length) return; // imagem colada: o hook de upload cuida
+    var html = cd.getData('text/html');
+    if (!html) return;
+    var limpo;
+    try {
+      var dt = new DataTransfer();
+      dt.setData('text/html', limparHtmlColado(html));
+      dt.setData('text/plain', cd.getData('text/plain') || '');
+      limpo = new ClipboardEvent('paste', { clipboardData: dt, bubbles: true, cancelable: true });
+    } catch (e) {
+      return; // navegador sem suporte: segue a colagem normal
+    }
+    ev.preventDefault();
+    ev.stopImmediatePropagation();
+    reemitindo = true;
+    try { view.dom.dispatchEvent(limpo); } finally { reemitindo = false; }
+  }, true);
+})();
+
 // O que o PHP recebe é o markdown, não o HTML do editor.
 campoMd.form.addEventListener('submit', function () {
-  campoMd.value = editor.getMarkdown();
+  campoMd.value = markdownParaSalvar();
 });
+
+// ---- Autor ----
+function autorMudou() {
+  var sel = document.getElementById('authorSelect');
+  var wrap = document.getElementById('authorOtherWrap');
+  if (sel && wrap) wrap.style.display = sel.value === '' ? '' : 'none';
+}
+// "+ novo autor" salvou: entra na lista e já fica escolhido, sem recarregar o post.
+function autorCriado(autor) {
+  var sel = document.getElementById('authorSelect');
+  if (!sel) return;
+  var opt = document.createElement('option');
+  opt.value = autor.id;
+  opt.textContent = autor.name;
+  sel.appendChild(opt);
+  sel.value = String(autor.id);
+  autorMudou();
+}
 
 // ---- Capa: a área preta é a zona de arrastar ----
 (function () {
@@ -533,5 +677,7 @@ campoMd.form.addEventListener('submit', function () {
   });
 })();
 </script>
+
+<?php if ($authorsReady) cmsAuthorModal(); ?>
 
 <?php adminLayoutBottom(); ?>

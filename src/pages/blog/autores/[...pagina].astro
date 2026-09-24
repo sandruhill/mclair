@@ -1,0 +1,146 @@
+---
+// Índice de autores do blog: blog > autores. Só entra quem tem pelo menos um
+// artigo publicado (ver src/utils/blogAuthors.ts para o porquê).
+//
+// Rota com parâmetro rest em vez de index.astro de propósito: enquanto não
+// existe nenhum autor com artigo, a página /blog/autores/ simplesmente não é
+// gerada (nem entra no sitemap). Um índice vazio indexável seria pior do que
+// nenhum.
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import { getBlogPosts, getBlogAuthors } from '../../../utils/cmsApi';
+import { autoresComPosts, urlDoAutor, idDaPessoa, primeiroNome } from '../../../utils/blogAuthors';
+
+export async function getStaticPaths() {
+  const { getBlogPosts: gp, getBlogAuthors: ga } = await import('../../../utils/cmsApi');
+  const { autoresComPosts: comPosts } = await import('../../../utils/blogAuthors');
+  const [posts, todos] = await Promise.all([gp(), ga()]);
+  return comPosts(todos, posts).length > 0 ? [{ params: { pagina: undefined } }] : [];
+}
+
+const [posts, todos] = await Promise.all([getBlogPosts(), getBlogAuthors()]);
+const autores = autoresComPosts(todos, posts);
+const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
+const total = autores.length;
+
+const breadcrumbSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Início', item: BASE },
+    { '@type': 'ListItem', position: 2, name: 'Blog', item: `${BASE}/blog` },
+    { '@type': 'ListItem', position: 3, name: 'Autores', item: `${BASE}/blog/autores` },
+  ],
+};
+
+const listaSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'CollectionPage',
+  '@id': `${BASE}/blog/autores/#page`,
+  name: 'Autores do blog Mclair',
+  url: `${BASE}/blog/autores/`,
+  isPartOf: { '@id': `${BASE}/#website` },
+  inLanguage: 'pt-BR',
+  mainEntity: {
+    '@type': 'ItemList',
+    itemListElement: autores.map((a, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: { '@id': idDaPessoa(BASE, a.slug), '@type': 'Person', name: a.name, url: `${BASE}${urlDoAutor(a.slug)}` },
+    })),
+  },
+};
+
+const descricao = total
+  ? `Quem escreve no blog da Mclair: ${total} autor${total === 1 ? '' : 'es'} entre executivos, especialistas e a equipe da agência, com perfil, áreas de atuação e todos os artigos de cada um.`
+  : 'Quem escreve no blog da Mclair: perfil, áreas de atuação e artigos de cada autor.';
+---
+
+<Layout
+  title="Autores | Blog Mclair"
+  description={descricao}
+  ogImage="https://mclair.com.br/paginas/sobre-estrategia-comunicacao-mclair.jpg"
+  schema={[breadcrumbSchema, listaSchema]}
+>
+
+<section class="au-hero">
+  <div class="container au-hero-inner">
+    <p class="au-breadcrumb">
+      <a href="/blog/">Blog</a>
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="m9 18 6-6-6-6"/></svg>
+      <span>Autores</span>
+    </p>
+    <h1 class="au-title">Quem escreve no blog</h1>
+    <p class="au-lead">Executivos, especialistas e a equipe da Mclair. Cada perfil reúne a trajetória do autor e todos os artigos que ele assina.</p>
+  </div>
+</section>
+
+<section class="section au-section">
+  <div class="container">
+    {total === 0 ? (
+      <p class="au-vazio">Os perfis dos autores aparecem aqui assim que os primeiros artigos assinados forem publicados.</p>
+    ) : (
+      <div class="au-grid stagger-children">
+        {autores.map((a, i) => (
+          <a href={urlDoAutor(a.slug)} class="au-card" data-anim data-delay={((i % 3) + 1).toString()}>
+            {a.photo_url ? (
+              <img src={a.photo_url} alt="" class="au-foto" width="96" height="96" loading="lazy" />
+            ) : (
+              <span class="au-foto au-foto-inicial" aria-hidden="true">{a.name.trim().charAt(0).toUpperCase()}</span>
+            )}
+            <span class="au-nome">{a.name}</span>
+            {a.job_title && <span class="au-cargo">{a.job_title}</span>}
+            {a.bio_short && <span class="au-bio">{a.bio_short}</span>}
+            <span class="au-n">{a.post_count} artigo{a.post_count === 1 ? '' : 's'} de {primeiroNome(a.name)}</span>
+          </a>
+        ))}
+      </div>
+    )}
+  </div>
+</section>
+
+</Layout>
+
+<style>
+.au-hero { background: var(--dark); padding-top: 128px; padding-bottom: 48px; }
+.au-hero-inner { position: relative; z-index: 1; max-width: 860px; }
+.au-breadcrumb {
+  display: flex; align-items: center; gap: 8px;
+  font-size: .72rem; letter-spacing: .08em; text-transform: uppercase;
+  color: rgba(255,255,255,.4); margin-bottom: 16px;
+}
+.au-breadcrumb a { color: rgba(255,255,255,.5); transition: color .2s; }
+.au-breadcrumb a:hover { color: #fff; }
+.au-title { font-size: clamp(2rem,4.5vw,3.2rem); font-weight: 900; letter-spacing: -.03em; color: #fff; margin-bottom: 12px; }
+.au-lead { font-size: 1rem; color: rgba(255,255,255,.55); line-height: 1.7; font-weight: 300; max-width: 640px; text-wrap: pretty; }
+
+.au-section { background: #fff; padding-top: 64px; padding-bottom: 96px; }
+.au-vazio { color: var(--ink-3); text-align: center; padding: 40px 0; text-wrap: pretty; }
+.au-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; }
+@media (max-width: 960px) { .au-grid { grid-template-columns: repeat(2, 1fr); gap: 22px; } }
+@media (max-width: 600px) { .au-grid { grid-template-columns: 1fr; } }
+
+.au-card {
+  display: flex; flex-direction: column; align-items: flex-start;
+  padding: 28px; border-radius: var(--r-lg);
+  border: 1.5px solid var(--line); background: #fff;
+  color: inherit; text-decoration: none;
+  transition: box-shadow .3s, transform .3s cubic-bezier(.22,1,.36,1), border-color .25s;
+}
+.au-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,.1); transform: translateY(-4px); border-color: rgba(200,16,46,.2); }
+.au-foto {
+  width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
+  background: var(--cream-2); margin-bottom: 18px;
+}
+.au-foto-inicial {
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.2rem; font-weight: 900; color: var(--red); background: var(--red-soft);
+}
+.au-nome { font-size: 1.15rem; font-weight: 800; letter-spacing: -.02em; color: var(--ink); line-height: 1.25; text-wrap: balance; }
+.au-cargo { font-size: .8rem; font-weight: 700; color: var(--red); margin-top: 4px; line-height: 1.4; text-wrap: pretty; }
+.au-bio { font-size: .85rem; color: var(--ink-3); line-height: 1.65; margin-top: 10px; text-wrap: pretty; }
+.au-n {
+  margin-top: 18px; font-size: .7rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+  color: var(--red);
+}
+</style>

@@ -6,6 +6,7 @@ export async function getStaticPaths({ paginate }) {
   const { getBlogPosts, resolveBlogImage } = await import('../../utils/cmsApi');
   const { marked } = await import('marked');
   const { embutirVideos } = await import('../../utils/videoEmbed');
+  const { normalizarParagrafos } = await import('../../utils/markdown');
   const posts = await getBlogPosts();
 
   function ts(d: string) {
@@ -20,7 +21,7 @@ export async function getStaticPaths({ paginate }) {
       date: p.post_date ?? '',
       author: p.author ?? 'Equipe Mclair',
       image: resolveBlogImage(p.featured_image, p.image_url),
-      content: embutirVideos(marked.parse(p.content_md ?? '') as string),
+      content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
       category: p.category ?? 'geral',
     }))
     .sort((a, b) => ts(b.date) - ts(a.date));
@@ -30,6 +31,12 @@ export async function getStaticPaths({ paginate }) {
 
 const { page } = Astro.props;
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
+
+// Link de entrada do silo blog > autores. Só aparece quando existe ao menos
+// um autor com artigo (sem isso /blog/autores/ seria uma página vazia).
+const { getBlogPosts: getPostsIdx, getBlogAuthors } = await import('../../utils/cmsApi');
+const { autoresComPosts } = await import('../../utils/blogAuthors');
+const temAutores = autoresComPosts(await getBlogAuthors(), await getPostsIdx()).length > 0;
 
 // ── Blog index JSON-LD ────────────────────────────────────────
 const blogSchema = {
@@ -105,6 +112,9 @@ function formatDate(d: string) {
     <p class="bh-lead hero-instant" data-anim data-delay="2">
       Insights, tendências e estratégias de marketing, comunicação e branding para quem quer se destacar.
     </p>
+    {temAutores && (
+      <a href="/blog/autores/" class="bh-autores hero-instant" data-anim data-delay="3">Conheça quem escreve aqui →</a>
+    )}
   </div>
 </section>
 
@@ -305,6 +315,12 @@ function formatDate(d: string) {
 }
 .bh-title span { color:var(--red); }
 .bh-lead { font-size:1rem;color:rgba(255,255,255,.45);line-height:1.8;max-width:520px;font-weight:300; }
+.bh-autores {
+  display:inline-block; margin-top:20px;
+  font-size:.72rem; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:rgba(255,255,255,.7); text-decoration:none; transition:color .2s;
+}
+.bh-autores:hover { color:#fff; }
 
 /* ═══ BLOG SECTION ═══ */
 .blog-section { background:#fff; padding-top:72px; padding-bottom:96px; }

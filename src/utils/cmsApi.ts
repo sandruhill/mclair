@@ -1,6 +1,8 @@
 // Fetches content from the MySQL-backed export API at build time.
 // Used by every page that used to read from Keystatic/git-tracked files.
-const EXPORT_URL = 'https://mclair.com.br/acesso/api-export.php';
+// CMS_EXPORT_URL só existe para build local contra um mock da API (testes);
+// em produção não é definida e vale o endereço real.
+const EXPORT_URL = import.meta.env.CMS_EXPORT_URL || 'https://mclair.com.br/acesso/api-export.php';
 
 // Building now runs on the same server that serves this API, and every page/component
 // that needs a content type calls its getter independently -- without caching, a full
@@ -37,6 +39,23 @@ export type DbBlogPost = {
   about_topics: string[];
   faq_items: { question: string; answer: string }[];
   content_md: string;
+  // Só existe depois de db/migrations/2026-09-25-blog-autores.sql; antes
+  // disso a chave nem vem no JSON.
+  blog_author_id?: number | null;
+};
+
+// Autor do blog (assinatura no fim do post + página /blog/autores/<slug>/).
+export type DbBlogAuthor = {
+  id: number;
+  slug: string;
+  name: string;
+  job_title: string | null;
+  photo_url: string | null;
+  bio_short: string | null;
+  bio_long: string | null;
+  topics: string[];
+  social_links: { type: string; url: string }[];
+  post_count: number;
 };
 
 export type DbService = {
@@ -97,6 +116,34 @@ export function resolveBlogImage(featuredImage?: string | null, imageUrl?: strin
 }
 
 export const getBlogPosts = () => fetchType<DbBlogPost>('blog_posts');
+
+// Tolerante de propósito: se a tabela ainda não existe no banco (migração não
+// rodada) ou o PHP publicado ainda não conhece o tipo, o site sai sem
+// assinaturas em vez de derrubar o build inteiro.
+export async function getBlogAuthors(): Promise<DbBlogAuthor[]> {
+  try {
+    const rows = await fetchType<any>('blog_authors');
+    if (!Array.isArray(rows)) return [];
+    return rows
+      .filter((r) => r && r.slug && r.name)
+      .map((r) => ({
+        id: Number(r.id),
+        slug: String(r.slug),
+        name: String(r.name),
+        job_title: r.job_title || null,
+        photo_url: r.photo_url || null,
+        bio_short: r.bio_short || null,
+        bio_long: r.bio_long || null,
+        topics: Array.isArray(r.topics) ? r.topics.map(String) : [],
+        social_links: Array.isArray(r.social_links)
+          ? r.social_links.filter((l: any) => l && typeof l.url === 'string').map((l: any) => ({ type: String(l.type || 'outro'), url: String(l.url) }))
+          : [],
+        post_count: Number(r.post_count ?? 0),
+      }));
+  } catch {
+    return [];
+  }
+}
 export const getServices = () => fetchType<DbService>('services');
 export const getCases = () => fetchType<DbCase>('cases');
 export const getSingletons = () => fetchType<DbSingleton>('singletons');

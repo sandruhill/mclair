@@ -1,13 +1,17 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
+import AuthorCard from '../../components/AuthorCard.astro';
 import { marked } from 'marked';
 import { embutirVideos, htmlDaCapaEmVideo } from '../../utils/videoEmbed';
-import { getBlogPosts, resolveBlogImage } from '../../utils/cmsApi';
-import type { DbBlogPost } from '../../utils/cmsApi';
+import { normalizarParagrafos } from '../../utils/markdown';
+import { getBlogPosts, getBlogAuthors, resolveBlogImage } from '../../utils/cmsApi';
+import type { DbBlogPost, DbBlogAuthor } from '../../utils/cmsApi';
+import { mapaDeAutores, autorDoPost, urlDoAutor, schemaAutorDoPost } from '../../utils/blogAuthors';
 
 export async function getStaticPaths() {
-  const posts = await getBlogPosts();
+  const [posts, autores] = await Promise.all([getBlogPosts(), getBlogAuthors()]);
+  const porId = mapaDeAutores(autores);
   // Normalized shape used both for the full post and the related-posts list
   // (relatedPosts needs plain slug/title/author/image, not the DB column names).
   const normalized = posts.map((p: DbBlogPost) => ({
@@ -16,10 +20,15 @@ export async function getStaticPaths() {
     subtitle: p.subtitle ?? '',
     metaDescription: p.meta_description ?? '',
     date: p.post_date ?? '',
-    author: p.author ?? 'Equipe Mclair',
+    // Com autor cadastrado, o nome exibido é o do cadastro (o painel mantém
+    // a coluna de texto em sincronia, mas o cadastro é a fonte).
+    author: autorDoPost(p, porId)?.name ?? p.author ?? 'Equipe Mclair',
+    // Autor cadastrado (assinatura + página de perfil); null nos posts
+    // migrados que só têm o nome de texto.
+    autor: autorDoPost(p, porId) as DbBlogAuthor | null,
     image: resolveBlogImage(p.featured_image, p.image_url),
     video: p.hero_video ?? '',
-    content: embutirVideos(marked.parse(p.content_md ?? '') as string),
+    content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
     keywords: p.keywords ?? [],
     aboutTopics: p.about_topics ?? [],
     faqItems: p.faq_items ?? [],
@@ -36,6 +45,8 @@ const { post, source, allPosts } = Astro.props;
 const capaEmVideo = htmlDaCapaEmVideo(post.video ?? '');
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
 const canonicalURL = `${BASE}/blog/${post.slug}`;
+const autor: DbBlogAuthor | null = post.autor ?? null;
+const autorUrl = autor ? urlDoAutor(autor.slug) : null;
 
 function formatDate(d: string) {
   if (!d) return '';
@@ -94,11 +105,15 @@ const articleSchema: Record<string, any> = {
   }),
   datePublished: dateISO,
   dateModified:  dateISO,
-  author: {
-    '@type': 'Person',
-    name: post.author || 'Equipe Mclair',
-    worksFor: { '@id': `${BASE}/#organization` },
-  },
+  // Com autor cadastrado, o Person tem @id estável (a URL do perfil), e é o
+  // mesmo @id que a página /blog/autores/<slug>/ declara por completo.
+  author: autor
+    ? { ...schemaAutorDoPost(autor, BASE), worksFor: { '@id': `${BASE}/#organization` } }
+    : {
+        '@type': 'Person',
+        name: post.author || 'Equipe Mclair',
+        worksFor: { '@id': `${BASE}/#organization` },
+      },
   publisher:        { '@id': `${BASE}/#organization` },
   mainEntityOfPage: { '@type': 'WebPage', '@id': canonicalURL },
   isPartOf:         { '@id': `${BASE}/#website` },
@@ -195,7 +210,8 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     <a href="/blog/" class="back-link">← Blog</a>
     <div class="ph-meta">
       {post.date && <time class="ph-date">{formatDate(post.date)}</time>}
-      {post.author && <span class="ph-author">por {post.author}</span>}
+      {post.author && autorUrl && <a class="ph-author" href={autorUrl} rel="author">por {post.author}</a>}
+      {post.author && !autorUrl && <span class="ph-author">por {post.author}</span>}
     </div>
     <h1 class="ph-title">{post.title}</h1>
     {post.subtitle && <p class="ph-subtitle">{post.subtitle}</p>}
@@ -216,13 +232,20 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     <div class="post-layout">
 
       <!-- CONTENT -->
-      <div class="post-content prose" set:html={post.content} />
+      <div>
+        <div class="post-content prose" set:html={post.content} />
+        {autor && <AuthorCard autor={autor} />}
+      </div>
 
       <!-- SIDEBAR -->
       <aside class="post-sidebar">
         <div class="sidebar-card">
           <p class="sb-label">Publicado por</p>
-          <p class="sb-author">{post.author || 'Equipe Mclair'}</p>
+          {autorUrl ? (
+            <p class="sb-author"><a href={autorUrl} rel="author">{post.author}</a></p>
+          ) : (
+            <p class="sb-author">{post.author || 'Equipe Mclair'}</p>
+          )}
           {post.date && <p class="sb-date">{formatDate(post.date)}</p>}
         </div>
 
@@ -345,8 +368,9 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 }
 .ph-author {
   font-size:.7rem; font-weight:700; letter-spacing:.08em; text-transform:uppercase;
-  color:var(--red);
+  color:var(--red); text-decoration:none;
 }
+a.ph-author:hover { text-decoration:underline; text-underline-offset:3px; }
 
 .ph-title {
   font-size:clamp(1.8rem,4.5vw,3.2rem); font-weight:900; line-height:1.12;
@@ -464,6 +488,8 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   color: var(--ink-3); margin-bottom: 8px;
 }
 .sb-author { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 4px; letter-spacing: -.01em; }
+.sb-author a { color: inherit; text-decoration: none; }
+.sb-author a:hover { color: var(--red); }
 .sb-date { font-size: .7rem; color: var(--ink-3); line-height: 1.5; }
 
 .sidebar-cta { background: var(--dark); border-color: transparent; }
