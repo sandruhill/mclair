@@ -37,5 +37,4 @@ ALTER TABLE cmstest_blog_posts
   ADD INDEX IF NOT EXISTS idx_blog_author (blog_author_id);
 
 ALTER TABLE cmstest_blog_posts
-  ADD CONSTRAINT IF NOT EXISTS fk_blog_posts_blog_author
-  FOREIGN KEY (blog_author_id) REFERENCES cmstest_blog_authors (id) ON DELETE SET NULL;
+  ADD FOREIGN KEY IF NOT EXISTS fk_blog_posts_blog_author (blog_author_id) REFERENCES cmstest_blog_authors (id) ON DELETE SET NULL;
