@@ -31,7 +31,8 @@ export function normalizarParagrafos(md: string | null | undefined): string {
   for (let i = 0; i < linhas.length; i++) {
     let linha = linhas[i];
 
-    if (/^\s*(```|~~~)/.test(linha)) {
+    // ``` e ~~~ (código) e $$ (bloco personalizado do editor, ex.: galeria)
+    if (/^\s*(```|~~~|\$\$)/.test(linha)) {
       dentroDeCodigo = !dentroDeCodigo;
       saida.push(linha);
       continue;

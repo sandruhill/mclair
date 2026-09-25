@@ -3,9 +3,8 @@ export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import AuthorCard from '../../components/AuthorCard.astro';
 import Byline from '../../components/Byline.astro';
-import { marked } from 'marked';
-import { embutirVideos, htmlDaCapaEmVideo } from '../../utils/videoEmbed';
-import { normalizarParagrafos } from '../../utils/markdown';
+import { htmlDaCapaEmVideo } from '../../utils/videoEmbed';
+import { renderizarPost } from '../../utils/renderPost';
 import { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } from '../../utils/cmsApi';
 import type { DbBlogPost, DbBlogAuthor } from '../../utils/cmsApi';
 import { mapaDeAutores, mapaDeVinculos, autoresDoPost, urlDoAutor, schemaAutoresDoPost, ligarNomes } from '../../utils/blogAuthors';
@@ -33,7 +32,7 @@ export async function getStaticPaths() {
     autores: autoresDoPost(p, porId, porPost) as DbBlogAuthor[],
     image: resolveBlogImage(p.featured_image, p.image_url),
     video: p.hero_video ?? '',
-    content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
+    content: renderizarPost(p.content_md),
     keywords: p.keywords ?? [],
     aboutTopics: p.about_topics ?? [],
     faqItems: p.faq_items ?? [],
@@ -316,6 +315,8 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 <!-- Só age no navegador de quem usa o painel (marcador no localStorage):
      recarrega esta página sozinha quando uma publicação nova está no ar. -->
 <script is:inline src="/ao-vivo.js" defer></script>
+<!-- Galeria e imagens do texto abrem em tela cheia (lightbox próprio, sem biblioteca). -->
+<script is:inline src="/lightbox.js" defer></script>
 
 </Layout>
 

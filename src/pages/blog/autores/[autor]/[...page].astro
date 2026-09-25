@@ -10,9 +10,7 @@ import type { DbBlogAuthor } from '../../../../utils/cmsApi';
 
 export async function getStaticPaths({ paginate }: any) {
   const { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } = await import('../../../../utils/cmsApi');
-  const { marked } = await import('marked');
-  const { embutirVideos } = await import('../../../../utils/videoEmbed');
-  const { normalizarParagrafos } = await import('../../../../utils/markdown');
+  const { renderizarPost } = await import('../../../../utils/renderPost');
   const { autoresComPosts, autoresDoPost, mapaDeAutores, mapaDeVinculos } = await import('../../../../utils/blogAuthors');
 
   const [posts, todos, vinculos] = await Promise.all([getBlogPosts(), getBlogAuthors(), getBlogPostAuthors()]);
@@ -33,7 +31,7 @@ export async function getStaticPaths({ paginate }: any) {
         subtitle: p.subtitle ?? '',
         date: p.post_date ?? '',
         image: resolveBlogImage(p.featured_image, p.image_url),
-        content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
+        content: renderizarPost(p.content_md),
       }))
       .sort((a: any, b: any) => ts(b.date) - ts(a.date));
     return paginate(deste, { pageSize: 12, params: { autor: autor.slug }, props: { autor } });

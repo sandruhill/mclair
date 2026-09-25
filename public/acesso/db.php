@@ -58,7 +58,7 @@ function cmsNormalizarParagrafos(string $md): string {
     $n = count($linhas);
     for ($i = 0; $i < $n; $i++) {
         $linha = $linhas[$i];
-        if (preg_match('/^\s*(```|~~~)/', $linha)) { $dentroDeCodigo = !$dentroDeCodigo; $saida[] = $linha; continue; }
+        if (preg_match('/^\s*(```|~~~|\$\$)/', $linha)) { $dentroDeCodigo = !$dentroDeCodigo; $saida[] = $linha; continue; }
         if ($dentroDeCodigo) { $saida[] = $linha; continue; }
         if (preg_match('/^[ \t]+$/', $linha)) $linha = '';
         $saida[] = $linha;

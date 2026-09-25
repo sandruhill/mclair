@@ -16,9 +16,7 @@ const CATEGORIES: Record<string, string> = {
 
 export async function getStaticPaths({ paginate }: any) {
   const { getBlogPosts, resolveBlogImage } = await import('../../../../utils/cmsApi');
-  const { marked } = await import('marked');
-  const { embutirVideos } = await import('../../../../utils/videoEmbed');
-  const { normalizarParagrafos } = await import('../../../../utils/markdown');
+  const { renderizarPost } = await import('../../../../utils/renderPost');
   const topicsBySlug = (await import('../../../../data/blog-topics.json')).default as Record<string, string>;
   const posts = await getBlogPosts();
 
@@ -34,7 +32,7 @@ export async function getStaticPaths({ paginate }: any) {
       date: p.post_date ?? '',
       author: p.author ?? 'Equipe Mclair',
       image: resolveBlogImage(p.featured_image, p.image_url),
-      content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
+      content: renderizarPost(p.content_md),
       categoria: topicsBySlug[p.slug],
     }))
     .filter((p: any) => p.categoria)

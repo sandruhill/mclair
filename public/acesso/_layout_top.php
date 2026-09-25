@@ -40,7 +40,9 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   .shell { display:flex; min-height:100vh; }
 
   /* Sidebar */
-  .sidebar { width:236px; background:var(--sidebar); color:var(--ink); flex-shrink:0; display:flex; flex-direction:column; padding:22px 12px 14px; border-right:1px solid var(--line); }
+  /* Fica parada enquanto o conteúdo rola; se for mais alta que a tela, rola
+     por dentro, com a caixa do usuário presa embaixo. */
+  .sidebar { width:236px; background:var(--sidebar); color:var(--ink); flex-shrink:0; display:flex; flex-direction:column; padding:22px 12px 14px; border-right:1px solid var(--line); position:sticky; top:0; height:100vh; height:100dvh; overflow-y:auto; overscroll-behavior:contain; align-self:flex-start; }
   .sidebar-brand { display:flex; align-items:center; gap:10px; padding:0 10px 26px; }
   .sidebar-brand .logo-link { position:relative; width:26px; height:26px; flex-shrink:0; }
   .sidebar-brand .logo-link img { width:26px; height:26px; object-fit:contain; display:block; }
@@ -244,7 +246,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   @media (max-width: 768px) {
     /* Sidebar becomes an off-canvas drawer, opened by the topbar hamburger */
     .nav-toggle { display:inline-flex; }
-    .sidebar { position:fixed; top:0; bottom:0; left:0; z-index:60; width:min(300px, 85vw); transform:translateX(-105%); transition:transform .25s ease; overflow-y:auto; }
+    .sidebar { position:fixed; top:0; bottom:0; left:0; z-index:60; width:min(300px, 85vw); height:100vh; height:100dvh; align-self:auto; transform:translateX(-105%); transition:transform .25s ease; overflow-y:auto; }
     .sidebar.open { transform:none; box-shadow:0 10px 40px rgba(0,0,0,.25); }
     body.nav-open { overflow:hidden; }
     .sidebar nav a { padding:13px 12px; font-size:.95rem; }

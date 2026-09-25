@@ -4,9 +4,7 @@ import Layout from '../../layouts/Layout.astro';
 
 export async function getStaticPaths({ paginate }) {
   const { getBlogPosts, resolveBlogImage } = await import('../../utils/cmsApi');
-  const { marked } = await import('marked');
-  const { embutirVideos } = await import('../../utils/videoEmbed');
-  const { normalizarParagrafos } = await import('../../utils/markdown');
+  const { renderizarPost } = await import('../../utils/renderPost');
   const posts = await getBlogPosts();
 
   function ts(d: string) {
@@ -21,7 +19,7 @@ export async function getStaticPaths({ paginate }) {
       date: p.post_date ?? '',
       author: p.author ?? 'Equipe Mclair',
       image: resolveBlogImage(p.featured_image, p.image_url),
-      content: embutirVideos(marked.parse(normalizarParagrafos(p.content_md)) as string),
+      content: renderizarPost(p.content_md),
       category: p.category ?? 'geral',
     }))
     .sort((a, b) => ts(b.date) - ts(a.date));

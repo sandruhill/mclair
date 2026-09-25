@@ -3,6 +3,7 @@ require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/_layout_top.php';
 require_once __DIR__ . '/_author_modal.php';
+require_once __DIR__ . '/_media_modals.php';
 $pdo = cmsDb();
 $slug = $_GET['slug'] ?? $_POST['slug'] ?? '';
 $myId = (int) $_SESSION['cms_user_id'];
@@ -147,7 +148,15 @@ adminLayoutTop(
   .toastui-editor-contents .ProseMirror > p { margin: 0 0 .9em; }
   .toastui-editor-mode-switch { border-radius: 0 0 8px 8px; }
   /* Barra de ferramentas acompanha a rolagem quando o editor é mais alto que a tela. */
-  .toastui-editor-defaultUI-toolbar { position: sticky; top: 0; z-index: 6; }
+  /* Quem gruda é o wrapper .toastui-editor-toolbar (o pai alto é o
+     .toastui-editor-defaultUI); grudar só a barra interna não funcionava,
+     porque o wrapper tem exatamente a altura dela. Os menus da barra ("...",
+     título, tabela, link) são filhos do wrapper, então acompanham a barra
+     grudada, e o z-index 40 os deixa acima do .toastui-editor-ww-container
+     (20) da biblioteca, que antes os escondia atrás do texto. */
+  .toastui-editor-defaultUI .toastui-editor-toolbar { position: sticky; top: 0; z-index: 40; }
+  .toastui-editor-defaultUI-toolbar { position: relative; z-index: auto; }
+  .toastui-editor-defaultUI .toastui-editor-popup, .toastui-editor-defaultUI .toastui-editor-dropdown-toolbar { z-index: 41; }
   .toastui-editor-defaultUI { border-radius: 8px 8px 0 0; }
 
   /* Linha de publicação: aviso "Salvo/Publicado" e, quando o post está no
@@ -213,6 +222,19 @@ adminLayoutTop(
   .dt-grade button.futuro { color:#C7CBD1; text-decoration:line-through; cursor:not-allowed; }
   .dt-pop-pe { display:flex; justify-content:space-between; margin-top:8px; font-size:.78rem; font-weight:700; }
   .dt-futuro { color:#9a1f1f; }
+
+  /* Prévia da galeria dentro do editor (bloco $$galeria): miniaturas e o
+     atalho "Editar galeria", em vez do texto cru do bloco. */
+  .toastui-editor-custom-block .toastui-editor-custom-block-view { padding:0; }
+  .galeria-previa { display:block; padding:10px 12px 12px; margin:6px 0; background:var(--soft); border:1px solid var(--line); border-radius:10px; cursor:pointer; }
+  .galeria-previa:hover { border-color:var(--red); }
+  .galeria-previa-cabeca { display:flex; align-items:center; gap:8px; font-size:.78rem; color:var(--ink-3); margin-bottom:8px; }
+  .galeria-previa-cabeca strong { color:var(--ink); }
+  .galeria-editar { margin-left:auto; font-weight:700; color:var(--red); text-decoration:underline; text-underline-offset:2px; }
+  .galeria-previa-thumbs { display:flex; flex-wrap:wrap; gap:6px; }
+  .galeria-previa-thumbs img { width:76px; height:57px; object-fit:cover; border-radius:6px; background:#fff; margin:0; }
+  .galeria-previa-thumbs .mais { display:flex; align-items:center; justify-content:center; width:76px; height:57px; border-radius:6px; background:#fff; color:var(--ink-3); font-weight:700; font-size:.8rem; }
+  .toastui-editor-custom-block-editor { font-family:ui-monospace, monospace; font-size:.8rem; }
 
   /* Alça de altura: a borda de baixo do editor, arrastável. */
   .editor-alca { height: 14px; margin-top: -1px; border: 1px solid var(--line); border-top: none; border-radius: 0 0 8px 8px; background: var(--soft); cursor: ns-resize; display: flex; align-items: center; justify-content: center; touch-action: none; user-select: none; -webkit-user-select: none; }
@@ -402,43 +424,11 @@ adminLayoutTop(
   </div>
 </form>
 
-<!-- Media picker modal (toolbar "Imagem" button) -->
-<style>
-  .imgmodal { display:none; position:fixed; inset:0; background:rgba(26,27,30,.5); z-index:50; align-items:center; justify-content:center; }
-  .imgmodal.open { display:flex; }
-  .imgmodal .card { width:640px; max-width:92vw; max-height:84vh; overflow:auto; }
-  .imggrid { display:grid; grid-template-columns:repeat(auto-fill, minmax(110px, 1fr)); gap:8px; margin-top:12px; }
-  .imggrid button { border:2px solid transparent; border-radius:8px; padding:0; background:var(--soft); cursor:pointer; overflow:hidden; aspect-ratio:4/3; }
-  .imggrid button img { width:100%; height:100%; object-fit:cover; display:block; }
-  .imggrid button.on { border-color:var(--red); }
-</style>
-<div class="imgmodal" id="imgModal">
-  <div class="card">
-    <div style="display:flex;align-items:center;justify-content:space-between">
-      <div class="hero-tabs" role="tablist">
-        <button type="button" id="imgTabUp" onclick="imgTab('up')">Enviar nova</button>
-        <button type="button" id="imgTabGal" onclick="imgTab('gal')">Galeria</button>
-      </div>
-      <button type="button" onclick="imgModalClose()" style="background:none;border:none;cursor:pointer;font-size:1rem;color:var(--ink-3)" title="Fechar">✕</button>
-    </div>
-    <div id="imgPaneUp">
-      <label>Imagem</label>
-      <input type="text" id="imgModalUrl" class="img-url" placeholder="/uploads/exemplo.jpg" />
-    </div>
-    <div id="imgPaneGal" style="display:none">
-      <div class="imggrid" id="imgGrid"></div>
-      <p class="hint" id="imgGalMsg"></p>
-    </div>
-    <div style="margin-top:16px;display:flex;align-items:center;gap:10px;justify-content:flex-end">
-      <span class="hint" id="imgModalErr" style="margin:0"></span>
-      <button type="button" class="btn secondary" onclick="imgModalClose()">Cancelar</button>
-      <button type="button" class="btn" onclick="imgModalInsert()">Inserir imagem</button>
-    </div>
-  </div>
-</div>
+<?php cmsMediaModals(); ?>
 
 <script src="/acesso/vendor/toastui-editor-all.min.js"></script>
 <script src="/acesso/vendor/i18n-pt-br.js"></script>
+<script src="/acesso/editor-midia.js"></script>
 <script>
 // ---- Hero preview ----
 var heroMode = <?= json_encode($heroMode) ?>;
@@ -479,92 +469,10 @@ function renderHero() {
 
 setHeroMode(heroMode);
 
-// ---- Markdown toolbar ----
-// ---- Media picker modal ----
-// Galeria do site: o editor visual já traz upload por arrastar, isto aqui é
-// para reaproveitar imagem que já foi enviada antes.
-var imgCurTab = 'up';
-var imgPicked = '';
-
-function mdImage() {
-  imgPicked = '';
-  document.getElementById('imgModalErr').textContent = '';
-  document.getElementById('imgModal').classList.add('open');
-  imgTab('up');
-}
-
-function imgTab(t) {
-  imgCurTab = t;
-  document.getElementById('imgTabUp').className = t === 'up' ? 'on' : '';
-  document.getElementById('imgTabGal').className = t === 'gal' ? 'on' : '';
-  document.getElementById('imgPaneUp').style.display = t === 'up' ? '' : 'none';
-  document.getElementById('imgPaneGal').style.display = t === 'gal' ? '' : 'none';
-  if (t === 'gal') imgLoadGallery();
-}
-
-function imgLoadGallery() {
-  var grid = document.getElementById('imgGrid');
-  var msg = document.getElementById('imgGalMsg');
-  grid.innerHTML = '';
-  msg.textContent = 'Carregando...';
-  fetch('/acesso/media-list.php')
-    .then(function (r) { return r.json(); })
-    .then(function (list) {
-      msg.textContent = list.length ? '' : 'Nenhuma imagem enviada ainda.';
-      list.forEach(function (f) {
-        var b = document.createElement('button');
-        b.type = 'button';
-        b.title = f.url;
-        var im = document.createElement('img');
-        im.src = f.url;
-        im.alt = '';
-        im.loading = 'lazy';
-        b.appendChild(im);
-        b.addEventListener('click', function () {
-          var on = grid.querySelector('.on');
-          if (on) on.classList.remove('on');
-          b.classList.add('on');
-          imgPicked = f.url;
-          document.getElementById('imgModalErr').textContent = '';
-        });
-        grid.appendChild(b);
-      });
-    })
-    .catch(function () { msg.textContent = 'Falha ao carregar a galeria. Tente de novo.'; });
-}
-
-function imgModalClose() {
-  document.getElementById('imgModal').classList.remove('open');
-}
-
-function imgModalInsert() {
-  var url = imgCurTab === 'up'
-    ? document.getElementById('imgModalUrl').value.trim()
-    : imgPicked;
-  if (!url) {
-    document.getElementById('imgModalErr').textContent = imgCurTab === 'up'
-      ? 'Envie ou cole a URL de uma imagem primeiro.'
-      : 'Clique numa imagem da galeria primeiro.';
-    return;
-  }
-  editor.exec('addImage', { imageUrl: url, altText: '' });
-  editor.focus();
-  imgModalClose();
-}
-
 // ---- Editor visual ----
 // O banco guarda markdown (o build roda marked.parse em content_md), então o
 // editor abre em WYSIWYG mas o que vai no POST é sempre getMarkdown().
-// Botão extra na barra: abre a galeria de imagens já enviadas ao site.
-function botaoGaleria() {
-  var b = document.createElement('button');
-  b.type = 'button';
-  b.textContent = 'Galeria';
-  b.style.cssText = 'background:none;border:0;font:inherit;font-size:11px;font-weight:700;cursor:pointer;padding:0 6px;color:inherit';
-  b.addEventListener('click', function () { mdImage(); });
-  return b;
-}
-
+// Imagem, vídeo e galeria são botões próprios (editor-midia.js).
 var campoMd = document.getElementById('contentMd');
 var editor = new toastui.Editor({
   el: document.getElementById('wysiwyg'),
@@ -575,31 +483,29 @@ var editor = new toastui.Editor({
   language: 'pt-BR',
   usageStatistics: false,
   autofocus: false,
+  // Menos itens, agrupados pelo uso: texto, listas e citação, mídia, estrutura.
+  // Tachado, código inline e bloco de código saíram (raros num blog de
+  // comunicação); assim a barra cabe inteira na largura do editor.
   toolbarItems: [
-    ['heading', 'bold', 'italic', 'strike'],
-    ['hr', 'quote'],
-    ['ul', 'ol'],
-    ['table', 'link'],
-    ['code', 'codeblock'],
-    [{ name: 'galeria', tooltip: 'Imagem já enviada', el: botaoGaleria() }]
+    ['heading', 'bold', 'italic'],
+    ['ul', 'ol', 'quote'],
+    ['link',
+      { name: 'imagem', tooltip: 'Imagem', el: midia.botaoBarra('imagem', 'Imagem', function () { midia.abrirImagem(); }) },
+      { name: 'video', tooltip: 'Vídeo', el: midia.botaoBarra('video', 'Vídeo', function () { midia.abrirVideo(); }) },
+      { name: 'galeria', tooltip: 'Galeria de imagens', el: midia.botaoBarra('galeria', 'Galeria', function () { midia.abrirGaleria(); }) }],
+    ['table', 'hr']
   ],
+  customHTMLRenderer: { galeria: midia.renderGaleria },
   hooks: {
     // Arrastar ou colar imagem dentro do texto: sobe pelo mesmo upload.php do painel.
     addImageBlobHook: function (blob, callback) {
-      var fd = new FormData();
-      fd.append('file', blob);
-      fd.append('csrf', CMS_CSRF);
-      fetch('/acesso/upload.php', { method: 'POST', body: fd })
-        .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
-        .then(function (res) {
-          if (!res.ok || !res.j.url) { alert(res.j.error || 'Falha no upload da imagem.'); return; }
-          callback(res.j.url, '');
-        })
-        .catch(function () { alert('Falha de rede ao enviar a imagem.'); });
+      midia.subir(blob).then(function (r) { callback(r.urlComTamanho, midia.altDoNome(blob.name || '')); })
+        .catch(function (e) { alert(e.message || 'Falha no upload da imagem.'); });
       return false;
     }
   }
 });
+midia.ligar(editor);
 // ---- Parágrafos: o que o editor mostra é o que o site publica ----
 // O Toast UI grava cada Enter como quebra simples de linha ("a\nb"), que para
 // o markdown do site é a mesma frase: o post inteiro saía num único <p>. E ao
