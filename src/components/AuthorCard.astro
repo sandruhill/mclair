@@ -45,12 +45,11 @@ const paragrafos = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
   display: flex; gap: 24px; align-items: flex-start;
   margin: 2.5rem 0 0;
   padding: 28px;
-  background: var(--cream);
-  border: 1.5px solid var(--line);
-  border-radius: var(--r-lg);
+  background: linear-gradient(135deg, rgba(200,16,46,.045), rgba(200,16,46,.015) 60%, var(--cream));
+  border-radius: 22px;
 }
 .autor-card + .autor-card { margin-top: 16px; }
-.autor-card :global(.autor-avatar) { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--red-soft); }
+.autor-card :global(.autor-avatar) { box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(200,16,46,.10); }
 .autor-card-perfil { margin: 0; background: #fff; }
 
 .autor-texto { min-width: 0; flex: 1; }

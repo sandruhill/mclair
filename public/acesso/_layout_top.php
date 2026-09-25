@@ -402,11 +402,22 @@ function imgDropInit(root) {
 }
 document.addEventListener('DOMContentLoaded', function () { imgDropInit(document); });
 
-// ---- "Ver ao vivo" -- watches the rebuild actually finish after a save ----
-// The save itself only queues a rebuild (~1min cron); this polls a small
-// timestamp file rebuild.sh writes on every successful publish and swaps the
-// static "Salvo no banco." message for a live link once that build is newer
-// than this save (?t=<serverUnixTime set at save-redirect time>).
+// ---- "Ver online": acompanha a publicação de verdade ----
+// Salvar só coloca o site na fila (cron de ~1 min + build de ~1 min). Aqui a
+// mensagem "Salvo" vira, na ordem: "na fila", "publicando", e por fim
+// "Publicado! Ver online" (ou um erro claro se o build falhou), consultando
+// /acesso/build-status.php, que lê a fila, a trava e o último log do
+// rebuild. Quando a nova versão está no ar, avisa as abas do site abertas
+// neste navegador (BroadcastChannel + localStorage), e /ao-vivo.js recarrega
+// a página certa sozinho.
+localStorage.setItem('mclair:painel', '1'); // marcador: este navegador é do dono do site
+
+function avisarAbasDoSite(url, builtAt, todas) {
+  var msg = { url: url, builtAt: builtAt, all: !!todas, at: Date.now() };
+  try { new BroadcastChannel('mclair-publicacao').postMessage(msg); } catch (e) {}
+  try { localStorage.setItem('mclair:publicado', JSON.stringify(msg)); } catch (e) {}
+}
+
 document.addEventListener('DOMContentLoaded', function () {
   var el = document.getElementById('savedMsg');
   if (!el) return;
@@ -418,27 +429,57 @@ document.addEventListener('DOMContentLoaded', function () {
   var spin = document.createElement('span');
   spin.className = 'spin';
   el.prepend(spin);
-  textEl.textContent = 'Salvo. Publicando no site...';
+  textEl.textContent = 'Salvo. Aguardando a fila de publicação...';
 
-  var elapsed = 0;
-  var iv = setInterval(function () {
-    elapsed += 3000;
-    fetch('/acesso/build-status.json?_=' + Date.now(), { cache: 'no-store' })
+  var inicio = Date.now();
+  var vistoBuild = false;
+  function terminar(html, erro) {
+    spin.remove();
+    if (erro) { el.classList.remove('ok'); el.classList.add('err'); }
+    textEl.innerHTML = html;
+  }
+  function verificar() {
+    fetch('/acesso/build-status.php?_=' + Date.now(), { cache: 'no-store', credentials: 'same-origin' })
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (data) {
-        if (data && data.builtAt >= t) {
-          clearInterval(iv);
-          spin.remove();
-          textEl.innerHTML = 'Publicado! <a href="' + liveUrl + '" target="_blank" rel="noopener">Ver ao vivo →</a>';
-        } else if (elapsed >= 120000) {
-          clearInterval(iv);
-          spin.remove();
-          textEl.textContent = 'Salvo. Ainda publicando -- deve aparecer no site em instantes.';
+      .then(function (s) {
+        if (!s) return proximo(5000);
+        var decorrido = Date.now() - inicio;
+        if (s.builtAt >= t) {
+          // O build-status.json é copiado junto com as páginas; um segundo de
+          // folga garante que o post também já chegou ao public_html.
+          setTimeout(function () {
+            terminar('Publicado! <a href="' + liveUrl + '" target="_blank" rel="noopener">Ver online →</a>');
+            avisarAbasDoSite(liveUrl, s.builtAt, el.hasAttribute('data-live-all'));
+            // Telas que têm algo a oferecer depois da publicação (o editor de
+            // post mostra "Escrever novo post") escutam este evento.
+            document.dispatchEvent(new CustomEvent('mclair:publicado', { detail: { url: liveUrl, builtAt: s.builtAt } }));
+          }, 1500);
+          return;
         }
+        if (s.state === 'failed' && s.changedAt >= t) {
+          var det = s.error ? '<br><small style="opacity:.85;white-space:pre-line">' + escapeHtml(s.error) + '</small>' : '';
+          terminar('A publicação falhou e o site continua com a versão anterior. Salve de novo para tentar outra vez; se repetir, avise o suporte.' + (s.log ? ' (log ' + escapeHtml(s.log) + ')' : '') + det, true);
+          return;
+        }
+        if (s.state === 'building') { vistoBuild = true; textEl.textContent = 'Salvo. Publicando no site...'; }
+        else if (s.state === 'queued') textEl.textContent = 'Salvo. Na fila de publicação...';
+        else if (vistoBuild) textEl.textContent = 'Salvo. Copiando a versão nova para o site...';
+        else textEl.textContent = 'Salvo. Aguardando a fila de publicação...';
+        if (decorrido > 15 * 60000) {
+          terminar('Salvo, mas a publicação está demorando mais do que o normal (15 min). O texto está guardado; confira o site daqui a pouco ou salve de novo. <a href="' + liveUrl + '" target="_blank" rel="noopener">Abrir o endereço →</a>', true);
+          return;
+        }
+        proximo(decorrido > 3 * 60000 ? 10000 : 3000);
       })
-      .catch(function () {});
-  }, 3000);
+      .catch(function () { proximo(5000); });
+  }
+  function proximo(ms) { setTimeout(verificar, ms); }
+  verificar();
 });
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]; });
+}
 
 // ---- Inline delete confirmation (replaces native confirm()) ----
 // Delete buttons are type="button" with onclick="askConfirm(this)"; the first

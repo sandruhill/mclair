@@ -60,8 +60,8 @@ $semAutor = $pronto ? (int) $pdo->query('SELECT COUNT(*) FROM cmstest_blog_posts
 adminLayoutTop('authors', 'Autores', ['label' => 'Posts do blog', 'href' => '/acesso/posts'], 'https://mclair.com.br/blog/autores/');
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/autores/"><?= cmsCheckIcon() ?><span class="msg-text">Autor salvo.</span></div><?php endif; ?>
-<?php if (isset($_GET['removed'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/autores/"><?= cmsCheckIcon() ?><span class="msg-text">Autor removido.</span></div><?php endif; ?>
+<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-all="1" data-live-url="https://mclair.com.br/blog/autores/"><?= cmsCheckIcon() ?><span class="msg-text">Autor salvo.</span></div><?php endif; ?>
+<?php if (isset($_GET['removed'])): ?><div class="msg ok" id="savedMsg" data-live-all="1" data-live-url="https://mclair.com.br/blog/autores/"><?= cmsCheckIcon() ?><span class="msg-text">Autor removido.</span></div><?php endif; ?>
 
 <?php if (!$pronto): ?>
 <div class="msg err"><?= htmlspecialchars(CMS_AUTHORS_MIGRATION_HINT) ?></div>

@@ -31,6 +31,7 @@ export async function getStaticPaths({ paginate }) {
 
 const { page } = Astro.props;
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
+const { isoComFuso } = await import('../../utils/datas');
 
 // Link de entrada do silo blog > autores. Só aparece quando existe ao menos
 // um autor com artigo (sem isso /blog/autores/ seria uma página vazia).
@@ -53,11 +54,7 @@ const blogSchema = {
     headline: p.title,
     url: `${BASE}/blog/${p.slug}`,
     ...(p.image && { image: p.image }),
-    datePublished: p.date
-      ? p.date.includes('-')
-        ? p.date
-        : `${p.date.split('/')[2]}-${p.date.split('/')[1]}-${p.date.split('/')[0]}`
-      : undefined,
+    datePublished: isoComFuso(p.date) || undefined,
     author: p.author
       ? { '@type': 'Person', name: p.author }
       : { '@id': `${BASE}/#organization` },

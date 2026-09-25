@@ -9,6 +9,7 @@ import { normalizarParagrafos } from '../../utils/markdown';
 import { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } from '../../utils/cmsApi';
 import type { DbBlogPost, DbBlogAuthor } from '../../utils/cmsApi';
 import { mapaDeAutores, mapaDeVinculos, autoresDoPost, urlDoAutor, schemaAutoresDoPost, ligarNomes } from '../../utils/blogAuthors';
+import { isoComFuso, dataPorExtenso } from '../../utils/datas';
 
 export async function getStaticPaths() {
   const [posts, autores, vinculos] = await Promise.all([getBlogPosts(), getBlogAuthors(), getBlogPostAuthors()]);
@@ -64,12 +65,9 @@ function formatDate(d: string) {
   return `${parseInt(dd)} de ${months[parseInt(mm)-1]} de ${yy}`;
 }
 
-function isoDate(d: string) {
-  if (!d) return '';
-  if (d.includes('-')) return d;
-  const [dd, mm, yy] = d.split('/');
-  return `${yy}-${mm.padStart(2,'0')}-${dd.padStart(2,'0')}`;
-}
+// ISO com hora e fuso de Brasília quando o post tem hora (coluna DATETIME);
+// só a data nos posts antigos.
+const isoDate = (d: string) => isoComFuso(d);
 
 function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -213,7 +211,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
   <div class="container ph-inner">
     <a href="/blog/" class="back-link">← Blog</a>
     <div class="ph-meta">
-      {post.date && <time class="ph-date">{formatDate(post.date)}</time>}
+      {post.date && <time class="ph-date" datetime={dateISO}>{formatDate(post.date)}</time>}
       {post.author && !temAutores && <span class="ph-author">por {post.author}</span>}
     </div>
     <h1 class="ph-title">{post.title}</h1>
@@ -250,7 +248,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
           ) : (
             <p class="sb-author">{post.author || 'Equipe Mclair'}</p>
           )}
-          {post.date && <p class="sb-date">{formatDate(post.date)}</p>}
+          {post.date && <p class="sb-date">{dataPorExtenso(post.date, { hora: true })}</p>}
         </div>
 
         <div class="sidebar-card sidebar-cta">
@@ -314,6 +312,10 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
     </div>
   </section>
 )}
+
+<!-- Só age no navegador de quem usa o painel (marcador no localStorage):
+     recarrega esta página sozinha quando uma publicação nova está no ar. -->
+<script is:inline src="/ao-vivo.js" defer></script>
 
 </Layout>
 

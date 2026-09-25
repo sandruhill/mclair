@@ -184,8 +184,8 @@ function menuRenderRows(array $byParent, int $parentKey, array $pages, array $se
 adminLayoutTop('menu', 'Menu', null, 'https://mclair.com.br/');
 ?>
 
-<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item salvo.</span></div><?php endif; ?>
-<?php if (isset($_GET['removed'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item removido. Os itens filhos, se havia, agora estão no topo do menu.</span></div><?php endif; ?>
+<?php if (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-all="1" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item salvo.</span></div><?php endif; ?>
+<?php if (isset($_GET['removed'])): ?><div class="msg ok" id="savedMsg" data-live-all="1" data-live-url="https://mclair.com.br/"><?= cmsCheckIcon() ?><span class="msg-text">Item removido. Os itens filhos, se havia, agora estão no topo do menu.</span></div><?php endif; ?>
 <?php if (isset($_GET['err'])): ?><div class="msg err">Preencha o rótulo e o destino do link antes de salvar.</div><?php endif; ?>
 
 <style>

@@ -254,11 +254,55 @@ function cmsAuthorById(PDO $pdo, int $id): ?array {
     return $row ? cmsAuthorDecode($row) : null;
 }
 
+// ---- Data e hora do post ----
+// post_date nasceu como DATE; db/migrations/2026-09-26-blog-post-date-datetime.sql
+// passa para DATETIME (hora de Brasília, sem fuso no banco). Até lá, só o dia.
+function cmsPostDateHasTime(PDO $pdo): bool {
+    static $tem = null;
+    if ($tem !== null) return $tem;
+    try {
+        $col = $pdo->query("SHOW COLUMNS FROM cmstest_blog_posts LIKE 'post_date'")->fetch();
+        $tem = $col ? stripos((string) $col['Type'], 'datetime') !== false : false;
+    } catch (PDOException $e) {
+        $tem = false;
+    }
+    return $tem;
+}
+
+/**
+ * "AAAA-MM-DD" ou "AAAA-MM-DD HH:MM" -> valor para o banco. Data no futuro
+ * (mais de 5 min) vira agora, porque não existe agendamento e um post com
+ * data futura confundiria leitor e Google; $ajustada avisa o editor.
+ */
+function cmsNormalizarPostDate(string $entrada, bool $comHora, bool &$ajustada): ?string {
+    $tz = new DateTimeZone('America/Sao_Paulo');
+    $entrada = trim($entrada);
+    if ($entrada === '') return null;
+    if (!preg_match('/^(\d{4}-\d{2}-\d{2})(?:[ T](\d{2}:\d{2})(?::\d{2})?)?$/', $entrada, $m)) return null;
+    $data = $m[1];
+    $hora = $comHora ? ($m[2] ?? '09:00') : '00:00';
+    try {
+        $dt = new DateTime("$data $hora:00", $tz);
+    } catch (Exception $e) {
+        return null;
+    }
+    $agora = new DateTime('now', $tz);
+    if ($dt->getTimestamp() > $agora->getTimestamp() + 300) {
+        $ajustada = true;
+        $dt = $agora;
+    }
+    return $comHora ? $dt->format('Y-m-d H:i:00') : $dt->format('Y-m-d');
+}
+
 // Signals the server-side cron (see ~/mclair-build/rebuild.sh) to rebuild and
 // republish the static site. Just drops a flag file — actual build/deploy
 // happens outside PHP since exec()/shell_exec() are disabled on this host.
+// Pasta do build no servidor. config.php pode sobrescrever (o teste local
+// aponta para uma pasta de mentira e simula o cron).
+if (!defined('CMS_BUILD_DIR')) define('CMS_BUILD_DIR', '/home/u229450165/mclair-build');
+
 function queueRebuild(): void {
-    $dir = '/home/u229450165/mclair-build/queue';
+    $dir = CMS_BUILD_DIR . '/queue';
     if (!is_dir($dir)) return;
     @touch($dir . '/pending');
 }

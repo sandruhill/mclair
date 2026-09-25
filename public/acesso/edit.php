@@ -14,6 +14,7 @@ $isNew = ($slug === '');
 // Autores com assinatura (tabela de db/migrations/2026-09-25-blog-autores.sql).
 // Sem a migração, o campo volta a ser só o nome digitado, como sempre foi.
 $authorsReady = cmsAuthorsReady($pdo);
+$postDateHasTime = cmsPostDateHasTime($pdo);
 
 /** slug é a chave primária, então um título repetido vira -2, -3, e assim por diante. */
 function cmsSlugUnico(PDO $pdo, string $base): string {
@@ -47,6 +48,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $authorName = trim((string) ($_POST['author_other'] ?? ''));
     $authorName = $authorName !== '' ? $authorName : null;
 
+    // Data e hora (fuso de Brasília). Sem a migração, só o dia. Data no futuro
+    // não agenda nada (todo post sai no próximo build), então vira "agora" e
+    // o editor avisa.
+    $dataAjustada = false;
+    $postDate = cmsNormalizarPostDate((string) ($_POST['post_date'] ?? ''), $postDateHasTime, $dataAjustada);
+    $_POST['post_date'] = $postDate;
+    $_POST['meta_description'] = mb_substr(trim((string) ($_POST['meta_description'] ?? '')), 0, 500);
+
     // Rede de segurança no servidor para o problema dos parágrafos colados
     // (ver cmsNormalizarParagrafos em db.php): o JS do editor já manda
     // certo, mas o banco nunca mais recebe "a\nb" onde deveria ser "a\n\nb".
@@ -70,7 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         ]);
         if ($authorsReady) cmsPostAuthorsSave($pdo, $slug, $authorIds, $authorName);
         queueRebuild();
-        header('Location: editar?slug=' . urlencode($slug) . '&created=1&t=' . time());
+        header('Location: editar?slug=' . urlencode($slug) . '&created=1&t=' . time() . ($dataAjustada ? '&data_ajustada=1' : ''));
         exit;
     }
 
@@ -82,7 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     ]);
     if ($authorsReady) cmsPostAuthorsSave($pdo, $slug, $authorIds, $authorName);
     queueRebuild();
-    header('Location: editar?slug=' . urlencode($slug) . '&saved=1&t=' . time());
+    header('Location: editar?slug=' . urlencode($slug) . '&saved=1&t=' . time() . ($dataAjustada ? '&data_ajustada=1' : ''));
     exit;
 }
 
@@ -91,7 +100,7 @@ if ($isNew) {
     // o caso comum; dá para trocar no select.
     $post = [
         'title' => '', 'subtitle' => '', 'meta_description' => '',
-        'post_date' => date('Y-m-d'), 'author' => '', 'blog_author_id' => null,
+        'post_date' => date('Y-m-d H:i'), 'author' => '', 'blog_author_id' => null,
         'featured_image' => '', 'hero_video' => '', 'category' => 'geral',
         'keywords' => '', 'content_md' => '', 'updated_by_name' => null,
     ];
@@ -135,6 +144,73 @@ adminLayoutTop(
   .toastui-editor-defaultUI-toolbar { background: var(--soft); border-radius: 8px 8px 0 0; border-bottom: 1px solid var(--line); }
   .toastui-editor-defaultUI .ProseMirror { font-family: inherit; font-size: .95rem; line-height: 1.7; }
   .toastui-editor-mode-switch { border-radius: 0 0 8px 8px; }
+  /* Barra de ferramentas acompanha a rolagem quando o editor é mais alto que a tela. */
+  .toastui-editor-defaultUI-toolbar { position: sticky; top: 0; z-index: 6; }
+  .toastui-editor-defaultUI { border-radius: 8px 8px 0 0; }
+
+  /* Linha de publicação: aviso "Salvo/Publicado" e, quando o post está no
+     ar, o convite para o próximo. O botão já ocupa o lugar (invisível) para
+     a linha não mudar de tamanho na hora em que aparece. */
+  .pub-row { display:flex; justify-content:flex-end; align-items:center; gap:10px; margin:0 0 18px; flex-wrap:wrap; }
+  .pub-row #savedMsg { margin:0; }
+  .btn-novo {
+    --verde:#1B8A76; /* verde da paleta do site; branco sobre ele passa de 4.5:1 */
+    background:var(--verde); color:#fff; padding:7px 14px; font-size:.8rem; gap:7px;
+    visibility:hidden; opacity:0; transform:translateY(8px);
+  }
+  .btn-novo:hover { background:#166F5F; }
+  .btn-novo.on { visibility:visible; animation:novoEntra .8s cubic-bezier(.22,1,.36,1) forwards, novoBrilho 1.8s ease-out .7s 1; }
+  @keyframes novoEntra { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes novoBrilho { 0% { box-shadow:0 0 0 0 rgba(27,138,118,.55); } 60% { box-shadow:0 0 0 14px rgba(27,138,118,0); } 100% { box-shadow:0 0 0 0 rgba(27,138,118,0); } }
+  @media (prefers-reduced-motion: reduce) { .btn-novo.on { animation:none; opacity:1; transform:none; } }
+  @media (max-width: 768px) { .pub-row { justify-content:stretch; } .pub-row #savedMsg, .btn-novo { width:100%; justify-content:center; } }
+
+  /* Contadores e barra de calor dos campos com limite. */
+  .contador { float:right; font-weight:600; text-transform:none; letter-spacing:0; color:var(--ink-3); }
+  .contador.quente { color:#9a1f1f; }
+  .calor { position:relative; height:5px; border-radius:3px; background:var(--soft); margin:7px 0 0; }
+  .calor i { display:block; height:100%; width:0; border-radius:3px; background:#1B8A76; transition:width .25s ease, background-color .25s ease; }
+  .calor b { position:absolute; top:-3px; width:2px; height:11px; margin-left:-1px; border-radius:1px; background:#C7CBD1; }
+  .calor b.lim { background:var(--ink-3); }
+  .contagem { margin-top:8px; }
+  @media (prefers-reduced-motion: reduce) { .calor i { transition:none; } }
+
+  /* Barra do editor: o botão do bloco onde o cursor está (tabela, lista...)
+     ganha um fundo discreto em vez do sprite azul da biblioteca. */
+  .toastui-editor-toolbar-icons:not(:disabled):hover { background-color:rgba(26,27,30,.07); border-radius:6px; }
+  .toastui-editor-toolbar-icons:not(:disabled).active, .toastui-editor-toolbar-icons:not(:disabled).active:hover { background-position-y:3px; background-color:rgba(200,16,46,.12); border-radius:6px; box-shadow:inset 0 0 0 1px rgba(200,16,46,.25); }
+
+  /* Data e hora: campo de data com calendário próprio (sem o seletor nativo). */
+  .dt-linha { display:flex; gap:6px; align-items:stretch; margin-top:6px; }
+  .dt-campo { flex:1 1 auto; min-width:0; display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); font:inherit; font-size:.9rem; color:var(--ink); cursor:pointer; text-align:left; white-space:nowrap; }
+  .dt-campo:hover, .dt-campo[aria-expanded=true] { border-color:var(--red); }
+  .dt-campo svg { color:var(--ink-3); flex-shrink:0; }
+  .dt-hora { flex:0 0 auto; width:104px; padding:8px 8px; font-size:.9rem; }
+  .dt-agora { display:inline-block; margin-top:6px; padding:0; border:none; background:none; font:inherit; font-size:.76rem; font-weight:700; color:var(--red); cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
+  .dt-agora:hover { color:var(--ink); }
+  .dt-pop { margin-top:6px; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--paper); box-shadow:0 12px 30px -10px rgba(0,0,0,.18); }
+  .dt-pop[hidden] { display:none; }
+  .dt-pop-cabeca { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+  .dt-pop-cabeca strong { font-size:.85rem; }
+  .dt-pop-cabeca button, .dt-pop-pe button { border:none; background:none; font:inherit; font-size:1rem; cursor:pointer; color:var(--ink-3); padding:4px 8px; border-radius:6px; }
+  .dt-pop-cabeca button:hover, .dt-pop-pe button:hover { background:var(--soft); color:var(--ink); }
+  .dt-grade { display:grid; grid-template-columns:repeat(7, 1fr); gap:2px; }
+  .dt-grade .dt-dia-sem { font-size:.62rem; font-weight:700; text-transform:uppercase; letter-spacing:.04em; color:var(--ink-3); text-align:center; padding:4px 0; }
+  .dt-grade button { border:none; background:none; font:inherit; font-size:.82rem; padding:7px 0; border-radius:8px; cursor:pointer; color:var(--ink); }
+  .dt-grade button:hover { background:var(--soft); }
+  .dt-grade button:focus-visible { outline:2px solid rgba(200,16,46,.35); outline-offset:-2px; }
+  .dt-grade button.fora { color:#C7CBD1; }
+  .dt-grade button.hoje { font-weight:800; color:var(--red); }
+  .dt-grade button.sel, .dt-grade button.sel:hover { background:var(--red); color:#fff; }
+  .dt-grade button.futuro { color:#C7CBD1; text-decoration:line-through; cursor:not-allowed; }
+  .dt-pop-pe { display:flex; justify-content:space-between; margin-top:8px; font-size:.78rem; font-weight:700; }
+  .dt-futuro { color:#9a1f1f; }
+
+  /* Alça de altura: a borda de baixo do editor, arrastável. */
+  .editor-alca { height: 14px; margin-top: -1px; border: 1px solid var(--line); border-top: none; border-radius: 0 0 8px 8px; background: var(--soft); cursor: ns-resize; display: flex; align-items: center; justify-content: center; touch-action: none; user-select: none; -webkit-user-select: none; }
+  .editor-alca span { width: 36px; height: 3px; border-radius: 3px; background: #C7CBD1; }
+  .editor-alca:hover span, .editor-alca.arrastando span { background: var(--red); }
+  .editor-alca.arrastando { background: rgba(200,16,46,.05); }
 
   /* Capa: a área preta inteira recebe a imagem arrastada. */
   .hero-drop { position: relative; cursor: pointer; border-radius: 10px 10px 0 0; overflow: hidden; }
@@ -168,8 +244,17 @@ adminLayoutTop(
   .au-item button.au-rem { color:var(--red); }
 </style>
 
-<?php if (isset($_GET['created'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post criado. Entra no ar na próxima republicação, em alguns minutos.</span></div>
-<?php elseif (isset($_GET['saved'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post salvo.</span></div><?php endif; ?>
+<?php if (isset($_GET['data_ajustada'])): ?><div class="msg err">A data estava no futuro. Como não existe agendamento (todo post sai na próxima republicação), ela foi ajustada para agora.</div><?php endif; ?>
+<?php if (isset($_GET['created']) || isset($_GET['saved'])): ?>
+<div class="pub-row">
+  <div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text"><?= isset($_GET['created']) ? 'Post criado. Entra no ar na próxima republicação, em alguns minutos.' : 'Post salvo.' ?></span></div>
+  <!-- Aparece só quando a publicação é confirmada no ar (evento mclair:publicado). O espaço já fica reservado, para nada pular. -->
+  <a class="btn btn-novo" id="novoPostBtn" href="/acesso/posts/novo" aria-hidden="true" tabindex="-1">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
+    Escrever novo post
+  </a>
+</div>
+<?php endif; ?>
 
 <form method="post">
   <input type="hidden" name="csrf" value="<?= htmlspecialchars(cmsCsrfToken()) ?>" />
@@ -179,15 +264,19 @@ adminLayoutTop(
     <!-- Left: content -->
     <div>
       <div class="card">
-        <label style="margin-top:0">Título</label>
-        <input type="text" name="title" value="<?= htmlspecialchars($post['title']) ?>" />
+        <label style="margin-top:0">Título <span class="contador" id="tituloCont"></span></label>
+        <input type="text" name="title" id="tituloInput" value="<?= htmlspecialchars($post['title']) ?>" />
+        <div class="calor" id="tituloCalor" aria-hidden="true"><i></i><b style="left:37.5%" title="60 caracteres: até aqui o Google mostra inteiro"></b><b class="lim" style="left:87.5%" title="140 caracteres: limite bom para SEO"></b></div>
+        <p class="hint">Até 140 caracteres é bom para SEO. O Google costuma mostrar cerca de 60 no resultado; este site corta o título da aba em 52 e acrescenta " | Blog Mclair".</p>
 
-        <label>Subtítulo</label>
-        <input type="text" name="subtitle" value="<?= htmlspecialchars($post['subtitle']) ?>" />
+        <label>Subtítulo <span class="contador" id="subCont"></span></label>
+        <input type="text" name="subtitle" id="subInput" value="<?= htmlspecialchars($post['subtitle']) ?>" />
         <p class="hint">Aparece logo abaixo do título no post publicado.</p>
 
         <label>Conteúdo</label>
         <div id="wysiwyg"></div>
+        <div class="editor-alca" id="editorAlca" title="Arraste para mudar a altura do editor; clique duas vezes para voltar ao automático" role="separator" aria-orientation="horizontal" aria-label="Altura do editor"><span></span></div>
+        <p class="hint contagem" id="contagemTexto" aria-live="polite">0 palavras</p>
         <textarea name="content_md" id="contentMd" hidden><?= htmlspecialchars($post['content_md']) ?></textarea>
       </div>
     </div>
@@ -258,15 +347,34 @@ adminLayoutTop(
               <option value="<?= $cat ?>" <?= $post['category'] === $cat ? 'selected' : '' ?>><?= $cat ?></option>
             <?php endforeach; ?>
           </select>
-          <label>Data de postagem</label>
-          <input type="date" name="post_date" value="<?= htmlspecialchars($post['post_date']) ?>" />
+          <label>Data e hora de postagem</label>
+          <input type="hidden" name="post_date" id="postDate" value="<?= htmlspecialchars((string) $post['post_date']) ?>" />
+          <div class="dt-linha">
+            <button type="button" class="dt-campo" id="dtAbrir" aria-haspopup="dialog" aria-expanded="false" title="Escolher a data">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>
+              <span id="dtTexto">escolher</span>
+            </button>
+            <input type="time" id="dtHora" class="dt-hora" step="60" aria-label="Hora" />
+          </div>
+          <button type="button" class="dt-agora" id="dtAgora" title="Usar a data e a hora de agora">Usar agora</button>
+          <div class="dt-pop" id="dtPop" role="dialog" aria-label="Calendário" hidden>
+            <div class="dt-pop-cabeca">
+              <button type="button" id="dtAnt" aria-label="Mês anterior">‹</button>
+              <strong id="dtMes"></strong>
+              <button type="button" id="dtProx" aria-label="Próximo mês">›</button>
+            </div>
+            <div class="dt-grade" id="dtGrade" role="grid"></div>
+            <div class="dt-pop-pe"><button type="button" id="dtHoje">Hoje</button><button type="button" id="dtFechar">Fechar</button></div>
+          </div>
+          <p class="hint" id="dtAviso"><?= $postDateHasTime ? 'Horário de Brasília. Não existe agendamento: o post entra no ar na próxima republicação, com a data que estiver aqui.' : 'Só o dia é gravado por enquanto (a hora depende de db/migrations/2026-09-26-blog-post-date-datetime.sql).' ?></p>
         </div>
 
         <div class="side-sec">
           <strong>SEO</strong>
-          <label>Meta description</label>
-          <textarea name="meta_description" maxlength="500" style="min-height:90px;font-size:.85rem"><?= htmlspecialchars($post['meta_description'] ?? '') ?></textarea>
-          <p class="hint">Resumo para o Google. Ideal até ~160 caracteres.</p>
+          <label>Meta description <span class="contador" id="metaCont"></span></label>
+          <textarea name="meta_description" id="metaInput" maxlength="140" style="min-height:90px;font-size:.85rem"><?= htmlspecialchars($post['meta_description'] ?? '') ?></textarea>
+          <div class="calor" id="metaCalor" aria-hidden="true"><i></i><b class="lim" style="left:100%" title="140 caracteres: limite"></b></div>
+          <p class="hint">Resumo para o Google, até 140 caracteres. Colar um texto maior corta na última palavra que cabe.</p>
           <label>Palavras-chave</label>
           <input type="text" name="keywords" value="<?= htmlspecialchars($kwText) ?>" placeholder="marketing, branding, imprensa" />
           <p class="hint">Separe por vírgula.</p>
@@ -598,6 +706,284 @@ function limparHtmlColado(html) {
 campoMd.form.addEventListener('submit', function () {
   campoMd.value = markdownParaSalvar();
 });
+
+// ---- "Escrever novo post" depois de publicar, e alterações não salvas ----
+(function () {
+  var botao = document.getElementById('novoPostBtn');
+  var alterado = false;
+  function marcar() { alterado = true; }
+  editor.on('change', marcar);
+  campoMd.form.addEventListener('input', marcar);
+  campoMd.form.addEventListener('submit', function () { alterado = false; });
+  window.addEventListener('beforeunload', function (e) {
+    if (!alterado) return;
+    e.preventDefault();
+    e.returnValue = '';
+  });
+  if (!botao) return;
+  document.addEventListener('mclair:publicado', function () {
+    botao.classList.add('on');
+    botao.removeAttribute('aria-hidden');
+    botao.removeAttribute('tabindex');
+  });
+  botao.addEventListener('click', function (e) {
+    if (!alterado || botao.dataset.confirmado) return;
+    e.preventDefault();
+    // Mesmo padrão inline do painel: nada de confirm() nativo.
+    var box = document.createElement('span');
+    box.className = 'ci';
+    var m = document.createElement('span');
+    m.className = 'ci-msg';
+    m.textContent = 'Há alterações não salvas neste post.';
+    var sim = document.createElement('button');
+    sim.type = 'button'; sim.className = 'ci-yes'; sim.textContent = 'sair sem salvar';
+    var nao = document.createElement('button');
+    nao.type = 'button'; nao.className = 'ci-no'; nao.textContent = 'ficar';
+    sim.addEventListener('click', function () { alterado = false; location.href = botao.href; });
+    nao.addEventListener('click', function () { box.remove(); botao.style.display = ''; });
+    box.append(m, sim, nao);
+    botao.style.display = 'none';
+    botao.after(box);
+  });
+})();
+
+// ---- Contadores: título, subtítulo, meta description e texto ----
+(function () {
+  var VERDE = [27, 138, 118], AMBAR = [199, 119, 0], VERMELHO = [200, 16, 46];
+  function mistura(a, b, f) { return 'rgb(' + a.map(function (v, i) { return Math.round(v + (b[i] - v) * f); }).join(',') + ')'; }
+  function corCalor(r) {
+    if (r >= 1) return mistura(VERMELHO, VERMELHO, 0);
+    if (r >= .85) return mistura(AMBAR, VERMELHO, (r - .85) / .15);
+    if (r >= .45) return mistura(VERDE, AMBAR, (r - .45) / .4);
+    return mistura(VERDE, VERDE, 0);
+  }
+  // barra: limite = onde fica vermelha; escala = 100% da largura
+  function calor(barra, n, limite, escala) {
+    var i = barra.querySelector('i');
+    i.style.width = Math.min(100, n / escala * 100) + '%';
+    i.style.backgroundColor = corCalor(n / limite);
+  }
+  function contador(el, n, limite) {
+    el.textContent = limite ? n + '/' + limite : n;
+    el.classList.toggle('quente', !!limite && n >= limite);
+  }
+  var titulo = document.getElementById('tituloInput'), tituloCont = document.getElementById('tituloCont'), tituloCalor = document.getElementById('tituloCalor');
+  var sub = document.getElementById('subInput'), subCont = document.getElementById('subCont');
+  var meta = document.getElementById('metaInput'), metaCont = document.getElementById('metaCont'), metaCalor = document.getElementById('metaCalor');
+  function atualizarTitulo() { var n = titulo.value.length; contador(tituloCont, n, 140); calor(tituloCalor, n, 140, 160); }
+  function atualizarSub() { contador(subCont, sub.value.length, 0); }
+  function atualizarMeta() { var n = meta.value.length; contador(metaCont, n, 140); calor(metaCalor, n, 140, 140); }
+  titulo.addEventListener('input', atualizarTitulo);
+  sub.addEventListener('input', atualizarSub);
+  meta.addEventListener('input', atualizarMeta);
+  // Colar além de 140 na meta: corta na última palavra inteira que cabe.
+  meta.addEventListener('paste', function (e) {
+    var colado = (e.clipboardData || window.clipboardData).getData('text');
+    if (!colado) return;
+    var ini = meta.selectionStart, fim = meta.selectionEnd;
+    var novo = meta.value.slice(0, ini) + colado + meta.value.slice(fim);
+    if (novo.length <= 140) return;
+    e.preventDefault();
+    var corte = novo.slice(0, 140);
+    var esp = corte.lastIndexOf(' ');
+    if (esp > 100) corte = corte.slice(0, esp);
+    meta.value = corte.replace(/[\s,;:]+$/, '');
+    meta.setSelectionRange(meta.value.length, meta.value.length);
+    atualizarMeta();
+  });
+  atualizarTitulo(); atualizarSub(); atualizarMeta();
+
+  // Texto: conta o que o leitor vê, sem a sintaxe do markdown. Atualiza no
+  // máximo a cada 300 ms para não pesar em post longo.
+  var saida = document.getElementById('contagemTexto');
+  function textoVisivel(md) {
+    return md
+      .replace(/```[\s\S]*?```/g, function (b) { return b.replace(/```[^\n]*/g, ''); })
+      .replace(/!\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/^\s{0,3}(#{1,6}\s+|>\s?|[-*+]\s+|\d+[.)]\s+)/gm, '')
+      .replace(/^\s*\|?\s*:?-{3,}:?\s*(\|\s*:?-{3,}:?\s*)*\|?\s*$/gm, '')
+      .replace(/\|/g, ' ')
+      .replace(/(\*\*|__|~~|`|\*|_)/g, '')
+      .replace(/\\([\\`*_{}\[\]()#+\-.!|])/g, '$1');
+  }
+  function contarTexto() {
+    var t = textoVisivel(editor.getMarkdown());
+    var palavras = (t.match(/[\p{L}\p{N}]+(?:['’\-][\p{L}\p{N}]+)*/gu) || []).length;
+    var comEspaco = t.replace(/\s+/g, ' ').trim().length;
+    var semEspaco = t.replace(/\s/g, '').length;
+    saida.textContent = palavras.toLocaleString('pt-BR') + (palavras === 1 ? ' palavra' : ' palavras') + ' · ' + comEspaco.toLocaleString('pt-BR') + ' caracteres com espaço · ' + semEspaco.toLocaleString('pt-BR') + ' sem espaço';
+  }
+  var agendado = null;
+  editor.on('change', function () {
+    if (agendado) return;
+    agendado = setTimeout(function () { agendado = null; contarTexto(); }, 300);
+  });
+  contarTexto();
+})();
+
+// ---- Data e hora: calendário próprio + hora + "Agora" ----
+(function () {
+  var TEM_HORA = <?= $postDateHasTime ? 'true' : 'false' ?>;
+  var oculto = document.getElementById('postDate');
+  var abrir = document.getElementById('dtAbrir'), texto = document.getElementById('dtTexto');
+  var hora = document.getElementById('dtHora'), agora = document.getElementById('dtAgora');
+  var pop = document.getElementById('dtPop'), grade = document.getElementById('dtGrade'), mesEl = document.getElementById('dtMes');
+  var aviso = document.getElementById('dtAviso');
+  var MESES = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+  var DIAS = ['D', 'S', 'T', 'Q', 'Q', 'S', 'S'];
+  var p2 = function (n) { return (n < 10 ? '0' : '') + n; };
+
+  // valor gravado: "AAAA-MM-DD" ou "AAAA-MM-DD HH:MM[:SS]"
+  var m = /^(\d{4})-(\d{2})-(\d{2})(?:[ T](\d{2}):(\d{2}))?/.exec(oculto.value) || [];
+  var hoje = new Date();
+  var sel = m.length ? new Date(+m[1], +m[2] - 1, +m[3]) : new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate());
+  hora.value = m[4] ? m[4] + ':' + m[5] : (m.length ? '09:00' : p2(hoje.getHours()) + ':' + p2(hoje.getMinutes()));
+  hora.style.display = TEM_HORA ? '' : 'none';
+  var vendo = new Date(sel.getFullYear(), sel.getMonth(), 1);
+
+  function ehFuturo(d, h) {
+    var ag = new Date();
+    var c = new Date(d.getFullYear(), d.getMonth(), d.getDate(), +(h || '00:00').slice(0, 2), +(h || '00:00').slice(3, 5));
+    return c.getTime() > ag.getTime() + 5 * 60000;
+  }
+  function gravar() {
+    var v = sel.getFullYear() + '-' + p2(sel.getMonth() + 1) + '-' + p2(sel.getDate());
+    if (TEM_HORA && hora.value) v += ' ' + hora.value;
+    oculto.value = v;
+    texto.textContent = p2(sel.getDate()) + '/' + p2(sel.getMonth() + 1) + '/' + sel.getFullYear();
+    var fut = ehFuturo(sel, TEM_HORA ? hora.value : '00:00');
+    aviso.classList.toggle('dt-futuro', fut);
+    aviso.textContent = fut
+      ? 'Essa data está no futuro. Não existe agendamento: ao salvar, ela vira "agora" e o post sai na próxima republicação.'
+      : (TEM_HORA ? 'Horário de Brasília. Não existe agendamento: o post entra no ar na próxima republicação, com a data que estiver aqui.' : 'Só o dia é gravado por enquanto (a hora depende de db/migrations/2026-09-26-blog-post-date-datetime.sql).');
+  }
+  function mesmoDia(a, b) { return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate(); }
+  function desenhar(focar) {
+    var nomeMes = MESES[vendo.getMonth()];
+    mesEl.textContent = nomeMes.charAt(0).toUpperCase() + nomeMes.slice(1) + ' de ' + vendo.getFullYear();
+    grade.innerHTML = '';
+    DIAS.forEach(function (d) { var s = document.createElement('span'); s.className = 'dt-dia-sem'; s.textContent = d; grade.appendChild(s); });
+    var primeiro = new Date(vendo.getFullYear(), vendo.getMonth(), 1);
+    var inicio = new Date(primeiro); inicio.setDate(1 - primeiro.getDay()); // semana começa no domingo
+    for (var i = 0; i < 42; i++) {
+      var d = new Date(inicio); d.setDate(inicio.getDate() + i);
+      var b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = d.getDate();
+      b.dataset.iso = d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate());
+      b.setAttribute('aria-label', d.getDate() + ' de ' + MESES[d.getMonth()] + ' de ' + d.getFullYear());
+      if (d.getMonth() !== vendo.getMonth()) b.classList.add('fora');
+      if (mesmoDia(d, hoje)) b.classList.add('hoje');
+      if (mesmoDia(d, sel)) { b.classList.add('sel'); b.setAttribute('aria-selected', 'true'); }
+      var fut = d.getTime() > new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()).getTime();
+      if (fut) { b.classList.add('futuro'); b.disabled = true; b.title = 'Data futura: não existe agendamento'; }
+      b.tabIndex = mesmoDia(d, sel) ? 0 : -1;
+      (function (dd) { b.addEventListener('click', function () { sel = dd; gravar(); fechar(); }); })(d);
+      grade.appendChild(b);
+    }
+    if (focar) { var f = grade.querySelector('button.sel') || grade.querySelector('button:not(.fora):not(:disabled)'); if (f) f.focus(); }
+  }
+  function abrirPop() { pop.hidden = false; abrir.setAttribute('aria-expanded', 'true'); vendo = new Date(sel.getFullYear(), sel.getMonth(), 1); desenhar(true); }
+  function fechar() { pop.hidden = true; abrir.setAttribute('aria-expanded', 'false'); abrir.focus(); }
+  abrir.addEventListener('click', function () { pop.hidden ? abrirPop() : fechar(); });
+  document.getElementById('dtFechar').addEventListener('click', fechar);
+  document.getElementById('dtAnt').addEventListener('click', function () { vendo.setMonth(vendo.getMonth() - 1); desenhar(false); });
+  document.getElementById('dtProx').addEventListener('click', function () { vendo.setMonth(vendo.getMonth() + 1); desenhar(false); });
+  document.getElementById('dtHoje').addEventListener('click', function () { sel = new Date(hoje.getFullYear(), hoje.getMonth(), hoje.getDate()); gravar(); fechar(); });
+  agora.addEventListener('click', function () {
+    var ag = new Date();
+    sel = new Date(ag.getFullYear(), ag.getMonth(), ag.getDate());
+    hora.value = p2(ag.getHours()) + ':' + p2(ag.getMinutes());
+    gravar();
+  });
+  hora.addEventListener('input', gravar);
+  // Teclado dentro da grade: setas andam pelos dias, Enter escolhe, Esc fecha.
+  grade.addEventListener('keydown', function (e) {
+    var b = document.activeElement;
+    if (!b || !b.dataset || !b.dataset.iso) return;
+    var passo = { ArrowLeft: -1, ArrowRight: 1, ArrowUp: -7, ArrowDown: 7 }[e.key];
+    if (passo) {
+      e.preventDefault();
+      var d = new Date(+b.dataset.iso.slice(0, 4), +b.dataset.iso.slice(5, 7) - 1, +b.dataset.iso.slice(8, 10));
+      d.setDate(d.getDate() + passo);
+      if (d.getMonth() !== vendo.getMonth() || d.getFullYear() !== vendo.getFullYear()) { vendo = new Date(d.getFullYear(), d.getMonth(), 1); desenhar(false); }
+      var alvo = grade.querySelector('button[data-iso="' + d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + '"]');
+      if (alvo && !alvo.disabled) alvo.focus();
+    } else if (e.key === 'Escape') { e.preventDefault(); fechar(); }
+  });
+  document.addEventListener('click', function (e) { if (!pop.hidden && !pop.contains(e.target) && e.target !== abrir && !abrir.contains(e.target)) fechar(); });
+  gravar();
+})();
+
+// ---- Altura do editor ----
+// Por padrão o editor cresce até a base da coluna da direita (capa,
+// publicação, SEO), para as duas colunas terminarem juntas; no celular, com
+// uma coluna só, usa uma altura fixa. A alça na borda de baixo deixa o
+// usuário escolher outra altura, lembrada neste navegador; clique duplo na
+// alça volta ao automático.
+(function () {
+  var MIN = 320, PADRAO_CELULAR = 440, CHAVE = 'mclair:editorAltura';
+  var alca = document.getElementById('editorAlca');
+  var caixa = document.getElementById('wysiwyg');
+  var lateral = document.querySelector('.editor-grid > div:last-child > .card');
+  var cartaoTexto = caixa.closest('.card');
+  var escolhida = null;
+  try { escolhida = parseInt(localStorage.getItem(CHAVE) || '', 10) || null; } catch (e) {}
+
+  function duasColunas() { return window.innerWidth > 980; }
+  function alturaAutomatica() {
+    if (!duasColunas() || !lateral) return PADRAO_CELULAR;
+    var baseLateral = lateral.getBoundingClientRect().bottom;
+    var r = caixa.getBoundingClientRect();
+    // tudo o que fica abaixo do editor dentro do cartão (alça, contagem, respiro)
+    var rodape = cartaoTexto.getBoundingClientRect().bottom - r.bottom;
+    return Math.max(MIN, Math.round(baseLateral - r.top - rodape));
+  }
+  function aplicar(altura) {
+    editor.setHeight(Math.max(MIN, Math.round(altura)) + 'px');
+  }
+  function ajustar() {
+    aplicar(escolhida || alturaAutomatica());
+  }
+  ajustar();
+  window.addEventListener('resize', ajustar);
+  if (window.ResizeObserver && lateral) {
+    // A coluna da direita muda de tamanho (prévia da capa carregou, autor
+    // adicionado): o editor acompanha, a não ser que o usuário tenha fixado.
+    new ResizeObserver(function () { if (!escolhida) ajustar(); }).observe(lateral);
+  }
+
+  var arrastando = false, yInicial = 0, alturaInicial = 0;
+  alca.addEventListener('pointerdown', function (e) {
+    if (e.button !== 0) return;
+    e.preventDefault();
+    arrastando = true;
+    yInicial = e.clientY;
+    alturaInicial = caixa.getBoundingClientRect().height;
+    alca.classList.add('arrastando');
+    alca.setPointerCapture(e.pointerId);
+  });
+  alca.addEventListener('pointermove', function (e) {
+    if (!arrastando) return;
+    aplicar(alturaInicial + (e.clientY - yInicial));
+  });
+  function soltar(e) {
+    if (!arrastando) return;
+    arrastando = false;
+    alca.classList.remove('arrastando');
+    escolhida = Math.round(caixa.getBoundingClientRect().height);
+    try { localStorage.setItem(CHAVE, String(escolhida)); } catch (err) {}
+  }
+  alca.addEventListener('pointerup', soltar);
+  alca.addEventListener('pointercancel', soltar);
+  alca.addEventListener('dblclick', function () {
+    escolhida = null;
+    try { localStorage.removeItem(CHAVE); } catch (err) {}
+    ajustar();
+  });
+})();
 
 // ---- Autores ----
 // AUTORES tem todo o cadastro; ESCOLHIDOS é a ordem em que assinam o post.

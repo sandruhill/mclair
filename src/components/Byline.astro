@@ -31,19 +31,24 @@ const um = autores[0];
 
 {varios && (
   <div class="byline byline-varios">
-    <p class="byline-por">
-      {verbo}{' '}
-      {autores.map((a, i) => (
-        <Fragment>
-          {i > 0 && (i === autores.length - 1 ? ' e ' : ', ')}
-          <a href={urlDoAutor(a.slug)} rel="author">{a.name}</a>
-        </Fragment>
-      ))}
-    </p>
+    <div class="byline-cabeca">
+      <div class="byline-fotos" aria-hidden="true">
+        {autores.slice(0, 3).map((a) => <AuthorAvatar autor={a} tamanho={56} />)}
+      </div>
+      <p class="byline-por">
+        {verbo}{' '}
+        {autores.map((a, i) => (
+          <Fragment>
+            {i > 0 && (i === autores.length - 1 ? ' e ' : ', ')}
+            <a href={urlDoAutor(a.slug)} rel="author">{a.name}</a>
+          </Fragment>
+        ))}
+      </p>
+    </div>
     <div class="byline-grade">
       {autores.map((a) => (
         <div class="byline-celula">
-          <AuthorAvatar autor={a} tamanho={48} />
+          <AuthorAvatar autor={a} tamanho={44} />
           <div class="byline-texto">
             <a class="byline-nome" href={urlDoAutor(a.slug)} rel="author">{a.name}</a>
             {a.job_title && <p class="byline-cargo">{a.job_title}</p>}
@@ -56,18 +61,20 @@ const um = autores[0];
 )}
 
 <style>
+/* Cartão leve, sem fios nem sombra: um fundo creme com um toque da marca,
+   cantos bem redondos e espaço para respirar. */
 .byline {
-  display: flex; align-items: center; gap: 20px;
-  padding: 22px 0 24px; margin: 0 0 40px;
-  border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
+  display: flex; align-items: center; gap: 22px;
+  padding: 24px 28px; margin: 0 0 40px;
+  background: linear-gradient(135deg, rgba(200,16,46,.045), rgba(200,16,46,.015) 60%, var(--cream));
+  border-radius: 22px;
 }
-/* Anel fino da marca em volta da foto, com um respiro branco: é o detalhe
-   que liga a assinatura ao cartão do fim e ao perfil. */
-.byline :global(.autor-avatar) { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px var(--red-soft); }
-.byline :global(.autor-avatar-mono) { box-shadow: 0 0 0 2px #fff, 0 0 0 3.5px rgba(200,16,46,.18); }
+/* Anel suave em volta da foto, com um respiro claro: é o detalhe que liga
+   a assinatura ao cartão do fim e ao perfil. */
+.byline :global(.autor-avatar) { box-shadow: 0 0 0 3px #fff, 0 0 0 6px rgba(200,16,46,.10); }
 .byline-texto { min-width: 0; flex: 1; }
 .byline-por {
-  font-size: 1rem; line-height: 1.4; color: var(--ink-3); margin: 0;
+  font-size: 1rem; line-height: 1.45; color: var(--ink-3); margin: 0;
   text-wrap: pretty;
 }
 .byline-por a {
@@ -75,34 +82,45 @@ const um = autores[0];
   letter-spacing: -.01em; border-bottom: 2px solid transparent;
   transition: border-color .2s, color .2s;
 }
-.byline-por a:hover { color: var(--red); border-color: var(--red); }
+.byline-por a:hover { color: var(--red); border-color: rgba(200,16,46,.35); }
 .byline-cargo {
-  font-size: .82rem; line-height: 1.45; color: var(--ink-3); margin: 3px 0 0;
+  font-size: .84rem; line-height: 1.5; color: var(--ink-3); margin: 4px 0 0;
   text-wrap: pretty;
 }
-.byline :global(.autor-links) { margin-top: 10px; }
+.byline :global(.autor-links) { margin-top: 12px; }
+.byline :global(.autor-links a) { border-bottom-color: rgba(200,16,46,.18); }
 
-/* Dois ou mais: a frase completa em cima, um cartão curto por pessoa embaixo. */
-.byline-varios { flex-direction: column; align-items: stretch; gap: 16px; }
-.byline-varios > .byline-por { font-size: 1rem; }
+/* Dois ou mais: as fotos se sobrepõem de leve e a frase completa fica ao
+   lado; embaixo, um cartãozinho por pessoa com cargo e redes. */
+.byline-varios { flex-direction: column; align-items: stretch; gap: 18px; }
+.byline-cabeca { display: flex; align-items: center; gap: 16px; }
+.byline-fotos { display: flex; flex-shrink: 0; }
+.byline-fotos :global(.autor-avatar) { --autor-avatar: 56px; }
+.byline-fotos :global(.autor-avatar + .autor-avatar) { margin-left: -14px; }
+.byline-varios .byline-por { font-size: 1rem; }
 .byline-grade {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
-  gap: 14px 24px;
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(min(240px, 100%), 1fr));
+  gap: 12px 20px;
 }
-.byline-celula { display: flex; align-items: flex-start; gap: 12px; min-width: 0; }
+.byline-celula {
+  display: flex; align-items: flex-start; gap: 12px; min-width: 0;
+  padding: 12px 14px; border-radius: 16px; background: rgba(255,255,255,.65);
+}
+.byline-celula :global(.autor-avatar) { box-shadow: 0 0 0 2px #fff, 0 0 0 4px rgba(200,16,46,.10); }
 .byline-nome {
   display: block; font-size: .92rem; font-weight: 800; color: var(--ink);
   text-decoration: none; letter-spacing: -.01em; line-height: 1.3;
   text-wrap: balance;
 }
 .byline-nome:hover { color: var(--red); }
-.byline-celula :global(.autor-links) { margin-top: 6px; gap: 4px 10px; }
+.byline-celula :global(.autor-links) { margin-top: 8px; gap: 4px 10px; }
 .byline-celula :global(.autor-links a) { border-bottom: none; padding: 0; color: var(--ink-3); }
 .byline-celula :global(.autor-links a:hover) { color: var(--red); }
 
 @media (max-width: 600px) {
-  .byline { gap: 14px; padding: 16px 0 18px; margin-bottom: 32px; }
-  .byline :global(.autor-avatar) { --autor-avatar: 52px; }
-  .byline-por { font-size: .9rem; }
+  .byline { gap: 16px; padding: 20px 20px; margin-bottom: 32px; border-radius: 18px; }
+  .byline :global(.autor-avatar) { --autor-avatar: 56px; }
+  .byline-por { font-size: .95rem; }
+  .byline-cabeca { align-items: flex-start; }
 }
 </style>

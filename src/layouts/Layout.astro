@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
+import { BUILD_ID } from '../utils/build';
 
 interface Props {
   title: string;
@@ -200,6 +201,7 @@ const websiteSchema = {
 
     <!-- ── SEO + GEO ── -->
     <meta name="robots"           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="build-id"         content={BUILD_ID} />
     <meta name="author"           content={articleAuthor || 'Mclair Comunicação Estratégica'} />
     {keywords && <meta name="keywords" content={keywords} />}
     <meta name="geo.region"       content="BR-SP" />
