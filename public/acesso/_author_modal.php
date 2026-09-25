@@ -13,6 +13,7 @@ function cmsAuthorModal(): void {
     if ($emitido) return;
     $emitido = true;
     $tipos = cmsAuthorSocialTypes();
+    $v2 = cmsAuthorsV2Ready(cmsDb());
 ?>
 <style>
   .am-backdrop { display:none; position:fixed; inset:0; background:rgba(26,27,30,.5); z-index:120; align-items:flex-start; justify-content:center; padding:24px 16px; overflow-y:auto; }
@@ -53,6 +54,7 @@ function cmsAuthorModal(): void {
   .am-card { background:#fff; border:1.5px solid var(--line); border-radius:12px; padding:18px; display:flex; gap:14px; align-items:flex-start; }
   .am-card-foto { width:56px; height:56px; border-radius:50%; overflow:hidden; background:rgba(200,16,46,.08); color:var(--red); font-weight:900; font-size:1.3rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
   .am-card-foto img { width:100%; height:100%; object-fit:cover; display:block; }
+  .am-card-por { font-size:.7rem; color:var(--ink-3); margin:0 0 2px; }
   .am-card-nome { font-size:.95rem; font-weight:800; color:var(--ink); line-height:1.25; margin:0; text-wrap:balance; }
   .am-card-cargo { font-size:.74rem; font-weight:700; color:var(--red); margin:3px 0 0; text-wrap:pretty; }
   .am-card-bio { font-size:.8rem; line-height:1.6; color:var(--ink); margin:8px 0 0; text-wrap:pretty; }
@@ -60,6 +62,9 @@ function cmsAuthorModal(): void {
   .am-card-links li { border-bottom:1px solid var(--line); }
   .am-card-vazio { font-size:.78rem; color:var(--ink-3); margin:8px 0 0; line-height:1.5; }
   .am-side .hint { margin-top:10px; line-height:1.5; }
+  .am-radios { display:flex; flex-wrap:wrap; gap:6px 18px; margin-top:6px; }
+  .am-radio { display:inline-flex; align-items:center; gap:6px; margin:0; font-size:.85rem; font-weight:600; text-transform:none; letter-spacing:0; color:var(--ink); cursor:pointer; }
+  .am-radio input { margin:0; accent-color:var(--red); }
 
   @media (max-width: 860px) {
     .am-body { grid-template-columns:1fr; }
@@ -90,7 +95,7 @@ function cmsAuthorModal(): void {
               <span>Arraste a foto ou clique</span>
             </div>
             <div class="am-foto-acoes">
-              Quadrada, rosto centralizado, pelo menos 400 x 400 px. JPG, PNG ou WEBP até 8 MB.<br />
+              Quadrada, rosto centralizado (ou o logotipo, no caso de organização), pelo menos 400 x 400 px. JPG, PNG ou WEBP até 8 MB.<br />
               <button type="button" id="amFotoRemover" style="display:none">Remover foto</button>
             </div>
             <input type="file" id="amFotoArquivo" accept="image/*" style="display:none" />
@@ -99,6 +104,25 @@ function cmsAuthorModal(): void {
           <label>Nome</label>
           <input type="text" name="name" id="amNome" placeholder="Ex.: Kelly Pinheiro" maxlength="190" autocomplete="off" />
           <p class="hint">Como aparece no site. Nome completo, sem cargo.</p>
+
+          <?php if ($v2): ?>
+          <label>Quem assina</label>
+          <div class="am-radios">
+            <label class="am-radio"><input type="radio" name="kind" value="pessoa" checked /> Uma pessoa</label>
+            <label class="am-radio"><input type="radio" name="kind" value="organizacao" /> Uma organização (a própria Mclair, por exemplo)</label>
+          </div>
+          <p class="hint">Organização aparece como "Publicado por" e, para o Google, é a empresa, não uma pessoa. A foto vira o logotipo.</p>
+
+          <div id="amGeneroWrap">
+            <label>Tratamento</label>
+            <div class="am-radios">
+              <label class="am-radio"><input type="radio" name="gender" value="f" /> Autora</label>
+              <label class="am-radio"><input type="radio" name="gender" value="m" /> Autor</label>
+              <label class="am-radio"><input type="radio" name="gender" value="" checked /> Não definir</label>
+            </div>
+            <p class="hint">Define a concordância em tudo o que o site escreve sobre a pessoa: "Autora no blog Mclair", "Sobre a autora". Sem definir, o site usa formas neutras.</p>
+          </div>
+          <?php endif; ?>
 
           <label>Cargo ou função</label>
           <input type="text" name="job_title" id="amCargo" placeholder="Ex.: CEO e fundadora da Mclair" maxlength="190" autocomplete="off" />
@@ -127,6 +151,7 @@ function cmsAuthorModal(): void {
           <div class="am-card" id="amCard">
             <div class="am-card-foto" id="amCardFoto">?</div>
             <div style="min-width:0;flex:1">
+              <p class="am-card-por" id="amCardPor">Escrito por</p>
               <p class="am-card-nome" id="amCardNome">Nome do autor</p>
               <p class="am-card-cargo" id="amCardCargo" style="display:none"></p>
               <p class="am-card-bio" id="amCardBio" style="display:none"></p>
@@ -227,8 +252,12 @@ var autorModal = (function () {
     el('amCardVazio').style.display = (cargo || bio) ? 'none' : '';
 
     var f = el('amCardFoto');
-    if (foto) f.innerHTML = '<img src="' + esc(foto) + '" alt="" />';
-    else f.textContent = (nome.charAt(0) || '?').toUpperCase();
+    var org = kindAtual() === 'organizacao';
+    if (foto) f.innerHTML = '<img src="' + esc(foto) + '" alt=""' + (org ? ' style="object-fit:contain;padding:8px;background:#fff"' : '') + ' />';
+    else f.textContent = iniciais(nome) || '?';
+    el('amCardPor').textContent = org ? 'Publicado por' : 'Escrito por';
+    var gw = el('amGeneroWrap');
+    if (gw) gw.style.display = org ? 'none' : '';
 
     var ul = el('amCardLinks');
     ul.innerHTML = '';
@@ -241,6 +270,19 @@ var autorModal = (function () {
   }
 
   function erro(msg) { el('amErro').textContent = msg || ''; }
+  function kindAtual() {
+    var r = el('amForm').querySelector('input[name=kind]:checked');
+    return r ? r.value : 'pessoa';
+  }
+  function marcar(nome, valor) {
+    var rs = el('amForm').querySelectorAll('input[name=' + nome + ']');
+    Array.prototype.forEach.call(rs, function (r) { r.checked = (r.value === (valor == null ? '' : String(valor))); });
+  }
+  function iniciais(nome) {
+    var p = nome.trim().split(/\s+/).filter(Boolean);
+    if (!p.length) return '';
+    return (p[0].charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : '')).toUpperCase();
+  }
 
   // ---- Abrir / fechar / salvar ----
   function abrir(dados, cb) {
@@ -255,6 +297,8 @@ var autorModal = (function () {
     el('amBioCurta').value = dados.bio_short || '';
     el('amBioLonga').value = dados.bio_long || '';
     el('amTemas').value = (dados.topics || []).join(', ');
+    marcar('kind', dados.kind || 'pessoa');
+    marcar('gender', dados.gender || '');
     el('amLinks').innerHTML = '';
     (dados.social_links || []).forEach(function (l) { addLink(l.type, l.url); });
     erro('');
@@ -291,6 +335,7 @@ var autorModal = (function () {
 
   // ---- Ligações de evento (uma vez) ----
   ['amNome', 'amCargo', 'amBioCurta'].forEach(function (id) { el(id).addEventListener('input', previa); });
+  Array.prototype.forEach.call(el('amForm').querySelectorAll('input[name=kind], input[name=gender]'), function (r) { r.addEventListener('change', previa); });
   var zona = el('amFotoZona'), arquivo = el('amFotoArquivo');
   zona.addEventListener('click', function () { arquivo.click(); });
   arquivo.addEventListener('change', function () { fotoSubir(arquivo.files[0]); arquivo.value = ''; });

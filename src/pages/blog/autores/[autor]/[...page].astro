@@ -9,14 +9,16 @@ import AuthorCard from '../../../../components/AuthorCard.astro';
 import type { DbBlogAuthor } from '../../../../utils/cmsApi';
 
 export async function getStaticPaths({ paginate }: any) {
-  const { getBlogPosts, getBlogAuthors, resolveBlogImage } = await import('../../../../utils/cmsApi');
+  const { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } = await import('../../../../utils/cmsApi');
   const { marked } = await import('marked');
   const { embutirVideos } = await import('../../../../utils/videoEmbed');
   const { normalizarParagrafos } = await import('../../../../utils/markdown');
-  const { autoresComPosts } = await import('../../../../utils/blogAuthors');
+  const { autoresComPosts, autoresDoPost, mapaDeAutores, mapaDeVinculos } = await import('../../../../utils/blogAuthors');
 
-  const [posts, todos] = await Promise.all([getBlogPosts(), getBlogAuthors()]);
-  const autores = autoresComPosts(todos, posts);
+  const [posts, todos, vinculos] = await Promise.all([getBlogPosts(), getBlogAuthors(), getBlogPostAuthors()]);
+  const autores = autoresComPosts(todos, posts, vinculos);
+  const porId = mapaDeAutores(todos);
+  const porPost = mapaDeVinculos(vinculos);
 
   function ts(d: string) {
     return d ? new Date(d).getTime() : 0;
@@ -24,7 +26,7 @@ export async function getStaticPaths({ paginate }: any) {
 
   return autores.flatMap((autor) => {
     const deste = posts
-      .filter((p: any) => Number(p.blog_author_id) === autor.id)
+      .filter((p: any) => autoresDoPost(p, porId, porPost).some((a) => a.id === autor.id))
       .map((p: any) => ({
         slug: p.slug,
         title: p.title,
@@ -40,9 +42,11 @@ export async function getStaticPaths({ paginate }: any) {
 
 const { page, autor } = Astro.props as { page: any; autor: DbBlogAuthor };
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
-const { schemaPessoa, urlDoAutor, primeiroNome } = await import('../../../../utils/blogAuthors');
+const { schemaDoAutor, urlDoAutor, idDoAutor, palavras } = await import('../../../../utils/blogAuthors');
 const perfilUrl = `${BASE}${urlDoAutor(autor.slug)}`;
-const pessoa = schemaPessoa(autor, BASE);
+const pal = palavras(autor);
+const entidade = schemaDoAutor(autor, BASE);
+const org = autor.kind === 'organizacao';
 
 function stripHtml(html: string) {
   return html.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
@@ -69,12 +73,12 @@ function pageHref(n: number) {
 // Título e descrição únicos por perfil; a partir da página 2 o título muda
 // e a descrição continua a mesma (a página 2 não é uma entidade nova).
 const pagina = page.currentPage > 1 ? ` | Página ${page.currentPage}` : '';
-const seoTitle = `${autor.name}${pagina} | Autor no blog Mclair`;
+const seoTitle = pagina ? pal.tituloPerfil.replace(' | ', `${pagina} | `) : pal.tituloPerfil;
 const bioMeta = (autor.bio_short || autor.bio_long || '').replace(/\s+/g, ' ').trim();
 const cargoMeta = autor.job_title ? ` ${autor.job_title}.` : '';
 const descricao = (bioMeta
   ? `${autor.name}:${cargoMeta} ${bioMeta}`
-  : `Artigos de ${autor.name} no blog da Mclair.${cargoMeta} ${page.total} artigo${page.total === 1 ? '' : 's'} publicados.`
+  : `${pal.artigosDe} no blog da Mclair.${cargoMeta} ${page.total} artigo${page.total === 1 ? '' : 's'} publicados.`
 ).slice(0, 160).trimEnd();
 
 const breadcrumbSchema = {
@@ -93,16 +97,18 @@ const perfilSchema = {
   '@type': 'ProfilePage',
   '@id': `${perfilUrl}#profile`,
   url: perfilUrl,
-  name: `${autor.name} | Autor no blog Mclair`,
+  name: pal.tituloPerfil,
   inLanguage: 'pt-BR',
   isPartOf: { '@id': `${BASE}/#website` },
-  mainEntity: pessoa,
+  // Pessoa: Person completo. Organização: só a referência à Organization
+  // que o Layout já declara (mesmo @id, nunca uma segunda).
+  mainEntity: entidade,
   hasPart: page.data.map((p: any) => ({
     '@type': 'BlogPosting',
     '@id': `${BASE}/blog/${p.slug}#article`,
     headline: p.title,
     url: `${BASE}/blog/${p.slug}`,
-    author: { '@id': pessoa['@id'] },
+    author: { '@id': idDoAutor(BASE, autor) },
   })),
 };
 ---
@@ -112,7 +118,7 @@ const perfilSchema = {
   description={descricao}
   ogImage={autor.photo_url ? (autor.photo_url.startsWith('http') ? autor.photo_url : `${BASE}${autor.photo_url}`) : 'https://mclair.com.br/paginas/sobre-estrategia-comunicacao-mclair.jpg'}
   ogImageAlt={autor.name}
-  ogType="profile"
+  ogType={org ? 'website' : 'profile'}
   prevUrl={page.url.prev || undefined}
   nextUrl={page.url.next || undefined}
   schema={[perfilSchema, breadcrumbSchema]}
@@ -134,7 +140,7 @@ const perfilSchema = {
   <div class="container ap-perfil-inner">
     <AuthorCard autor={autor} variante="perfil" />
     {autor.topics.length > 0 && (
-      <p class="ap-temas">Escreve sobre {autor.topics.join(', ')}.</p>
+      <p class="ap-temas">{org ? 'Temas' : 'Escreve sobre'}: {autor.topics.join(', ')}.</p>
     )}
   </div>
 </section>
@@ -142,7 +148,7 @@ const perfilSchema = {
 <section class="section ap-section">
   <div class="container">
     <h2 class="ap-lista-titulo">
-      {page.total} artigo{page.total === 1 ? '' : 's'} de {primeiroNome(autor.name)}{page.currentPage > 1 ? `, página ${page.currentPage}` : ''}
+      {page.total} artigo{page.total === 1 ? '' : 's'} de {autor.name}{page.currentPage > 1 ? `, página ${page.currentPage}` : ''}
     </h2>
 
     <div class="ap-grid stagger-children">

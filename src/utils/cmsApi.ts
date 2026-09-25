@@ -56,7 +56,13 @@ export type DbBlogAuthor = {
   topics: string[];
   social_links: { type: string; url: string }[];
   post_count: number;
+  // Segunda migração (2026-09-26). Antes dela: 'pessoa' e null.
+  kind: 'pessoa' | 'organizacao';
+  gender: 'm' | 'f' | null;
 };
+
+// Linha da tabela de vários autores por post (segunda migração).
+export type DbBlogPostAuthor = { post_slug: string; author_id: number; position: number };
 
 export type DbService = {
   slug: string;
@@ -139,7 +145,23 @@ export async function getBlogAuthors(): Promise<DbBlogAuthor[]> {
           ? r.social_links.filter((l: any) => l && typeof l.url === 'string').map((l: any) => ({ type: String(l.type || 'outro'), url: String(l.url) }))
           : [],
         post_count: Number(r.post_count ?? 0),
+        kind: r.kind === 'organizacao' ? 'organizacao' : 'pessoa',
+        gender: r.gender === 'm' || r.gender === 'f' ? r.gender : null,
       }));
+  } catch {
+    return [];
+  }
+}
+
+// Vários autores por post. [] quando a tabela ainda não existe (aí vale o
+// blog_author_id de cada post).
+export async function getBlogPostAuthors(): Promise<DbBlogPostAuthor[]> {
+  try {
+    const rows = await fetchType<any>('blog_post_authors');
+    if (!Array.isArray(rows)) return [];
+    return rows
+      .filter((r) => r && r.post_slug && r.author_id)
+      .map((r) => ({ post_slug: String(r.post_slug), author_id: Number(r.author_id), position: Number(r.position ?? 0) }));
   } catch {
     return [];
   }

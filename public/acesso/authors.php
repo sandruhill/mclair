@@ -6,6 +6,7 @@ require_once __DIR__ . '/_author_modal.php';
 $pdo = cmsDb();
 $podeRemover = in_array(cmsRole(), ['admin', 'editor'], true);
 $pronto = cmsAuthorsReady($pdo);
+$v2 = $pronto && cmsAuthorsV2Ready($pdo);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
@@ -23,13 +24,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // assinatura. Nos dois casos o nome de texto (`author`) é preservado
         // ou trocado de propósito; a FK sozinha só zeraria a referência.
         $destino = (int) ($_POST['reassign_to'] ?? 0);
-        if ($destino > 0 && $destino !== $id && ($novo = cmsAuthorById($pdo, $destino))) {
-            $pdo->prepare('UPDATE cmstest_blog_posts SET blog_author_id = ?, author = ? WHERE blog_author_id = ?')
-                ->execute([$novo['id'], $novo['name'], $id]);
+        $novo = ($destino > 0 && $destino !== $id) ? cmsAuthorById($pdo, $destino) : null;
+        if (cmsAuthorsV2Ready($pdo)) {
+            $q = $pdo->prepare('SELECT post_slug FROM cmstest_blog_post_authors WHERE author_id = ?');
+            $q->execute([$id]);
+            $slugs = $q->fetchAll(PDO::FETCH_COLUMN);
+            if ($novo) {
+                // Toma o lugar do removido na mesma posição; se o destino já
+                // assina o post, a linha duplicada simplesmente sai.
+                $pdo->prepare('UPDATE IGNORE cmstest_blog_post_authors SET author_id = ? WHERE author_id = ?')->execute([$novo['id'], $id]);
+            }
+            $pdo->prepare('DELETE FROM cmstest_blog_authors WHERE id = ?')->execute([$id]); // CASCADE limpa o que sobrou
+            cmsPostAuthorsResync($pdo, $slugs);
         } else {
-            $pdo->prepare('UPDATE cmstest_blog_posts SET blog_author_id = NULL WHERE blog_author_id = ?')->execute([$id]);
+            if ($novo) {
+                $pdo->prepare('UPDATE cmstest_blog_posts SET blog_author_id = ?, author = ? WHERE blog_author_id = ?')
+                    ->execute([$novo['id'], $novo['name'], $id]);
+            } else {
+                $pdo->prepare('UPDATE cmstest_blog_posts SET blog_author_id = NULL WHERE blog_author_id = ?')->execute([$id]);
+            }
+            $pdo->prepare('DELETE FROM cmstest_blog_authors WHERE id = ?')->execute([$id]);
         }
-        $pdo->prepare('DELETE FROM cmstest_blog_authors WHERE id = ?')->execute([$id]);
         queueRebuild();
         header('Location: autores?removed=1&t=' . time());
         exit;
@@ -73,6 +88,8 @@ adminLayoutTop('authors', 'Autores', ['label' => 'Posts do blog', 'href' => '/ac
   @media (max-width: 768px) { .tablecard-head { flex-wrap:wrap; gap:10px; } .au-busca input[type=text] { width:150px; } }
 </style>
 
+<?php if (!$v2): ?><div class="msg err" style="background:#FFF4E5;color:#7A4A00;border:1px solid #F3D9A4"><?= htmlspecialchars(CMS_AUTHORS_V2_HINT) ?></div><?php endif; ?>
+
 <?php adminStatCards([
     ['num' => count($todos), 'lbl' => 'Autores cadastrados'],
     ['num' => $comPosts, 'lbl' => 'Com artigo publicado'],
@@ -110,6 +127,7 @@ adminLayoutTop('authors', 'Autores', ['label' => 'Posts do blog', 'href' => '/ac
       <td class="au-nome">
         <strong><?= htmlspecialchars($a['name']) ?></strong>
         <?php if ($a['job_title']): ?><span><?= htmlspecialchars($a['job_title']) ?></span><?php endif; ?>
+        <?php if ($v2): ?><br /><em><?= htmlspecialchars(cmsAuthorLabel($a)) ?><?= ($a['kind'] === 'pessoa' && !$a['gender']) ? ' (tratamento não definido)' : '' ?></em><?php endif; ?>
         <?php if (!$a['photo_url'] || !$a['bio_short']): ?><br /><em>Falta: <?= implode(' e ', array_filter([$a['photo_url'] ? '' : 'foto', $a['bio_short'] ? '' : 'bio curta'])) ?></em><?php endif; ?>
       </td>
       <td>

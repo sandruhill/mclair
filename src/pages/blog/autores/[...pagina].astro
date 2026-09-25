@@ -8,18 +8,19 @@
 // nenhum.
 export const prerender = true;
 import Layout from '../../../layouts/Layout.astro';
-import { getBlogPosts, getBlogAuthors } from '../../../utils/cmsApi';
-import { autoresComPosts, urlDoAutor, idDaPessoa, primeiroNome } from '../../../utils/blogAuthors';
+import AuthorAvatar from '../../../components/AuthorAvatar.astro';
+import { getBlogPosts, getBlogAuthors, getBlogPostAuthors } from '../../../utils/cmsApi';
+import { autoresComPosts, urlDoAutor, idDoAutor } from '../../../utils/blogAuthors';
 
 export async function getStaticPaths() {
-  const { getBlogPosts: gp, getBlogAuthors: ga } = await import('../../../utils/cmsApi');
+  const { getBlogPosts: gp, getBlogAuthors: ga, getBlogPostAuthors: gv } = await import('../../../utils/cmsApi');
   const { autoresComPosts: comPosts } = await import('../../../utils/blogAuthors');
-  const [posts, todos] = await Promise.all([gp(), ga()]);
-  return comPosts(todos, posts).length > 0 ? [{ params: { pagina: undefined } }] : [];
+  const [posts, todos, vinculos] = await Promise.all([gp(), ga(), gv()]);
+  return comPosts(todos, posts, vinculos).length > 0 ? [{ params: { pagina: undefined } }] : [];
 }
 
-const [posts, todos] = await Promise.all([getBlogPosts(), getBlogAuthors()]);
-const autores = autoresComPosts(todos, posts);
+const [posts, todos, vinculos] = await Promise.all([getBlogPosts(), getBlogAuthors(), getBlogPostAuthors()]);
+const autores = autoresComPosts(todos, posts, vinculos);
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
 const total = autores.length;
 
@@ -46,7 +47,9 @@ const listaSchema = {
     itemListElement: autores.map((a, i) => ({
       '@type': 'ListItem',
       position: i + 1,
-      item: { '@id': idDaPessoa(BASE, a.slug), '@type': 'Person', name: a.name, url: `${BASE}${urlDoAutor(a.slug)}` },
+      item: a.kind === 'organizacao'
+        ? { '@id': idDoAutor(BASE, a), '@type': 'Organization', name: a.name, url: BASE }
+        : { '@id': idDoAutor(BASE, a), '@type': 'Person', name: a.name, url: `${BASE}${urlDoAutor(a.slug)}` },
     })),
   },
 };
@@ -83,15 +86,11 @@ const descricao = total
       <div class="au-grid stagger-children">
         {autores.map((a, i) => (
           <a href={urlDoAutor(a.slug)} class="au-card" data-anim data-delay={((i % 3) + 1).toString()}>
-            {a.photo_url ? (
-              <img src={a.photo_url} alt="" class="au-foto" width="96" height="96" loading="lazy" />
-            ) : (
-              <span class="au-foto au-foto-inicial" aria-hidden="true">{a.name.trim().charAt(0).toUpperCase()}</span>
-            )}
+            <AuthorAvatar autor={a} tamanho={96} link={false} />
             <span class="au-nome">{a.name}</span>
             {a.job_title && <span class="au-cargo">{a.job_title}</span>}
             {a.bio_short && <span class="au-bio">{a.bio_short}</span>}
-            <span class="au-n">{a.post_count} artigo{a.post_count === 1 ? '' : 's'} de {primeiroNome(a.name)}</span>
+            <span class="au-n">{a.post_count} artigo{a.post_count === 1 ? '' : 's'}</span>
           </a>
         ))}
       </div>
@@ -128,14 +127,7 @@ const descricao = total
   transition: box-shadow .3s, transform .3s cubic-bezier(.22,1,.36,1), border-color .25s;
 }
 .au-card:hover { box-shadow: 0 16px 48px rgba(0,0,0,.1); transform: translateY(-4px); border-color: rgba(200,16,46,.2); }
-.au-foto {
-  width: 96px; height: 96px; border-radius: 50%; object-fit: cover;
-  background: var(--cream-2); margin-bottom: 18px;
-}
-.au-foto-inicial {
-  display: flex; align-items: center; justify-content: center;
-  font-size: 2.2rem; font-weight: 900; color: var(--red); background: var(--red-soft);
-}
+.au-card :global(.autor-avatar) { margin-bottom: 18px; }
 .au-nome { font-size: 1.15rem; font-weight: 800; letter-spacing: -.02em; color: var(--ink); line-height: 1.25; text-wrap: balance; }
 .au-cargo { font-size: .8rem; font-weight: 700; color: var(--red); margin-top: 4px; line-height: 1.4; text-wrap: pretty; }
 .au-bio { font-size: .85rem; color: var(--ink-3); line-height: 1.65; margin-top: 10px; text-wrap: pretty; }

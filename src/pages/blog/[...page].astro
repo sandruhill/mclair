@@ -34,9 +34,9 @@ const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
 
 // Link de entrada do silo blog > autores. Só aparece quando existe ao menos
 // um autor com artigo (sem isso /blog/autores/ seria uma página vazia).
-const { getBlogPosts: getPostsIdx, getBlogAuthors } = await import('../../utils/cmsApi');
+const { getBlogPosts: getPostsIdx, getBlogAuthors, getBlogPostAuthors } = await import('../../utils/cmsApi');
 const { autoresComPosts } = await import('../../utils/blogAuthors');
-const temAutores = autoresComPosts(await getBlogAuthors(), await getPostsIdx()).length > 0;
+const temAutores = autoresComPosts(await getBlogAuthors(), await getPostsIdx(), await getBlogPostAuthors()).length > 0;
 
 // ── Blog index JSON-LD ────────────────────────────────────────
 const blogSchema = {

@@ -348,3 +348,33 @@ ul, ol { list-style:none; }
 }
 .clients-hero:hover .ch-photo-img { transform: scale(1.06); }
 .page-content { animation: page-in .5s cubic-bezier(.22,1,.36,1) backwards; }
+
+/* ── Autores: peças compartilhadas entre a assinatura no topo do artigo,
+      o cartão no fim e a página de perfil (um sistema só) ── */
+.autor-avatar {
+  --tam: var(--autor-avatar, 56px);
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  width: var(--tam); height: var(--tam); border-radius: 50%; overflow: hidden;
+  background: var(--cream-2); color: inherit; text-decoration: none;
+  box-shadow: 0 0 0 1.5px var(--line);
+}
+.autor-avatar img { width: 100%; height: 100%; object-fit: cover; display: block; }
+/* Sem foto: monograma com as iniciais, nunca uma silhueta genérica. */
+.autor-avatar-mono {
+  background: var(--red-soft); color: var(--red);
+  font-weight: 800; letter-spacing: .02em; line-height: 1;
+  font-size: calc(var(--tam) * .34);
+}
+/* Organização: o logotipo inteiro, com respiro, sobre fundo branco. */
+.autor-avatar-org { background: #fff; }
+.autor-avatar-org img { object-fit: contain; padding: 18%; }
+
+.autor-links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; }
+.autor-links a {
+  display: inline-flex; align-items: center; gap: 6px;
+  font-size: .74rem; font-weight: 700; color: var(--ink-2);
+  text-decoration: none; border-bottom: 1px solid var(--line-2); padding-bottom: 1px;
+  transition: color .2s, border-color .2s;
+}
+.autor-links a:hover { color: var(--red); border-color: var(--red); }
+.autor-links svg { width: 14px; height: 14px; flex-shrink: 0; }

@@ -37,18 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $kwArr = array_values(array_filter(array_map('trim', explode(',', $_POST['keywords'] ?? '')), 'strlen'));
     $kwJson = json_encode($kwArr, JSON_UNESCAPED_UNICODE);
 
-    // Autor: com a tabela de autores, o select manda o id e o nome de texto
-    // (`author`, usado nas listas e no JSON do site) vira o nome cadastrado.
-    // Sem autor escolhido, vale o nome digitado, como nos posts migrados.
-    $blogAuthorId = null;
+    // Autores: a lista ordenada de ids vem em authors[]; o primeiro vai em
+    // blog_author_id, todos vão para a tabela de vários autores (quando
+    // existe) e o nome de exibição (`author`, usado nas listas e no JSON do
+    // site) vira "A", "A e B"... Sem autor escolhido, vale o nome digitado,
+    // como nos posts migrados. A gravação em si é feita depois do INSERT/UPDATE
+    // por cmsPostAuthorsSave (precisa do slug).
+    $authorIds = $authorsReady ? array_map('intval', (array) ($_POST['authors'] ?? [])) : [];
     $authorName = trim((string) ($_POST['author_other'] ?? ''));
-    if ($authorsReady && ($_POST['blog_author_id'] ?? '') !== '') {
-        $autor = cmsAuthorById($pdo, (int) $_POST['blog_author_id']);
-        if ($autor) {
-            $blogAuthorId = $autor['id'];
-            $authorName = $autor['name'];
-        }
-    }
     $authorName = $authorName !== '' ? $authorName : null;
 
     // Rede de segurança no servidor para o problema dos parágrafos colados
@@ -66,30 +62,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($base === '') $base = 'post-' . date('Y-m-d');
         $slug = cmsSlugUnico($pdo, $base);
 
-        $cols = 'slug, title, subtitle, category, post_date, featured_image, hero_video, meta_description, keywords, content_md, author, updated_by';
-        $vals = [
+        $stmt = $pdo->prepare('INSERT INTO cmstest_blog_posts (slug, title, subtitle, category, post_date, featured_image, hero_video, meta_description, keywords, content_md, author, updated_by) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)');
+        $stmt->execute([
             $slug, $titulo, $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
             $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
             $conteudo, $authorName, $myId,
-        ];
-        if ($authorsReady) { $cols .= ', blog_author_id'; $vals[] = $blogAuthorId; }
-        $stmt = $pdo->prepare('INSERT INTO cmstest_blog_posts (' . $cols . ') VALUES (' . implode(',', array_fill(0, count($vals), '?')) . ')');
-        $stmt->execute($vals);
+        ]);
+        if ($authorsReady) cmsPostAuthorsSave($pdo, $slug, $authorIds, $authorName);
         queueRebuild();
         header('Location: editar?slug=' . urlencode($slug) . '&created=1&t=' . time());
         exit;
     }
 
-    $set = 'title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author = ?, updated_by = ?';
-    $vals = [
+    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET title = ?, subtitle = ?, category = ?, post_date = ?, featured_image = ?, hero_video = ?, meta_description = ?, keywords = ?, content_md = ?, author = ?, updated_by = ? WHERE slug = ?');
+    $stmt->execute([
         $_POST['title'], $_POST['subtitle'], $_POST['category'], $_POST['post_date'],
         $_POST['featured_image'], $_POST['hero_video'], $_POST['meta_description'], $kwJson,
-        $conteudo, $authorName, $myId,
-    ];
-    if ($authorsReady) { $set .= ', blog_author_id = ?'; $vals[] = $blogAuthorId; }
-    $vals[] = $slug;
-    $stmt = $pdo->prepare('UPDATE cmstest_blog_posts SET ' . $set . ' WHERE slug = ?');
-    $stmt->execute($vals);
+        $conteudo, $authorName, $myId, $slug,
+    ]);
+    if ($authorsReady) cmsPostAuthorsSave($pdo, $slug, $authorIds, $authorName);
     queueRebuild();
     header('Location: editar?slug=' . urlencode($slug) . '&saved=1&t=' . time());
     exit;
@@ -117,7 +108,8 @@ if ($isNew) {
 }
 
 $authorOptions = $authorsReady ? cmsAuthorsAll($pdo) : [];
-$postAuthorId = $authorsReady ? (int) ($post['blog_author_id'] ?? 0) : 0;
+$postAuthorIds = ($authorsReady && !$isNew) ? cmsPostAuthorIds($pdo, $slug) : [];
+$authorsV2 = $authorsReady && cmsAuthorsV2Ready($pdo);
 
 $categories = ['assessoria-de-imprensa','marketing-de-autoridade','branding-estrategico','marketing-digital','comunicacao','marca-pessoal','negocios','geral'];
 
@@ -162,6 +154,18 @@ adminLayoutTop(
   .hero-drop:has(.hero-preview .empty) .hero-drop-hint { opacity: 1; }
   .hero-drop.arrastando { outline: 2px dashed var(--red); outline-offset: -4px; }
   .hero-drop:has(.hero-preview .empty) .hero-preview .empty { visibility: hidden; }
+
+  /* Autores escolhidos: uma linha por autor, na ordem em que assinam. */
+  .au-list { display:flex; flex-direction:column; gap:6px; }
+  .au-list:empty { display:none; }
+  .au-item { display:flex; align-items:center; gap:10px; padding:8px 10px; border:1px solid var(--line); border-radius:8px; background:var(--soft); }
+  .au-item .au-foto { width:30px; height:30px; border-radius:50%; object-fit:cover; background:#fff; flex-shrink:0; }
+  .au-item .au-inicial { width:30px; height:30px; border-radius:50%; background:rgba(200,16,46,.1); color:var(--red); font-weight:800; font-size:.75rem; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .au-item .au-nome { flex:1; min-width:0; font-size:.85rem; font-weight:700; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+  .au-item .au-nome small { display:block; font-weight:600; color:var(--ink-3); font-size:.7rem; }
+  .au-item button { background:none; border:none; padding:2px 4px; cursor:pointer; font-family:inherit; font-size:.72rem; font-weight:700; color:var(--ink-3); }
+  .au-item button:hover { color:var(--ink); }
+  .au-item button.au-rem { color:var(--red); }
 </style>
 
 <?php if (isset($_GET['created'])): ?><div class="msg ok" id="savedMsg" data-live-url="https://mclair.com.br/blog/<?= urlencode($slug) ?>"><?= cmsCheckIcon() ?><span class="msg-text">Post criado. Entra no ar na próxima republicação, em alguns minutos.</span></div>
@@ -226,20 +230,22 @@ adminLayoutTop(
 
         <div class="side-sec">
           <strong>Publicação</strong>
-          <label>Autor</label>
+          <label>Autor<?= $authorsV2 ? 'es' : '' ?></label>
           <?php if ($authorsReady): ?>
-          <div style="display:flex;gap:6px;align-items:stretch">
-            <select name="blog_author_id" id="authorSelect" onchange="autorMudou()" style="min-width:0">
-              <option value="">Sem autor cadastrado (só o nome abaixo)</option>
+          <div id="authorList" class="au-list"></div>
+          <div style="display:flex;gap:6px;align-items:stretch;margin-top:6px">
+            <select id="authorAdd" onchange="autorAdicionarDoSelect()" style="min-width:0">
+              <option value="">Escolher autor cadastrado...</option>
               <?php foreach ($authorOptions as $a): ?>
-                <option value="<?= (int) $a['id'] ?>" <?= $postAuthorId === (int) $a['id'] ? 'selected' : '' ?>><?= htmlspecialchars($a['name']) ?></option>
+                <option value="<?= (int) $a['id'] ?>"><?= htmlspecialchars($a['name']) ?><?= $a['kind'] === 'organizacao' ? ' (organização)' : '' ?></option>
               <?php endforeach; ?>
             </select>
             <button type="button" class="btn secondary" style="white-space:nowrap;padding:8px 12px;font-size:.78rem" onclick="autorModal.abrir(null, autorCriado)" title="Cadastrar um autor novo sem sair do post">+ novo autor</button>
           </div>
-          <p class="hint">Com um autor cadastrado, o artigo ganha a assinatura com foto e bio no fim do texto e entra na página dele no site. O cadastro fica em Posts do blog, Autores.</p>
-          <div id="authorOtherWrap" style="<?= $postAuthorId ? 'display:none' : '' ?>">
-            <input type="text" name="author_other" value="<?= htmlspecialchars($postAuthorId ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
+          <p class="hint"><?= $authorsV2 ? 'Um ou mais autores, na ordem em que assinam. ' : '' ?>Com autor cadastrado, o artigo ganha a assinatura com foto no início e a bio no fim do texto, e entra na página do autor no site. O cadastro fica em Posts do blog, Autores.</p>
+          <?php if (!$authorsV2): ?><p class="hint"><?= htmlspecialchars(CMS_AUTHORS_V2_HINT) ?></p><?php endif; ?>
+          <div id="authorOtherWrap" style="<?= $postAuthorIds ? 'display:none' : '' ?>">
+            <input type="text" name="author_other" value="<?= htmlspecialchars($postAuthorIds ? '' : ($post['author'] ?? '')) ?>" placeholder="Nome do autor" style="margin-top:6px" />
             <p class="hint">Só o nome, sem assinatura. É como estão os posts migrados do site antigo.</p>
           </div>
           <?php else: ?>
@@ -593,23 +599,83 @@ campoMd.form.addEventListener('submit', function () {
   campoMd.value = markdownParaSalvar();
 });
 
-// ---- Autor ----
-function autorMudou() {
-  var sel = document.getElementById('authorSelect');
+// ---- Autores ----
+// AUTORES tem todo o cadastro; ESCOLHIDOS é a ordem em que assinam o post.
+// Cada escolhido vira um hidden input authors[] no form; sem escolhido,
+// aparece o campo de nome livre.
+var AUTORES = <?= json_encode(array_map(fn($a) => ['id' => $a['id'], 'name' => $a['name'], 'photo_url' => $a['photo_url'], 'kind' => $a['kind'], 'job_title' => $a['job_title']], $authorOptions), JSON_UNESCAPED_UNICODE) ?>;
+var ESCOLHIDOS = <?= json_encode(array_values($postAuthorIds)) ?>;
+var MULTI_AUTOR = <?= $authorsV2 ? 'true' : 'false' ?>;
+
+function autorPorId(id) {
+  for (var i = 0; i < AUTORES.length; i++) if (AUTORES[i].id === id) return AUTORES[i];
+  return null;
+}
+function autorIniciais(nome) {
+  var p = nome.trim().split(/\s+/);
+  return ((p[0] || '').charAt(0) + (p.length > 1 ? p[p.length - 1].charAt(0) : '')).toUpperCase();
+}
+function autorRender() {
+  var box = document.getElementById('authorList');
   var wrap = document.getElementById('authorOtherWrap');
-  if (sel && wrap) wrap.style.display = sel.value === '' ? '' : 'none';
+  var sel = document.getElementById('authorAdd');
+  if (!box) return;
+  box.innerHTML = '';
+  ESCOLHIDOS.forEach(function (id, i) {
+    var a = autorPorId(id);
+    if (!a) return;
+    var row = document.createElement('div');
+    row.className = 'au-item';
+    var foto = a.photo_url
+      ? '<img class="au-foto" src="' + a.photo_url.replace(/"/g, '&quot;') + '" alt="" />'
+      : '<span class="au-inicial">' + autorIniciais(a.name) + '</span>';
+    row.innerHTML = foto + '<span class="au-nome"></span>'
+      + (ESCOLHIDOS.length > 1 && i > 0 ? '<button type="button" class="au-up" title="Assina antes">subir</button>' : '')
+      + '<button type="button" class="au-rem" title="Tirar este autor do post">remover</button>'
+      + '<input type="hidden" name="authors[]" value="' + a.id + '" />';
+    var nome = row.querySelector('.au-nome');
+    nome.textContent = a.name;
+    if (a.job_title) { var s = document.createElement('small'); s.textContent = a.job_title; nome.appendChild(s); }
+    var up = row.querySelector('.au-up');
+    if (up) up.addEventListener('click', function () { ESCOLHIDOS.splice(i - 1, 0, ESCOLHIDOS.splice(i, 1)[0]); autorRender(); });
+    row.querySelector('.au-rem').addEventListener('click', function () { ESCOLHIDOS.splice(i, 1); autorRender(); });
+    box.appendChild(row);
+  });
+  if (wrap) wrap.style.display = ESCOLHIDOS.length ? 'none' : '';
+  if (sel) {
+    Array.prototype.forEach.call(sel.options, function (o) {
+      if (!o.value) return;
+      o.disabled = ESCOLHIDOS.indexOf(parseInt(o.value, 10)) !== -1;
+    });
+    sel.value = '';
+    // Sem a migração de vários autores, o segundo autor não seria gravado: o
+    // select some depois do primeiro em vez de prometer o que não vai.
+    sel.style.display = (!MULTI_AUTOR && ESCOLHIDOS.length) ? 'none' : '';
+  }
 }
-// "+ novo autor" salvou: entra na lista e já fica escolhido, sem recarregar o post.
+function autorAdicionar(id) {
+  id = parseInt(id, 10);
+  if (!id || ESCOLHIDOS.indexOf(id) !== -1) return;
+  if (!MULTI_AUTOR) ESCOLHIDOS = [];
+  ESCOLHIDOS.push(id);
+  autorRender();
+}
+function autorAdicionarDoSelect() {
+  autorAdicionar(document.getElementById('authorAdd').value);
+}
+// "+ novo autor" salvou: entra no cadastro e já assina o post, sem recarregar.
 function autorCriado(autor) {
-  var sel = document.getElementById('authorSelect');
-  if (!sel) return;
-  var opt = document.createElement('option');
-  opt.value = autor.id;
-  opt.textContent = autor.name;
-  sel.appendChild(opt);
-  sel.value = String(autor.id);
-  autorMudou();
+  AUTORES.push({ id: autor.id, name: autor.name, photo_url: autor.photo_url, kind: autor.kind, job_title: autor.job_title });
+  var sel = document.getElementById('authorAdd');
+  if (sel) {
+    var opt = document.createElement('option');
+    opt.value = autor.id;
+    opt.textContent = autor.name + (autor.kind === 'organizacao' ? ' (organização)' : '');
+    sel.appendChild(opt);
+  }
+  autorAdicionar(autor.id);
 }
+autorRender();
 
 // ---- Capa: a área preta é a zona de arrastar ----
 (function () {

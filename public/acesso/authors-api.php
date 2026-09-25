@@ -36,9 +36,15 @@ if (mb_strlen($bioLong) > 20000) apiErro(422, 'A bio completa está grande demai
 
 // Foto: só o que o upload.php do painel devolve (/uploads/...) ou uma URL
 // https completa. Nada de caminho arbitrário do servidor.
-if ($photo !== '' && !preg_match('#^(/uploads/[A-Za-z0-9._-]+|https://\S+)$#', $photo)) {
+if ($photo !== '' && !preg_match('#^(/uploads/[A-Za-z0-9._-]+|/logos/[A-Za-z0-9._-]+|https://\S+)$#', $photo)) {
     apiErro(422, 'A foto precisa vir do upload do painel (/uploads/...) ou ser um endereço https.');
 }
+
+// Tipo e tratamento (segunda migração). Sem ela, os campos nem aparecem.
+$v2 = cmsAuthorsV2Ready($pdo);
+$kind = ($_POST['kind'] ?? 'pessoa') === 'organizacao' ? 'organizacao' : 'pessoa';
+$gender = in_array($_POST['gender'] ?? '', ['m', 'f'], true) ? $_POST['gender'] : null;
+if ($kind === 'organizacao') $gender = null;
 if (mb_strlen($photo) > 255) apiErro(422, 'Endereço da foto grande demais.');
 
 // Áreas de especialidade: texto separado por vírgula -> lista sem repetição.
@@ -78,10 +84,20 @@ if ($id > 0) {
     if (!cmsAuthorById($pdo, $id)) apiErro(404, 'Autor não encontrado.');
     // O slug nunca muda numa edição: é a URL pública do perfil, e o Google já
     // pode ter indexado.
-    $stmt = $pdo->prepare('UPDATE cmstest_blog_authors SET name = ?, job_title = ?, photo_url = ?, bio_short = ?, bio_long = ?, topics = ?, social_links = ? WHERE id = ?');
-    $stmt->execute([$name, $nulo($jobTitle), $nulo($photo), $nulo($bioShort), $nulo($bioLong), $topicsJson, $linksJson, $id]);
-    // O nome exibido nos posts acompanha o autor.
-    $pdo->prepare('UPDATE cmstest_blog_posts SET author = ? WHERE blog_author_id = ?')->execute([$name, $id]);
+    $extra = $v2 ? ', kind = ?, gender = ?' : '';
+    $params = [$name, $nulo($jobTitle), $nulo($photo), $nulo($bioShort), $nulo($bioLong), $topicsJson, $linksJson];
+    if ($v2) { $params[] = $kind; $params[] = $gender; }
+    $params[] = $id;
+    $stmt = $pdo->prepare('UPDATE cmstest_blog_authors SET name = ?, job_title = ?, photo_url = ?, bio_short = ?, bio_long = ?, topics = ?, social_links = ?' . $extra . ' WHERE id = ?');
+    $stmt->execute($params);
+    // O nome exibido nos posts acompanha o autor (inclusive nos assinados a mais de um).
+    if ($v2) {
+        $slugs = $pdo->prepare('SELECT post_slug FROM cmstest_blog_post_authors WHERE author_id = ?');
+        $slugs->execute([$id]);
+        cmsPostAuthorsResync($pdo, $slugs->fetchAll(PDO::FETCH_COLUMN));
+    } else {
+        $pdo->prepare('UPDATE cmstest_blog_posts SET author = ? WHERE blog_author_id = ?')->execute([$name, $id]);
+    }
 } else {
     $base = cmsSlugify($name);
     if ($base === '') $base = 'autor';
@@ -92,8 +108,11 @@ if ($id > 0) {
         if (!$check->fetchColumn()) break;
         $slug = $base . '-' . $n;
     }
-    $stmt = $pdo->prepare('INSERT INTO cmstest_blog_authors (slug, name, job_title, photo_url, bio_short, bio_long, topics, social_links, created_by) VALUES (?,?,?,?,?,?,?,?,?)');
-    $stmt->execute([$slug, $name, $nulo($jobTitle), $nulo($photo), $nulo($bioShort), $nulo($bioLong), $topicsJson, $linksJson, (int) $_SESSION['cms_user_id']]);
+    $cols = 'slug, name, job_title, photo_url, bio_short, bio_long, topics, social_links, created_by';
+    $params = [$slug, $name, $nulo($jobTitle), $nulo($photo), $nulo($bioShort), $nulo($bioLong), $topicsJson, $linksJson, (int) $_SESSION['cms_user_id']];
+    if ($v2) { $cols .= ', kind, gender'; $params[] = $kind; $params[] = $gender; }
+    $stmt = $pdo->prepare('INSERT INTO cmstest_blog_authors (' . $cols . ') VALUES (' . implode(',', array_fill(0, count($params), '?')) . ')');
+    $stmt->execute($params);
     $id = (int) $pdo->lastInsertId();
 }
 

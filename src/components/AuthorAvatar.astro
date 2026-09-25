@@ -1,0 +1,26 @@
+---
+// Foto do autor, ou monograma com as iniciais quando não há foto, ou o
+// logotipo quando é uma organização. Estilos em global.css (.autor-avatar).
+import type { DbBlogAuthor } from '../utils/cmsApi';
+import { iniciais, urlDoAutor } from '../utils/blogAuthors';
+
+interface Props {
+  autor: DbBlogAuthor;
+  tamanho?: number;
+  link?: boolean;
+}
+const { autor, tamanho = 56, link = true } = Astro.props;
+const org = autor.kind === 'organizacao';
+const classes = ['autor-avatar', { 'autor-avatar-mono': !autor.photo_url, 'autor-avatar-org': org && !!autor.photo_url }];
+const estilo = `--autor-avatar:${tamanho}px`;
+const Tag = link ? 'a' : 'span';
+const extra = link ? { href: urlDoAutor(autor.slug), rel: 'author', tabindex: -1 } : {};
+---
+
+<Tag class:list={classes} style={estilo} aria-hidden="true" {...extra}>
+  {autor.photo_url ? (
+    <img src={autor.photo_url} alt="" width={tamanho} height={tamanho} loading="lazy" />
+  ) : (
+    iniciais(autor.name)
+  )}
+</Tag>

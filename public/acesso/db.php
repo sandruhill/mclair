@@ -139,13 +139,103 @@ function cmsAuthorDecode(array $row): array {
         'topics'       => is_array($topics) ? array_values($topics) : [],
         'social_links' => is_array($links) ? array_values($links) : [],
         'post_count'   => (int) ($row['post_count'] ?? 0),
+        // Colunas da segunda migração; antes dela, todo autor é pessoa sem tratamento definido.
+        'kind'         => ($row['kind'] ?? 'pessoa') === 'organizacao' ? 'organizacao' : 'pessoa',
+        'gender'       => in_array($row['gender'] ?? null, ['m', 'f'], true) ? $row['gender'] : null,
     ];
+}
+
+// Segunda etapa (db/migrations/2026-09-26-blog-autores-v2.sql): tipo,
+// tratamento e vários autores por post. Sem ela, vale um autor por post.
+function cmsAuthorsV2Ready(PDO $pdo): bool {
+    static $ready = null;
+    if ($ready !== null) return $ready;
+    try {
+        $temKind = (bool) $pdo->query("SHOW COLUMNS FROM cmstest_blog_authors LIKE 'kind'")->fetchColumn();
+        $temGender = (bool) $pdo->query("SHOW COLUMNS FROM cmstest_blog_authors LIKE 'gender'")->fetchColumn();
+        $temJoin = (bool) $pdo->query("SHOW TABLES LIKE 'cmstest_blog_post_authors'")->fetchColumn();
+        $ready = $temKind && $temGender && $temJoin;
+    } catch (PDOException $e) {
+        $ready = false;
+    }
+    return $ready;
+}
+
+const CMS_AUTHORS_V2_HINT = 'Vários autores por post, tipo (pessoa/organização) e tratamento (autor/autora) dependem de db/migrations/2026-09-26-blog-autores-v2.sql. Até lá, só o primeiro autor é gravado.';
+
+/** "Autor", "Autora" ou "Organização", conforme o cadastro. */
+function cmsAuthorLabel(array $a): string {
+    if (($a['kind'] ?? 'pessoa') === 'organizacao') return 'Organização';
+    return ($a['gender'] ?? null) === 'f' ? 'Autora' : 'Autor';
+}
+
+/** Subconsulta de contagem de posts do autor, pela tabela de vários autores quando ela existe. */
+function cmsAuthorPostCountSql(PDO $pdo): string {
+    return cmsAuthorsV2Ready($pdo)
+        ? '(SELECT COUNT(*) FROM cmstest_blog_post_authors pa WHERE pa.author_id = a.id)'
+        : '(SELECT COUNT(*) FROM cmstest_blog_posts p WHERE p.blog_author_id = a.id)';
+}
+
+/** Ids dos autores do post, na ordem. Sem a tabela de vários autores, é só o blog_author_id. */
+function cmsPostAuthorIds(PDO $pdo, string $slug): array {
+    if (cmsAuthorsV2Ready($pdo)) {
+        $stmt = $pdo->prepare('SELECT author_id FROM cmstest_blog_post_authors WHERE post_slug = ? ORDER BY position, author_id');
+        $stmt->execute([$slug]);
+        $ids = array_map('intval', $stmt->fetchAll(PDO::FETCH_COLUMN));
+        if ($ids) return $ids;
+    }
+    $stmt = $pdo->prepare('SELECT blog_author_id FROM cmstest_blog_posts WHERE slug = ?');
+    $stmt->execute([$slug]);
+    $id = (int) $stmt->fetchColumn();
+    return $id ? [$id] : [];
+}
+
+/** Nomes ligados em português: "A", "A e B", "A, B e C". */
+function cmsJoinNames(array $nomes): string {
+    $n = count($nomes);
+    if ($n === 0) return '';
+    if ($n === 1) return $nomes[0];
+    return implode(', ', array_slice($nomes, 0, -1)) . ' e ' . $nomes[$n - 1];
+}
+
+/**
+ * Grava os autores de um post: tabela de vários autores (quando existe),
+ * blog_author_id = primeiro autor, e o nome de exibição (coluna `author`)
+ * = nomes ligados. Ids inexistentes são ignorados. Lista vazia = sem autor
+ * cadastrado; nesse caso o nome de texto informado ($nomeLivre) é mantido.
+ */
+function cmsPostAuthorsSave(PDO $pdo, string $slug, array $ids, ?string $nomeLivre = null): void {
+    $autores = [];
+    foreach (array_values(array_unique(array_map('intval', $ids))) as $id) {
+        if ($id > 0 && ($a = cmsAuthorById($pdo, $id))) $autores[] = $a;
+    }
+    $v2 = cmsAuthorsV2Ready($pdo);
+    if (!$v2) $autores = array_slice($autores, 0, 1);
+
+    $primeiro = $autores[0]['id'] ?? null;
+    $nome = $autores ? cmsJoinNames(array_column($autores, 'name')) : ($nomeLivre !== null && trim($nomeLivre) !== '' ? trim($nomeLivre) : null);
+    $pdo->prepare('UPDATE cmstest_blog_posts SET blog_author_id = ?, author = ? WHERE slug = ?')->execute([$primeiro, $nome, $slug]);
+
+    if ($v2) {
+        $pdo->prepare('DELETE FROM cmstest_blog_post_authors WHERE post_slug = ?')->execute([$slug]);
+        $ins = $pdo->prepare('INSERT INTO cmstest_blog_post_authors (post_slug, author_id, position) VALUES (?, ?, ?)');
+        foreach ($autores as $i => $a) $ins->execute([$slug, $a['id'], $i]);
+    }
+}
+
+/** Depois de remover/reatribuir um autor: refaz blog_author_id e o nome de exibição dos posts afetados. */
+function cmsPostAuthorsResync(PDO $pdo, array $slugs): void {
+    foreach (array_unique($slugs) as $slug) {
+        $ids = cmsPostAuthorIds($pdo, $slug);
+        $stmt = $pdo->prepare('SELECT author FROM cmstest_blog_posts WHERE slug = ?');
+        $stmt->execute([$slug]);
+        cmsPostAuthorsSave($pdo, $slug, $ids, (string) $stmt->fetchColumn());
+    }
 }
 
 /** Todos os autores, em ordem alfabética, com a contagem de posts de cada um. */
 function cmsAuthorsAll(PDO $pdo, string $busca = ''): array {
-    $sql = 'SELECT a.*, (SELECT COUNT(*) FROM cmstest_blog_posts p WHERE p.blog_author_id = a.id) AS post_count
-            FROM cmstest_blog_authors a';
+    $sql = 'SELECT a.*, ' . cmsAuthorPostCountSql($pdo) . ' AS post_count FROM cmstest_blog_authors a';
     $params = [];
     if ($busca !== '') {
         $sql .= ' WHERE a.name LIKE ? OR a.job_title LIKE ?';
@@ -158,7 +248,7 @@ function cmsAuthorsAll(PDO $pdo, string $busca = ''): array {
 }
 
 function cmsAuthorById(PDO $pdo, int $id): ?array {
-    $stmt = $pdo->prepare('SELECT a.*, (SELECT COUNT(*) FROM cmstest_blog_posts p WHERE p.blog_author_id = a.id) AS post_count FROM cmstest_blog_authors a WHERE a.id = ?');
+    $stmt = $pdo->prepare('SELECT a.*, ' . cmsAuthorPostCountSql($pdo) . ' AS post_count FROM cmstest_blog_authors a WHERE a.id = ?');
     $stmt->execute([$id]);
     $row = $stmt->fetch();
     return $row ? cmsAuthorDecode($row) : null;

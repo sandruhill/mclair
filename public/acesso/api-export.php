@@ -21,6 +21,9 @@ $allowed = [
     // Tabela criada por db/migrations/2026-09-25-blog-autores.sql. Se ainda não
     // existe, devolve [] (tratado abaixo) para o build seguir sem assinaturas.
     'blog_authors' => 'SELECT a.*, (SELECT COUNT(*) FROM cmstest_blog_posts p WHERE p.blog_author_id = a.id) AS post_count FROM cmstest_blog_authors a ORDER BY a.name',
+    // Vários autores por post (db/migrations/2026-09-26-blog-autores-v2.sql).
+    // Sem a tabela, devolve [] e o build usa blog_author_id.
+    'blog_post_authors' => 'SELECT post_slug, author_id, position FROM cmstest_blog_post_authors ORDER BY post_slug, position, author_id',
     'services'   => 'SELECT * FROM cmstest_services ORDER BY num',
     'cases'      => 'SELECT * FROM cmstest_cases ORDER BY num',
     'singletons' => 'SELECT * FROM cmstest_singletons',
@@ -38,7 +41,7 @@ try {
 } catch (PDOException $e) {
     // Só o tipo novo pode faltar (migração ainda não rodada); os demais
     // continuam falhando alto, como antes.
-    if ($type !== 'blog_authors') throw $e;
+    if ($type !== 'blog_authors' && $type !== 'blog_post_authors') throw $e;
     $rows = [];
 }
 
