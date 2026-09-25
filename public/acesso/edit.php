@@ -143,6 +143,8 @@ adminLayoutTop(
   .toastui-editor-defaultUI { border-radius: 8px; border-color: var(--line); font-family: inherit; }
   .toastui-editor-defaultUI-toolbar { background: var(--soft); border-radius: 8px 8px 0 0; border-bottom: 1px solid var(--line); }
   .toastui-editor-defaultUI .ProseMirror { font-family: inherit; font-size: .95rem; line-height: 1.7; }
+  /* Respiro entre parágrafos, como no site: sem isso o texto parece "tudo junto" mesmo gravado certo. */
+  .toastui-editor-contents .ProseMirror > p { margin: 0 0 .9em; }
   .toastui-editor-mode-switch { border-radius: 0 0 8px 8px; }
   /* Barra de ferramentas acompanha a rolagem quando o editor é mais alto que a tela. */
   .toastui-editor-defaultUI-toolbar { position: sticky; top: 0; z-index: 6; }
