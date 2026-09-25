@@ -9,7 +9,7 @@ function cmsMediaModals(): void {
 ?>
 <style>
   /* Botões próprios na barra do editor: ícone de traço, no mesmo tamanho dos da biblioteca. */
-  .toastui-editor-toolbar-icons.mm-btn { background-image:none; display:inline-flex; align-items:center; justify-content:center; color:#4a4c52; }
+  .toastui-editor-toolbar-icons.mm-btn { background-image:none; display:inline-flex; vertical-align:top; padding:0; align-items:center; justify-content:center; color:#4a4c52; }
   .toastui-editor-toolbar-icons.mm-btn svg { width:18px; height:18px; }
   .toastui-editor-toolbar-icons.mm-btn:hover { color:var(--ink); }
 

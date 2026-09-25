@@ -435,6 +435,8 @@ a.ph-author:hover { text-decoration:underline; text-underline-offset:3px; }
 }
 .prose :global(blockquote p) { margin: 0; font-style: italic; color: var(--ink-2); }
 .prose :global(img) { width: 100%; height: auto; border-radius: var(--r-md); margin: 1.6rem 0; }
+/* Na galeria a foto preenche o quadro: sem a margem e o canto da regra acima. */
+.prose :global(.galeria-link img) { height: 100%; margin: 0; border-radius: 0; }
 .prose :global(hr) { border: none; border-top: 1px solid var(--line); margin: 2.4rem 0; }
 .prose :global(code) {
   background: var(--cream); border-radius: 4px; padding: .1em .4em;
