@@ -187,7 +187,13 @@ adminLayoutTop(
   .dt-campo { flex:1 1 auto; min-width:0; display:inline-flex; align-items:center; gap:8px; padding:9px 12px; border:1px solid var(--line); border-radius:8px; background:var(--paper); font:inherit; font-size:.9rem; color:var(--ink); cursor:pointer; text-align:left; white-space:nowrap; }
   .dt-campo:hover, .dt-campo[aria-expanded=true] { border-color:var(--red); }
   .dt-campo svg { color:var(--ink-3); flex-shrink:0; }
-  .dt-hora { flex:0 0 auto; width:104px; padding:8px 8px; font-size:.9rem; }
+  /* A hora fica igual ao botão da data ao lado: mesma fonte, borda, altura e cor. */
+  .dt-hora { flex:0 0 auto; width:104px; padding:9px 10px; border:1px solid var(--line); border-radius:8px; background:var(--paper); color:var(--ink); font-family:inherit; font-size:.9rem; font-variant-numeric:tabular-nums; box-sizing:border-box; -webkit-appearance:none; appearance:none; cursor:pointer; }
+  .dt-hora:hover, .dt-hora:focus { border-color:var(--red); outline:none; }
+  .dt-hora::-webkit-datetime-edit, .dt-hora::-webkit-datetime-edit-fields-wrapper { font-family:inherit; padding:0; }
+  .dt-hora::-webkit-datetime-edit-hour-field:focus, .dt-hora::-webkit-datetime-edit-minute-field:focus { background:rgba(200,16,46,.12); color:var(--ink); border-radius:3px; }
+  .dt-hora::-webkit-calendar-picker-indicator { opacity:.45; cursor:pointer; }
+  .dt-hora::-webkit-calendar-picker-indicator:hover { opacity:.8; }
   .dt-agora { display:inline-block; margin-top:6px; padding:0; border:none; background:none; font:inherit; font-size:.76rem; font-weight:700; color:var(--red); cursor:pointer; text-decoration:underline; text-underline-offset:2px; }
   .dt-agora:hover { color:var(--ink); }
   .dt-pop { margin-top:6px; padding:12px; border:1px solid var(--line); border-radius:12px; background:var(--paper); box-shadow:0 12px 30px -10px rgba(0,0,0,.18); }

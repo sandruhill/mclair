@@ -257,7 +257,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
     .content { padding:16px; }
 
     /* iOS Safari force-zooms the page when a focused field is under 16px */
-    input[type=text], input[type=password], input[type=date], input[type=email], select, textarea { font-size:16px !important; }
+    input[type=text], input[type=password], input[type=date], input[type=time], input[type=email], select, textarea { font-size:16px !important; }
 
     /* Tables scroll sideways inside the card instead of squishing */
     .tablecard { overflow-x:auto; -webkit-overflow-scrolling:touch; }
