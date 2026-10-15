@@ -78,17 +78,21 @@ $ext = $allowed[$mime];
 $name = bin2hex(random_bytes(8)) . '.' . $ext;
 $dest = $uploadDir . '/' . $name;
 
-// Foto maior que 2000 px de lado é reduzida (GD, mesmo formato), para o
-// post não carregar 8 MB de imagem. Se o GD faltar ou falhar, o arquivo vai
-// como veio: nunca é motivo para perder o upload.
-const MAX_LADO = 2000;
+// Foto maior que 1920 px de lado é reduzida, e foto acima de 300 KB é
+// recomprimida mesmo sem reduzir (GD, mesmo formato, então o endereço não
+// muda), para o post não carregar 8 MB de imagem. Só troca o arquivo se o
+// resultado ficar menor. Se o GD faltar ou falhar, o arquivo vai como veio:
+// nunca é motivo para perder o upload.
+const MAX_LADO = 1920;
+const MAX_BYTES = 300 * 1024;
 function reduzirSePrecisar(string $caminho, string $mime): void {
     if (!function_exists('imagecreatefromjpeg') || $mime === 'image/gif') return;
     $info = @getimagesize($caminho);
     if (!$info) return;
     [$w, $h] = $info;
-    if ($w <= MAX_LADO && $h <= MAX_LADO) return;
-    $fator = MAX_LADO / max($w, $h);
+    $grande = $w > MAX_LADO || $h > MAX_LADO;
+    if (!$grande && filesize($caminho) <= MAX_BYTES) return;
+    $fator = $grande ? MAX_LADO / max($w, $h) : 1;
     $nw = (int) round($w * $fator);
     $nh = (int) round($h * $fator);
     $origem = match ($mime) {
@@ -109,14 +113,16 @@ function reduzirSePrecisar(string $caminho, string $mime): void {
     $destino = imagecreatetruecolor($nw, $nh);
     if ($mime !== 'image/jpeg') { imagealphablending($destino, false); imagesavealpha($destino, true); }
     imagecopyresampled($destino, $origem, 0, 0, 0, 0, $nw, $nh, imagesx($origem), imagesy($origem));
+    if ($mime === 'image/jpeg') imageinterlace($destino, true);
     $tmp = $caminho . '.tmp';
     $ok = match ($mime) {
-        'image/jpeg' => imagejpeg($destino, $tmp, 85),
+        'image/jpeg' => imagejpeg($destino, $tmp, 80),
         'image/png'  => imagepng($destino, $tmp, 6),
-        'image/webp' => imagewebp($destino, $tmp, 84),
+        'image/webp' => imagewebp($destino, $tmp, 80),
         default      => false,
     };
-    if ($ok && filesize($tmp) > 0) rename($tmp, $caminho); else @unlink($tmp);
+    clearstatcache();
+    if ($ok && filesize($tmp) > 0 && filesize($tmp) < filesize($caminho)) rename($tmp, $caminho); else @unlink($tmp);
 }
 
 if ($mime === 'image/svg+xml') {
