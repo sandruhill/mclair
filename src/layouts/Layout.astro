@@ -4,6 +4,7 @@ import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import '../styles/global.css';
 import { BUILD_ID } from '../utils/build';
+import { idDaPessoa, paginaDaPessoa } from '../utils/blogAuthors';
 
 interface Props {
   title: string;
@@ -63,11 +64,13 @@ const orgSchema = {
   image: `${BASE}/android-chrome-512x512.png`,
   description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. Posicionamos marcas como referência reconhecida no mercado.',
   foundingDate: '2017',
+  // Referência ao Person canônico da Kelly (declarado em /kelly-pinheiro/),
+  // não uma cópia: um @id só para a pessoa no site inteiro.
   founder: {
     '@type': 'Person',
+    '@id': idDaPessoa(BASE, 'kelly-pinheiro'),
     name: 'Kelly Pinheiro',
-    jobTitle: 'CEO & Sócio-Fundadora',
-    sameAs: ['https://instagram.com/mclair.com.br'],
+    url: `${BASE}${paginaDaPessoa('kelly-pinheiro')}`,
   },
   address: {
     '@type': 'PostalAddress',

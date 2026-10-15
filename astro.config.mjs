@@ -60,6 +60,7 @@ const blogDates = buildBlogDateMap();
 // here can never take the whole build down.
 const FALLBACK_CUSTOM_PAGES = [
   'https://mclair.com.br/sobre/',
+  'https://mclair.com.br/kelly-pinheiro/',
   'https://mclair.com.br/servicos/',
   'https://mclair.com.br/servicos/marketing-de-autoridade/',
   'https://mclair.com.br/servicos/assessoria-de-imprensa/',
@@ -150,6 +151,7 @@ export default defineConfig({
       },
       customPages: [
         'https://mclair.com.br/sobre/',
+        'https://mclair.com.br/kelly-pinheiro/',
         'https://mclair.com.br/servicos/',
         'https://mclair.com.br/servicos/marketing-de-autoridade/',
         'https://mclair.com.br/servicos/assessoria-de-imprensa/',

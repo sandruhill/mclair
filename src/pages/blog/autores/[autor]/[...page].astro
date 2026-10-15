@@ -40,8 +40,11 @@ export async function getStaticPaths({ paginate }: any) {
 
 const { page, autor } = Astro.props as { page: any; autor: DbBlogAuthor };
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
-const { schemaDoAutor, urlDoAutor, idDoAutor, palavras } = await import('../../../../utils/blogAuthors');
+const { schemaDoAutor, urlDoAutor, idDoAutor, palavras, paginaDaPessoa } = await import('../../../../utils/blogAuthors');
 const perfilUrl = `${BASE}${urlDoAutor(autor.slug)}`;
+// Quem tem página própria no site (ex.: /kelly-pinheiro/) ganha o link
+// visível aqui; o Person dela já aponta para lá (ver blogAuthors.ts).
+const paginaPropria = autor.kind === 'organizacao' ? null : paginaDaPessoa(autor.slug);
 const pal = palavras(autor);
 const entidade = schemaDoAutor(autor, BASE);
 const org = autor.kind === 'organizacao';
@@ -140,6 +143,9 @@ const perfilSchema = {
     {autor.topics.length > 0 && (
       <p class="ap-temas">{org ? 'Temas' : 'Escreve sobre'}: {autor.topics.join(', ')}.</p>
     )}
+    {paginaPropria && (
+      <p class="ap-pagina-propria"><a href={paginaPropria}>Conheça a trajetória de {autor.name}</a></p>
+    )}
   </div>
 </section>
 
@@ -219,6 +225,13 @@ const perfilSchema = {
 .ap-perfil-inner { max-width: 860px; margin-top: -64px; position: relative; z-index: 2; }
 .ap-perfil-inner :global(.autor-card-perfil) { box-shadow: var(--shadow-lg); }
 .ap-temas { font-size: .9rem; color: var(--ink-3); margin: 18px 0 0 4px; line-height: 1.6; text-wrap: pretty; }
+.ap-pagina-propria { margin: 14px 0 0 4px; }
+.ap-pagina-propria a {
+  font-size: .9rem; font-weight: 700; color: var(--ink);
+  text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line-2);
+  transition: color .2s, text-decoration-color .2s;
+}
+.ap-pagina-propria a:hover { color: var(--red); text-decoration-color: var(--red); }
 
 .ap-section { background: #fff; padding-top: 56px; padding-bottom: 96px; }
 .ap-lista-titulo { font-size: 1.4rem; font-weight: 900; letter-spacing: -.03em; color: var(--ink); margin-bottom: 32px; text-wrap: balance; }

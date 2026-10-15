@@ -1,0 +1,616 @@
+---
+// Página pessoal de Kelly Pinheiro: o nó canônico da pessoa no site.
+// Todo Person de Kelly espalhado pelo site (founder no Layout, /sobre/,
+// autora do blog) aponta para o @id declarado aqui, nunca para uma cópia.
+// Texto aprovado pela Kelly (docx "Seção Kelly Pinheiro"); fatos e números
+// vêm de lá, não inventar nem atualizar sem ela.
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import { getSingleton } from '../utils/cmsApi';
+import { idDaPessoa, PESSOAS_CANONICAS } from '../utils/blogAuthors';
+
+const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
+const URL_PAGINA = `${BASE}${PESSOAS_CANONICAS['kelly-pinheiro'].path}`;
+const ID_KELLY = idDaPessoa(BASE, 'kelly-pinheiro')!;
+
+const WA_KELLY = 'https://wa.me/5511988600372?text=' + encodeURIComponent('Olá Kelly! Vim pela sua página no site da Mclair e gostaria de conversar.');
+const WA_PALESTRA = 'https://wa.me/5511988600372?text=' + encodeURIComponent('Olá Kelly! Gostaria de levar você para palestrar no meu evento. Pode me passar mais informações?');
+const EMAIL = 'kelly@mclair.com.br';
+// TODO(sameAs): trocar pelo LinkedIn pessoal da Kelly quando ela confirmar a
+// URL. linkedin.com/in/kellypinheiro é de outra pessoa (RH, Quest Edu).
+// Enquanto isso o botão leva à página da Mclair no LinkedIn.
+const LINKEDIN = 'https://linkedin.com/company/mclair-comunicacao';
+
+// Faixa de logos: mesma fonte da página /clientes/ (CMS), com os clientes
+// citados no texto da Kelly na frente. Casamento pelo nome do arquivo do logo.
+const PRIORIDADE = ['lambda3', 'eximiaco', 'zbra', 'insight-rh', 'brazil-machinery-solutions', 'bms-abimaq', 'fidalgo-leiloes', 'globo-leiloes'];
+const clientesContent = await getSingleton('clientes').catch(() => ({}));
+const todosClientes = (clientesContent?.clients ?? []) as { name?: string; logo: string; case?: string }[];
+function posicao(c: { logo: string }) {
+  const i = PRIORIDADE.findIndex((p) => (c.logo || '').includes(`/${p}-logo`));
+  return i === -1 ? PRIORIDADE.length : i;
+}
+const clientes = todosClientes
+  .map((c, i) => ({ ...c, i }))
+  .sort((a, b) => posicao(a) - posicao(b) || a.i - b.i);
+
+// Fotos: public/kelly-pinheiro/<base>-800.webp e -1600.webp.
+type Foto = { base: string; w: number; h: number; alt: string };
+const FOTO = {
+  cafe:     { base: 'kelly-pinheiro-cafe-notebook',         w: 1600, h: 2416, alt: 'Kelly Pinheiro de blazer branco, sorrindo com as mãos sob o queixo, diante de um notebook e uma caneca com a própria caricatura, sob um letreiro neon' },
+  poltrona: { base: 'kelly-pinheiro-poltrona-perfil',       w: 1600, h: 2416, alt: 'Kelly Pinheiro de roupa preta, sentada em uma poltrona de madeira, olhando para o lado com um leve sorriso' },
+  janela:   { base: 'kelly-pinheiro-mesa-janela',           w: 1600, h: 2400, alt: 'Kelly Pinheiro de mãos cruzadas sobre a mesa, diante de um tablet, com uma janela ampla ao fundo' },
+  sorrisoEscritorio: { base: 'kelly-pinheiro-escritorio-sorriso', w: 1600, h: 2400, alt: 'Kelly Pinheiro sorrindo à mesa do escritório da Mclair, segurando os óculos, com uma estante ao fundo' },
+  mesa:     { base: 'kelly-pinheiro-mesa-notebook',         w: 1600, h: 2400, alt: 'Kelly Pinheiro de blazer branco, mãos cruzadas sobre o notebook, em uma sala de fundo escuro' },
+  bolderOculos: { base: 'kelly-pinheiro-programa-bolder-oculos', w: 1600, h: 1067, alt: 'Kelly Pinheiro segurando os óculos, sorrindo, com uma TV ao fundo exibindo o Programa Bolder' },
+  bolder:   { base: 'kelly-pinheiro-programa-bolder',       w: 1600, h: 1067, alt: 'Kelly Pinheiro conduzindo um encontro de mentoria, com a tela do Programa Bolder ao fundo' },
+  blazer:   { base: 'kelly-pinheiro-blazer-branco',         w: 1600, h: 2416, alt: 'Kelly Pinheiro de blazer branco, apoiada em um guarda-corpo, segurando os óculos e sorrindo' },
+  retrato:  { base: 'kelly-pinheiro-retrato-sorriso',       w: 1600, h: 2416, alt: 'Retrato de Kelly Pinheiro sorrindo para a câmera, de roupa preta, sentada em uma poltrona de madeira' },
+} satisfies Record<string, Foto>;
+const src = (f: Foto, n: 800 | 1600) => `/kelly-pinheiro/${f.base}-${n}.webp`;
+const srcset = (f: Foto) => `${src(f, 800)} 800w, ${src(f, 1600)} 1600w`;
+
+const OG = `${BASE}/kelly-pinheiro/kelly-pinheiro-og.jpg`;
+const TITLE = 'Kelly Pinheiro | CEO da Mclair, jornalista, mentora e palestrante';
+const DESCRIPTION = 'Jornalista com mais de 20 anos em comunicação corporativa, CEO & Sócio-Fundadora da Mclair, mentora e palestrante de marketing e câncer de mama.';
+
+// Artigos assinados por Kelly na Exame (seção Bússola), conferidos um a um.
+// A Exame não tem página de autora para ela, por isso entram como Article
+// com author apontando para o @id da Kelly, e não como sameAs.
+const ARTIGOS_EXAME = [
+  { url: 'https://exame.com/bussola/kelly-pinheiro-do-digital-ao-esg-como-carnaval-revoluciona-o-marketing-de-grandes-marcas-do-brasil/', titulo: 'Do digital ao ESG: como o Carnaval revoluciona o marketing de grandes marcas do Brasil', data: '2025-02-14', rotulo: 'fev 2025' },
+  { url: 'https://exame.com/bussola/entre-o-rosa-e-a-conscientizacao-marcas-ainda-erram-no-outubro-rosa/', titulo: 'Entre o rosa e a conscientização: marcas ainda erram no Outubro Rosa', data: '2024-10-28', rotulo: 'out 2024' },
+  { url: 'https://exame.com/bussola/por-tras-de-grandes-marcas-e-negocios-ha-sempre-um-mentor-sera/', titulo: 'Por trás de grandes marcas e negócios, há sempre um mentor. Será?', data: '2023-09-14', rotulo: 'set 2023' },
+];
+
+const pessoa = {
+  '@type': 'Person',
+  '@id': ID_KELLY,
+  name: 'Kelly Pinheiro',
+  url: URL_PAGINA,
+  mainEntityOfPage: URL_PAGINA,
+  image: {
+    '@type': 'ImageObject',
+    url: `${BASE}${src(FOTO.cafe, 1600)}`,
+    width: FOTO.cafe.w,
+    height: FOTO.cafe.h,
+    caption: 'Kelly Pinheiro, CEO & Sócio-Fundadora da Mclair',
+  },
+  jobTitle: 'CEO & Sócio-Fundadora da Mclair',
+  description: DESCRIPTION,
+  email: EMAIL,
+  worksFor: [
+    { '@id': `${BASE}/#organization` },
+    { '@type': 'Organization', name: 'Aspin Seguros' },
+  ],
+  hasOccupation: [
+    { '@type': 'Occupation', name: 'Jornalista' },
+    { '@type': 'Occupation', name: 'Estrategista de comunicação' },
+    { '@type': 'Occupation', name: 'Mentora' },
+    { '@type': 'Occupation', name: 'Palestrante' },
+  ],
+  knowsAbout: [
+    'Comunicação Estratégica',
+    'Marketing de Autoridade',
+    'Assessoria de Imprensa',
+    'Comunicação Corporativa',
+    'Gerenciamento de Crise',
+    'Posicionamento de Marca',
+    'Marca Pessoal',
+    'Desmarketização',
+    'Media Training',
+    'Conscientização sobre Câncer de Mama',
+  ],
+  knowsLanguage: ['pt-BR'],
+  // TODO(sameAs): incluir LinkedIn e Instagram pessoais da Kelly assim que
+  // ela confirmar as URLs. Não há página de colunista na Exame (os artigos
+  // ficam na seção Bússola), e linkedin.com/in/kellypinheiro é outra pessoa.
+  // sameAs: [],
+  subjectOf: {
+    '@type': 'WebPage',
+    name: '#21 Liderança em Pauta: Kelly Pinheiro',
+    url: 'https://claudiaelisa.com/2024/06/26/21-lep-kelly-pinheiro/',
+  },
+};
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ProfilePage',
+    '@id': `${URL_PAGINA}#page`,
+    url: URL_PAGINA,
+    name: TITLE,
+    description: DESCRIPTION,
+    inLanguage: 'pt-BR',
+    isPartOf: { '@id': `${BASE}/#website` },
+    primaryImageOfPage: { '@id': `${URL_PAGINA}#imagem` },
+    mainEntity: pessoa,
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ImageObject',
+    '@id': `${URL_PAGINA}#imagem`,
+    url: OG,
+    width: 1200,
+    height: 630,
+    caption: 'Kelly Pinheiro, CEO & Sócio-Fundadora da Mclair',
+  },
+  // A organização já é declarada no Layout; aqui só o vínculo de fundação,
+  // mesmo @id, para o grafo fechar nos dois sentidos.
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Organization',
+    '@id': `${BASE}/#organization`,
+    founder: { '@id': ID_KELLY },
+    employee: { '@id': ID_KELLY },
+  },
+  ...ARTIGOS_EXAME.map((a) => ({
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': a.url,
+    url: a.url,
+    headline: a.titulo,
+    datePublished: a.data,
+    inLanguage: 'pt-BR',
+    author: { '@id': ID_KELLY },
+    publisher: { '@type': 'Organization', name: 'Exame' },
+  })),
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Kelly Pinheiro', item: URL_PAGINA },
+    ],
+  },
+];
+---
+
+<Layout
+  title={TITLE}
+  description={DESCRIPTION}
+  ogImage={OG}
+  ogImageAlt="Kelly Pinheiro, CEO & Sócio-Fundadora da Mclair"
+  ogType="profile"
+  keywords="Kelly Pinheiro, Mclair, CEO Mclair, jornalista, comunicação estratégica, marketing de autoridade, desmarketização, palestrante, mentora, Bolder Press, Be Bolder, câncer de mama"
+  schema={schema}
+>
+
+<!-- ABERTURA -->
+<section class="kp-abertura" id="topo">
+  <div class="container kp-abertura-grid">
+    <div class="kp-abertura-texto">
+      <h1 class="kp-nome hero-instant" data-anim>Kelly Pinheiro</h1>
+      <p class="kp-lead hero-instant" data-anim data-delay="1">
+        Jornalista, estrategista de comunicação e CEO &amp; Sócio-Fundadora da Mclair. Há mais de 20 anos, Kelly constrói reputação para marcas e pessoas que têm algo relevante a dizer.
+      </p>
+      <div class="kp-acoes hero-instant" data-anim data-delay="2">
+        <a href="#historia" class="btn-primary">Conheça a história</a>
+        <a href={WA_KELLY} class="btn-outline" target="_blank" rel="noopener">Fale com a Kelly</a>
+      </div>
+    </div>
+    <figure class="kp-abertura-foto hero-instant" data-anim="fade" data-delay="1">
+      <img
+        src={src(FOTO.cafe, 800)}
+        srcset={srcset(FOTO.cafe)}
+        sizes="(max-width: 900px) 100vw, 44vw"
+        width={FOTO.cafe.w}
+        height={FOTO.cafe.h}
+        alt={FOTO.cafe.alt}
+        fetchpriority="high"
+        decoding="async"
+      />
+    </figure>
+  </div>
+</section>
+
+<!-- A HISTÓRIA -->
+<section class="kp-historia section" id="historia">
+  <div class="container kp-historia-grid">
+    <div class="kp-prosa">
+      <h2 class="kp-titulo" data-anim>A história</h2>
+      <p data-anim>Kelly Pinheiro começou na comunicação em 2004, como jornalista. Aprendeu cedo que uma boa história só funciona quando as pessoas confiam em quem conta. Essa lição virou método.</p>
+      <p data-anim>Ao longo de mais de 20 anos, atuou em comunicação corporativa, gestão de conteúdo e gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais de portes e segmentos muito diferentes. Em todas, o desafio era o mesmo: fazer a marca dizer com clareza quem é, antes que outros digam por ela.</p>
+
+      <blockquote class="kp-citacao" data-anim>
+        <p>Fazer a marca dizer com clareza quem é, antes que outros digam por ela.</p>
+      </blockquote>
+
+      <p data-anim>A vivência em Vancouver, no Canadá, e em Lisboa, em Portugal, ampliou seu repertório. O contato com outras culturas abriu sua visão de mundo e deu novo fôlego à criatividade que ela leva para cada projeto. A pós-graduação em Marketing Estratégico deu estrutura ao que a prática já mostrava.</p>
+      <p data-anim>Em janeiro de 2017, fundou a Mclair, em São Paulo, para oferecer às empresas uma comunicação estratégica, próxima e sem ruídos.</p>
+
+      <div class="kp-dupla" data-anim="fade">
+        <figure>
+          <img src={src(FOTO.janela, 800)} srcset={srcset(FOTO.janela)} sizes="(max-width: 900px) 50vw, 300px" width={FOTO.janela.w} height={FOTO.janela.h} alt={FOTO.janela.alt} loading="lazy" decoding="async" />
+        </figure>
+        <figure>
+          <img src={src(FOTO.sorrisoEscritorio, 800)} srcset={srcset(FOTO.sorrisoEscritorio)} sizes="(max-width: 900px) 50vw, 300px" width={FOTO.sorrisoEscritorio.w} height={FOTO.sorrisoEscritorio.h} alt={FOTO.sorrisoEscritorio.alt} loading="lazy" decoding="async" />
+        </figure>
+      </div>
+
+      <!-- Segunda metade da história. No celular fica recolhida atrás de
+           "Continuar lendo" (o script abaixo tira o `open` só em telas
+           estreitas); o texto está sempre no HTML, para o Google e para quem
+           navega sem JS. No desktop o resumo nem aparece. -->
+      <details class="kp-mais" open>
+        <summary>Continuar lendo</summary>
+        <p>No fim de 2019, Kelly recebeu o diagnóstico de câncer de mama. O tratamento aconteceu ao longo de 2020, no mesmo ano em que a pandemia de Covid-19 parou o mundo. Foi nesse período que a Mclair cresceu 200% em número de clientes e em faturamento e ganhou um novo braço tecnológico e digital.</p>
+        <p>Em sua trajetória, foi colunista da Exame por dois anos e meio e tem artigos publicados em portais relevantes como HSM e Grandes Nomes da Propaganda, entre outros. Em 2024, foi mentorada pela conselheira Claudia Elisa na 2ª turma da Mentoria Sharp, ao lado de executivos de empresas como Bradesco, Vivara e Central Ailos.</p>
+        <p>Hoje, além de liderar a Mclair, que atende clientes em todo o Brasil, é CMO da Aspin Seguros, empresa familiar fundada há 30 anos por seu pai, Antônio José Pinheiro. Também atua como mentora e palestrante.</p>
+
+        <div class="kp-leitura">
+          <h3>Artigos de Kelly na Exame</h3>
+          <ul>
+            {ARTIGOS_EXAME.map((a) => (
+              <li>
+                <a href={a.url} target="_blank" rel="noopener">{a.titulo}</a>
+                <time datetime={a.data}>{a.rotulo}</time>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </details>
+      <script is:inline data-astro-rerun>
+        (function () {
+          if (!window.matchMedia('(max-width: 640px)').matches) return;
+          document.querySelectorAll('details.kp-mais[open]').forEach(function (d) { d.removeAttribute('open'); });
+        })();
+      </script>
+    </div>
+
+    <figure class="kp-historia-foto" data-anim="fade">
+      <img src={src(FOTO.poltrona, 800)} srcset={srcset(FOTO.poltrona)} sizes="(max-width: 900px) 100vw, 380px" width={FOTO.poltrona.w} height={FOTO.poltrona.h} alt={FOTO.poltrona.alt} loading="lazy" decoding="async" />
+    </figure>
+  </div>
+</section>
+
+<!-- A VISÃO -->
+<section class="kp-visao section" id="visao">
+  <div class="container kp-visao-grid">
+    <figure class="kp-visao-foto" data-anim="fade">
+      <img src={src(FOTO.mesa, 800)} srcset={srcset(FOTO.mesa)} sizes="(max-width: 900px) 100vw, 40vw" width={FOTO.mesa.w} height={FOTO.mesa.h} alt={FOTO.mesa.alt} loading="lazy" decoding="async" />
+    </figure>
+    <div class="kp-visao-texto">
+      <h2 class="kp-titulo kp-titulo-claro" data-anim>Menos marketing de fachada. Mais autoridade de verdade.</h2>
+      <p data-anim data-delay="1">Kelly chama isso de desmarketização: tirar do caminho o que é ruído e deixar aparecer o que a marca ou o profissional realmente sabe fazer. Para ela, autoridade não se compra com volume de post. Ela se constrói com posicionamento claro, presença consistente na imprensa e conteúdo que prova conhecimento.</p>
+    </div>
+  </div>
+</section>
+
+<!-- PALESTRAS -->
+<section class="kp-palco section" id="palestras">
+  <div class="container">
+    <div class="kp-palco-cabeca">
+      <h2 class="kp-titulo" data-anim>Kelly no palco</h2>
+      <p class="kp-intro" data-anim data-delay="1">Kelly leva para eventos, empresas e instituições dois temas que conhece por dentro.</p>
+    </div>
+    <figure class="kp-larga" data-anim="fade">
+      <img src={src(FOTO.bolderOculos, 800)} srcset={srcset(FOTO.bolderOculos)} sizes="(max-width: 1280px) 100vw, 1200px" width={FOTO.bolderOculos.w} height={FOTO.bolderOculos.h} alt={FOTO.bolderOculos.alt} loading="lazy" decoding="async" />
+    </figure>
+    <div class="kp-temas">
+      <div class="kp-tema" data-anim>
+        <h3>Marketing e posicionamento</h3>
+        <p>Autoridade, reputação, presença na imprensa e desmarketização, com base em mais de 20 anos de prática.</p>
+      </div>
+      <div class="kp-tema" data-anim data-delay="1">
+        <h3>Conscientização sobre câncer de mama</h3>
+        <p>A própria história, do diagnóstico ao tratamento em plena pandemia, no mesmo período em que a Mclair viveu seu maior crescimento. Uma conversa sobre (auto)cuidado e esclarecimentos, a partir de quem viveu o processo.</p>
+      </div>
+    </div>
+    <div class="kp-acoes" data-anim>
+      <a href={WA_PALESTRA} class="btn-primary" target="_blank" rel="noopener">Leve a Kelly para o seu evento</a>
+    </div>
+  </div>
+</section>
+
+<!-- CLIENTES -->
+{clientes.length > 0 && (
+  <section class="kp-clientes section" id="clientes">
+    <div class="container">
+      <h2 class="kp-titulo kp-titulo-centro" data-anim>Quem já confiou no trabalho da Kelly</h2>
+      <ul class="kp-logos" data-anim="fade">
+        {clientes.map((c) => (
+          <li>
+            {c.case ? (
+              <a href={c.case} title={c.name ? `Case ${c.name}` : 'Ver case'}>
+                <img src={c.logo} alt={c.name || 'Cliente Mclair'} loading="lazy" decoding="async" onerror="this.closest('li').style.display='none'" />
+              </a>
+            ) : (
+              <img src={c.logo} alt={c.name || 'Cliente Mclair'} loading="lazy" decoding="async" onerror="this.closest('li').style.display='none'" />
+            )}
+          </li>
+        ))}
+      </ul>
+      <p class="kp-clientes-link" data-anim><a href="/clientes/">Ver todos os clientes da Mclair</a></p>
+    </div>
+  </section>
+)}
+
+<!-- MENTORIAS -->
+<section class="kp-mentorias section" id="mentorias">
+  <div class="container kp-mentorias-grid">
+    <figure class="kp-mentorias-foto" data-anim="fade">
+      <img src={src(FOTO.bolder, 800)} srcset={srcset(FOTO.bolder)} sizes="(max-width: 900px) 100vw, 50vw" width={FOTO.bolder.w} height={FOTO.bolder.h} alt={FOTO.bolder.alt} loading="lazy" decoding="async" />
+    </figure>
+    <div class="kp-mentorias-texto">
+      <h2 class="kp-titulo" data-anim>Aprenda com quem aplica esse método todos os dias</h2>
+
+      <article class="kp-programa" data-anim>
+        <h3>Bolder Press</h3>
+        <p class="kp-programa-sub">Jornada de Assessoria de Imprensa</p>
+        <p>Para profissionais de comunicação que querem dominar a relação com a imprensa e se tornar referência na área. Dois meses de mentoria com a Kelly, com encontros online, um encontro presencial e media training como bônus.</p>
+        <a href="/mentorias/#bolder-press" class="btn-text">
+          Conheça o Bolder Press
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </article>
+
+      <article class="kp-programa" data-anim data-delay="1">
+        <h3>Be Bolder</h3>
+        <p class="kp-programa-sub">Jornada de Influência Estratégica</p>
+        <p>Para quem quer transformar conhecimento em influência, com método e posicionamento. Dois meses de mentoria com a Kelly, com encontros online, um encontro presencial e aulas mensais ao vivo com experts convidados.</p>
+        <a href="/mentorias/#bolder" class="btn-text">
+          Conheça o Be Bolder
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- SERVIÇOS MCLAIR -->
+<section class="kp-servicos section" id="servicos">
+  <div class="container kp-servicos-grid">
+    <div class="kp-servicos-texto">
+      <h2 class="kp-titulo" data-anim>Precisa potencializar a comunicação da sua empresa?</h2>
+      <p data-anim data-delay="1">A Mclair leva essa mesma visão para marcas de todos os portes: branding, assessoria de imprensa, media training, consultoria em comunicação, conteúdo digital, comunicação interna, entre outras iniciativas.</p>
+      <div class="kp-acoes" data-anim data-delay="2">
+        <a href="/servicos/" class="btn-primary">Conheça os serviços da Mclair</a>
+      </div>
+    </div>
+    <figure class="kp-servicos-foto" data-anim="fade">
+      <img src={src(FOTO.blazer, 800)} srcset={srcset(FOTO.blazer)} sizes="(max-width: 900px) 100vw, 360px" width={FOTO.blazer.w} height={FOTO.blazer.h} alt={FOTO.blazer.alt} loading="lazy" decoding="async" />
+    </figure>
+  </div>
+</section>
+
+<!-- FECHAMENTO -->
+<section class="kp-fim section" id="contato">
+  <div class="container kp-fim-grid">
+    <figure class="kp-fim-foto" data-anim="fade">
+      <img src={src(FOTO.retrato, 800)} srcset={srcset(FOTO.retrato)} sizes="(max-width: 900px) 100vw, 400px" width={FOTO.retrato.w} height={FOTO.retrato.h} alt={FOTO.retrato.alt} loading="lazy" decoding="async" />
+    </figure>
+    <div class="kp-fim-texto">
+      <h2 class="kp-titulo kp-titulo-claro" data-anim>Vamos conversar?</h2>
+      <p data-anim data-delay="1">Para marcas e profissionais que querem ser lembrados pelo que realmente entregam, a conversa começa aqui.</p>
+      <div class="kp-fim-acoes" data-anim data-delay="2">
+        <a href={WA_KELLY} class="btn-primary" target="_blank" rel="noopener">WhatsApp</a>
+        <a href={`mailto:${EMAIL}`} class="kp-link-claro">{EMAIL}</a>
+        <a href={LINKEDIN} class="kp-link-claro" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+</Layout>
+
+<style is:global>
+/* O cabeçalho do site nasce transparente com logo e menu brancos, pensado
+   para heros escuros. Esta página abre em fundo claro, então ele já começa
+   no estado sólido (o mesmo visual que ganha ao rolar), sem depender de JS. */
+#site-header:has(~ main .kp-abertura) {
+  background: rgba(250,250,248,.98);
+  box-shadow: 0 1px 0 rgba(0,0,0,.06);
+}
+#site-header:has(~ main .kp-abertura) .logo-default { display: block; }
+#site-header:has(~ main .kp-abertura) .logo-white { display: none; }
+#site-header:has(~ main .kp-abertura) .nav-link { color: var(--ink-2); }
+#site-header:has(~ main .kp-abertura) .nav-link:hover { color: var(--red); }
+#site-header:has(~ main .kp-abertura) .burger { border-color: var(--line-2); }
+#site-header:has(~ main .kp-abertura) .burger span { background: var(--ink); }
+</style>
+
+<style>
+/* Ritmo de revista: tipografia grande, prosa com medida, fotos em recortes
+   limpos. Sem cartões, sem rótulos, sem números em destaque. */
+.kp-titulo {
+  font-size: clamp(2rem, 4vw, 3.4rem);
+  font-weight: 900; line-height: 1.06; letter-spacing: -.035em;
+  color: var(--ink); text-wrap: balance;
+  margin-bottom: 28px;
+}
+.kp-titulo-claro { color: #fff; }
+.kp-titulo-centro { text-align: center; margin-left: auto; margin-right: auto; max-width: 720px; }
+figure { margin: 0; }
+figure img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: var(--r-sm); }
+.kp-acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+
+/* ABERTURA */
+.kp-abertura { background: var(--cream); padding-top: clamp(118px, 14vw, 170px); padding-bottom: clamp(56px, 7vw, 110px); }
+.kp-abertura-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+.kp-nome {
+  font-size: clamp(3.2rem, 8.5vw, 7.2rem);
+  font-weight: 900; line-height: .95; letter-spacing: -.045em;
+  color: var(--ink); margin: 0 0 32px;
+}
+.kp-lead {
+  font-size: clamp(1.15rem, 1.7vw, 1.45rem); font-weight: 300; line-height: 1.65;
+  color: var(--ink-2); max-width: 540px; margin-bottom: 40px;
+}
+.kp-abertura-foto { aspect-ratio: 2 / 3; max-height: 82vh; justify-self: end; width: 100%; }
+
+/* HISTÓRIA */
+.kp-historia { background: #fff; }
+.kp-historia-grid { display: grid; grid-template-columns: minmax(0, 640px) 380px; gap: clamp(40px, 7vw, 120px); justify-content: space-between; align-items: start; }
+.kp-prosa p { font-size: clamp(1.05rem, 1.35vw, 1.2rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.4em; }
+.kp-prosa .kp-titulo { margin-bottom: 36px; }
+.kp-citacao { margin: 48px 0 56px; padding: 0; }
+.kp-citacao p {
+  font-size: clamp(1.5rem, 2.6vw, 2.2rem); font-weight: 300; font-style: italic;
+  line-height: 1.3; letter-spacing: -.02em; color: var(--ink); margin: 0;
+  text-wrap: balance;
+}
+.kp-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 48px 0 56px; }
+.kp-dupla figure { aspect-ratio: 2 / 3; }
+.kp-historia-foto { position: sticky; top: 110px; aspect-ratio: 2 / 3; }
+.kp-mais > summary { display: none; }
+.kp-leitura { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line); }
+.kp-leitura h3 { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
+.kp-leitura ul { list-style: none; padding: 0; margin: 0; }
+.kp-leitura li { display: flex; gap: 16px; align-items: baseline; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
+.kp-leitura a { font-size: 1rem; line-height: 1.5; color: var(--ink-2); text-decoration: underline; text-decoration-color: var(--line-2); text-underline-offset: 4px; transition: color .2s, text-decoration-color .2s; text-wrap: pretty; }
+.kp-leitura a:hover { color: var(--red); text-decoration-color: var(--red); }
+.kp-leitura time { font-size: .8rem; color: var(--ink-4); white-space: nowrap; }
+
+/* VISÃO */
+.kp-visao { background: var(--dark); color: rgba(255,255,255,.78); }
+.kp-visao-grid { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: clamp(40px, 7vw, 110px); align-items: center; }
+.kp-visao-foto { aspect-ratio: 2 / 3; }
+.kp-visao-texto .kp-titulo { font-size: clamp(2.2rem, 4.6vw, 4.2rem); max-width: 640px; }
+.kp-visao-texto p { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.75; max-width: 600px; }
+
+/* PALESTRAS */
+.kp-palco { background: var(--cream); }
+.kp-palco-cabeca { max-width: 720px; margin-bottom: 40px; }
+.kp-intro { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.7; color: var(--ink-2); }
+.kp-larga { aspect-ratio: 3 / 2; max-height: 72vh; margin-bottom: 56px; }
+.kp-temas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px); margin-bottom: 48px; }
+.kp-tema { padding-top: 24px; border-top: 1px solid var(--line-2); }
+.kp-tema h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 700; letter-spacing: -.02em; color: var(--ink); margin-bottom: 14px; }
+.kp-tema p { font-size: 1.05rem; line-height: 1.75; color: var(--ink-2); }
+
+/* CLIENTES */
+.kp-clientes { background: #fff; }
+.kp-logos {
+  list-style: none; padding: 0; margin: 0;
+  display: grid; grid-template-columns: repeat(5, 1fr);
+  gap: 8px 24px; align-items: center;
+}
+.kp-logos li { display: flex; align-items: center; justify-content: center; height: 112px; }
+.kp-logos a { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
+.kp-logos img {
+  max-width: 88%; max-height: 84px; width: auto; height: auto; object-fit: contain;
+  filter: grayscale(100%); opacity: .6;
+  transition: filter .3s, opacity .3s;
+}
+.kp-logos li:hover img { filter: grayscale(0); opacity: 1; }
+.kp-clientes-link { text-align: center; margin-top: 40px; }
+.kp-clientes-link a { font-size: .95rem; color: var(--ink-3); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line-2); }
+.kp-clientes-link a:hover { color: var(--red); text-decoration-color: var(--red); }
+
+/* MENTORIAS */
+.kp-mentorias { background: var(--cream); }
+.kp-mentorias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
+.kp-mentorias-foto { aspect-ratio: 3 / 2; position: sticky; top: 110px; }
+.kp-programa { padding: 28px 0 32px; border-top: 1px solid var(--line-2); }
+.kp-programa:last-child { border-bottom: 1px solid var(--line-2); }
+.kp-programa h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 900; letter-spacing: -.03em; color: var(--ink); margin-bottom: 4px; }
+.kp-programa-sub { font-size: 1.05rem; font-style: italic; font-weight: 300; color: var(--ink-3); margin-bottom: 14px; }
+.kp-programa p { font-size: 1.05rem; line-height: 1.75; color: var(--ink-2); margin-bottom: 18px; }
+
+/* SERVIÇOS */
+.kp-servicos { background: #fff; }
+.kp-servicos-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(40px, 7vw, 120px); align-items: center; }
+.kp-servicos-texto .kp-titulo { max-width: 640px; }
+.kp-servicos-texto p { font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.75; color: var(--ink-2); max-width: 600px; margin-bottom: 36px; }
+.kp-servicos-foto { aspect-ratio: 2 / 3; }
+
+/* FECHAMENTO */
+.kp-fim { background: var(--dark); color: rgba(255,255,255,.78); }
+.kp-fim-grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: clamp(40px, 7vw, 110px); align-items: center; }
+.kp-fim-foto { aspect-ratio: 2 / 3; }
+.kp-fim-texto .kp-titulo { font-size: clamp(2.6rem, 6vw, 5.2rem); }
+.kp-fim-texto p { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.7; max-width: 560px; margin-bottom: 40px; }
+.kp-fim-acoes { display: flex; align-items: center; gap: 16px 32px; flex-wrap: wrap; }
+.kp-link-claro {
+  font-size: .95rem; font-weight: 700; color: #fff;
+  text-decoration: underline; text-underline-offset: 5px; text-decoration-color: rgba(255,255,255,.35);
+  transition: text-decoration-color .2s;
+}
+.kp-link-claro:hover { text-decoration-color: #fff; }
+
+/* RESPONSIVO */
+@media (max-width: 1024px) {
+  .kp-historia-grid { grid-template-columns: minmax(0, 1fr) 300px; }
+}
+@media (max-width: 900px) {
+  .kp-abertura-grid, .kp-historia-grid, .kp-visao-grid, .kp-mentorias-grid, .kp-servicos-grid, .kp-fim-grid { grid-template-columns: 1fr; }
+  .kp-abertura-foto { aspect-ratio: 4 / 5; max-height: none; justify-self: stretch; }
+  .kp-abertura-foto img { object-position: center 20%; }
+  .kp-historia-foto, .kp-mentorias-foto { position: static; }
+  .kp-historia-foto { order: -1; aspect-ratio: 4 / 5; max-width: 520px; }
+  .kp-visao-foto { max-width: 520px; aspect-ratio: 4 / 5; }
+  .kp-visao-foto img { object-position: center 30%; }
+  .kp-servicos-foto { max-width: 420px; }
+  .kp-fim-foto { max-width: 420px; }
+  .kp-temas { grid-template-columns: 1fr; gap: 24px; }
+  .kp-logos { grid-template-columns: repeat(4, 1fr); gap: 4px 20px; }
+  .kp-logos li { height: 96px; }
+}
+/* Celular: poucas fotos, recortadas baixas no rosto; abertura cabe na
+   primeira tela; história com "Continuar lendo"; logos numa faixa curta. */
+@media (max-width: 640px) {
+  .kp-historia, .kp-visao, .kp-palco, .kp-clientes, .kp-mentorias, .kp-servicos, .kp-fim { padding-block: 56px; }
+  .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); margin-bottom: 18px; }
+
+  .kp-abertura { padding-top: 96px; padding-bottom: 44px; }
+  .kp-abertura-grid { gap: 22px; }
+  .kp-abertura-foto { order: -1; aspect-ratio: 3 / 2; }
+  .kp-abertura-foto img { object-position: center 20%; }
+  .kp-nome { font-size: clamp(2.5rem, 12.5vw, 3.4rem); margin-bottom: 16px; }
+  .kp-lead { font-size: 1.05rem; line-height: 1.6; margin-bottom: 22px; }
+  .kp-abertura .kp-acoes a { flex: 1 1 100%; justify-content: center; }
+
+  .kp-historia-grid { gap: 22px; }
+  .kp-historia-foto { order: -1; aspect-ratio: 3 / 2; max-width: none; }
+  .kp-historia-foto img { object-position: center 10%; }
+  .kp-prosa .kp-titulo { margin-bottom: 20px; }
+  .kp-prosa p { font-size: 1.02rem; line-height: 1.72; margin-bottom: 1.15em; }
+  .kp-citacao { margin: 26px 0 30px; }
+  .kp-citacao p { font-size: 1.35rem; line-height: 1.35; }
+  .kp-dupla { display: none; }
+  .kp-mais > summary {
+    display: inline-flex; cursor: pointer; margin: 4px 0 8px;
+    list-style: none;
+    font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--red);
+  }
+  .kp-mais > summary::-webkit-details-marker { display: none; }
+  .kp-mais[open] > summary { display: none; }
+  .kp-leitura { margin-top: 32px; padding-top: 20px; }
+  .kp-leitura li { flex-direction: column; gap: 4px; align-items: flex-start; }
+
+  .kp-visao-foto, .kp-mentorias-foto, .kp-servicos-foto { display: none; }
+  .kp-visao-texto .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); }
+  .kp-visao-texto p, .kp-servicos-texto p, .kp-fim-texto p, .kp-intro, .kp-tema p, .kp-programa p { font-size: 1.02rem; line-height: 1.7; }
+
+  .kp-palco-cabeca { margin-bottom: 24px; }
+  .kp-larga { margin-bottom: 28px; }
+  .kp-temas { gap: 18px; margin-bottom: 28px; }
+  .kp-tema { padding-top: 18px; }
+  .kp-tema h3 { font-size: 1.25rem; margin-bottom: 8px; }
+
+  /* Só os nove primeiros (os citados no texto vêm na frente); o resto fica
+     em /clientes/. */
+  .kp-logos { grid-template-columns: repeat(3, 1fr); gap: 0 14px; }
+  .kp-logos li { height: 84px; }
+  .kp-logos li:nth-child(n + 10) { display: none; }
+  .kp-logos img { max-height: 64px; max-width: 90%; }
+  .kp-clientes-link { margin-top: 22px; }
+
+  .kp-programa { padding: 22px 0 24px; }
+  .kp-programa h3 { font-size: 1.45rem; }
+  .kp-programa-sub { font-size: 1rem; margin-bottom: 10px; }
+  .kp-servicos-texto p { margin-bottom: 26px; }
+
+  .kp-fim-foto { aspect-ratio: 3 / 2; max-width: none; }
+  .kp-fim-foto img { object-position: center 20%; }
+  .kp-fim-texto .kp-titulo { font-size: clamp(2.2rem, 9.5vw, 2.8rem); }
+  .kp-fim-texto p { margin-bottom: 26px; }
+  .kp-fim-acoes { flex-direction: column; align-items: flex-start; gap: 18px; }
+  .kp-fim-acoes .btn-primary { width: 100%; justify-content: center; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .kp-logos img { transition: none; }
+}
+</style>

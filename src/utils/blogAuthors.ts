@@ -19,9 +19,36 @@ export function urlDoAutor(slug: string): string {
   return `${AUTORES_PATH}/${slug}/`;
 }
 
-/** @id estável: a URL do perfil + #person. A Mclair (organização) usa o @id da Organization do Layout. */
+/**
+ * Pessoas que têm página própria no site, fora do blog. O @id canônico da
+ * pessoa mora nessa página (ex.: /kelly-pinheiro/#pessoa) e todo nó Person
+ * dela (autora do blog, founder no Layout, /sobre/) aponta para o mesmo @id,
+ * para o Google e as IAs enxergarem uma entidade só. Chave = slug do autor
+ * no CMS. Quem não está aqui segue com o @id da própria página de autor.
+ */
+export const PESSOAS_CANONICAS: Record<string, { path: string; fragmento: string }> = {
+  'kelly-pinheiro': { path: '/kelly-pinheiro/', fragmento: '#pessoa' },
+};
+
+/** @id canônico da pessoa (página própria), ou null se ela não tem uma. */
+export function idDaPessoa(base: string, slug: string): string | null {
+  const p = PESSOAS_CANONICAS[slug];
+  return p ? `${base}${p.path}${p.fragmento}` : null;
+}
+
+/** Caminho da página própria da pessoa (para link visível), ou null. */
+export function paginaDaPessoa(slug: string): string | null {
+  return PESSOAS_CANONICAS[slug]?.path ?? null;
+}
+
+/**
+ * @id estável: a URL do perfil + #person, exceto para quem tem página própria
+ * (ver PESSOAS_CANONICAS). A Mclair (organização) usa o @id da Organization
+ * do Layout.
+ */
 export function idDoAutor(base: string, autor: DbBlogAuthor): string {
-  return autor.kind === 'organizacao' ? `${base}/#organization` : `${base}${urlDoAutor(autor.slug)}#person`;
+  if (autor.kind === 'organizacao') return `${base}/#organization`;
+  return idDaPessoa(base, autor.slug) ?? `${base}${urlDoAutor(autor.slug)}#person`;
 }
 
 export type LinkSocial = { type: string; url: string };
@@ -154,11 +181,14 @@ export function schemaDoAutor(autor: DbBlogAuthor, base: string): Record<string,
   if (autor.kind === 'organizacao') {
     return { '@id': `${base}/#organization` };
   }
+  // Quem tem página própria tem a URL canônica lá; a página de autora é só
+  // a lista de artigos.
+  const paginaPropria = paginaDaPessoa(autor.slug);
   return {
     '@type': 'Person',
     '@id': idDoAutor(base, autor),
     name: autor.name,
-    url: `${base}${urlDoAutor(autor.slug)}`,
+    url: `${base}${paginaPropria ?? urlDoAutor(autor.slug)}`,
     ...(autor.job_title && { jobTitle: autor.job_title }),
     ...(autor.photo_url && { image: absoluta(base, autor.photo_url) }),
     ...(descricao && { description: descricao }),
@@ -177,7 +207,7 @@ export function schemaAutorDoPost(autor: DbBlogAuthor, base: string): Record<str
     '@type': 'Person',
     '@id': idDoAutor(base, autor),
     name: autor.name,
-    url: `${base}${urlDoAutor(autor.slug)}`,
+    url: `${base}${paginaDaPessoa(autor.slug) ?? urlDoAutor(autor.slug)}`,
     ...(autor.job_title && { jobTitle: autor.job_title }),
     ...(autor.photo_url && { image: absoluta(base, autor.photo_url) }),
     worksFor: { '@id': `${base}/#organization` },

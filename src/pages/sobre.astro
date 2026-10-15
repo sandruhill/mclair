@@ -2,8 +2,9 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import { getSingleton } from '../utils/cmsApi';
+import { idDaPessoa, paginaDaPessoa } from '../utils/blogAuthors';
 
-const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20falar%20com%20a%20equipe.';
+const WA ='https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20falar%20com%20a%20equipe.';
 
 const sobreContent = await getSingleton('sobre');
 const valores  = (sobreContent?.valores  ?? []) as any[];
@@ -35,16 +36,14 @@ const seo = sobreContent?.seo ?? {};
         ],
       },
     },
+    // Kelly: só a referência ao Person canônico de /kelly-pinheiro/, nunca
+    // um segundo Person com outro @id.
     {
       '@context': 'https://schema.org',
       '@type': 'Person',
-      '@id': 'https://mclair.com.br/sobre#kelly',
+      '@id': idDaPessoa('https://mclair.com.br', 'kelly-pinheiro'),
       name: 'Kelly Pinheiro',
-      jobTitle: 'CEO & Sócio-Fundadora',
-      worksFor: { '@id': 'https://mclair.com.br/#organization' },
-      description: 'CEO & Sócio-Fundadora da Mclair. Especialista em Comunicação Estratégica e Marketing de Autoridade com mais de 20 anos de experiência.',
-      sameAs: ['https://instagram.com/mclair.com.br', 'https://linkedin.com/company/mclair-comunicacao'],
-      knowsAbout: ['Marketing de Autoridade', 'Comunicação Estratégica', 'Assessoria de Imprensa', 'Branding', 'Marca Pessoal'],
+      url: `https://mclair.com.br${paginaDaPessoa('kelly-pinheiro')}`,
     },
   ]}
 >
@@ -183,6 +182,9 @@ const seo = sobreContent?.seo ?? {};
         </div>
       ))}
     </div>
+    <p class="equipe-link" data-anim>
+      <a href={paginaDaPessoa('kelly-pinheiro')}>Conheça a trajetória de Kelly Pinheiro</a>
+    </p>
   </div>
 </section>
 
@@ -279,6 +281,13 @@ const seo = sobreContent?.seo ?? {};
 .mc-nome { font-size:.98rem; font-weight:700; color:var(--ink); margin-bottom:5px; }
 .mc-cargo { font-size:.65rem; letter-spacing:.1em; text-transform:uppercase; color:var(--red); margin-bottom:14px; }
 .mc-bio { font-size:.95rem; font-weight:300; color:var(--ink-3); line-height:1.75; }
+.equipe-link { text-align:center; margin-top:32px; }
+.equipe-link a {
+  font-size:.95rem; font-weight:700; color:var(--ink);
+  text-decoration:underline; text-underline-offset:4px; text-decoration-color:var(--line-2);
+  transition:color .2s, text-decoration-color .2s;
+}
+.equipe-link a:hover { color:var(--red); text-decoration-color:var(--red); }
 
 /* RESPONSIVE */
 @media (max-width:1024px) { .valores-grid { grid-template-columns:1fr 1fr; } }
