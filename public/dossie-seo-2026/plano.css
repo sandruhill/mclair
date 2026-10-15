@@ -1,16 +1,6 @@
 /* ---- Plano de 12 meses: mesma base visual do dossiê (Lato, tinta, linhas finas) ---- */
 
-/* Abas no topo da página */
-.abas{display:flex; flex-wrap:wrap; gap:8px; margin:0 0 36px}
-.abas a{
-  font-size:15px; font-weight:700; text-decoration:none; color:var(--ink-2);
-  padding:9px 18px; border-radius:6px; border:1px solid var(--line-2); background:#fff;
-}
-.abas a:hover{border-color:var(--ink-4); color:var(--ink)}
-.abas a[aria-current="page"]{background:var(--ink); border-color:var(--ink); color:var(--cream)}
-.abas a:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
-body:not(.com-abas) .plano{margin-top:72px; padding-top:32px; border-top:1px solid var(--line-2)}
-[data-aba][hidden]{display:none}
+.plano{margin-top:72px; padding-top:32px; border-top:1px solid var(--line-2)}
 
 .plano{
   --surface:#fff; --surface-2:var(--cream-2); --surface-3:var(--cream-3);
@@ -246,3 +236,17 @@ body.solo-leitura .cyc{cursor:default}
   .resumo{padding:16px 14px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
+
+/* Plano ilustrado: diagramas com as cores da página */
+.ilustrado{--fg:var(--ink); --fg-2:var(--ink-2); --fg-3:var(--ink-3); --bg:#fff; --tint:var(--cream-2); --ink-on-red:#fff; margin:48px 0 8px}
+.ilustrado h3.ilu-sub{margin-top:40px}
+.ilustrado h3{font-size:1.2rem; margin:32px 0 0}
+.ilustrado p, .ilustrado li{color:var(--ink-2); line-height:1.7}
+.ilustrado ul{padding-left:1.2em}
+.ilustrado li{margin-top:8px}
+.ilustrado .quote{font-size:1.3rem; line-height:1.4; color:var(--ink); margin-top:28px}
+.ilustrado figure{margin:32px 0 0}
+.ilustrado figcaption{font-size:.9rem; color:var(--ink-3); margin-top:10px}
+.ilustrado .diagram{overflow-x:auto}
+.ilustrado .diagram svg{display:block; width:100%; min-width:640px; height:auto}
+.ilustrado svg text{font-family:var(--font)}

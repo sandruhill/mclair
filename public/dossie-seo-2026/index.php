@@ -444,14 +444,8 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
     <span class="reservado">Documento interno, fora dos buscadores</span>
   </header>
 
-  <?php if (!$editar): ?>
-  <nav class="abas" aria-label="Partes desta página">
-    <a href="#dossie" data-alvo="dossie">Dossiê</a>
-    <a href="#plano" data-alvo="plano">Plano de 12 meses</a>
-  </nav>
-  <?php endif; ?>
 
-  <div class="dossie" id="dossie" data-aba="dossie">
+  <div class="dossie" id="dossie">
 
   <?php if ($aviso): ?>
     <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?></p>

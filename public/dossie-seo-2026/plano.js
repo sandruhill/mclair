@@ -159,24 +159,6 @@ const el = id => document.getElementById(id);
 
 function esc(s){ return String(s).replace(/[<>&"']/g, c => ({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&#39;'}[c])); }
 
-/* ---- Abas: Dossiê e Plano de 12 meses na mesma URL ----
-   Sem JavaScript as duas partes aparecem uma embaixo da outra. */
-function abaDoEndereco(){
-  const h = location.hash;
-  if (h === "#plano" || /^#(t-|s\d)/.test(h)) return "plano";
-  if (h === "#dossie") return "dossie";
-  const q = new URLSearchParams(location.search);
-  return (q.has("t") || q.has("k")) ? "plano" : "dossie";
-}
-function mostrarAba(aba){
-  document.body.classList.add("com-abas");
-  document.querySelectorAll("[data-aba]").forEach(s => { s.hidden = s.dataset.aba !== aba; });
-  document.querySelectorAll(".abas a").forEach(a => {
-    const ativa = a.dataset.alvo === aba;
-    if (ativa) a.setAttribute("aria-current", "page"); else a.removeAttribute("aria-current");
-  });
-}
-
 /* ---- Palavras pelas quais a Mclair disputa ----
    Os dados ficam em dados/posicoes.json, lido pelo PHP, para a medição
    mensal acrescentar uma coluna sem mexer aqui. Uma consulta principal por
@@ -530,14 +512,7 @@ buildDesempeno();
 buildPalabras();
 render();
 if (!PUEDE_EDITAR) document.body.classList.add("solo-leitura");
-mostrarAba(abaDoEndereco());
-window.addEventListener("hashchange", () => {
-  mostrarAba(abaDoEndereco());
-  // Trocar de aba volta ao topo, para as abas continuarem à vista.
-  if (location.hash === "#plano" || location.hash === "#dossie") window.scrollTo(0, 0);
-});
-if (location.hash === "#plano" || location.hash === "#dossie") requestAnimationFrame(() => window.scrollTo(0, 0));
-if (location.hash && location.hash !== "#plano" && location.hash !== "#dossie") {
+if (location.hash) {
   const alvo = document.getElementById(location.hash.slice(1));
   if (alvo) alvo.scrollIntoView({block: "start"});
 }
