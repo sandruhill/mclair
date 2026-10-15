@@ -53,7 +53,16 @@ const FOTO = {
   bolder:   { base: 'kelly-pinheiro-programa-bolder',       w: 1600, h: 1067, alt: 'Kelly Pinheiro conduzindo um encontro de mentoria, com a tela do Programa Bolder ao fundo' },
   blazer:   { base: 'kelly-pinheiro-blazer-branco',         w: 1600, h: 2416, alt: 'Kelly Pinheiro de blazer branco, apoiada em um guarda-corpo, segurando os óculos e sorrindo' },
   retrato:  { base: 'kelly-pinheiro-retrato-sorriso',       w: 1600, h: 2416, alt: 'Retrato de Kelly Pinheiro sorrindo para a câmera, de roupa preta, sentada em uma poltrona de madeira' },
+  oculos:   { base: 'kelly-pinheiro-escritorio-oculos',     w: 1600, h: 2400, alt: 'Kelly Pinheiro de óculos, sorrindo com a mão no queixo, à mesa do escritório da Mclair' },
 } satisfies Record<string, Foto>;
+
+// Fotos que acompanham a leitura da história (coluna fixa, crossfade por trecho).
+const FOTOS_HISTORIA: { chave: string; foto: Foto }[] = [
+  { chave: 'inicio', foto: FOTO.poltrona },
+  { chave: 'mclair', foto: FOTO.janela },
+  { chave: 'virada', foto: FOTO.oculos },
+  { chave: 'hoje', foto: FOTO.sorrisoEscritorio },
+];
 const src = (f: Foto, n: 800 | 1600) => `/kelly-pinheiro/${f.base}-${n}.webp`;
 const srcset = (f: Foto) => `${src(f, 800)} 800w, ${src(f, 1600)} 1600w`;
 
@@ -183,57 +192,45 @@ const schema = [
   schema={schema}
 >
 
-<!-- ABERTURA -->
+<!-- ABERTURA: foto sangrando à direita, nome em escala de capa por cima -->
 <section class="kp-abertura" id="topo">
-  <div class="container kp-abertura-grid">
-    <div class="kp-abertura-texto">
-      <h1 class="kp-nome hero-instant" data-anim>Kelly Pinheiro</h1>
-      <p class="kp-lead hero-instant" data-anim data-delay="1">
-        Jornalista, estrategista de comunicação e CEO &amp; Sócio-Fundadora da Mclair. Há mais de 20 anos, Kelly constrói reputação para marcas e pessoas que têm algo relevante a dizer.
-      </p>
-      <div class="kp-acoes hero-instant" data-anim data-delay="2">
-        <a href="#historia" class="btn-primary">Conheça a história</a>
-        <a href={WA_KELLY} class="btn-outline" target="_blank" rel="noopener">Fale com a Kelly</a>
-      </div>
+  <div class="kp-ab-foto">
+    <img
+      src={src(FOTO.cafe, 800)}
+      srcset={srcset(FOTO.cafe)}
+      sizes="(max-width: 640px) 100vw, 56vw"
+      width={FOTO.cafe.w}
+      height={FOTO.cafe.h}
+      alt={FOTO.cafe.alt}
+      fetchpriority="high"
+      decoding="async"
+      data-kp-px="0.06"
+    />
+  </div>
+  <div class="container kp-ab-texto">
+    <h1 class="kp-nome">
+      <span class="kp-nome-linha"><span class="kp-nome-inner">Kelly</span></span>
+      <span class="kp-nome-linha"><span class="kp-nome-inner">Pinheiro</span></span>
+    </h1>
+    <p class="kp-lead">
+      Jornalista, estrategista de comunicação e CEO &amp; Sócio-Fundadora da Mclair. Há mais de 20 anos, Kelly constrói reputação para marcas e pessoas que têm algo relevante a dizer.
+    </p>
+    <div class="kp-acoes kp-ab-acoes">
+      <a href="#historia" class="btn-primary">Conheça a história</a>
+      <a href={WA_KELLY} class="kp-btn-contorno" target="_blank" rel="noopener">Fale com a Kelly</a>
     </div>
-    <figure class="kp-abertura-foto hero-instant" data-anim="fade" data-delay="1">
-      <img
-        src={src(FOTO.cafe, 800)}
-        srcset={srcset(FOTO.cafe)}
-        sizes="(max-width: 900px) 100vw, 44vw"
-        width={FOTO.cafe.w}
-        height={FOTO.cafe.h}
-        alt={FOTO.cafe.alt}
-        fetchpriority="high"
-        decoding="async"
-      />
-    </figure>
   </div>
 </section>
 
-<!-- A HISTÓRIA -->
-<section class="kp-historia section" id="historia">
+<!-- A HISTÓRIA: prosa à esquerda, foto fixa à direita que muda com a leitura -->
+<section class="kp-historia" id="historia">
   <div class="container kp-historia-grid">
     <div class="kp-prosa">
-      <h2 class="kp-titulo" data-anim>A história</h2>
-      <p data-anim>Kelly Pinheiro começou na comunicação em 2004, como jornalista. Aprendeu cedo que uma boa história só funciona quando as pessoas confiam em quem conta. Essa lição virou método.</p>
-      <p data-anim>Ao longo de mais de 20 anos, atuou em comunicação corporativa, gestão de conteúdo e gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais de portes e segmentos muito diferentes. Em todas, o desafio era o mesmo: fazer a marca dizer com clareza quem é, antes que outros digam por ela.</p>
-
-      <blockquote class="kp-citacao" data-anim>
-        <p>Fazer a marca dizer com clareza quem é, antes que outros digam por ela.</p>
-      </blockquote>
-
-      <p data-anim>A vivência em Vancouver, no Canadá, e em Lisboa, em Portugal, ampliou seu repertório. O contato com outras culturas abriu sua visão de mundo e deu novo fôlego à criatividade que ela leva para cada projeto. A pós-graduação em Marketing Estratégico deu estrutura ao que a prática já mostrava.</p>
-      <p data-anim>Em janeiro de 2017, fundou a Mclair, em São Paulo, para oferecer às empresas uma comunicação estratégica, próxima e sem ruídos.</p>
-
-      <div class="kp-dupla" data-anim="fade">
-        <figure>
-          <img src={src(FOTO.janela, 800)} srcset={srcset(FOTO.janela)} sizes="(max-width: 900px) 50vw, 300px" width={FOTO.janela.w} height={FOTO.janela.h} alt={FOTO.janela.alt} loading="lazy" decoding="async" />
-        </figure>
-        <figure>
-          <img src={src(FOTO.sorrisoEscritorio, 800)} srcset={srcset(FOTO.sorrisoEscritorio)} sizes="(max-width: 900px) 50vw, 300px" width={FOTO.sorrisoEscritorio.w} height={FOTO.sorrisoEscritorio.h} alt={FOTO.sorrisoEscritorio.alt} loading="lazy" decoding="async" />
-        </figure>
-      </div>
+      <h2 class="kp-titulo kp-titulo-grande kp-reveal">A história</h2>
+      <p class="kp-reveal" data-foto="inicio">Kelly Pinheiro começou na comunicação em 2004, como jornalista. Aprendeu cedo que uma boa história só funciona quando as pessoas confiam em quem conta. Essa lição virou método.</p>
+      <p class="kp-reveal" data-foto="inicio">Ao longo de mais de 20 anos, atuou em comunicação corporativa, gestão de conteúdo e gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais de portes e segmentos muito diferentes.</p>
+      <p class="kp-reveal" data-foto="mclair">A vivência em Vancouver, no Canadá, e em Lisboa, em Portugal, ampliou seu repertório. O contato com outras culturas abriu sua visão de mundo e deu novo fôlego à criatividade que ela leva para cada projeto. A pós-graduação em Marketing Estratégico deu estrutura ao que a prática já mostrava.</p>
+      <p class="kp-reveal" data-foto="mclair">Em janeiro de 2017, fundou a Mclair, em São Paulo, para oferecer às empresas uma comunicação estratégica, próxima e sem ruídos.</p>
 
       <!-- Segunda metade da história. No celular fica recolhida atrás de
            "Continuar lendo" (o script abaixo tira o `open` só em telas
@@ -241,11 +238,11 @@ const schema = [
            navega sem JS. No desktop o resumo nem aparece. -->
       <details class="kp-mais" open>
         <summary>Continuar lendo</summary>
-        <p>No fim de 2019, Kelly recebeu o diagnóstico de câncer de mama. O tratamento aconteceu ao longo de 2020, no mesmo ano em que a pandemia de Covid-19 parou o mundo. Foi nesse período que a Mclair cresceu 200% em número de clientes e em faturamento e ganhou um novo braço tecnológico e digital.</p>
-        <p>Em sua trajetória, foi colunista da Exame por dois anos e meio e tem artigos publicados em portais relevantes como HSM e Grandes Nomes da Propaganda, entre outros. Em 2024, foi mentorada pela conselheira Claudia Elisa na 2ª turma da Mentoria Sharp, ao lado de executivos de empresas como Bradesco, Vivara e Central Ailos.</p>
-        <p>Hoje, além de liderar a Mclair, que atende clientes em todo o Brasil, é CMO da Aspin Seguros, empresa familiar fundada há 30 anos por seu pai, Antônio José Pinheiro. Também atua como mentora e palestrante.</p>
+        <p data-foto="virada">No fim de 2019, Kelly recebeu o diagnóstico de câncer de mama. O tratamento aconteceu ao longo de 2020, no mesmo ano em que a pandemia de Covid-19 parou o mundo. Foi nesse período que a Mclair cresceu 200% em número de clientes e em faturamento e ganhou um novo braço tecnológico e digital.</p>
+        <p data-foto="virada">Em sua trajetória, foi colunista da Exame por dois anos e meio e tem artigos publicados em portais relevantes como HSM e Grandes Nomes da Propaganda, entre outros. Em 2024, foi mentorada pela conselheira Claudia Elisa na 2ª turma da Mentoria Sharp, ao lado de executivos de empresas como Bradesco, Vivara e Central Ailos.</p>
+        <p data-foto="hoje">Hoje, além de liderar a Mclair, que atende clientes em todo o Brasil, é CMO da Aspin Seguros, empresa familiar fundada há 30 anos por seu pai, Antônio José Pinheiro. Também atua como mentora e palestrante.</p>
 
-        <div class="kp-leitura">
+        <div class="kp-leitura" data-foto="hoje">
           <h3>Artigos de Kelly na Exame</h3>
           <ul>
             {ARTIGOS_EXAME.map((a) => (
@@ -270,57 +267,83 @@ const schema = [
       </script>
     </div>
 
-    <figure class="kp-historia-foto" data-anim="fade">
-      <img src={src(FOTO.poltrona, 800)} srcset={srcset(FOTO.poltrona)} sizes="(max-width: 900px) 100vw, 380px" width={FOTO.poltrona.w} height={FOTO.poltrona.h} alt={FOTO.poltrona.alt} loading="lazy" decoding="async" />
-    </figure>
+    <div class="kp-hist-coluna">
+      <div class="kp-hist-sticky" id="kp-hist-fotos">
+        {FOTOS_HISTORIA.map((f, i) => (
+          <img
+            class:list={['kp-hist-foto', { ativa: i === 0 }]}
+            data-foto-chave={f.chave}
+            src={src(f.foto, 800)}
+            srcset={srcset(f.foto)}
+            sizes="(max-width: 900px) 100vw, 440px"
+            width={f.foto.w}
+            height={f.foto.h}
+            alt={f.foto.alt}
+            loading="lazy"
+            decoding="async"
+          />
+        ))}
+      </div>
+    </div>
   </div>
 </section>
 
-<!-- A VISÃO -->
-<section class="kp-visao section" id="visao">
+<!-- CITAÇÃO: página inteira em vermelho, só tipografia -->
+<section class="kp-citacao-sec" aria-label="Citação de Kelly Pinheiro">
+  <div class="container">
+    <blockquote class="kp-citacao">
+      <p class="kp-reveal">Fazer a marca dizer com clareza quem é, antes que outros digam por ela.</p>
+      <footer class="kp-reveal">Kelly Pinheiro</footer>
+    </blockquote>
+  </div>
+</section>
+
+<!-- A VISÃO: foto sangrando à esquerda sobre fundo escuro -->
+<section class="kp-visao" id="visao">
   <div class="container kp-visao-grid">
-    <figure class="kp-visao-foto" data-anim="fade">
-      <img src={src(FOTO.mesa, 800)} srcset={srcset(FOTO.mesa)} sizes="(max-width: 900px) 100vw, 40vw" width={FOTO.mesa.w} height={FOTO.mesa.h} alt={FOTO.mesa.alt} loading="lazy" decoding="async" />
+    <figure class="kp-visao-foto">
+      <img src={src(FOTO.mesa, 800)} srcset={srcset(FOTO.mesa)} sizes="(max-width: 900px) 100vw, 46vw" width={FOTO.mesa.w} height={FOTO.mesa.h} alt={FOTO.mesa.alt} loading="lazy" decoding="async" data-kp-px="0.05" />
     </figure>
     <div class="kp-visao-texto">
-      <h2 class="kp-titulo kp-titulo-claro" data-anim>Menos marketing de fachada. Mais autoridade de verdade.</h2>
-      <p data-anim data-delay="1">Kelly chama isso de desmarketização: tirar do caminho o que é ruído e deixar aparecer o que a marca ou o profissional realmente sabe fazer. Para ela, autoridade não se compra com volume de post. Ela se constrói com posicionamento claro, presença consistente na imprensa e conteúdo que prova conhecimento.</p>
+      <h2 class="kp-titulo kp-titulo-claro kp-titulo-grande kp-reveal">Menos marketing de fachada. <span class="kp-vermelho">Mais autoridade de verdade.</span></h2>
+      <p class="kp-reveal">Kelly chama isso de desmarketização: tirar do caminho o que é ruído e deixar aparecer o que a marca ou o profissional realmente sabe fazer. Para ela, autoridade não se compra com volume de post. Ela se constrói com posicionamento claro, presença consistente na imprensa e conteúdo que prova conhecimento.</p>
     </div>
   </div>
 </section>
 
-<!-- PALESTRAS -->
-<section class="kp-palco section" id="palestras">
-  <div class="container">
-    <div class="kp-palco-cabeca">
-      <h2 class="kp-titulo" data-anim>Kelly no palco</h2>
-      <p class="kp-intro" data-anim data-delay="1">Kelly leva para eventos, empresas e instituições dois temas que conhece por dentro.</p>
+<!-- PALESTRAS: foto do Programa Bolder em tela cheia, título por cima -->
+<section class="kp-palco" id="palestras">
+  <div class="kp-palco-banner">
+    <img src={src(FOTO.bolderOculos, 800)} srcset={srcset(FOTO.bolderOculos)} sizes="100vw" width={FOTO.bolderOculos.w} height={FOTO.bolderOculos.h} alt={FOTO.bolderOculos.alt} loading="lazy" decoding="async" data-kp-px="0.08" />
+    <div class="kp-palco-veu" aria-hidden="true"></div>
+    <div class="container kp-palco-sobre">
+      <h2 class="kp-titulo kp-titulo-claro kp-titulo-capa kp-reveal">Kelly no palco</h2>
+      <p class="kp-palco-intro kp-reveal">Kelly leva para eventos, empresas e instituições dois temas que conhece por dentro.</p>
     </div>
-    <figure class="kp-larga" data-anim="fade">
-      <img src={src(FOTO.bolderOculos, 800)} srcset={srcset(FOTO.bolderOculos)} sizes="(max-width: 1280px) 100vw, 1200px" width={FOTO.bolderOculos.w} height={FOTO.bolderOculos.h} alt={FOTO.bolderOculos.alt} loading="lazy" decoding="async" />
-    </figure>
+  </div>
+  <div class="container">
     <div class="kp-temas">
-      <div class="kp-tema" data-anim>
+      <div class="kp-tema kp-reveal">
         <h3>Marketing e posicionamento</h3>
         <p>Autoridade, reputação, presença na imprensa e desmarketização, com base em mais de 20 anos de prática.</p>
       </div>
-      <div class="kp-tema" data-anim data-delay="1">
+      <div class="kp-tema kp-reveal">
         <h3>Conscientização sobre câncer de mama</h3>
         <p>A própria história, do diagnóstico ao tratamento em plena pandemia, no mesmo período em que a Mclair viveu seu maior crescimento. Uma conversa sobre (auto)cuidado e esclarecimentos, a partir de quem viveu o processo.</p>
       </div>
-    </div>
-    <div class="kp-acoes" data-anim>
-      <a href={WA_PALESTRA} class="btn-primary" target="_blank" rel="noopener">Leve a Kelly para o seu evento</a>
+      <div class="kp-tema-cta kp-reveal">
+        <a href={WA_PALESTRA} class="btn-primary" target="_blank" rel="noopener">Leve a Kelly para o seu evento</a>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- CLIENTES -->
 {clientes.length > 0 && (
-  <section class="kp-clientes section" id="clientes">
+  <section class="kp-clientes" id="clientes">
     <div class="container">
-      <h2 class="kp-titulo kp-titulo-centro" data-anim>Quem já confiou no trabalho da Kelly</h2>
-      <ul class="kp-logos" data-anim="fade">
+      <h2 class="kp-titulo kp-titulo-centro kp-reveal">Quem já confiou no trabalho da Kelly</h2>
+      <ul class="kp-logos">
         {clientes.map((c) => (
           <li>
             {c.case ? (
@@ -333,70 +356,91 @@ const schema = [
           </li>
         ))}
       </ul>
-      <p class="kp-clientes-link" data-anim><a href="/clientes/">Ver todos os clientes da Mclair</a></p>
+      <p class="kp-clientes-link"><a href="/clientes/">Ver todos os clientes da Mclair</a></p>
     </div>
   </section>
 )}
 
-<!-- MENTORIAS -->
-<section class="kp-mentorias section" id="mentorias">
+<!-- MENTORIAS: bloco vermelho, foto sangrando à esquerda -->
+<section class="kp-mentorias" id="mentorias">
   <div class="container kp-mentorias-grid">
-    <figure class="kp-mentorias-foto" data-anim="fade">
-      <img src={src(FOTO.bolder, 800)} srcset={srcset(FOTO.bolder)} sizes="(max-width: 900px) 100vw, 50vw" width={FOTO.bolder.w} height={FOTO.bolder.h} alt={FOTO.bolder.alt} loading="lazy" decoding="async" />
+    <figure class="kp-mentorias-foto">
+      <img src={src(FOTO.bolder, 800)} srcset={srcset(FOTO.bolder)} sizes="(max-width: 900px) 100vw, 52vw" width={FOTO.bolder.w} height={FOTO.bolder.h} alt={FOTO.bolder.alt} loading="lazy" decoding="async" data-kp-px="0.05" />
     </figure>
     <div class="kp-mentorias-texto">
-      <h2 class="kp-titulo" data-anim>Aprenda com quem aplica esse método todos os dias</h2>
+      <h2 class="kp-titulo kp-titulo-claro kp-reveal">Aprenda com quem aplica esse método todos os dias</h2>
 
-      <article class="kp-programa" data-anim>
+      <article class="kp-programa kp-reveal">
         <h3>Bolder Press</h3>
         <p class="kp-programa-sub">Jornada de Assessoria de Imprensa</p>
         <p>Para profissionais de comunicação que querem dominar a relação com a imprensa e se tornar referência na área. Dois meses de mentoria com a Kelly, com encontros online, um encontro presencial e media training como bônus.</p>
-        <a href="/mentorias/#bolder-press" class="btn-text">
-          Conheça o Bolder Press
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+        <a href="/mentorias/#bolder-press" class="kp-btn-branco">Conheça o Bolder Press</a>
       </article>
 
-      <article class="kp-programa" data-anim data-delay="1">
+      <article class="kp-programa kp-reveal">
         <h3>Be Bolder</h3>
         <p class="kp-programa-sub">Jornada de Influência Estratégica</p>
         <p>Para quem quer transformar conhecimento em influência, com método e posicionamento. Dois meses de mentoria com a Kelly, com encontros online, um encontro presencial e aulas mensais ao vivo com experts convidados.</p>
-        <a href="/mentorias/#bolder" class="btn-text">
-          Conheça o Be Bolder
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
+        <a href="/mentorias/#bolder" class="kp-btn-branco">Conheça o Be Bolder</a>
       </article>
     </div>
   </div>
 </section>
 
 <!-- SERVIÇOS MCLAIR -->
-<section class="kp-servicos section" id="servicos">
+<section class="kp-servicos" id="servicos">
   <div class="container kp-servicos-grid">
     <div class="kp-servicos-texto">
-      <h2 class="kp-titulo" data-anim>Precisa potencializar a comunicação da sua empresa?</h2>
-      <p data-anim data-delay="1">A Mclair leva essa mesma visão para marcas de todos os portes: branding, assessoria de imprensa, media training, consultoria em comunicação, conteúdo digital, comunicação interna, entre outras iniciativas.</p>
-      <div class="kp-acoes" data-anim data-delay="2">
+      <h2 class="kp-titulo kp-reveal">Precisa potencializar a comunicação da sua empresa?</h2>
+      <p class="kp-reveal">A Mclair leva essa mesma visão para marcas de todos os portes: branding, assessoria de imprensa, media training, consultoria em comunicação, conteúdo digital, comunicação interna, entre outras iniciativas.</p>
+      <div class="kp-acoes kp-reveal">
         <a href="/servicos/" class="btn-primary">Conheça os serviços da Mclair</a>
       </div>
     </div>
-    <figure class="kp-servicos-foto" data-anim="fade">
-      <img src={src(FOTO.blazer, 800)} srcset={srcset(FOTO.blazer)} sizes="(max-width: 900px) 100vw, 360px" width={FOTO.blazer.w} height={FOTO.blazer.h} alt={FOTO.blazer.alt} loading="lazy" decoding="async" />
+    <figure class="kp-servicos-foto">
+      <img src={src(FOTO.blazer, 800)} srcset={srcset(FOTO.blazer)} sizes="(max-width: 900px) 100vw, 40vw" width={FOTO.blazer.w} height={FOTO.blazer.h} alt={FOTO.blazer.alt} loading="lazy" decoding="async" data-kp-px="0.05" />
     </figure>
   </div>
 </section>
 
-<!-- FECHAMENTO -->
-<section class="kp-fim section" id="contato">
+<!-- FECHAMENTO: retrato grande, "Vamos conversar?" enorme e formulário -->
+<section class="kp-fim" id="contato">
   <div class="container kp-fim-grid">
-    <figure class="kp-fim-foto" data-anim="fade">
-      <img src={src(FOTO.retrato, 800)} srcset={srcset(FOTO.retrato)} sizes="(max-width: 900px) 100vw, 400px" width={FOTO.retrato.w} height={FOTO.retrato.h} alt={FOTO.retrato.alt} loading="lazy" decoding="async" />
+    <figure class="kp-fim-foto">
+      <img src={src(FOTO.retrato, 800)} srcset={srcset(FOTO.retrato)} sizes="(max-width: 900px) 100vw, 44vw" width={FOTO.retrato.w} height={FOTO.retrato.h} alt={FOTO.retrato.alt} loading="lazy" decoding="async" data-kp-px="0.05" />
     </figure>
     <div class="kp-fim-texto">
-      <h2 class="kp-titulo kp-titulo-claro" data-anim>Vamos conversar?</h2>
-      <p data-anim data-delay="1">Para marcas e profissionais que querem ser lembrados pelo que realmente entregam, a conversa começa aqui.</p>
-      <div class="kp-fim-acoes" data-anim data-delay="2">
-        <a href={WA_KELLY} class="btn-primary" target="_blank" rel="noopener">WhatsApp</a>
+      <h2 class="kp-titulo kp-titulo-claro kp-titulo-capa kp-reveal">Vamos conversar?</h2>
+      <p class="kp-fim-lead kp-reveal">Para marcas e profissionais que querem ser lembrados pelo que realmente entregam, a conversa começa aqui.</p>
+
+      <!-- Mesmo destino do #wa-form do site (modal do Layout): monta a
+           mensagem e abre o WhatsApp da Mclair. Id próprio para não
+           colidir com o do modal; classe wa-form para o GTM reconhecer. -->
+      <form id="wa-form-kelly" class="wa-form kp-form kp-reveal" novalidate>
+        <div class="kp-form-campos">
+          <label class="kp-campo">
+            <span>Seu nome</span>
+            <input type="text" name="nome" autocomplete="name" placeholder="Como posso chamar você?" required />
+          </label>
+          <label class="kp-campo">
+            <span>Seu WhatsApp</span>
+            <input type="tel" name="whatsapp" autocomplete="tel" inputmode="tel" placeholder="(11) 90000-0000" />
+          </label>
+          <label class="kp-campo">
+            <span>Assunto</span>
+            <select name="assunto">
+              <option value="Palestra">Palestra</option>
+              <option value="Mentoria Bolder Press">Mentoria Bolder Press</option>
+              <option value="Mentoria Be Bolder">Mentoria Be Bolder</option>
+              <option value="Serviços da Mclair">Serviços da Mclair</option>
+              <option value="Outro assunto">Outro assunto</option>
+            </select>
+          </label>
+        </div>
+        <button type="submit" class="btn-primary kp-form-enviar">Enviar no WhatsApp</button>
+      </form>
+
+      <div class="kp-fim-acoes kp-reveal">
         <a href={`mailto:${EMAIL}`} class="kp-link-claro">{EMAIL}</a>
         <a href={LINKEDIN} class="kp-link-claro" target="_blank" rel="noopener">LinkedIn</a>
       </div>
@@ -404,69 +448,175 @@ const schema = [
   </div>
 </section>
 
+<script is:inline data-astro-rerun>
+(function () {
+  var reduz = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var raiz = document.documentElement;
+
+  // Revelação suave no scroll. Sem JS (ou com movimento reduzido) tudo já
+  // nasce visível; a classe kp-js é o que liga o estado inicial escondido.
+  var revela = document.querySelectorAll('.kp-reveal');
+  if (!reduz && 'IntersectionObserver' in window && revela.length) {
+    raiz.classList.add('kp-js');
+    var obs = new IntersectionObserver(function (es) {
+      es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+    }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+    revela.forEach(function (el) { obs.observe(el); });
+  }
+
+  // A foto da história acompanha o trecho que está no meio da tela.
+  var fotos = document.querySelectorAll('#kp-hist-fotos .kp-hist-foto');
+  var trechos = document.querySelectorAll('[data-foto]');
+  if (fotos.length && trechos.length && 'IntersectionObserver' in window) {
+    var obsFoto = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return;
+        var chave = e.target.getAttribute('data-foto');
+        fotos.forEach(function (f) { f.classList.toggle('ativa', f.getAttribute('data-foto-chave') === chave); });
+      });
+    }, { rootMargin: '-40% 0px -45% 0px', threshold: 0 });
+    trechos.forEach(function (t) { obsFoto.observe(t); });
+  }
+
+  // Parallax leve nas fotos grandes: deslocam poucos pixels conforme a
+  // distância ao centro da tela. Nada disso roda com movimento reduzido.
+  var px = Array.prototype.slice.call(document.querySelectorAll('[data-kp-px]'));
+  if (px.length && !reduz && window.matchMedia('(min-width: 641px)').matches) {
+    var pedido = false;
+    function anda() {
+      pedido = false;
+      var vh = window.innerHeight;
+      px.forEach(function (img) {
+        var r = img.parentElement.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > vh + 200) return;
+        var f = parseFloat(img.getAttribute('data-kp-px')) || 0.05;
+        var d = (r.top + r.height / 2 - vh / 2) * -f;
+        img.style.transform = 'translate3d(0,' + d.toFixed(1) + 'px,0) scale(1.12)';
+      });
+    }
+    function pede() { if (!pedido) { pedido = true; requestAnimationFrame(anda); } }
+    window.addEventListener('scroll', pede, { passive: true });
+    window.addEventListener('resize', pede);
+    anda();
+  }
+
+  // Formulário do fechamento: abre o WhatsApp com a mensagem pronta.
+  var form = document.getElementById('wa-form-kelly');
+  if (form && !form.dataset.ligado) {
+    form.dataset.ligado = '1';
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var nome = (form.nome.value || '').trim();
+      var zap = (form.whatsapp.value || '').trim();
+      var assunto = form.assunto.value || 'Contato';
+      if (!nome) { form.nome.focus(); return; }
+      var msg = 'Olá Kelly! Meu nome é ' + nome + '. Assunto: ' + assunto + '.' + (zap ? ' Meu WhatsApp: ' + zap + '.' : '') + ' Vim pela sua página no site da Mclair.';
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({ event: 'wa_form_submit', form_id: 'wa-form-kelly', assunto: assunto });
+      window.open('https://wa.me/5511988600372?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+    });
+  }
+})();
+</script>
+
 </Layout>
 
-<style is:global>
-/* O cabeçalho do site nasce transparente com logo e menu brancos, pensado
-   para heros escuros. Esta página abre em fundo claro, então ele já começa
-   no estado sólido (o mesmo visual que ganha ao rolar), sem depender de JS. */
-#site-header:has(~ main .kp-abertura) {
-  background: rgba(250,250,248,.98);
-  box-shadow: 0 1px 0 rgba(0,0,0,.06);
-}
-#site-header:has(~ main .kp-abertura) .logo-default { display: block; }
-#site-header:has(~ main .kp-abertura) .logo-white { display: none; }
-#site-header:has(~ main .kp-abertura) .nav-link { color: var(--ink-2); }
-#site-header:has(~ main .kp-abertura) .nav-link:hover { color: var(--red); }
-#site-header:has(~ main .kp-abertura) .burger { border-color: var(--line-2); }
-#site-header:has(~ main .kp-abertura) .burger span { background: var(--ink); }
-</style>
-
 <style>
-/* Ritmo de revista: tipografia grande, prosa com medida, fotos em recortes
-   limpos. Sem cartões, sem rótulos, sem números em destaque. */
+/* Perfil de revista: tipografia em escala de capa, fotos que sangram até a
+   borda, fundos claro, escuro e vermelho se alternando. */
+figure { margin: 0; }
+figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.kp-acoes { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
 .kp-titulo {
   font-size: clamp(2rem, 4vw, 3.4rem);
-  font-weight: 900; line-height: 1.06; letter-spacing: -.035em;
-  color: var(--ink); text-wrap: balance;
-  margin-bottom: 28px;
+  font-weight: 900; line-height: 1.04; letter-spacing: -.04em;
+  color: var(--ink); text-wrap: balance; margin-bottom: 28px;
 }
+.kp-titulo-grande { font-size: clamp(2.6rem, 5.4vw, 5rem); }
+.kp-titulo-capa { font-size: clamp(3rem, 8.5vw, 8rem); line-height: .95; letter-spacing: -.05em; }
 .kp-titulo-claro { color: #fff; }
-.kp-titulo-centro { text-align: center; margin-left: auto; margin-right: auto; max-width: 720px; }
-figure { margin: 0; }
-figure img { width: 100%; height: 100%; object-fit: cover; display: block; border-radius: var(--r-sm); }
-.kp-acoes { display: flex; gap: 12px; flex-wrap: wrap; }
+.kp-titulo-centro { text-align: center; margin-left: auto; margin-right: auto; max-width: 760px; }
+.kp-vermelho { color: var(--red); }
+.kp-btn-contorno {
+  display: inline-flex; align-items: center;
+  font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: #fff; border: 1.5px solid rgba(255,255,255,.35);
+  padding: .85rem 1.9rem; border-radius: var(--r-sm);
+  transition: border-color .2s, transform .2s;
+}
+.kp-btn-contorno:hover { border-color: #fff; transform: translateY(-2px); }
+.kp-btn-branco {
+  display: inline-flex; align-items: center;
+  font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--red); background: #fff;
+  padding: .85rem 1.9rem; border-radius: var(--r-sm);
+  transition: transform .2s, box-shadow .2s;
+}
+.kp-btn-branco:hover { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(0,0,0,.18); }
+
+/* Revelação: só esconde quando o script confirma que vai revelar. */
+:global(html.kp-js) .kp-reveal { opacity: 0; transform: translateY(28px); transition: opacity .9s cubic-bezier(.22,1,.36,1), transform .9s cubic-bezier(.22,1,.36,1); }
+:global(html.kp-js) .kp-reveal.in { opacity: 1; transform: none; }
+:global(html.kp-js) .kp-reveal:nth-child(2) { transition-delay: .08s; }
+:global(html.kp-js) .kp-reveal:nth-child(3) { transition-delay: .16s; }
+@media (min-width: 641px) { [data-kp-px] { will-change: transform; transform: scale(1.12); } }
 
 /* ABERTURA */
-.kp-abertura { background: var(--cream); padding-top: clamp(118px, 14vw, 170px); padding-bottom: clamp(56px, 7vw, 110px); }
-.kp-abertura-grid { display: grid; grid-template-columns: 1.1fr .9fr; gap: clamp(32px, 6vw, 96px); align-items: center; }
+.kp-abertura {
+  position: relative; background: var(--dark); color: #fff;
+  min-height: 100vh; min-height: 100svh; overflow: hidden;
+  display: flex; align-items: flex-end;
+}
+.kp-ab-foto {
+  position: absolute; top: 0; right: 0; bottom: 0; width: 56%;
+  overflow: hidden;
+  animation: kp-foto-entra 1.6s cubic-bezier(.22,1,.36,1) both;
+}
+.kp-ab-foto::before {
+  content: ''; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(90deg, var(--dark) 0%, rgba(21,18,16,.55) 18%, rgba(21,18,16,0) 42%),
+              linear-gradient(0deg, rgba(21,18,16,.75) 0%, rgba(21,18,16,0) 40%);
+}
+.kp-ab-foto img { width: 100%; height: 100%; object-fit: cover; object-position: 50% 28%; }
+.kp-ab-texto { position: relative; z-index: 2; padding-top: 150px; padding-bottom: clamp(56px, 8vh, 96px); }
 .kp-nome {
-  font-size: clamp(3.2rem, 8.5vw, 7.2rem);
-  font-weight: 900; line-height: .95; letter-spacing: -.045em;
-  color: var(--ink); margin: 0 0 32px;
+  font-size: clamp(4.4rem, 13.5vw, 13rem);
+  font-weight: 900; line-height: .86; letter-spacing: -.055em;
+  color: #fff; margin: 0 0 36px;
+  text-shadow: 0 2px 40px rgba(0,0,0,.35);
 }
+.kp-nome-linha { display: block; overflow: hidden; padding-bottom: .06em; margin-bottom: -.06em; }
+.kp-nome-inner { display: inline-block; animation: kp-sobe 1.1s cubic-bezier(.22,1,.36,1) both; }
+.kp-nome-linha:nth-child(2) .kp-nome-inner { animation-delay: .12s; padding-left: .18em; }
 .kp-lead {
-  font-size: clamp(1.15rem, 1.7vw, 1.45rem); font-weight: 300; line-height: 1.65;
-  color: var(--ink-2); max-width: 540px; margin-bottom: 40px;
+  font-size: clamp(1.1rem, 1.5vw, 1.35rem); font-weight: 300; line-height: 1.65;
+  color: rgba(255,255,255,.82); max-width: 540px; margin-bottom: 36px;
+  animation: kp-fade-sobe 1s .55s cubic-bezier(.22,1,.36,1) both;
 }
-.kp-abertura-foto { aspect-ratio: 2 / 3; max-height: 82vh; justify-self: end; width: 100%; }
+.kp-ab-acoes { animation: kp-fade-sobe 1s .7s cubic-bezier(.22,1,.36,1) both; }
+@keyframes kp-sobe { from { transform: translateY(112%); } to { transform: none; } }
+@keyframes kp-fade-sobe { from { opacity: 0; transform: translateY(24px); } to { opacity: 1; transform: none; } }
+@keyframes kp-foto-entra { from { opacity: 0; clip-path: inset(0 0 0 30%); } to { opacity: 1; clip-path: inset(0); } }
 
 /* HISTÓRIA */
-.kp-historia { background: #fff; }
-.kp-historia-grid { display: grid; grid-template-columns: minmax(0, 640px) 380px; gap: clamp(40px, 7vw, 120px); justify-content: space-between; align-items: start; }
-.kp-prosa p { font-size: clamp(1.05rem, 1.35vw, 1.2rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.4em; }
-.kp-prosa .kp-titulo { margin-bottom: 36px; }
-.kp-citacao { margin: 48px 0 56px; padding: 0; }
-.kp-citacao p {
-  font-size: clamp(1.5rem, 2.6vw, 2.2rem); font-weight: 300; font-style: italic;
-  line-height: 1.3; letter-spacing: -.02em; color: var(--ink); margin: 0;
-  text-wrap: balance;
+.kp-historia { background: var(--cream); padding-block: clamp(80px, 10vw, 140px); }
+.kp-historia-grid { display: grid; grid-template-columns: minmax(0, 620px) 440px; gap: clamp(48px, 8vw, 140px); justify-content: space-between; align-items: start; }
+.kp-prosa .kp-titulo { margin-bottom: 40px; }
+.kp-prosa p { font-size: clamp(1.08rem, 1.4vw, 1.25rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.4em; }
+.kp-hist-coluna { align-self: stretch; }
+.kp-hist-sticky {
+  position: sticky; top: 96px;
+  height: calc(100vh - 120px); height: calc(100svh - 120px);
+  min-height: 520px; overflow: hidden; background: var(--cream-3);
 }
-.kp-dupla { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 48px 0 56px; }
-.kp-dupla figure { aspect-ratio: 2 / 3; }
-.kp-historia-foto { position: sticky; top: 110px; aspect-ratio: 2 / 3; }
+.kp-hist-foto {
+  position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 20%;
+  opacity: 0; transform: scale(1.04);
+  transition: opacity 1s cubic-bezier(.22,1,.36,1), transform 1.4s cubic-bezier(.22,1,.36,1);
+}
+.kp-hist-foto.ativa { opacity: 1; transform: none; }
 .kp-mais > summary { display: none; }
-.kp-leitura { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line); }
+.kp-leitura { margin-top: 56px; padding-top: 28px; border-top: 1px solid var(--line-2); }
 .kp-leitura h3 { font-size: 1rem; font-weight: 700; color: var(--ink); margin-bottom: 14px; }
 .kp-leitura ul { list-style: none; padding: 0; margin: 0; }
 .kp-leitura li { display: flex; gap: 16px; align-items: baseline; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--line); }
@@ -474,69 +624,106 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; borde
 .kp-leitura a:hover { color: var(--red); text-decoration-color: var(--red); }
 .kp-leitura time { font-size: .8rem; color: var(--ink-4); white-space: nowrap; }
 .kp-leitura-blog { margin-top: 16px; }
-.kp-leitura-blog a { font-size: .95rem; font-weight: 700; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line-2); transition: color .2s, text-decoration-color .2s; }
-.kp-leitura-blog a:hover { color: var(--red); text-decoration-color: var(--red); }
+.kp-leitura-blog a { font-size: .95rem; font-weight: 700; color: var(--ink); }
+
+/* CITAÇÃO */
+.kp-citacao-sec { background: var(--red); color: #fff; padding-block: clamp(96px, 16vh, 180px); }
+.kp-citacao { margin: 0; max-width: 1180px; }
+.kp-citacao p {
+  font-size: clamp(2.1rem, 5.6vw, 5.6rem); font-weight: 300; font-style: italic;
+  line-height: 1.06; letter-spacing: -.035em; margin: 0; text-wrap: balance;
+  text-indent: -.42em;
+}
+.kp-citacao p::before { content: '\201C'; }
+.kp-citacao p::after { content: '\201D'; }
+.kp-citacao footer { margin-top: 36px; font-size: 1rem; font-weight: 700; letter-spacing: .02em; color: rgba(255,255,255,.85); }
 
 /* VISÃO */
-.kp-visao { background: var(--dark); color: rgba(255,255,255,.78); }
-.kp-visao-grid { display: grid; grid-template-columns: minmax(0, 420px) minmax(0, 1fr); gap: clamp(40px, 7vw, 110px); align-items: center; }
-.kp-visao-foto { aspect-ratio: 2 / 3; }
-.kp-visao-texto .kp-titulo { font-size: clamp(2.2rem, 4.6vw, 4.2rem); max-width: 640px; }
+.kp-visao { background: var(--dark); color: rgba(255,255,255,.8); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
+.kp-visao-grid { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: clamp(40px, 7vw, 120px); align-items: center; }
+.kp-visao-foto { margin-left: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-visao-foto img { object-position: 50% 25%; }
+.kp-visao-texto .kp-titulo { max-width: 640px; }
 .kp-visao-texto p { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.75; max-width: 600px; }
 
 /* PALESTRAS */
-.kp-palco { background: var(--cream); }
-.kp-palco-cabeca { max-width: 720px; margin-bottom: 40px; }
-.kp-intro { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.7; color: var(--ink-2); }
-.kp-larga { aspect-ratio: 3 / 2; max-height: 72vh; margin-bottom: 56px; }
-.kp-temas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px); margin-bottom: 48px; }
-.kp-tema { padding-top: 24px; border-top: 1px solid var(--line-2); }
-.kp-tema h3 { font-size: clamp(1.3rem, 2vw, 1.7rem); font-weight: 700; letter-spacing: -.02em; color: var(--ink); margin-bottom: 14px; }
-.kp-tema p { font-size: 1.05rem; line-height: 1.75; color: var(--ink-2); }
+.kp-palco { background: var(--cream); padding-bottom: clamp(80px, 10vw, 140px); }
+.kp-palco-banner { position: relative; height: 90vh; height: 90svh; min-height: 560px; max-height: 920px; overflow: hidden; background: var(--dark); display: flex; align-items: flex-end; }
+.kp-palco-banner > img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 30%; }
+.kp-palco-veu { position: absolute; inset: 0; background: linear-gradient(0deg, rgba(21,18,16,.9) 0%, rgba(21,18,16,.45) 40%, rgba(21,18,16,0) 70%); }
+.kp-palco-sobre { position: relative; z-index: 2; padding-bottom: clamp(48px, 7vh, 88px); }
+.kp-palco-sobre .kp-titulo { margin-bottom: 20px; }
+.kp-palco-intro { font-size: clamp(1.1rem, 1.5vw, 1.35rem); font-weight: 300; line-height: 1.6; color: rgba(255,255,255,.85); max-width: 560px; }
+.kp-temas { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(32px, 5vw, 80px); margin-top: clamp(56px, 7vw, 96px); }
+.kp-tema { padding-top: 28px; border-top: 1px solid var(--line-2); }
+.kp-tema h3 { font-size: clamp(1.5rem, 2.4vw, 2.1rem); font-weight: 900; letter-spacing: -.03em; color: var(--ink); margin-bottom: 14px; text-wrap: balance; }
+.kp-tema p { font-size: 1.08rem; line-height: 1.75; color: var(--ink-2); }
+.kp-tema-cta { grid-column: 1 / -1; }
 
 /* CLIENTES */
-.kp-clientes { background: #fff; }
+.kp-clientes { background: #fff; padding-block: clamp(80px, 10vw, 140px); }
 .kp-logos {
   list-style: none; padding: 0; margin: 0;
-  display: grid; grid-template-columns: repeat(5, 1fr);
-  gap: 8px 24px; align-items: center;
+  display: grid; grid-template-columns: repeat(4, 1fr);
+  gap: 16px 48px; align-items: center; max-width: 1080px; margin-inline: auto;
 }
-.kp-logos li { display: flex; align-items: center; justify-content: center; height: 112px; }
+.kp-logos li { display: flex; align-items: center; justify-content: center; height: 180px; }
+.kp-logos li:nth-child(n + 21) { display: none; }
 .kp-logos a { display: flex; align-items: center; justify-content: center; width: 100%; height: 100%; }
 .kp-logos img {
-  max-width: 88%; max-height: 84px; width: auto; height: auto; object-fit: contain;
-  filter: grayscale(100%); opacity: .6;
-  transition: filter .3s, opacity .3s;
+  width: 100%; max-width: 230px; height: 150px; object-fit: contain;
+  filter: grayscale(100%); opacity: .8;
+  transition: filter .35s, opacity .35s, transform .35s;
 }
-.kp-logos li:hover img { filter: grayscale(0); opacity: 1; }
-.kp-clientes-link { text-align: center; margin-top: 40px; }
-.kp-clientes-link a { font-size: .95rem; color: var(--ink-3); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--line-2); }
+.kp-logos li:hover img { filter: none; opacity: 1; transform: scale(1.05); }
+.kp-clientes-link { text-align: center; margin-top: 48px; }
+.kp-clientes-link a { font-size: 1rem; font-weight: 700; color: var(--ink); text-decoration: underline; text-underline-offset: 5px; text-decoration-color: var(--line-2); }
 .kp-clientes-link a:hover { color: var(--red); text-decoration-color: var(--red); }
 
 /* MENTORIAS */
-.kp-mentorias { background: var(--cream); }
-.kp-mentorias-grid { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(40px, 6vw, 96px); align-items: start; }
-.kp-mentorias-foto { aspect-ratio: 3 / 2; position: sticky; top: 110px; }
-.kp-programa { padding: 28px 0 32px; border-top: 1px solid var(--line-2); }
-.kp-programa:last-child { border-bottom: 1px solid var(--line-2); }
-.kp-programa h3 { font-size: clamp(1.5rem, 2.4vw, 2rem); font-weight: 900; letter-spacing: -.03em; color: var(--ink); margin-bottom: 4px; }
-.kp-programa-sub { font-size: 1.05rem; font-style: italic; font-weight: 300; color: var(--ink-3); margin-bottom: 14px; }
-.kp-programa p { font-size: 1.05rem; line-height: 1.75; color: var(--ink-2); margin-bottom: 18px; }
+.kp-mentorias { background: var(--red); color: #fff; overflow: hidden; }
+.kp-mentorias-grid { display: grid; grid-template-columns: minmax(0, 52%) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: stretch; }
+.kp-mentorias-foto { margin-left: calc(-1 * var(--gutter)); overflow: hidden; min-height: 100%; }
+.kp-mentorias-foto img { object-position: 50% 40%; }
+.kp-mentorias-texto { padding-block: clamp(72px, 9vw, 130px); }
+.kp-mentorias-texto .kp-titulo { max-width: 560px; margin-bottom: 40px; }
+.kp-programa { padding: 30px 0 34px; border-top: 1px solid rgba(255,255,255,.3); }
+.kp-programa:last-child { border-bottom: 1px solid rgba(255,255,255,.3); }
+.kp-programa h3 { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 900; letter-spacing: -.035em; color: #fff; margin-bottom: 2px; }
+.kp-programa-sub { font-size: 1.1rem; font-style: italic; font-weight: 300; color: rgba(255,255,255,.8); margin-bottom: 14px; }
+.kp-programa p { font-size: 1.08rem; line-height: 1.75; color: rgba(255,255,255,.92); margin-bottom: 20px; }
 
 /* SERVIÇOS */
-.kp-servicos { background: #fff; }
-.kp-servicos-grid { display: grid; grid-template-columns: minmax(0, 1fr) 360px; gap: clamp(40px, 7vw, 120px); align-items: center; }
-.kp-servicos-texto .kp-titulo { max-width: 640px; }
-.kp-servicos-texto p { font-size: clamp(1.05rem, 1.4vw, 1.2rem); line-height: 1.75; color: var(--ink-2); max-width: 600px; margin-bottom: 36px; }
-.kp-servicos-foto { aspect-ratio: 2 / 3; }
+.kp-servicos { background: var(--cream); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
+.kp-servicos-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 40%); gap: clamp(40px, 7vw, 120px); align-items: center; }
+.kp-servicos-texto .kp-titulo { max-width: 640px; font-size: clamp(2.2rem, 4.4vw, 4rem); }
+.kp-servicos-texto p { font-size: clamp(1.08rem, 1.4vw, 1.25rem); line-height: 1.75; color: var(--ink-2); max-width: 600px; margin-bottom: 36px; }
+.kp-servicos-foto { margin-right: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-servicos-foto img { object-position: 50% 20%; }
 
 /* FECHAMENTO */
-.kp-fim { background: var(--dark); color: rgba(255,255,255,.78); }
-.kp-fim-grid { display: grid; grid-template-columns: minmax(0, 400px) minmax(0, 1fr); gap: clamp(40px, 7vw, 110px); align-items: center; }
-.kp-fim-foto { aspect-ratio: 2 / 3; }
-.kp-fim-texto .kp-titulo { font-size: clamp(2.6rem, 6vw, 5.2rem); }
-.kp-fim-texto p { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.7; max-width: 560px; margin-bottom: 40px; }
-.kp-fim-acoes { display: flex; align-items: center; gap: 16px 32px; flex-wrap: wrap; }
+.kp-fim { background: var(--dark); color: rgba(255,255,255,.82); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
+.kp-fim-grid { display: grid; grid-template-columns: minmax(0, 44%) minmax(0, 1fr); gap: 0 clamp(32px, 4vw, 64px); align-items: center; }
+.kp-fim-foto { margin-left: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-fim-foto img { object-position: 50% 20%; }
+.kp-fim-texto { position: relative; z-index: 2; }
+.kp-fim-texto .kp-titulo-capa { margin-left: -22%; margin-bottom: 28px; text-shadow: 0 2px 40px rgba(0,0,0,.45); }
+.kp-fim-lead { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.7; max-width: 560px; margin-bottom: 40px; }
+.kp-form { display: flex; flex-direction: column; gap: 28px; max-width: 760px; }
+.kp-form-campos { display: grid; grid-template-columns: 1.2fr 1fr 1fr; gap: 24px; }
+.kp-campo { display: flex; flex-direction: column; gap: 8px; min-width: 0; }
+.kp-campo span { font-size: .78rem; font-weight: 700; color: rgba(255,255,255,.6); }
+.kp-campo input, .kp-campo select {
+  width: 100%; background: transparent; border: 0; border-bottom: 1px solid rgba(255,255,255,.35);
+  border-radius: 0; padding: .7rem 0; color: #fff; font-size: 1rem; font-family: inherit; outline: none;
+  appearance: none; -webkit-appearance: none; transition: border-color .2s;
+}
+.kp-campo input::placeholder { color: rgba(255,255,255,.3); }
+.kp-campo input:focus, .kp-campo select:focus { border-bottom-color: #fff; }
+.kp-campo select { background-image: linear-gradient(45deg, transparent 50%, rgba(255,255,255,.7) 50%), linear-gradient(135deg, rgba(255,255,255,.7) 50%, transparent 50%); background-position: calc(100% - 12px) 55%, calc(100% - 6px) 55%; background-size: 6px 6px; background-repeat: no-repeat; padding-right: 24px; }
+.kp-campo select option { color: var(--ink); background: #fff; }
+.kp-form-enviar { align-self: flex-start; border: 0; }
+.kp-fim-acoes { display: flex; align-items: center; gap: 16px 32px; flex-wrap: wrap; margin-top: 40px; }
 .kp-link-claro {
   font-size: .95rem; font-weight: 700; color: #fff;
   text-decoration: underline; text-underline-offset: 5px; text-decoration-color: rgba(255,255,255,.35);
@@ -545,87 +732,100 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; borde
 .kp-link-claro:hover { text-decoration-color: #fff; }
 
 /* RESPONSIVO */
-@media (max-width: 1024px) {
-  .kp-historia-grid { grid-template-columns: minmax(0, 1fr) 300px; }
+@media (max-width: 1100px) {
+  .kp-historia-grid { grid-template-columns: minmax(0, 1fr) 360px; }
+  .kp-logos { grid-template-columns: repeat(4, 1fr); }
+  .kp-form-campos { grid-template-columns: 1fr 1fr; }
 }
 @media (max-width: 900px) {
-  .kp-abertura-grid, .kp-historia-grid, .kp-visao-grid, .kp-mentorias-grid, .kp-servicos-grid, .kp-fim-grid { grid-template-columns: 1fr; }
-  .kp-abertura-foto { aspect-ratio: 4 / 5; max-height: none; justify-self: stretch; }
-  .kp-abertura-foto img { object-position: center 20%; }
-  .kp-historia-foto, .kp-mentorias-foto { position: static; }
-  .kp-historia-foto { order: -1; aspect-ratio: 4 / 5; max-width: 520px; }
-  .kp-visao-foto { max-width: 520px; aspect-ratio: 4 / 5; }
-  .kp-visao-foto img { object-position: center 30%; }
-  .kp-servicos-foto { max-width: 420px; }
-  .kp-fim-foto { max-width: 420px; }
+  .kp-ab-foto { width: 70%; }
+  .kp-ab-foto::before { background: linear-gradient(90deg, var(--dark) 0%, rgba(21,18,16,.6) 30%, rgba(21,18,16,0) 60%), linear-gradient(0deg, rgba(21,18,16,.85) 0%, rgba(21,18,16,0) 45%); }
+  .kp-historia-grid, .kp-visao-grid, .kp-mentorias-grid, .kp-servicos-grid, .kp-fim-grid { grid-template-columns: 1fr; }
+  .kp-hist-sticky { position: relative; top: auto; height: auto; min-height: 0; aspect-ratio: 3 / 2; }
+  .kp-hist-foto:not(:first-child) { display: none; }
+  .kp-hist-coluna { order: -1; }
+  .kp-visao-foto, .kp-mentorias-foto, .kp-servicos-foto, .kp-fim-foto { margin: 0; aspect-ratio: 3 / 2; max-width: none; }
+  .kp-mentorias-foto img { object-position: 50% 30%; }
+  .kp-mentorias-texto { padding-top: 48px; }
+  .kp-fim-texto .kp-titulo-capa { margin-left: 0; }
+  .kp-fim-foto { margin-bottom: 36px; }
   .kp-temas { grid-template-columns: 1fr; gap: 24px; }
-  .kp-logos { grid-template-columns: repeat(4, 1fr); gap: 4px 20px; }
-  .kp-logos li { height: 96px; }
 }
-/* Celular: poucas fotos, recortadas baixas no rosto; abertura cabe na
-   primeira tela; história com "Continuar lendo"; logos numa faixa curta. */
-@media (max-width: 640px) {
-  .kp-historia, .kp-visao, .kp-palco, .kp-clientes, .kp-mentorias, .kp-servicos, .kp-fim { padding-block: 56px; }
-  .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); margin-bottom: 18px; }
 
-  .kp-abertura { padding-top: 96px; padding-bottom: 44px; }
-  .kp-abertura-grid { gap: 22px; }
-  .kp-abertura-foto { order: -1; aspect-ratio: 3 / 2; }
-  .kp-abertura-foto img { object-position: center 20%; }
-  .kp-nome { font-size: clamp(2.5rem, 12.5vw, 3.4rem); margin-bottom: 16px; }
+/* Celular: abertura cabe na primeira tela, poucas fotos recortadas no
+   rosto, história com "Continuar lendo", nove logos. */
+@media (max-width: 640px) {
+  .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); margin-bottom: 18px; }
+  .kp-titulo-grande { font-size: clamp(2.2rem, 10vw, 2.8rem); }
+  .kp-titulo-capa { font-size: clamp(2.6rem, 13vw, 3.6rem); }
+  .kp-historia, .kp-visao, .kp-clientes, .kp-servicos, .kp-fim { padding-block: 56px; }
+
+  .kp-abertura { min-height: 0; display: block; }
+  .kp-ab-foto { position: relative; width: 100%; height: 46vh; min-height: 300px; animation: none; }
+  .kp-ab-foto::before { background: linear-gradient(0deg, var(--dark) 0%, rgba(21,18,16,.35) 35%, rgba(21,18,16,0) 60%); }
+  .kp-ab-foto img { object-position: 50% 22%; }
+  .kp-ab-texto { padding-top: 0; margin-top: -2.6rem; padding-bottom: 40px; }
+  .kp-nome { font-size: clamp(3.4rem, 17vw, 4.6rem); margin-bottom: 18px; }
+  .kp-nome-linha:nth-child(2) .kp-nome-inner { padding-left: 0; }
   .kp-lead { font-size: 1.05rem; line-height: 1.6; margin-bottom: 22px; }
-  .kp-abertura .kp-acoes a { flex: 1 1 100%; justify-content: center; }
+  .kp-ab-acoes a { flex: 1 1 100%; justify-content: center; }
 
   .kp-historia-grid { gap: 22px; }
-  .kp-historia-foto { order: -1; aspect-ratio: 3 / 2; max-width: none; }
-  .kp-historia-foto img { object-position: center 10%; }
+  .kp-hist-sticky { background: transparent; }
   .kp-prosa .kp-titulo { margin-bottom: 20px; }
   .kp-prosa p { font-size: 1.02rem; line-height: 1.72; margin-bottom: 1.15em; }
-  .kp-citacao { margin: 26px 0 30px; }
-  .kp-citacao p { font-size: 1.35rem; line-height: 1.35; }
-  .kp-dupla { display: none; }
   .kp-mais > summary {
-    display: inline-flex; cursor: pointer; margin: 4px 0 8px;
-    list-style: none;
-    font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
-    color: var(--red);
+    display: inline-flex; cursor: pointer; margin: 4px 0 8px; list-style: none;
+    font-size: .78rem; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--red);
   }
   .kp-mais > summary::-webkit-details-marker { display: none; }
   .kp-mais[open] > summary { display: none; }
   .kp-leitura { margin-top: 32px; padding-top: 20px; }
   .kp-leitura li { flex-direction: column; gap: 4px; align-items: flex-start; }
 
-  .kp-visao-foto, .kp-mentorias-foto, .kp-servicos-foto { display: none; }
-  .kp-visao-texto .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); }
-  .kp-visao-texto p, .kp-servicos-texto p, .kp-fim-texto p, .kp-intro, .kp-tema p, .kp-programa p { font-size: 1.02rem; line-height: 1.7; }
+  .kp-citacao-sec { padding-block: 64px; }
+  .kp-citacao p { font-size: clamp(1.6rem, 7.6vw, 2.2rem); }
+  .kp-citacao footer { margin-top: 22px; }
 
-  .kp-palco-cabeca { margin-bottom: 24px; }
-  .kp-larga { margin-bottom: 28px; }
-  .kp-temas { gap: 18px; margin-bottom: 28px; }
+  .kp-visao-foto, .kp-mentorias-foto, .kp-servicos-foto { display: none; }
+  .kp-visao-texto p, .kp-servicos-texto p, .kp-tema p, .kp-programa p, .kp-fim-lead { font-size: 1.02rem; line-height: 1.7; }
+
+  .kp-palco-banner { height: auto; min-height: 0; aspect-ratio: 3 / 2; max-height: none; }
+  .kp-palco-sobre { padding-bottom: 20px; }
+  .kp-palco-sobre .kp-titulo { margin-bottom: 8px; }
+  .kp-palco-intro { font-size: 1rem; }
+  .kp-palco { padding-bottom: 56px; }
+  .kp-temas { margin-top: 28px; gap: 18px; }
   .kp-tema { padding-top: 18px; }
-  .kp-tema h3 { font-size: 1.25rem; margin-bottom: 8px; }
+  .kp-tema h3 { font-size: 1.3rem; margin-bottom: 8px; }
 
   /* Só os nove primeiros (os citados no texto vêm na frente); o resto fica
      em /clientes/. */
-  .kp-logos { grid-template-columns: repeat(3, 1fr); gap: 0 14px; }
-  .kp-logos li { height: 84px; }
+  .kp-logos { grid-template-columns: repeat(3, 1fr); gap: 8px 14px; }
+  .kp-logos li { height: 96px; }
   .kp-logos li:nth-child(n + 10) { display: none; }
-  .kp-logos img { max-height: 64px; max-width: 90%; }
-  .kp-clientes-link { margin-top: 22px; }
+  .kp-logos img { height: 84px; max-width: 100%; }
+  .kp-clientes-link { margin-top: 24px; }
 
+  .kp-mentorias-texto { padding-block: 56px; }
+  .kp-mentorias-texto .kp-titulo { margin-bottom: 24px; }
   .kp-programa { padding: 22px 0 24px; }
-  .kp-programa h3 { font-size: 1.45rem; }
+  .kp-programa h3 { font-size: 1.5rem; }
   .kp-programa-sub { font-size: 1rem; margin-bottom: 10px; }
+  .kp-servicos-texto .kp-titulo { font-size: clamp(1.9rem, 8.4vw, 2.4rem); }
   .kp-servicos-texto p { margin-bottom: 26px; }
 
-  .kp-fim-foto { aspect-ratio: 3 / 2; max-width: none; }
-  .kp-fim-foto img { object-position: center 20%; }
-  .kp-fim-texto .kp-titulo { font-size: clamp(2.2rem, 9.5vw, 2.8rem); }
-  .kp-fim-texto p { margin-bottom: 26px; }
-  .kp-fim-acoes { flex-direction: column; align-items: flex-start; gap: 18px; }
-  .kp-fim-acoes .btn-primary { width: 100%; justify-content: center; }
+  .kp-fim-foto { display: block; margin-bottom: 24px; }
+  .kp-fim-lead { margin-bottom: 26px; }
+  .kp-form { gap: 22px; }
+  .kp-form-campos { grid-template-columns: 1fr; gap: 16px; }
+  .kp-form-enviar { align-self: stretch; justify-content: center; }
+  .kp-fim-acoes { flex-direction: column; align-items: flex-start; gap: 14px; margin-top: 30px; }
 }
+
 @media (prefers-reduced-motion: reduce) {
-  .kp-logos img { transition: none; }
+  .kp-ab-foto, .kp-nome-inner, .kp-lead, .kp-ab-acoes { animation: none; }
+  .kp-hist-foto, .kp-logos img, .kp-reveal { transition: none; }
+  [data-kp-px] { transform: none; }
 }
 </style>
