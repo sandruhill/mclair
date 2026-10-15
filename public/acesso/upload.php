@@ -78,51 +78,62 @@ $ext = $allowed[$mime];
 $name = bin2hex(random_bytes(8)) . '.' . $ext;
 $dest = $uploadDir . '/' . $name;
 
-// Foto maior que 1920 px de lado é reduzida, e foto acima de 300 KB é
-// recomprimida mesmo sem reduzir (GD, mesmo formato, então o endereço não
-// muda), para o post não carregar 8 MB de imagem. Só troca o arquivo se o
-// resultado ficar menor. Se o GD faltar ou falhar, o arquivo vai como veio:
-// nunca é motivo para perder o upload.
-const MAX_LADO = 1920;
-const MAX_BYTES = 300 * 1024;
+// Toda foto enviada sai com até 200 KB, no mesmo formato e no mesmo nome
+// (o endereço não muda): JPG/WEBP tentam qualidades e larguras decrescentes;
+// PNG vira 256 cores e, se precisar, reduz a largura. Só troca o arquivo se
+// o resultado ficar menor. Se o GD faltar ou falhar, o arquivo vai como
+// veio: nunca é motivo para perder o upload.
+const ALVO_BYTES = 200 * 1024;
+const LARGURAS = [1920, 1600, 1366, 1200, 1024, 900, 800, 700];
+const QUALIDADES = [80, 72, 64, 56];
 function reduzirSePrecisar(string $caminho, string $mime): void {
-    if (!function_exists('imagecreatefromjpeg') || $mime === 'image/gif') return;
+    if (!function_exists('imagecreatefromjpeg') || $mime === 'image/gif' || $mime === 'image/svg+xml') return;
     $info = @getimagesize($caminho);
     if (!$info) return;
-    [$w, $h] = $info;
-    $grande = $w > MAX_LADO || $h > MAX_LADO;
-    if (!$grande && filesize($caminho) <= MAX_BYTES) return;
-    $fator = $grande ? MAX_LADO / max($w, $h) : 1;
-    $nw = (int) round($w * $fator);
-    $nh = (int) round($h * $fator);
-    $origem = match ($mime) {
+    clearstatcache();
+    $original = filesize($caminho);
+    if ($original <= ALVO_BYTES && max($info[0], $info[1]) <= LARGURAS[0]) return;
+    @ini_set('memory_limit', '512M');
+    $img = match ($mime) {
         'image/jpeg' => @imagecreatefromjpeg($caminho),
         'image/png'  => @imagecreatefrompng($caminho),
         'image/webp' => @imagecreatefromwebp($caminho),
         default      => false,
     };
-    if (!$origem) return;
+    if (!$img) return;
     // Fotos de celular vêm giradas por EXIF; endireita antes de reduzir.
     if ($mime === 'image/jpeg' && function_exists('exif_read_data')) {
-        $exif = @exif_read_data($caminho);
-        $o = (int) ($exif['Orientation'] ?? 1);
-        if ($o === 3) $origem = imagerotate($origem, 180, 0);
-        elseif ($o === 6) { $origem = imagerotate($origem, -90, 0); [$nw, $nh] = [$nh, $nw]; }
-        elseif ($o === 8) { $origem = imagerotate($origem, 90, 0); [$nw, $nh] = [$nh, $nw]; }
+        $o = (int) (@exif_read_data($caminho)['Orientation'] ?? 1);
+        if ($o === 3) $img = imagerotate($img, 180, 0);
+        elseif ($o === 6) $img = imagerotate($img, -90, 0);
+        elseif ($o === 8) $img = imagerotate($img, 90, 0);
     }
-    $destino = imagecreatetruecolor($nw, $nh);
-    if ($mime !== 'image/jpeg') { imagealphablending($destino, false); imagesavealpha($destino, true); }
-    imagecopyresampled($destino, $origem, 0, 0, 0, 0, $nw, $nh, imagesx($origem), imagesy($origem));
-    if ($mime === 'image/jpeg') imageinterlace($destino, true);
     $tmp = $caminho . '.tmp';
-    $ok = match ($mime) {
-        'image/jpeg' => imagejpeg($destino, $tmp, 80),
-        'image/png'  => imagepng($destino, $tmp, 6),
-        'image/webp' => imagewebp($destino, $tmp, 80),
-        default      => false,
-    };
-    clearstatcache();
-    if ($ok && filesize($tmp) > 0 && filesize($tmp) < filesize($caminho)) rename($tmp, $caminho); else @unlink($tmp);
+    $guardado = $caminho . '.melhor';
+    $melhor = PHP_INT_MAX;
+    foreach (LARGURAS as $larg) {
+        $w = imagesx($img); $h = imagesy($img);
+        $f = min(1, $larg / max($w, $h));
+        $nw = max(1, (int) round($w * $f)); $nh = max(1, (int) round($h * $f));
+        $r = imagecreatetruecolor($nw, $nh);
+        if ($mime !== 'image/jpeg') { imagealphablending($r, false); imagesavealpha($r, true); }
+        imagecopyresampled($r, $img, 0, 0, 0, 0, $nw, $nh, $w, $h);
+        if ($mime === 'image/png') imagetruecolortopalette($r, true, 256);
+        if ($mime === 'image/jpeg') imageinterlace($r, true);
+        foreach ($mime === 'image/png' ? [0] : QUALIDADES as $q) {
+            $ok = match ($mime) {
+                'image/jpeg' => imagejpeg($r, $tmp, $q),
+                'image/webp' => imagewebp($r, $tmp, $q),
+                default      => imagepng($r, $tmp, 9),
+            };
+            clearstatcache();
+            $t = $ok ? (int) @filesize($tmp) : 0;
+            if ($t > 0 && $t < $melhor) { $melhor = $t; rename($tmp, $guardado); }
+            if ($t > 0 && $t <= ALVO_BYTES) break 2;
+        }
+    }
+    @unlink($tmp);
+    if ($melhor < $original && is_file($guardado)) rename($guardado, $caminho); else @unlink($guardado);
 }
 
 if ($mime === 'image/svg+xml') {
