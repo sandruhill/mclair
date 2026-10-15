@@ -72,7 +72,8 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao)) {
   <ul>
     <li><strong>Perfil da Empresa no Google.</strong> Ele já existe e teve 285 visualizações, mas está sem área de atendimento, com o marcador caindo no centro do Brasil, e na categoria "Agência de Marketing". Passa para assessoria de imprensa, com área em São Paulo, fotos da equipe e um pedido de avaliação aos clientes atuais.</li>
     <li><strong>oHub.</strong> É a única fonte que a Visão Geral do Google usou para responder. Cadastro completo com bairro, ano de fundação, serviços e cases.</li>
-    <li><strong>Bing Places, Clutch, Econodata, GetNinjas.</strong> Fichas gratuitas que alimentam o Copilot e a Perplexity.</li>
+    <li><strong>Bing Places e Clutch.</strong> Fichas gratuitas que alimentam o Copilot e a Perplexity. GetNinjas e Econodata ficam de fora: atraem mais fornecedor e pedido barato do que cliente, e pesam pouco nas respostas.</li>
+    <li><strong>Sem virar ímã de fornecedor.</strong> Os cadastros usam um e-mail separado, como cadastros@mclair.com.br, e o WhatsApp comercial; os recursos de "receber orçamentos" ficam desligados. A ficha serve de referência para as IAs, não de canal de venda.</li>
     <li><strong>Um nome só.</strong> O Facebook está como "M. Clair Comunicação". Para quem cruza cadastros, isso é outra empresa. Tudo passa a ser "Mclair Comunicação".</li>
   </ul>
 
