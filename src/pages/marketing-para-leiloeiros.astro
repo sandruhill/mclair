@@ -2,6 +2,7 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import { getCases } from '../utils/cmsApi';
+import { linkarPessoasEmTexto } from '../utils/blogAuthors';
 
 const allCases = await getCases();
 const fidalgoCase = allCases.find((c) => c.slug === 'fidalgo');
@@ -359,11 +360,11 @@ const desafios = [
         <div class="lh-modal-grid">
           <div>
             <h4>O desafio</h4>
-            <p>{c.challenge}</p>
+            <p set:html={linkarPessoasEmTexto(c.challenge)}></p>
           </div>
           <div>
             <h4>A solução Mclair</h4>
-            <p>{c.solution}</p>
+            <p set:html={linkarPessoasEmTexto(c.solution)}></p>
           </div>
         </div>
         <div class="lh-modal-results">

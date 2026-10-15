@@ -2,6 +2,7 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import { getSingleton } from '../utils/cmsApi';
+import { paginaDaPessoa } from '../utils/blogAuthors';
 
 const WA_BOLDER = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder.%20Pode%20me%20contar%20mais%3F';
 const WA_PRESS  = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Tenho%20interesse%20na%20Mentoria%20Bolder%20Press.%20Pode%20me%20contar%20mais%3F';
@@ -84,7 +85,7 @@ const seo = mentoriasContent?.seo ?? {};
         <span class="word ph-accent"><span class="word-inner">carreira</span></span>
       </h1>
       <p class="ph-sub hero-instant" data-anim data-delay="2">
-        Conduzidas por Kelly Pinheiro, especialista com mais de 20 anos de experiência em Marketing de Autoridade, as mentorias Bolder e Bolder Press são programas de imersão e desenvolvimento acelerado para quem quer ser referência no mercado.
+        Conduzidas por <a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a>, especialista com mais de 20 anos de experiência em Marketing de Autoridade, as mentorias Bolder e Bolder Press são programas de imersão e desenvolvimento acelerado para quem quer ser referência no mercado.
       </p>
       <div class="ph-actions hero-instant" data-anim data-delay="3">
         <a href="#bolder" class="btn-white">
@@ -102,7 +103,7 @@ const seo = mentoriasContent?.seo ?? {};
           <img src="/mentoria/kelly-pinheiro-new.jpg" alt="Kelly Pinheiro" class="pk-photo" />
           <div class="pk-photo-badge">CEO & Sócio-Fundadora</div>
         </div>
-        <h3 class="pk-name">Kelly Pinheiro</h3>
+        <h3 class="pk-name"><a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a></h3>
         <span class="pk-role">Mclair Comunicação Estratégica</span>
         <div class="pk-divider"></div>
         <p class="pk-bio">Mais de 20 anos transformando marcas e profissionais em referências de mercado através de Comunicação Estratégica e Marketing de Autoridade.</p>

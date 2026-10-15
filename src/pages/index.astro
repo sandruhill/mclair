@@ -3,6 +3,7 @@ export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import HomeBlog from '../components/HomeBlog.astro';
 import { getServices, getCases, getSingleton } from '../utils/cmsApi';
+import { paginaDaPessoa } from '../utils/blogAuthors';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 
@@ -200,7 +201,7 @@ const cases = (allCases as any[])
         Trabalhamos com Comunicação Estratégica em 23+ segmentos, de startups a multinacionais. Cada projeto começa com diagnóstico, não com template.
       </p>
       <p class="section-lead" data-anim data-delay="3" style="margin-top:12px">
-        A Mclair atua em 23+ segmentos, de startups a multinacionais, de médicos a executivos. Com Kelly Pinheiro, geramos presença editorial, digital e de marca.
+        A Mclair atua em 23+ segmentos, de startups a multinacionais, de médicos a executivos. Com <a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a>, geramos presença editorial, digital e de marca.
       </p>
       <div class="about-pills stagger-children" data-anim data-delay="3">
         <span class="pill">Comunicação Estratégica</span>
@@ -329,7 +330,7 @@ const cases = (allCases as any[])
           </h2>
         </div>
         <p class="mt-lead" data-anim data-delay="2">
-          Conduzidas por Kelly Pinheiro, com mais de 20 anos de experiência em Marketing de Autoridade. Programas de imersão para quem quer ser referência no mercado.
+          Conduzidas por <a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a>, com mais de 20 anos de experiência em Marketing de Autoridade. Programas de imersão para quem quer ser referência no mercado.
         </p>
       </div>
     </div>
@@ -376,7 +377,7 @@ const cases = (allCases as any[])
       <div class="mt-kelly-card" data-anim data-delay="3">
         <div class="mtkc-avatar">KP</div>
         <div class="mtkc-info">
-          <strong>Kelly Pinheiro</strong>
+          <strong><a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a></strong>
           <span>CEO & Sócio-Fundadora · Mclair</span>
         </div>
         <blockquote class="mtkc-quote">

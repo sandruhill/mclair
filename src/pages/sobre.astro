@@ -2,7 +2,7 @@
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
 import { getSingleton } from '../utils/cmsApi';
-import { idDaPessoa, paginaDaPessoa } from '../utils/blogAuthors';
+import { idDaPessoa, paginaDaPessoa, paginaPorNome, linkarPessoasEmTexto } from '../utils/blogAuthors';
 
 const WA ='https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20falar%20com%20a%20equipe.';
 
@@ -66,7 +66,7 @@ const seo = sobreContent?.seo ?? {};
       <em>e Marketing de Autoridade desde 2017</em>
     </h1>
     <p class="ph-sub hero-instant" data-anim data-delay="2">
-      Fundada em 2017 por Kelly Pinheiro em São Paulo. Atende 23+ segmentos, de executivos a multinacionais, com equipes de Assessoria de Imprensa, Branding e Marketing Digital. 200+ clientes, 11.600+ inserções na mídia.
+      Fundada em 2017 por <a href={paginaDaPessoa('kelly-pinheiro')} class="pessoa-link">Kelly Pinheiro</a> em São Paulo. Atende 23+ segmentos, de executivos a multinacionais, com equipes de Assessoria de Imprensa, Branding e Marketing Digital. 200+ clientes, 11.600+ inserções na mídia.
     </p>
     <div class="ph-stats stagger-children" data-delay="3">
       <div class="phs-item">
@@ -176,9 +176,9 @@ const seo = sobreContent?.seo ?? {};
           <div class="mc-avatar" style="background:var(--red)">
             {m.initials}
           </div>
-          <h3 class="mc-nome">{m.nome}</h3>
+          <h3 class="mc-nome">{paginaPorNome(m.nome) ? <a href={paginaPorNome(m.nome)} class="pessoa-link">{m.nome}</a> : m.nome}</h3>
           <span class="mc-cargo">{m.cargo}</span>
-          <p class="mc-bio">{m.bio}</p>
+          <p class="mc-bio" set:html={linkarPessoasEmTexto(m.bio)}></p>
         </div>
       ))}
     </div>

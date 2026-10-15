@@ -1,6 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
+import { linkarPessoasEmTexto } from '../../utils/blogAuthors';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20resultados%20como%20esse.';
 
@@ -132,7 +133,7 @@ const { c, otherCases } = Astro.props;
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
         </div>
         <h2 class="cb-title">O Desafio</h2>
-        <p class="cb-text">{c.challenge}</p>
+        <p class="cb-text" set:html={linkarPessoasEmTexto(c.challenge)}></p>
       </div>
       <!-- Solution -->
       <div class="cb-block" data-anim data-delay="1">
@@ -140,7 +141,7 @@ const { c, otherCases } = Astro.props;
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
         </div>
         <h2 class="cb-title">A Solução Mclair</h2>
-        <p class="cb-text">{c.solution}</p>
+        <p class="cb-text" set:html={linkarPessoasEmTexto(c.solution)}></p>
       </div>
       <!-- Results -->
       <div class="cb-results" data-anim="right" data-delay="1">

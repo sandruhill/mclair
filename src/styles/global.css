@@ -349,6 +349,16 @@ ul, ol { list-style:none; }
 .clients-hero:hover .ch-photo-img { transform: scale(1.06); }
 .page-content { animation: page-in .5s cubic-bezier(.22,1,.36,1) backwards; }
 
+/* ── Nome de pessoa com página própria no site (Kelly), linkado no meio do
+      texto: herda a cor do trecho, só um sublinhado fino denuncia o link. ── */
+a.pessoa-link {
+  color: inherit; font-weight: inherit;
+  text-decoration: underline; text-decoration-thickness: 1px;
+  text-underline-offset: 3px; text-decoration-color: rgba(200,16,46,.45);
+  transition: text-decoration-color .2s, color .2s;
+}
+a.pessoa-link:hover { color: var(--red); text-decoration-color: var(--red); }
+
 /* ── Autores: peças compartilhadas entre a assinatura no topo do artigo,
       o cartão no fim e a página de perfil (um sistema só) ── */
 .autor-avatar {

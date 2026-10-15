@@ -26,8 +26,8 @@ export function urlDoAutor(slug: string): string {
  * para o Google e as IAs enxergarem uma entidade só. Chave = slug do autor
  * no CMS. Quem não está aqui segue com o @id da própria página de autor.
  */
-export const PESSOAS_CANONICAS: Record<string, { path: string; fragmento: string }> = {
-  'kelly-pinheiro': { path: '/kelly-pinheiro/', fragmento: '#pessoa' },
+export const PESSOAS_CANONICAS: Record<string, { nome: string; path: string; fragmento: string }> = {
+  'kelly-pinheiro': { nome: 'Kelly Pinheiro', path: '/kelly-pinheiro/', fragmento: '#pessoa' },
 };
 
 /** @id canônico da pessoa (página própria), ou null se ela não tem uma. */
@@ -39,6 +39,83 @@ export function idDaPessoa(base: string, slug: string): string | null {
 /** Caminho da página própria da pessoa (para link visível), ou null. */
 export function paginaDaPessoa(slug: string): string | null {
   return PESSOAS_CANONICAS[slug]?.path ?? null;
+}
+
+/** Página própria pelo nome exibido (textos do CMS trazem o nome, não o slug). */
+export function paginaPorNome(nome: string | null | undefined): string | null {
+  const n = (nome ?? '').trim().toLocaleLowerCase('pt-BR');
+  if (!n) return null;
+  for (const p of Object.values(PESSOAS_CANONICAS)) {
+    if (p.nome.toLocaleLowerCase('pt-BR') === n) return p.path;
+  }
+  return null;
+}
+
+/**
+ * Para onde o nome do autor leva: a página própria, se existir; senão a
+ * página de autor do blog. "Todos os artigos de Fulano" continua indo para
+ * a página de autor (ver AuthorCard.astro).
+ */
+export function linkDoAutor(autor: Pick<DbBlogAuthor, 'slug' | 'kind'>): string {
+  if (autor.kind === 'organizacao') return urlDoAutor(autor.slug);
+  return paginaDaPessoa(autor.slug) ?? urlDoAutor(autor.slug);
+}
+
+function escaparRegex(t: string): string {
+  return t.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+function escaparHtml(t: string): string {
+  return t.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+const NOMES_LINKAVEIS = Object.values(PESSOAS_CANONICAS).map((p) => ({
+  path: p.path,
+  // Nome inteiro, sem pegar pedaço de outra palavra (Kelly Pinheirosa).
+  re: new RegExp(`(?<![\\p{L}\\p{N}])${escaparRegex(p.nome)}(?![\\p{L}\\p{N}])`, 'gu'),
+}));
+
+/**
+ * HTML já renderizado: envolve o nome de quem tem página própria num <a>,
+ * só em texto corrido (fora de <a>, de h1 a h6, de script/style). Serve ao
+ * corpo dos posts e a qualquer HTML vindo do CMS; o banco não muda.
+ * `exceto` = caminho da própria página, para ela não linkar para si mesma.
+ */
+export function linkarPessoas(html: string | null | undefined, exceto?: string | null): string {
+  if (!html) return '';
+  const nomes = NOMES_LINKAVEIS.filter((n) => n.path !== exceto);
+  if (!nomes.length || !nomes.some((n) => (n.re.lastIndex = 0, n.re.test(html)))) return html;
+  const BLOQUEIA = /^(a|h[1-6]|script|style|title|textarea|button)$/i;
+  const partes = html.split(/(<[^>]+>)/);
+  const pilha: string[] = [];
+  return partes
+    .map((parte) => {
+      if (parte.startsWith('<')) {
+        const m = /^<\/?([a-zA-Z][a-zA-Z0-9-]*)/.exec(parte);
+        if (m && BLOQUEIA.test(m[1]) && !parte.endsWith('/>')) {
+          const tag = m[1].toLowerCase();
+          if (parte.startsWith('</')) {
+            const i = pilha.lastIndexOf(tag);
+            if (i !== -1) pilha.splice(i, 1);
+          } else {
+            pilha.push(tag);
+          }
+        }
+        return parte;
+      }
+      if (pilha.length || !parte.trim()) return parte;
+      let t = parte;
+      for (const n of nomes) {
+        n.re.lastIndex = 0;
+        t = t.replace(n.re, (nome) => `<a href="${n.path}" class="pessoa-link">${nome}</a>`);
+      }
+      return t;
+    })
+    .join('');
+}
+
+/** Texto simples (campo do CMS): escapa o HTML e linka os nomes. Usar com set:html. */
+export function linkarPessoasEmTexto(texto: string | null | undefined, exceto?: string | null): string {
+  return linkarPessoas(escaparHtml(texto ?? ''), exceto);
 }
 
 /**

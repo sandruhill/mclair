@@ -7,7 +7,7 @@ import { htmlDaCapaEmVideo } from '../../utils/videoEmbed';
 import { renderizarPost } from '../../utils/renderPost';
 import { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } from '../../utils/cmsApi';
 import type { DbBlogPost, DbBlogAuthor } from '../../utils/cmsApi';
-import { mapaDeAutores, mapaDeVinculos, autoresDoPost, urlDoAutor, schemaAutoresDoPost, ligarNomes } from '../../utils/blogAuthors';
+import { mapaDeAutores, mapaDeVinculos, autoresDoPost, linkDoAutor, schemaAutoresDoPost, ligarNomes, paginaPorNome } from '../../utils/blogAuthors';
 import { isoComFuso, dataPorExtenso } from '../../utils/datas';
 
 export async function getStaticPaths() {
@@ -243,9 +243,9 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
         <div class="sidebar-card">
           <p class="sb-label">Publicado por</p>
           {temAutores ? (
-            autores.map((a) => <p class="sb-author"><a href={urlDoAutor(a.slug)} rel="author">{a.name}</a></p>)
+            autores.map((a) => <p class="sb-author"><a href={linkDoAutor(a)} rel="author">{a.name}</a></p>)
           ) : (
-            <p class="sb-author">{post.author || 'Equipe Mclair'}</p>
+            <p class="sb-author">{paginaPorNome(post.author) ? <a href={paginaPorNome(post.author)} class="pessoa-link">{post.author}</a> : (post.author || 'Equipe Mclair')}</p>
           )}
           {post.date && <p class="sb-date">{dataPorExtenso(post.date, { hora: true })}</p>}
         </div>

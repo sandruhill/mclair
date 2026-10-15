@@ -2,6 +2,7 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { getServices } from '../../utils/cmsApi';
+import { linkarPessoasEmTexto } from '../../utils/blogAuthors';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20solicitar%20uma%20proposta.';
 
@@ -109,12 +110,12 @@ const services = (allServicos as any[])
         <div class="svc-content" data-anim data-delay="1">
           <span class="sc-tag" style={`color:${s.color};background:${s.bg}`}>{s.title}</span>
           <h2 class="sc-headline">{s.headline}</h2>
-          <p class="sc-desc">{s.desc}</p>
+          <p class="sc-desc" set:html={linkarPessoasEmTexto(s.desc)}></p>
           <ul class="sc-items stagger-children">
             {s.items.map(item => (
               <li>
                 <span class="sci-dot" style={`background:${s.color}`}></span>
-                {item}
+                <Fragment set:html={linkarPessoasEmTexto(item)} />
               </li>
             ))}
           </ul>

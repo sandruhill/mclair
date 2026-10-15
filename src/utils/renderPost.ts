@@ -11,9 +11,11 @@ import { marked } from 'marked';
 import { normalizarParagrafos } from './markdown';
 import { embutirVideos } from './videoEmbed';
 import { extrairGalerias, embutirGalerias, dimensoesDasImagens } from './galeria';
+import { linkarPessoas } from './blogAuthors';
 
 export function renderizarPost(md: string | null | undefined): string {
   const { md: semGalerias, galerias } = extrairGalerias(normalizarParagrafos(md));
   const html = marked.parse(semGalerias) as string;
-  return dimensoesDasImagens(embutirGalerias(embutirVideos(html), galerias));
+  //   6. quem tem página própria no site (Kelly) vira link no texto corrido.
+  return linkarPessoas(dimensoesDasImagens(embutirGalerias(embutirVideos(html), galerias)));
 }

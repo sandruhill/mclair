@@ -10,7 +10,7 @@ export const prerender = true;
 import Layout from '../../../layouts/Layout.astro';
 import AuthorAvatar from '../../../components/AuthorAvatar.astro';
 import { getBlogPosts, getBlogAuthors, getBlogPostAuthors } from '../../../utils/cmsApi';
-import { autoresComPosts, urlDoAutor, idDoAutor } from '../../../utils/blogAuthors';
+import { autoresComPosts, urlDoAutor, idDoAutor, linkDoAutor } from '../../../utils/blogAuthors';
 
 export async function getStaticPaths() {
   const { getBlogPosts: gp, getBlogAuthors: ga, getBlogPostAuthors: gv } = await import('../../../utils/cmsApi');
@@ -85,7 +85,7 @@ const descricao = total
     ) : (
       <div class="au-grid stagger-children">
         {autores.map((a, i) => (
-          <a href={urlDoAutor(a.slug)} class="au-card" data-anim data-delay={((i % 3) + 1).toString()}>
+          <a href={linkDoAutor(a)} class="au-card" data-anim data-delay={((i % 3) + 1).toString()}>
             <AuthorAvatar autor={a} tamanho={96} link={false} />
             <span class="au-nome">{a.name}</span>
             {a.job_title && <span class="au-cargo">{a.job_title}</span>}

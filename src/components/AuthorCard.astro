@@ -6,7 +6,7 @@
 import type { DbBlogAuthor } from '../utils/cmsApi';
 import AuthorAvatar from './AuthorAvatar.astro';
 import AuthorLinks from './AuthorLinks.astro';
-import { palavras, urlDoAutor } from '../utils/blogAuthors';
+import { palavras, urlDoAutor, linkDoAutor } from '../utils/blogAuthors';
 
 interface Props {
   autor: DbBlogAuthor;
@@ -29,7 +29,7 @@ const paragrafos = bio.split(/\n\s*\n/).map((p) => p.trim()).filter(Boolean);
     {perfil ? (
       <h1 class="autor-nome">{autor.name}</h1>
     ) : (
-      <p class="autor-nome"><a href={url} rel="author">{autor.name}</a></p>
+      <p class="autor-nome"><a href={linkDoAutor(autor)} rel="author">{autor.name}</a></p>
     )}
     {autor.job_title && <p class="autor-cargo">{autor.job_title}</p>}
     {paragrafos.map((p) => <p class="autor-bio">{p}</p>)}

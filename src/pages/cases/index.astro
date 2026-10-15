@@ -2,6 +2,7 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { getCases } from '../../utils/cmsApi';
+import { linkarPessoasEmTexto } from '../../utils/blogAuthors';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Quero%20saber%20mais%20sobre%20os%20cases.';
 
@@ -123,11 +124,11 @@ const allCasesForSchema = sorted.map((c, i) => ({
         <div class="case-body">
           <div class="cb-col" data-anim data-delay="1">
             <h3 class="cb-label">O Desafio</h3>
-            <p class="cb-text">{c.challenge}</p>
+            <p class="cb-text" set:html={linkarPessoasEmTexto(c.challenge)}></p>
           </div>
           <div class="cb-col" data-anim data-delay="2">
             <h3 class="cb-label">A Solução Mclair</h3>
-            <p class="cb-text">{c.solution}</p>
+            <p class="cb-text" set:html={linkarPessoasEmTexto(c.solution)}></p>
           </div>
           <div class="cb-results" data-anim data-delay="3">
             <h3 class="cb-label">Resultados</h3>

@@ -6,7 +6,7 @@
 import type { DbBlogAuthor } from '../utils/cmsApi';
 import AuthorAvatar from './AuthorAvatar.astro';
 import AuthorLinks from './AuthorLinks.astro';
-import { palavras, urlDoAutor } from '../utils/blogAuthors';
+import { palavras, linkDoAutor } from '../utils/blogAuthors';
 
 interface Props {
   autores: DbBlogAuthor[];
@@ -22,7 +22,7 @@ const um = autores[0];
   <div class="byline">
     <AuthorAvatar autor={um} tamanho={72} />
     <div class="byline-texto">
-      <p class="byline-por">{palavras(um).escritoPor} <a href={urlDoAutor(um.slug)} rel="author">{um.name}</a></p>
+      <p class="byline-por">{palavras(um).escritoPor} <a href={linkDoAutor(um)} rel="author">{um.name}</a></p>
       {um.job_title && <p class="byline-cargo">{um.job_title}</p>}
       <AuthorLinks autor={um} />
     </div>
@@ -40,7 +40,7 @@ const um = autores[0];
         {autores.map((a, i) => (
           <Fragment>
             {i > 0 && (i === autores.length - 1 ? ' e ' : ', ')}
-            <a href={urlDoAutor(a.slug)} rel="author">{a.name}</a>
+            <a href={linkDoAutor(a)} rel="author">{a.name}</a>
           </Fragment>
         ))}
       </p>
@@ -50,7 +50,7 @@ const um = autores[0];
         <div class="byline-celula">
           <AuthorAvatar autor={a} tamanho={44} />
           <div class="byline-texto">
-            <a class="byline-nome" href={urlDoAutor(a.slug)} rel="author">{a.name}</a>
+            <a class="byline-nome" href={linkDoAutor(a)} rel="author">{a.name}</a>
             {a.job_title && <p class="byline-cargo">{a.job_title}</p>}
             <AuthorLinks autor={a} compacto />
           </div>

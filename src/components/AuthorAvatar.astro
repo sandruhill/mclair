@@ -2,7 +2,7 @@
 // Foto do autor, ou monograma com as iniciais quando não há foto, ou o
 // logotipo quando é uma organização. Estilos em global.css (.autor-avatar).
 import type { DbBlogAuthor } from '../utils/cmsApi';
-import { iniciais, urlDoAutor } from '../utils/blogAuthors';
+import { iniciais, linkDoAutor } from '../utils/blogAuthors';
 
 interface Props {
   autor: DbBlogAuthor;
@@ -14,7 +14,7 @@ const org = autor.kind === 'organizacao';
 const classes = ['autor-avatar', { 'autor-avatar-mono': !autor.photo_url, 'autor-avatar-org': org && !!autor.photo_url }];
 const estilo = `--autor-avatar:${tamanho}px`;
 const Tag = link ? 'a' : 'span';
-const extra = link ? { href: urlDoAutor(autor.slug), rel: 'author', tabindex: -1 } : {};
+const extra = link ? { href: linkDoAutor(autor), rel: 'author', tabindex: -1 } : {};
 ---
 
 <Tag class:list={classes} style={estilo} aria-hidden="true" {...extra}>
