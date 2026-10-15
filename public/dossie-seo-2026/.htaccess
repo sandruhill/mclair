@@ -1,4 +1,4 @@
-# Dossiê interno — não deve ser listado por buscador nenhum.
+# Dossiê interno: não deve ser listado por buscador nenhum.
 #
 # O noindex é enviado por cabeçalho, e NÃO por Disallow no robots.txt de
 # propósito: um robots bloqueado impede o rastreador de entrar e, portanto,
@@ -9,10 +9,21 @@
     Header always set Referrer-Policy "no-referrer"
 </IfModule>
 
-# O markdown de carga inicial só interessa ao PHP; servi-lo cru entregaria o
-# mesmo conteúdo por um caminho que não passa pelos cabeçalhos acima.
-<FilesMatch "\.(md|log)$">
+# O markdown de carga inicial, os dados do plano (dados/*.json) e qualquer
+# backup só interessam ao PHP; servi-los crus entregaria o conteúdo por um
+# caminho que não passa pelos cabeçalhos acima. Um .bak de um .php sairia
+# como texto puro.
+<FilesMatch "\.(md|log|json|bak|bak-[A-Za-z0-9_-]+|orig|save|swp|sql|zip|txt|ini|dist|inc)$">
+    Require all denied
+</FilesMatch>
+<FilesMatch "~$">
+    Require all denied
+</FilesMatch>
+
+# Partes do plano que só funcionam incluídas pelo index.php.
+<FilesMatch "^(plano|plano-secao)\.php$">
     Require all denied
 </FilesMatch>
 
 DirectoryIndex index.php
+Options -Indexes

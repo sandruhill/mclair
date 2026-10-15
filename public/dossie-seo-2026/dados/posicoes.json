@@ -1,0 +1,401 @@
+{
+ "fuente": "Semrush, base Brasil (br), pesquisa de 15/10/2026",
+ "actualizado": "2026-10-15",
+ "calendario": [
+  "2026-10-15",
+  "2026-11-15",
+  "2026-12-15",
+  "2027-01-15",
+  "2027-02-15",
+  "2027-03-15",
+  "2027-04-15",
+  "2027-05-15",
+  "2027-06-15",
+  "2027-07-15",
+  "2027-08-15",
+  "2027-09-15",
+  "2027-10-15"
+ ],
+ "objetivo": [
+  {
+   "p": "P1",
+   "kw": "assessoria de imprensa",
+   "vol": 4400,
+   "kd": 31,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "acessoria de imprensa",
+   "vol": 880,
+   "kd": 21,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "assesoria de imprensa",
+   "vol": 480,
+   "kd": 45,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "assessorias de imprensa",
+   "vol": 140,
+   "kd": 32,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "assessoria de imprensa digital",
+   "vol": 110,
+   "kd": 19,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "contratar assessoria de imprensa",
+   "vol": 70,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "agência de assessoria de imprensa",
+   "vol": 50,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "empresa de assessoria de imprensa",
+   "vol": 40,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "melhor assessoria de imprensa",
+   "vol": 40,
+   "kd": null,
+   "url": "/blog/ (guia das melhores agências de SP)",
+   "nova": true
+  },
+  {
+   "p": "P1",
+   "kw": "empresas de assessoria de imprensa",
+   "vol": 30,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "serviço de assessoria de imprensa",
+   "vol": 30,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "serviços de assessoria de imprensa",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/"
+  },
+  {
+   "p": "P1",
+   "kw": "assessoria de imprensa para startups",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/tecnologia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa sp",
+   "vol": 110,
+   "kd": 19,
+   "url": "/servicos/assessoria-de-imprensa/sao-paulo/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em sp",
+   "vol": 90,
+   "kd": 17,
+   "url": "/servicos/assessoria-de-imprensa/sao-paulo/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa são paulo",
+   "vol": 50,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/sao-paulo/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em são paulo",
+   "vol": 50,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/sao-paulo/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa rj",
+   "vol": 30,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/rio-de-janeiro/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa rio de janeiro",
+   "vol": 30,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/rio-de-janeiro/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa no rio de janeiro",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/rio-de-janeiro/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa bh",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/belo-horizonte/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa belo horizonte",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/belo-horizonte/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa porto alegre",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em porto alegre",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria imprensa porto alegre",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa rs",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa rio grande do sul",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de comunicação porto alegre",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/porto-alegre/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa curitiba",
+   "vol": 30,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/curitiba/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em curitiba",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/curitiba/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria imprensa curitiba",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/curitiba/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de comunicação curitiba",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/curitiba/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa florianopolis",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/florianopolis/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em florianópolis",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/florianopolis/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa santa catarina",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/florianopolis/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa joinville",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/joinville/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em joinville",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/joinville/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa brasilia",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/brasilia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa brasília",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/brasilia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em brasilia",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/brasilia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em brasília",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/brasilia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa df",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/brasilia/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa goiania",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/goiania/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa em goiania",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/goiania/",
+   "nova": true
+  },
+  {
+   "p": "P2",
+   "kw": "assessoria de imprensa cuiabá",
+   "vol": 10,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/cuiaba/",
+   "nova": true
+  },
+  {
+   "p": "P3",
+   "kw": "quanto custa assessoria de imprensa",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/quanto-custa/",
+   "nova": true
+  },
+  {
+   "p": "P3",
+   "kw": "assessoria de imprensa preço",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/quanto-custa/",
+   "nova": true
+  },
+  {
+   "p": "P3",
+   "kw": "assessoria de imprensa valor",
+   "vol": 20,
+   "kd": null,
+   "url": "/servicos/assessoria-de-imprensa/quanto-custa/",
+   "nova": true
+  }
+ ],
+ "medidas": [
+  {
+   "fecha": "2026-10-15",
+   "nota": "Linha de base. A Mclair não aparece em nenhuma consulta com \"imprensa\" no Semrush br; o domínio sem www não tem dados e o www tem uma palavra só (\"filme comunicação\", posição 12, numa URL antiga).",
+   "posiciones": {}
+  }
+ ]
+}

@@ -1,0 +1,190 @@
+{
+ "actualizado": "2026-10-15",
+ "fuentes": "Search Console, Bing Webmaster Tools (com o relatório de IA), Semrush base Brasil, o Perfil da Empresa no Google e as perguntas fixas às IAs",
+ "calendario": [
+  "2026-09-23",
+  "2026-10-15",
+  "2026-11-15",
+  "2026-12-15",
+  "2027-01-15",
+  "2027-02-15",
+  "2027-03-15",
+  "2027-04-15",
+  "2027-05-15",
+  "2027-06-15",
+  "2027-07-15",
+  "2027-08-15",
+  "2027-09-15",
+  "2027-10-15"
+ ],
+ "metricas": [
+  {
+   "id": "google_indexadas",
+   "nombre": "Páginas no Google",
+   "mejor": "arriba",
+   "nota": "Search Console. O sitemap tem 333 endereços."
+  },
+  {
+   "id": "google_cliques",
+   "nombre": "Cliques no Google (3 meses)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "google_impressoes",
+   "nombre": "Impressões no Google (3 meses)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "consultas",
+   "nombre": "Buscas distintas que trouxeram o site (3 meses)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "consultas_imprensa",
+   "nombre": "Dessas, com \"assessoria de imprensa\"",
+   "mejor": "arriba",
+   "nota": "O número que mais importa no plano."
+  },
+  {
+   "id": "bing_indexadas",
+   "nombre": "Páginas no Bing",
+   "mejor": "arriba"
+  },
+  {
+   "id": "bing_cliques",
+   "nombre": "Cliques no Bing (3 meses)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "bing_impressoes",
+   "nombre": "Impressões no Bing (3 meses)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "citas_copilot",
+   "nombre": "Citações no Copilot (3 meses)",
+   "mejor": "arriba",
+   "nota": "Relatório de IA do Bing Webmaster."
+  },
+  {
+   "id": "ia_sp",
+   "nombre": "IAs que citam a Mclair entre as melhores de SP",
+   "mejor": "arriba",
+   "nota": "Das perguntas fixas, sem login: Visão Geral do Google, Perplexity e ChatGPT. Em 23/09 o ChatGPT rodou logado; a partir de novembro, sem login."
+  },
+  {
+   "id": "ia_leiloes",
+   "nombre": "IAs que citam a Mclair em 1º para leiloeiros",
+   "mejor": "arriba",
+   "nota": "ChatGPT e Perplexity."
+  },
+  {
+   "id": "semrush_kw",
+   "nombre": "Palavras-chave no top 100 (Semrush)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "semrush_trafego",
+   "nombre": "Visitas orgânicas por mês (Semrush)",
+   "mejor": "arriba",
+   "nota": "Estimativa do Semrush."
+  },
+  {
+   "id": "kw_top100",
+   "nombre": "Consultas do painel no top 100",
+   "mejor": "arriba",
+   "nota": "Das consultas do painel de palavras abaixo."
+  },
+  {
+   "id": "kw_top20",
+   "nombre": "Consultas do painel no top 20",
+   "mejor": "arriba"
+  },
+  {
+   "id": "kw_top10",
+   "nombre": "Consultas do painel no top 10",
+   "mejor": "arriba",
+   "nota": "Onde começam os cliques."
+  },
+  {
+   "id": "cidades_indexadas",
+   "nombre": "Páginas de cidade indexadas",
+   "mejor": "arriba",
+   "nota": "De 10 previstas."
+  },
+  {
+   "id": "authority",
+   "nombre": "Authority Score (Semrush)",
+   "mejor": "arriba"
+  },
+  {
+   "id": "dominios_ref",
+   "nombre": "Domínios que apontam para o site",
+   "mejor": "arriba",
+   "nota": "Semrush."
+  },
+  {
+   "id": "gbp_avaliacoes",
+   "nombre": "Avaliações no Perfil do Google",
+   "mejor": "arriba"
+  },
+  {
+   "id": "fichas_ok",
+   "nombre": "Fichas certas (Perfil do Google, Bing Places, oHub)",
+   "mejor": "arriba",
+   "nota": "De 3. Em 23/09 o Perfil existia, mas sem área e na categoria errada."
+  }
+ ],
+ "medidas": [
+  {
+   "fecha": "2026-09-23",
+   "nota": "Ponto de partida do dossiê de concorrência. Search Console com dados só desde 18/08/2026; Semrush com referência de agosto. O sitemap estava com erro no Bing e foi reenviado neste dia.",
+   "google_indexadas": 351,
+   "google_cliques": 11,
+   "google_impressoes": 465,
+   "consultas": 45,
+   "consultas_imprensa": 0,
+   "bing_indexadas": 50,
+   "bing_cliques": 1,
+   "bing_impressoes": 2,
+   "citas_copilot": 0,
+   "ia_sp": 0,
+   "ia_leiloes": 2,
+   "semrush_kw": 17,
+   "semrush_trafego": 10,
+   "kw_top100": null,
+   "kw_top20": null,
+   "kw_top10": null,
+   "cidades_indexadas": 0,
+   "authority": 7,
+   "dominios_ref": 193,
+   "gbp_avaliacoes": 0,
+   "fichas_ok": 0
+  },
+  {
+   "fecha": "2026-10-15",
+   "nota": "Leitura parcial, só Semrush, feita na pesquisa de SERP comercial: nenhuma consulta do painel no top 100. O Authority Score e os domínios vêm do relatório de backlinks dessa data e não batem com os de 23/09, que eram da visão geral do domínio. No mesmo dia entrou no ar a página da Kelly.",
+   "google_indexadas": null,
+   "google_cliques": null,
+   "google_impressoes": null,
+   "consultas": null,
+   "consultas_imprensa": null,
+   "bing_indexadas": null,
+   "bing_cliques": null,
+   "bing_impressoes": null,
+   "citas_copilot": null,
+   "ia_sp": null,
+   "ia_leiloes": null,
+   "semrush_kw": null,
+   "semrush_trafego": null,
+   "kw_top100": 0,
+   "kw_top20": 0,
+   "kw_top10": 0,
+   "cidades_indexadas": 0,
+   "authority": 6,
+   "dominios_ref": 271,
+   "gbp_avaliacoes": null,
+   "fichas_ok": null
+  }
+ ]
+}

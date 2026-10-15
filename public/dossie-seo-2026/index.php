@@ -1,6 +1,6 @@
 <?php
 /**
- * Dossiê de SEO 2026 — página interna, fora dos buscadores.
+ * Dossiê de SEO 2026: página interna, fora dos buscadores.
  *
  * Aberta e editável por qualquer visitante, por decisão do cliente (23/09/2026).
  * Por isso duas salvaguardas que NÃO são controle de acesso e sim higiene básica:
@@ -253,6 +253,12 @@ $pdo     = cmsDb();
 
 dossieSchema($pdo);
 
+// Segunda parte da página: o Plano de 12 meses. As ações ?plano=... (estado,
+// salvar, responder, apagar, baixar) terminam dentro de planoInicia().
+define('DOSSIE_PLANO', true);
+require __DIR__ . '/plano.php';
+$plano = planoInicia($pdo);
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $token = $_POST['csrf'] ?? '';
     if (!hash_equals($_SESSION['csrf'], (string) $token)) {
@@ -354,34 +360,35 @@ body{
 /* Tipografia do documento */
 h1,h2,h3,h4{line-height:1.2; letter-spacing:-0.015em; text-wrap:balance; margin:0}
 h1{font-size:clamp(30px,5vw,42px); font-weight:700; margin-bottom:8px}
-h2{font-size:clamp(23px,3.2vw,29px); font-weight:700; margin:52px 0 14px; padding-top:20px; border-top:1px solid var(--line)}
-h3{font-size:19px; font-weight:700; margin:34px 0 10px; color:var(--ink-2)}
-h4{font-size:17px; font-weight:700; margin:26px 0 8px; color:var(--ink-2)}
-p{margin:0 0 17px; text-wrap:pretty}
-ul,ol{margin:0 0 20px; padding-left:22px}
-li{margin-bottom:7px; text-wrap:pretty}
+:where(.dossie) h2{font-size:clamp(23px,3.2vw,29px); font-weight:700; margin:52px 0 14px; padding-top:20px; border-top:1px solid var(--line)}
+:where(.dossie) h3{font-size:19px; font-weight:700; margin:34px 0 10px; color:var(--ink-2)}
+:where(.dossie) h4{font-size:17px; font-weight:700; margin:26px 0 8px; color:var(--ink-2)}
+p{margin:0}
+:where(.dossie) p{margin:0 0 17px; text-wrap:pretty}
+:where(.dossie) ul,:where(.dossie) ol{margin:0 0 20px; padding-left:22px}
+:where(.dossie) li{margin-bottom:7px; text-wrap:pretty}
 strong{font-weight:700}
 a{color:var(--red); text-underline-offset:2px}
 a:hover{color:var(--ink)}
-code{
+:where(.dossie) code{
   font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:0.87em;
   background:var(--cream-3); padding:1px 5px; border-radius:3px; word-break:break-word;
 }
 
 /* Tabelas */
 .rolagem{overflow-x:auto; margin:0 0 26px; -webkit-overflow-scrolling:touch}
-table{border-collapse:collapse; width:100%; font-size:15px; min-width:460px}
-thead th{
+:where(.dossie) table{border-collapse:collapse; width:100%; font-size:15px; min-width:460px}
+:where(.dossie) thead th{
   text-align:left; font-weight:700; font-size:13px; text-transform:uppercase;
   letter-spacing:0.04em; color:var(--ink-3);
   border-bottom:2px solid var(--line-2); padding:0 14px 9px 0; vertical-align:bottom;
 }
-tbody td{
+:where(.dossie) tbody td{
   border-bottom:1px solid var(--line); padding:11px 14px 11px 0;
   vertical-align:top; text-wrap:pretty;
 }
-tbody tr:last-child td{border-bottom:none}
-thead th:last-child,tbody td:last-child{padding-right:0}
+:where(.dossie) tbody tr:last-child td{border-bottom:none}
+:where(.dossie) thead th:last-child,:where(.dossie) tbody td:last-child{padding-right:0}
 
 /* Barra de ações */
 .acoes{
@@ -399,17 +406,17 @@ thead th:last-child,tbody td:last-child{padding-right:0}
 .quando{margin-left:auto; text-align:right; font-size:13px; color:var(--ink-4)}
 
 /* Editor */
-textarea{
+:where(.dossie) textarea{
   width:100%; min-height:62vh; font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   font-size:14px; line-height:1.7; padding:18px; border:1px solid var(--line-2);
   border-radius:8px; background:#fff; color:var(--ink); resize:vertical;
 }
 textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
-input[type=text]{
+:where(.dossie) input[type=text]{
   font:inherit; font-size:14px; padding:9px 12px; border:1px solid var(--line-2);
   border-radius:6px; background:#fff; max-width:260px;
 }
-label{font-size:14px; color:var(--ink-3)}
+:where(.dossie) label{font-size:14px; color:var(--ink-3)}
 .dica{font-size:13px; color:var(--ink-4); margin:10px 0 18px}
 
 /* Recados */
@@ -418,14 +425,15 @@ label{font-size:14px; color:var(--ink-3)}
 .recado-erro{background:var(--red); color:#fff}
 
 /* Histórico */
-details{margin-top:56px; border-top:1px solid var(--line); padding-top:22px}
-summary{cursor:pointer; font-weight:700; font-size:15px; color:var(--ink-2)}
-details table{font-size:14px; margin-top:16px; min-width:0}
+:where(.dossie) details{margin-top:56px; border-top:1px solid var(--line); padding-top:22px}
+:where(.dossie) summary{cursor:pointer; font-weight:700; font-size:15px; color:var(--ink-2)}
+:where(.dossie) details table{font-size:14px; margin-top:16px; min-width:0}
 .rodape{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-4)}
 @media (max-width:560px){
   body{font-size:16px}
   .quando{margin-left:0; text-align:left; width:100%}
 }
+<?php readfile(__DIR__ . '/plano.css'); ?>
 </style>
 </head>
 <body>
@@ -435,6 +443,15 @@ details table{font-size:14px; margin-top:16px; min-width:0}
     <a class="marca" href="https://mclair.com.br/">Mclair</a>
     <span class="reservado">Documento interno, fora dos buscadores</span>
   </header>
+
+  <?php if (!$editar): ?>
+  <nav class="abas" aria-label="Partes desta página">
+    <a href="#dossie" data-alvo="dossie">Dossiê</a>
+    <a href="#plano" data-alvo="plano">Plano de 12 meses</a>
+  </nav>
+  <?php endif; ?>
+
+  <div class="dossie" id="dossie" data-aba="dossie">
 
   <?php if ($aviso): ?>
     <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?></p>
@@ -486,7 +503,7 @@ details table{font-size:14px; margin-top:16px; min-width:0}
             $quando = new DateTimeImmutable((string) $v['salvo_em']); ?>
           <tr>
             <td><?= $quando->format('d/m/Y H:i') ?></td>
-            <td><?= htmlspecialchars((string) ($v['salvo_por'] ?? '—'), ENT_QUOTES, 'UTF-8') ?></td>
+            <td><?= htmlspecialchars((string) ($v['salvo_por'] ?? 'sem nome'), ENT_QUOTES, 'UTF-8') ?></td>
             <td><?= number_format((int) $v['tamanho'], 0, ',', '.') ?> car.</td>
             <td><a href="/dossie-seo-2026/?restaurar=<?= (int) $v['id'] ?>&amp;csrf=<?= htmlspecialchars($_SESSION['csrf'], ENT_QUOTES, 'UTF-8') ?>">restaurar</a></td>
           </tr>
@@ -498,6 +515,10 @@ details table{font-size:14px; margin-top:16px; min-width:0}
     <?php endif; ?>
 
   <?php endif; ?>
+
+  </div>
+
+  <?php if (!$editar) { planoSecao($plano); } ?>
 
   <p class="rodape">
     Esta página pede aos buscadores que não a listem, mas o endereço continua público:
