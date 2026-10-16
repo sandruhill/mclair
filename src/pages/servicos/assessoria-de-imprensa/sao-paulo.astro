@@ -1,0 +1,164 @@
+---
+// /servicos/assessoria-de-imprensa/sao-paulo/
+// Página dona de "assessoria de imprensa sp", "em sp", "são paulo" e
+// "agência de assessoria de imprensa em são paulo" (mapa de palavras de
+// 16/10/2026, cluster D1). Rota estática: o Astro dá prioridade a ela sobre
+// src/pages/servicos/[...slug].astro, que só gera os caminhos que o CMS
+// devolve. Se um dia o CMS criar um serviço filho com o slug "sao-paulo"
+// sob assessoria-de-imprensa, os dois disputariam a mesma URL: não criar.
+// Toda prova citada vem dos cases publicados em /cases/.
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import {
+  SEO_ASSESSORIA_SP, WA_ASSESSORIA_SP, FAQ_ASSESSORIA_SP,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO,
+} from '../../../data/assessoria-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_SP}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const CASES = [
+  { href: '/cases/fidalgo/', nome: 'Fidalgo Leilões', texto: 'Os leilões de imóveis da Caixa Econômica Federal viraram matéria na Folha de S.Paulo. A mesma pauta saiu na Exame IN, e outra foi a matéria mais lida do Valor Investe.' },
+  { href: '/cases/vip-leiloes/', nome: 'VIP Leilões', texto: 'A Folha de S.Paulo noticiou os leilões noturnos da leiloeira. O InfoMoney publicou os leilões da Caixa e do Itaú, e a IstoÉ Dinheiro, os 1.135 imóveis de Santander, Bradesco e Caixa.' },
+  { href: '/cases/diego-nogare/', nome: 'Diego Nogare', texto: 'O especialista em dados e inteligência artificial teve duas matérias seguidas na home da CNN Brasil e assinou artigo na Exame sobre vibe coding e os riscos da IA para as empresas.' },
+  { href: '/cases/lambda3/', nome: 'Lambda3', texto: 'Em cinco anos de parceria, a consultoria de tecnologia deu entrevistas ao SBT, à Record TV, à Band e à Gazeta.' },
+  { href: '/cases/elemar-jr/', nome: 'Elemar Jr.', texto: 'O arquiteto de software escreveu sobre vazamento de dados no UOL Tecnologia e no Canaltech e assinou coluna no Olhar Digital Pro.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa em São Paulo',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_SP.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'São Paulo',
+      containedInPlace: { '@type': 'State', name: 'São Paulo' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_SP.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'São Paulo', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_SP.title}
+  description={SEO_ASSESSORIA_SP.description}
+  keywords={SEO_ASSESSORIA_SP.keywords}
+  ogImage="/cases-img/fidalgo-press-1.webp"
+  ogImageAlt="Matéria da Folha de S.Paulo sobre leilões de imóveis da Caixa, pauta da Mclair para a Fidalgo Leilões"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'São Paulo' },
+  ]}
+  h1={SEO_ASSESSORIA_SP.h1}
+  intro="A Mclair nasceu em São Paulo em 2017, pelas mãos de uma jornalista, e trabalha a poucos quilômetros das redações que pautam o país. Desde então, foram mais de 11.600 inserções na mídia para mais de 200 clientes."
+  wa={WA_ASSESSORIA_SP}
+  cta="Falar com a Mclair"
+  faq={FAQ_ASSESSORIA_SP}
+  faqTitulo="Perguntas de quem procura assessoria em São Paulo"
+  fimTitulo="Sua empresa tem uma história para a imprensa de São Paulo?"
+  fimTexto="Conte o que está acontecendo no seu negócio. Na primeira conversa a Mclair avalia o que é notícia, para quais veículos e com qual porta-voz."
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">A cidade onde a imprensa nacional é feita</h2>
+      <p class="af-p">Boa parte do noticiário de economia e negócios do Brasil sai de São Paulo. A Folha de S.Paulo e o Estadão têm sede aqui. A Exame, o Valor Econômico, o InfoMoney e a CNN Brasil também. Band, Record TV e SBT têm sede na Grande São Paulo.</p>
+      <p class="af-p">Para uma assessoria de imprensa, estar na mesma cidade muda o trabalho. A equipe lê esses veículos todo dia, acompanha quem cobre cada assunto e sabe quando uma editoria está buscando fonte. O release chega à pessoa certa, no momento em que ela precisa da pauta.</p>
+      <p class="af-p">Nenhum desses veículos tem espaço à venda, e a Mclair não promete publicação em nenhum deles. O que dá para prometer é método: pauta com fato novo, porta-voz preparado e acompanhamento até a resposta da redação.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/fidalgo-press-1.webp" alt="Matéria da Folha de S.Paulo: Caixa realiza leilões de imóveis com até 95% de desconto" width="1400" height="1100" loading="lazy" decoding="async" />
+      <figcaption>Folha de S.Paulo sobre os leilões de imóveis da Caixa, pauta da Mclair para a <a href="/cases/fidalgo/">Fidalgo Leilões</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Setores fortes de São Paulo que a Mclair já levou à imprensa</h2>
+    <p class="af-p">São Paulo concentra empresas de quase todos os setores, mas alguns têm imprensa especializada forte e muita disputa por espaço. São os que aparecem com mais frequência nos nossos cases:</p>
+    <ul class="af-lista">
+      <li><strong>Mercado imobiliário e finanças.</strong> Leiloeiras parceiras de Caixa, Bradesco, Itaú, Santander e Correios saíram nas editorias de economia a cada novo lote de imóveis.</li>
+      <li><strong>Tecnologia e dados.</strong> Consultorias e especialistas em software e inteligência artificial ganharam espaço em CNN Brasil, Exame, UOL, Canaltech e IT Forum.</li>
+      <li><strong>Indústria.</strong> O programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, levou a indústria de máquinas a 1.734 publicações na imprensa internacional.</li>
+      <li><strong>Liderança e gestão.</strong> Executivos e consultores passaram a assinar artigos e dar entrevistas em HSM Management, MIT Sloan Review Brasil e Exame.</li>
+    </ul>
+  </div></div>
+</section>
+
+<section class="af-secao" id="cases">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Clientes que saíram em veículos de São Paulo</h2>
+    <p class="af-p">Cada case tem as matérias publicadas, com veículo e data.</p>
+    <dl class="af-def">
+      {CASES.map((c) => (
+        <div>
+          <dt><a href={c.href}>{c.nome}</a></dt>
+          <dd>{c.texto}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="af-nota">Todos os cases estão em <a href="/cases/">mclair.com.br/cases</a>.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Uma jornalista à frente da conta</h2>
+      <p class="af-p"><a href={KELLY} class="pessoa-link">Kelly Pinheiro</a> é jornalista desde 2004 e fundou a Mclair em São Paulo. Foi colunista da Exame por dois anos e meio e conhece o filtro de uma redação paulistana pelo lado de dentro: o que vira pauta, o que é descartado e por quê.</p>
+      <p class="af-p">Ela define a estratégia de cada cliente, e uma equipe de jornalistas cuida do dia a dia. <a href={KELLY}>Leia a trajetória completa de Kelly Pinheiro</a>.</p>
+      <h3 class="af-h3">Presencial quando ajuda, remoto no resto</h3>
+      <p class="af-p">Com a base em São Paulo, dá para marcar encontros presenciais quando o trabalho pede, como a preparação de um porta-voz para uma entrevista grande. A rotina corre por vídeo, telefone e WhatsApp. É o mesmo formato com que a Mclair atende clientes do Brasil todo.</p>
+    </div>
+    <figure class="af-foto af-foto-retrato">
+      <img src="/kelly-pinheiro/kelly-pinheiro-escritorio-sorriso-800.webp" srcset="/kelly-pinheiro/kelly-pinheiro-escritorio-sorriso-800.webp 800w, /kelly-pinheiro/kelly-pinheiro-escritorio-sorriso-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 40vw" width="1600" height="2400" alt="Kelly Pinheiro, jornalista e fundadora da Mclair, sorrindo à mesa do escritório" loading="lazy" decoding="async" />
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Antes de contratar</h2>
+    <p class="af-p">Se você ainda está entendendo o serviço, a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> mostra o que entra no trabalho e como ele funciona, do diagnóstico ao clipping. Se a dúvida é orçamento, a página sobre <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> explica como o mercado cobra e o que faz o valor mudar.</p>
+  </div></div>
+</section>
+
+</AssessoriaFilha>
+</Layout>

@@ -1,0 +1,192 @@
+---
+// /servicos/assessoria-de-imprensa/quanto-custa/
+// Página dona de "quanto custa assessoria de imprensa", "assessoria de
+// imprensa preço" e "valor assessoria de imprensa" (mapa de palavras de
+// 16/10/2026, cluster B). Rota estática, com prioridade sobre
+// src/pages/servicos/[...slug].astro; não criar no CMS um serviço filho
+// com o slug "quanto-custa" sob assessoria-de-imprensa.
+//
+// SEM NÚMERO DE PREÇO: a Mclair ainda não aprovou uma faixa. Quando aprovar,
+// ela entra no bloco marcado com "FAIXA DE PREÇO" mais abaixo, e a primeira
+// pergunta do FAQ (FAQ_ASSESSORIA_PRECO em src/data/assessoria-imprensa.ts)
+// passa a citar a mesma faixa, para HTML e FAQPage dizerem a mesma coisa.
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import { paginaDaPessoa, idDaPessoa } from '../../../utils/blogAuthors';
+import {
+  SEO_ASSESSORIA_PRECO, WA_ASSESSORIA_PRECO, FAQ_ASSESSORIA_PRECO,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO,
+} from '../../../data/assessoria-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_PRECO}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+const PUBLICADO = '2026-10-16';
+
+const MODELOS = [
+  { nome: 'Fee mensal', texto: 'Um valor fixo por mês para um escopo combinado: quantas pautas, quantos porta-vozes, que tipo de relatório. É o modelo mais comum para quem quer presença contínua, porque o relacionamento com as redações se constrói com o tempo e o trabalho do mês seguinte aproveita o do anterior.' },
+  { nome: 'Projeto', texto: 'Preço fechado para uma entrega com começo e fim: o lançamento de um produto, a chegada de uma empresa ao Brasil, uma rodada de investimento, uma feira. Funciona quando existe um fato forte e uma data. Terminado o projeto, o contato com a imprensa costuma esfriar.' },
+  { nome: 'Por pauta ou por release', texto: 'Cobrança avulsa por texto produzido e enviado. É o formato de muitos freelancers. Sai mais barato no papel, mas raramente inclui o acompanhamento com o jornalista, que é a parte que decide se a matéria sai.' },
+  { nome: 'Evento ou coletiva', texto: 'Valor por evento, que reúne convite à imprensa, credenciamento, material de apoio, preparação de quem vai falar e atendimento aos jornalistas no dia. Pode ser contratado sozinho ou somado a um fee mensal.' },
+];
+
+const VARIAVEIS = [
+  { nome: 'Número de porta-vozes', texto: 'Cada pessoa que fala pela empresa precisa de pauta própria, media training e agenda de entrevistas. Dois porta-vozes dão mais trabalho que um.' },
+  { nome: 'Frequência de pautas', texto: 'Uma pauta forte por mês é um trabalho. Uma por semana, com artigos assinados e respostas rápidas a jornalistas, é outro.' },
+  { nome: 'Alcance', texto: 'Imprensa regional, nacional ou estrangeira pedem listas, idiomas e relacionamentos diferentes. No programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, a Mclair trabalhou com correspondentes estrangeiros e conteúdo em português e inglês.' },
+  { nome: 'Setor', texto: 'Tecnologia, finanças e indústria têm jornalistas especializados e exigem pauta técnica bem traduzida. Setores regulados, como saúde, pedem cuidado extra com o que se diz.' },
+  { nome: 'O que entra junto', texto: 'Media training, gestão de crise, conteúdo para redes sociais e eventos podem fazer parte do mesmo contrato ou ficar de fora.' },
+  { nome: 'Urgência', texto: 'Uma crise ou um anúncio marcado para a semana seguinte exigem equipe dedicada de imediato.' },
+];
+
+const ALERTAS = [
+  { nome: 'Garantia de publicação', texto: 'Quem decide o que sai é o editor. Uma agência que garante matéria em determinado veículo está vendendo espaço pago com outro nome ou prometendo o que não controla.' },
+  { nome: 'Cobrança por matéria publicada', texto: 'Parece justo, mas cria o incentivo errado: a agência corre atrás de sites que publicam qualquer release e esquece os veículos que o seu cliente lê.' },
+  { nome: 'Preço fechado sem conversa', texto: 'Se a proposta chega antes de alguém perguntar o que a empresa tem para contar, ela foi feita para qualquer empresa.' },
+  { nome: 'Disparo em massa', texto: 'Mandar o mesmo release para milhares de endereços não é relacionamento com a imprensa. O jornalista apaga sem ler.' },
+  { nome: 'Relatório sem link', texto: 'Resultado de assessoria se mostra com a matéria publicada: veículo, data e endereço. Números de alcance sem a matéria por trás não provam nada.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${URL}#article`,
+    headline: SEO_ASSESSORIA_PRECO.h1,
+    description: SEO_ASSESSORIA_PRECO.description,
+    url: URL,
+    mainEntityOfPage: URL,
+    inLanguage: 'pt-BR',
+    datePublished: PUBLICADO,
+    dateModified: PUBLICADO,
+    author: { '@type': 'Person', '@id': idDaPessoa(BASE, 'kelly-pinheiro') ?? `${BASE}${KELLY}#person`, name: 'Kelly Pinheiro', url: `${BASE}${KELLY}` },
+    publisher: { '@id': `${BASE}/#organization` },
+    about: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_PRECO.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Quanto custa', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_PRECO.title}
+  description={SEO_ASSESSORIA_PRECO.description}
+  keywords={SEO_ASSESSORIA_PRECO.keywords}
+  ogType="article"
+  articleAuthor="Kelly Pinheiro"
+  articlePublishedTime={PUBLICADO}
+  articleModifiedTime={PUBLICADO}
+  articleSection="Assessoria de Imprensa"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Quanto custa' },
+  ]}
+  h1={SEO_ASSESSORIA_PRECO.h1}
+  intro="Depende do escopo, e essa resposta só serve se vier explicada. Aqui estão os modelos de cobrança do mercado, o que faz o valor subir ou cair e os sinais de que uma proposta barata pode sair cara."
+  wa={WA_ASSESSORIA_PRECO}
+  cta="Pedir um diagnóstico"
+  faq={FAQ_ASSESSORIA_PRECO}
+  faqTitulo="Perguntas sobre preço"
+  fimTitulo="Quer saber quanto custaria para a sua empresa?"
+  fimTexto="Mande uma mensagem contando o momento do seu negócio. A Mclair marca o diagnóstico e, depois dele, envia a proposta com escopo, prazo e forma de medir."
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Por que não existe preço de tabela</h2>
+    <p class="af-p">Assessoria de imprensa é serviço de jornalista. O que se compra é tempo de gente que entende de pauta, escreve como a redação escreve e conversa com repórteres e editores. Esse tempo varia muito de uma empresa para outra.</p>
+    <p class="af-p">Uma leiloeira que tem um lote novo de imóveis por mês precisa de pauta rápida e recorrente. Um especialista que quer ser a fonte chamada quando o assunto dele entra em pauta precisa de artigo assinado, entrevista e paciência. Uma indústria que exporta precisa falar com jornalistas de outros países, em outro idioma. São três trabalhos com o mesmo nome e custos diferentes.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Como o mercado cobra</h2>
+    <p class="af-p">Quase toda proposta de assessoria de imprensa no Brasil cai em um destes quatro formatos, ou em uma combinação deles.</p>
+    <dl class="af-def">
+      {MODELOS.map((m) => (
+        <div>
+          <dt>{m.nome}</dt>
+          <dd>{m.texto}</dd>
+        </div>
+      ))}
+    </dl>
+
+    {/*
+      ===================== FAIXA DE PREÇO =====================
+      Aguardando aprovação da Mclair. Quando houver faixa aprovada,
+      entra aqui um parágrafo curto, por exemplo:
+        <p class="af-p">Na Mclair, o fee mensal de assessoria de imprensa
+        começa em R$ X e costuma ficar entre R$ X e R$ Y, conforme o escopo.</p>
+      Atualizar junto a primeira resposta de FAQ_ASSESSORIA_PRECO
+      (src/data/assessoria-imprensa.ts) e a description em SEO_ASSESSORIA_PRECO.
+      ===========================================================
+    */}
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">O que faz o valor subir ou cair</h2>
+    <dl class="af-def">
+      {VARIAVEIS.map((v) => (
+        <div>
+          <dt>{v.nome}</dt>
+          <dd>{v.texto}</dd>
+        </div>
+      ))}
+    </dl>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Sinais de alerta numa proposta</h2>
+    <p class="af-p">Preço baixo não é problema em si. O problema é quando ele vem acompanhado de uma destas promessas:</p>
+    <dl class="af-def">
+      {ALERTAS.map((a) => (
+        <div>
+          <dt>{a.nome}</dt>
+          <dd>{a.texto}</dd>
+        </div>
+      ))}
+    </dl>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Como a Mclair monta a proposta</h2>
+    <p class="af-p">A proposta só sai depois do diagnóstico, que é a primeira conversa, sem compromisso. Nela, a Mclair quer entender quatro coisas: o que a empresa tem de novo para contar, quem pode falar por ela, quais veículos o cliente dela lê e o que seria um bom resultado daqui a seis meses.</p>
+    <p class="af-p">Com isso, a proposta chega por escrito com o escopo do mês (pautas, porta-vozes, media training, relatório), o modelo de cobrança que faz sentido para o caso e a forma de medir. Medir, para nós, é mostrar a matéria publicada. Foi assim com os leilões da <a href="/cases/fidalgo/">Fidalgo</a> na Folha de S.Paulo e com o artigo de <a href="/cases/diego-nogare/">Diego Nogare</a> na Exame.</p>
+    <p class="af-p">Quem conduz essa conversa é <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>, jornalista desde 2004, ex-colunista da Exame e fundadora da Mclair. Desde 2017, a agência soma mais de 11.600 inserções na mídia para mais de 200 clientes.</p>
+    <p class="af-nota">Para ver o que entra no serviço, leia a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Se a sua empresa está na capital paulista, veja também <a href={URL_ASSESSORIA_SP}>assessoria de imprensa em São Paulo</a>.</p>
+  </div></div>
+</section>
+
+</AssessoriaFilha>
+</Layout>

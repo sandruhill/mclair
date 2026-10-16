@@ -1,0 +1,142 @@
+---
+// Moldura das páginas filhas de /servicos/assessoria-de-imprensa/ (cidade,
+// preço e as que vierem). Traz o hero escuro do hub, o FAQ e o fechamento
+// com WhatsApp; o corpo de cada página entra pelo slot. Os estilos .af-*
+// são globais de propósito: o conteúdo do slot é escrito na página e não
+// receberia o escopo deste componente.
+import type { Pergunta } from '../../data/assessoria-imprensa';
+
+interface Props {
+  trilha: { nome: string; href?: string }[];
+  h1: string;
+  intro: string;
+  wa: string;
+  cta: string;
+  faq: Pergunta[];
+  faqTitulo: string;
+  fimTitulo: string;
+  fimTexto: string;
+}
+const { trilha, h1, intro, wa, cta, faq, faqTitulo, fimTitulo, fimTexto } = Astro.props;
+---
+
+<section class="af-hero">
+  <div class="container"><div class="af-hero-inner">
+    <nav class="af-trilha" aria-label="Você está em">
+      {trilha.map((t, i) => (
+        <>
+          {i > 0 && <span aria-hidden="true">/</span>}
+          {t.href ? <a href={t.href}>{t.nome}</a> : <span aria-current="page">{t.nome}</span>}
+        </>
+      ))}
+    </nav>
+    <h1 class="af-h1">{h1}</h1>
+    <p class="af-intro">{intro}</p>
+    <div class="af-acoes">
+      <a href={wa} class="btn-primary" target="_blank" rel="noopener">{cta}</a>
+    </div>
+  </div></div>
+</section>
+
+<slot />
+
+<section class="af-secao" id="perguntas-frequentes">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">{faqTitulo}</h2>
+    <div class="af-faq">
+      {faq.map((q, i) => (
+        <details class="af-faq-item" open={i === 0}>
+          <summary>{q.pergunta}</summary>
+          <p>{q.resposta}</p>
+        </details>
+      ))}
+    </div>
+    <slot name="depois-faq" />
+  </div></div>
+</section>
+
+<section class="af-fim">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2 af-claro">{fimTitulo}</h2>
+    <p>{fimTexto}</p>
+    <div class="af-fim-acoes">
+      <a href={wa} class="btn-primary" target="_blank" rel="noopener">Falar no WhatsApp</a>
+      <a href="/contato/" class="af-link-claro">Ou envie uma mensagem</a>
+    </div>
+  </div></div>
+</section>
+
+<style is:global>
+.af-hero { background: var(--dark); padding-top: 88px; }
+.af-hero-inner { padding-block: clamp(48px, 7vw, 88px); max-width: 900px; }
+.af-trilha { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: .9rem; color: rgba(255,255,255,.5); margin-bottom: 18px; }
+.af-trilha a { color: rgba(255,255,255,.65); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.25); }
+.af-trilha a:hover { color: #fff; }
+.af-h1 { font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.05; color: #fff; margin-bottom: 20px; text-wrap: balance; }
+.af-intro { font-size: clamp(1.02rem, 1.4vw, 1.2rem); line-height: 1.75; color: rgba(255,255,255,.78); max-width: 680px; margin-bottom: 30px; text-wrap: pretty; }
+.af-acoes { display: flex; gap: 14px 24px; flex-wrap: wrap; align-items: center; }
+
+.af-secao { padding-block: clamp(56px, 7vw, 96px); background: #fff; }
+.af-secao-creme { background: var(--cream); }
+.af-estreito { max-width: 860px; }
+.af-h2 { font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 900; letter-spacing: -.035em; line-height: 1.1; color: var(--ink); margin-bottom: 20px; text-wrap: balance; }
+.af-h3 { font-size: 1.2rem; font-weight: 800; letter-spacing: -.02em; line-height: 1.3; color: var(--ink); margin: 28px 0 8px; text-wrap: balance; }
+.af-claro { color: #fff; }
+.af-p { font-size: clamp(1rem, 1.25vw, 1.1rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.15em; text-wrap: pretty; }
+.af-p a, .af-lista a, .af-def a, .af-nota a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
+.af-p a:hover, .af-lista a:hover, .af-def a:hover, .af-nota a:hover { color: var(--red); text-decoration-color: var(--red); }
+
+/* Lista com linhas finas, no padrão do hub */
+.af-lista { list-style: none; padding: 0; margin: 8px 0 0; }
+.af-lista li { padding: 16px 0; border-top: 1px solid var(--line); font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
+.af-lista li:last-child { border-bottom: 1px solid var(--line); }
+.af-lista strong { color: var(--ink); }
+
+/* Termo e explicação */
+.af-def { margin: 12px 0 0; }
+.af-def > div { padding: 18px 0; border-top: 1px solid var(--line); }
+.af-def > div:last-child { border-bottom: 1px solid var(--line); }
+.af-def dt { font-size: 1.12rem; font-weight: 800; color: var(--ink); letter-spacing: -.01em; margin-bottom: 6px; text-wrap: balance; }
+.af-def dd { margin: 0; font-size: 1rem; line-height: 1.75; color: var(--ink-3); text-wrap: pretty; }
+
+/* Texto e imagem lado a lado */
+.af-duas { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 40%); gap: clamp(32px, 5vw, 80px); align-items: start; }
+.af-foto { margin: 0; }
+.af-foto img { width: 100%; height: auto; display: block; }
+.af-foto figcaption { font-size: .9rem; line-height: 1.55; color: var(--ink-3); margin-top: 10px; text-wrap: pretty; }
+.af-foto-retrato img { aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 15%; }
+
+.af-nota { margin-top: 28px; font-size: 1rem; line-height: 1.7; color: var(--ink-3); text-wrap: pretty; }
+
+/* FAQ */
+.af-faq-item { border-top: 1px solid var(--line); }
+.af-faq-item:last-child { border-bottom: 1px solid var(--line); }
+.af-faq-item summary { cursor: pointer; list-style: none; padding: 20px 40px 20px 0; position: relative; font-size: 1.1rem; font-weight: 700; color: var(--ink); letter-spacing: -.01em; line-height: 1.4; text-wrap: balance; }
+.af-faq-item summary::-webkit-details-marker { display: none; }
+.af-faq-item summary::after { content: '+'; position: absolute; right: 4px; top: 18px; font-size: 1.5rem; font-weight: 300; color: var(--red); line-height: 1; transition: transform .25s; }
+.af-faq-item[open] summary::after { transform: rotate(45deg); }
+.af-faq-item p { padding: 0 40px 24px 0; font-size: 1.02rem; line-height: 1.75; color: var(--ink-2); text-wrap: pretty; }
+
+/* Fechamento */
+.af-fim { background: var(--dark); padding-block: clamp(56px, 7vw, 96px); }
+.af-fim p { font-size: clamp(1.05rem, 1.4vw, 1.2rem); font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.8); margin-bottom: 30px; text-wrap: pretty; }
+.af-fim-acoes { display: flex; gap: 16px 28px; align-items: center; flex-wrap: wrap; }
+.af-link-claro { font-size: .95rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: rgba(255,255,255,.45); }
+.af-link-claro:hover { text-decoration-color: #fff; }
+
+@media (max-width: 900px) {
+  .af-duas { grid-template-columns: 1fr; }
+  .af-foto-retrato { max-width: 420px; }
+  .af-foto-retrato img { aspect-ratio: 3 / 2; }
+}
+@media (max-width: 640px) {
+  .af-secao, .af-fim { padding-block: 48px; }
+  .af-hero-inner { padding-block: 40px 48px; }
+  .af-h1 { font-size: clamp(2rem, 9vw, 2.6rem); }
+  .af-h2 { font-size: clamp(1.5rem, 7vw, 1.9rem); }
+  .af-faq-item summary { font-size: 1.02rem; padding-right: 34px; }
+  .af-faq-item p { padding-right: 0; }
+  .af-acoes .btn-primary, .af-fim-acoes .btn-primary { width: 100%; justify-content: center; box-sizing: border-box; }
+  .af-fim-acoes { flex-direction: column; align-items: stretch; }
+}
+</style>

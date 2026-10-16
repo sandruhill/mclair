@@ -1,4 +1,5 @@
 ---
+import { CIDADES_COM_PAGINA } from '../data/assessoria-imprensa';
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!';
 const nav = [
   { label: 'Início',    href: '/' },
@@ -97,6 +98,23 @@ const servicos = [
     </div>
   </div>
 
+  <!-- Onde atendemos: páginas de cidade da assessoria de imprensa. Fica
+       fora do menu; uma cidade nova entra em CIDADES_COM_PAGINA
+       (src/data/assessoria-imprensa.ts). -->
+  {CIDADES_COM_PAGINA.length > 0 && (
+    <div class="ft-cidades">
+      <div class="container">
+        <p>
+          Onde atendemos com assessoria de imprensa:
+          {CIDADES_COM_PAGINA.map((c, i) => (
+            <>{i > 0 && ', '}<a href={c.href}>{c.nome}</a></>
+          ))}
+          {' '}e o Brasil todo, de forma remota.
+        </p>
+      </div>
+    </div>
+  )}
+
   <div class="ft-bottom">
     <div class="container ft-bottom-inner">
       <span>© {new Date().getFullYear()} Mclair Comunicação. Todos os direitos reservados.</span>
@@ -171,6 +189,13 @@ const servicos = [
   .ft-contact-list svg { color:var(--red); flex-shrink:0; margin-top:2px; }
   .ft-contact-list a { color:rgba(255,255,255,.55); transition:color .2s; }
   .ft-contact-list a:hover { color:rgba(255,255,255,.8); }
+
+  /* Onde atendemos */
+  .ft-cidades { padding:18px 0; border-bottom:1px solid rgba(255,255,255,.06); }
+  .ft-cidades p { font-size:.8rem; line-height:1.6; color:rgba(255,255,255,.5); text-wrap:pretty; }
+  .ft-cidades a { color:rgba(255,255,255,.7); text-decoration:underline; text-underline-offset:3px; text-decoration-color:rgba(255,255,255,.25); transition:color .2s; }
+  .ft-cidades a:hover { color:#fff; }
+  @media (max-width:600px) { .ft-cidades p { text-align:center; } }
 
   /* Bottom */
   .ft-bottom { padding:20px 0; }
