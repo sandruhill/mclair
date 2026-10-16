@@ -524,6 +524,9 @@ const schema = [
 <style>
 /* Perfil de revista: tipografia em escala de capa, fotos que sangram até a
    borda, fundos claro, escuro e vermelho se alternando. */
+/* Quanto uma foto precisa avançar para encostar na borda da tela, a partir
+   de dentro do .container (que é centralizado e tem a gutter). */
+.kp-abertura, .kp-visao, .kp-mentorias, .kp-servicos, .kp-fim { --sangria: max(var(--gutter), calc((100vw - var(--max-w)) / 2 + var(--gutter))); }
 figure { margin: 0; }
 figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .kp-acoes { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
@@ -641,7 +644,7 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* VISÃO */
 .kp-visao { background: var(--dark); color: rgba(255,255,255,.8); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
 .kp-visao-grid { display: grid; grid-template-columns: minmax(0, 46%) minmax(0, 1fr); gap: clamp(40px, 7vw, 120px); align-items: center; }
-.kp-visao-foto { margin-left: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-visao-foto { margin-left: calc(-1 * var(--sangria)); aspect-ratio: 4 / 5; overflow: hidden; }
 .kp-visao-foto img { object-position: 50% 25%; }
 .kp-visao-texto .kp-titulo { max-width: 640px; }
 .kp-visao-texto p { font-size: clamp(1.1rem, 1.5vw, 1.3rem); font-weight: 300; line-height: 1.75; max-width: 600px; }
@@ -683,7 +686,7 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 /* MENTORIAS */
 .kp-mentorias { background: var(--red); color: #fff; overflow: hidden; }
 .kp-mentorias-grid { display: grid; grid-template-columns: minmax(0, 52%) minmax(0, 1fr); gap: clamp(40px, 6vw, 96px); align-items: stretch; }
-.kp-mentorias-foto { margin-left: calc(-1 * var(--gutter)); overflow: hidden; min-height: 100%; }
+.kp-mentorias-foto { margin-left: calc(-1 * var(--sangria)); overflow: hidden; min-height: 100%; }
 .kp-mentorias-foto img { object-position: 50% 40%; }
 .kp-mentorias-texto { padding-block: clamp(72px, 9vw, 130px); }
 .kp-mentorias-texto .kp-titulo { max-width: 560px; margin-bottom: 40px; }
@@ -698,13 +701,13 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
 .kp-servicos-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 40%); gap: clamp(40px, 7vw, 120px); align-items: center; }
 .kp-servicos-texto .kp-titulo { max-width: 640px; font-size: clamp(2.2rem, 4.4vw, 4rem); }
 .kp-servicos-texto p { font-size: clamp(1.08rem, 1.4vw, 1.25rem); line-height: 1.75; color: var(--ink-2); max-width: 600px; margin-bottom: 36px; }
-.kp-servicos-foto { margin-right: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-servicos-foto { margin-right: calc(-1 * var(--sangria)); aspect-ratio: 4 / 5; overflow: hidden; }
 .kp-servicos-foto img { object-position: 50% 20%; }
 
 /* FECHAMENTO */
 .kp-fim { background: var(--dark); color: rgba(255,255,255,.82); padding-block: clamp(80px, 10vw, 140px); overflow: hidden; }
 .kp-fim-grid { display: grid; grid-template-columns: minmax(0, 44%) minmax(0, 1fr); gap: 0 clamp(32px, 4vw, 64px); align-items: center; }
-.kp-fim-foto { margin-left: calc(-1 * var(--gutter)); aspect-ratio: 4 / 5; overflow: hidden; }
+.kp-fim-foto { margin-left: calc(-1 * var(--sangria)); aspect-ratio: 4 / 5; overflow: hidden; }
 .kp-fim-foto img { object-position: 50% 20%; }
 .kp-fim-texto { position: relative; z-index: 2; }
 .kp-fim-texto .kp-titulo-capa { margin-left: -22%; margin-bottom: 28px; text-shadow: 0 2px 40px rgba(0,0,0,.45); }
@@ -816,6 +819,7 @@ figure img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .kp-servicos-texto p { margin-bottom: 26px; }
 
   .kp-fim-foto { display: block; margin-bottom: 24px; }
+  .kp-fim-texto .kp-titulo-capa { font-size: clamp(2.2rem, 9.4vw, 2.8rem); }
   .kp-fim-lead { margin-bottom: 26px; }
   .kp-form { gap: 22px; }
   .kp-form-campos { grid-template-columns: 1fr; gap: 16px; }
