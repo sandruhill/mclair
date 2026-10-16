@@ -16,10 +16,9 @@ const ID_KELLY = idDaPessoa(BASE, 'kelly-pinheiro')!;
 const WA_KELLY = 'https://wa.me/5511988600372?text=' + encodeURIComponent('Olá Kelly! Vim pela sua página no site da Mclair e gostaria de conversar.');
 const WA_PALESTRA = 'https://wa.me/5511988600372?text=' + encodeURIComponent('Olá Kelly! Gostaria de levar você para palestrar no meu evento. Pode me passar mais informações?');
 const EMAIL = 'kelly@mclair.com.br';
-// TODO(sameAs): trocar pelo LinkedIn pessoal da Kelly quando ela confirmar a
-// URL. linkedin.com/in/kellypinheiro é de outra pessoa (RH, Quest Edu).
-// Enquanto isso o botão leva à página da Mclair no LinkedIn.
-const LINKEDIN = 'https://linkedin.com/company/mclair-comunicacao';
+// LinkedIn pessoal confirmado pela equipe no dossiê de SEO em 16/10/2026.
+// (linkedin.com/in/kellypinheiro é outra pessoa.)
+const LINKEDIN = 'https://www.linkedin.com/in/kelly-pinheiro-30900123/';
 
 // Faixa de logos: mesma fonte da página /clientes/ (CMS), com os clientes
 // citados no texto da Kelly na frente. Casamento pelo nome do arquivo do logo.
@@ -118,10 +117,9 @@ const pessoa = {
     'Conscientização sobre Câncer de Mama',
   ],
   knowsLanguage: ['pt-BR'],
-  // TODO(sameAs): incluir LinkedIn e Instagram pessoais da Kelly assim que
-  // ela confirmar as URLs. Não há página de colunista na Exame (os artigos
-  // ficam na seção Bússola), e linkedin.com/in/kellypinheiro é outra pessoa.
-  // sameAs: [],
+  // Só perfis confirmados. Não há página de colunista na Exame (os artigos
+  // ficam na seção Bússola e entram como Article com author = este @id).
+  sameAs: [LINKEDIN],
   subjectOf: {
     '@type': 'WebPage',
     name: '#21 Liderança em Pauta: Kelly Pinheiro',
