@@ -6,6 +6,7 @@
 // aqui vem dos cases publicados em /cases/ e dos números da página /sobre/.
 import { paginaDaPessoa, linkarPessoasEmTexto } from '../../utils/blogAuthors';
 import { FAQ_ASSESSORIA, WA_ASSESSORIA, CIDADES_ATENDIDAS, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO } from '../../data/assessoria-imprensa';
+import { URL_ASSESSOR, URL_CRISE, URL_MEDIA_TRAINING } from '../../data/servicos-imprensa';
 
 interface Props {
   s: { headline: string; desc: string; items: string[]; cta: string; accent: string };
@@ -15,6 +16,8 @@ const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/sobre/';
 
 // Explicação de cada entrega do CMS, pela ordem em que elas aparecem lá.
 // Se o painel mudar a lista, a entrega sem explicação aparece só com o nome.
+// Texto fixo do código (não vem do CMS), por isso pode levar link em HTML:
+// porta-vozes e crise apontam para as páginas próprias desses serviços.
 const EXPLICACOES: Record<string, string> = {
   'Redação e distribuição de releases estratégicos':
     'Cada release nasce de uma pauta com interesse jornalístico, escrito como notícia, com dado, contexto e porta-voz, e vai para os jornalistas certos, não para uma lista genérica.',
@@ -23,11 +26,11 @@ const EXPLICACOES: Record<string, string> = {
   'Gestão de clipping e monitoramento de mídia':
     'Tudo o que sai sobre a empresa, a concorrência e o setor é acompanhado, organizado e devolvido em relatório, com link e data.',
   'Posicionamento e treinamento de porta-vozes':
-    'Quem fala pela empresa aprende a dar entrevista: mensagem clara, exemplos prontos e segurança diante de pergunta difícil, em TV, rádio, podcast ou por escrito.',
+    `Quem fala pela empresa aprende a dar entrevista: mensagem clara, exemplos prontos e segurança diante de pergunta difícil, em TV, rádio, podcast ou por escrito. Veja como funciona o <a href="${URL_MEDIA_TRAINING}">media training</a>.`,
   'Coletivas, entrevistas e eventos de imprensa':
     'Organização de coletivas, agenda de entrevistas e cobertura de feiras e lançamentos, com a imprensa convidada e preparada.',
   'Assessoria de crise e gestão de reputação':
-    'Quando a notícia é delicada, o trabalho é conduzir a narrativa, responder rápido e proteger a reputação de quem está no centro dela.',
+    `Quando a notícia é delicada, o trabalho é conduzir a narrativa, responder rápido e proteger a reputação de quem está no centro dela. Saiba mais sobre <a href="${URL_CRISE}">gestão de crise de imagem</a>.`,
 };
 
 const ETAPAS = [
@@ -69,7 +72,7 @@ const CASES = [
         {s.items.map((item) => (
           <div class="ai-entrega">
             <dt set:html={linkarPessoasEmTexto(item)}></dt>
-            {EXPLICACOES[item] && <dd>{EXPLICACOES[item]}</dd>}
+            {EXPLICACOES[item] && <dd set:html={EXPLICACOES[item]}></dd>}
           </div>
         ))}
       </dl>
@@ -137,6 +140,7 @@ const CASES = [
       <h2 class="ai-h2">Quem cuida da sua conta</h2>
       <p class="ai-p">A estratégia de cada cliente passa por <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>, jornalista desde 2004, CEO e sócia-fundadora da Mclair. Antes de abrir a agência, em 2017, ela atuou em comunicação corporativa, gestão de conteúdo e gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais. Foi colunista da Exame por dois anos e meio, o que ajuda a saber, do lado de dentro, o que uma redação aceita e o que descarta.</p>
       <p class="ai-p">A conta é atendida por uma equipe de jornalistas, com Kelly à frente da relação com o cliente. <a href={KELLY}>Conheça a trajetória de Kelly Pinheiro</a>.</p>
+      <p class="ai-p">Ainda decidindo entre um jornalista freelancer e uma agência? A página sobre como <a href={URL_ASSESSOR}>contratar assessor de imprensa</a> compara os dois formatos.</p>
     </div>
   </div>
 </section>
@@ -149,7 +153,7 @@ const CASES = [
         <li>Empresas com algo novo para contar: lançamento, parceria, dado de mercado, expansão. Foi assim com as leiloeiras que viram notícia a cada praça.</li>
         <li>Setores técnicos que a imprensa cobre pouco e precisa de fonte: tecnologia, dados, máquinas e equipamentos, finanças.</li>
         <li>Executivos e especialistas que querem ser a referência chamada pela imprensa quando o assunto deles entra em pauta.</li>
-        <li>Marcas que passam por um momento sensível e precisam conduzir a narrativa com cuidado.</li>
+        <li>Marcas que passam por um momento sensível e precisam conduzir a narrativa com cuidado, com <a href={URL_CRISE}>gestão de crise</a>.</li>
       </ul>
     </div>
     <div>
@@ -271,8 +275,8 @@ const CASES = [
 }
 .ai-faq-item[open] summary::after { transform: rotate(45deg); }
 .ai-faq-item p { padding: 0 40px 24px 0; font-size: 1.02rem; line-height: 1.75; color: var(--ink-2); text-wrap: pretty; }
-.ai-lateral p a, .ai-cidades a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
-.ai-lateral p a:hover, .ai-cidades a:hover { color: var(--red); text-decoration-color: var(--red); }
+.ai-lateral p a, .ai-cidades a, .ai-entrega dd a, .ai-lista a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
+.ai-lateral p a:hover, .ai-cidades a:hover, .ai-entrega dd a:hover, .ai-lista a:hover { color: var(--red); text-decoration-color: var(--red); }
 .ai-cidades { margin-top: 32px; font-size: .95rem; line-height: 1.7; color: var(--ink-3); text-wrap: pretty; }
 
 /* Fechamento */

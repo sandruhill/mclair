@@ -1,0 +1,121 @@
+---
+// Formulário de contato das páginas de serviço com rota própria
+// (assessor de imprensa, gestão de crise, media training). Mesmo desenho e
+// mesmos campos do formulário de /servicos/assessoria-de-imprensa/quanto-custa/.
+// O envio é feito por /form-contato.js (carregado no Layout), que liga todo
+// form com data-mc-contato: valida, manda o e-mail para a Kelly e abre o
+// WhatsApp com a mensagem pronta. A classe wa-form e o id próprio deixam o
+// GTM reconhecer o envio como os outros formulários do site.
+// Estilos com prefixo fs- (e .mc-campo, igual ao de quanto-custa) em
+// is:global porque o form entra no slot de AssessoriaFilha.
+interface Props {
+  /** id do form, começando por "wa-form-" */
+  id: string;
+  /** âncora da seção, usada pelo botão do topo e pelo fechamento */
+  ancora: string;
+  titulo: string;
+  assunto: string;
+  waIntro: string;
+  perguntaLabel: string;
+  perguntaDica: string;
+  perguntaRotulo: string;
+  opcoesLabel: string;
+  opcoes: string[];
+  opcoesRotulo: string;
+}
+const { id, ancora, titulo, assunto, waIntro, perguntaLabel, perguntaDica, perguntaRotulo, opcoesLabel, opcoes, opcoesRotulo } = Astro.props;
+const p = id.replace(/^wa-form-/, 'fs-');
+---
+
+<section class="af-secao af-secao-creme fs-secao" id={ancora} aria-labelledby={`${p}-titulo`}>
+  <div class="container fs-grid">
+    <div class="fs-texto">
+      <h2 class="af-h2" id={`${p}-titulo`}>{titulo}</h2>
+      <slot />
+    </div>
+
+    <form id={id} class="wa-form fs-form" novalidate data-mc-contato data-assunto={assunto} data-wa-intro={waIntro}>
+      <div class="fs-linha">
+        <div class="mc-campo">
+          <label for={`${p}-nome`}>Nome</label>
+          <input id={`${p}-nome`} name="nome" type="text" autocomplete="name" required maxlength="120" data-nome-campo="seu nome" data-wa="Nome" />
+        </div>
+        <div class="mc-campo">
+          <label for={`${p}-empresa`}>Empresa <span class="fs-opc">(opcional)</span></label>
+          <input id={`${p}-empresa`} name="empresa" type="text" autocomplete="organization" maxlength="150" data-wa="Empresa" />
+        </div>
+      </div>
+      <div class="fs-linha">
+        <div class="mc-campo">
+          <label for={`${p}-email`}>E-mail</label>
+          <input id={`${p}-email`} name="email" type="email" autocomplete="email" inputmode="email" required maxlength="190" data-nome-campo="seu e-mail" data-wa="E-mail" />
+        </div>
+        <div class="mc-campo">
+          <label for={`${p}-zap`}>WhatsApp com DDD</label>
+          <input id={`${p}-zap`} name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="(11) 90000-0000" data-nome-campo="seu WhatsApp" data-wa="WhatsApp" />
+        </div>
+      </div>
+      <div class="mc-campo">
+        <label for={`${p}-objetivo`}>{perguntaLabel}</label>
+        <p class="fs-dica" id={`${p}-objetivo-dica`}>{perguntaDica}</p>
+        <textarea id={`${p}-objetivo`} name="objetivo" rows="3" required maxlength="1500" aria-describedby={`${p}-objetivo-dica`} data-nome-campo="a sua resposta" data-wa={perguntaRotulo}></textarea>
+      </div>
+      <div class="mc-campo">
+        <label for={`${p}-opcao`}>{opcoesLabel} <span class="fs-opc">(opcional)</span></label>
+        <select id={`${p}-opcao`} name="orcamento" data-wa={opcoesRotulo}>
+          <option value="">Escolha uma opção</option>
+          {opcoes.map((v) => <option value={v}>{v}</option>)}
+        </select>
+      </div>
+      <div class="mc-campo">
+        <label for={`${p}-msg`}>Mais alguma coisa? <span class="fs-opc">(opcional)</span></label>
+        <textarea id={`${p}-msg`} name="mensagem" rows="3" maxlength="4000" data-wa="Mensagem"></textarea>
+      </div>
+      <div class="fs-hp" aria-hidden="true">
+        <label for={`${p}-website`}>Deixe este campo em branco</label>
+        <input id={`${p}-website`} name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="submit" class="btn-primary fs-enviar">Enviar e abrir o WhatsApp</button>
+      <p class="fs-aviso" data-mc-aviso role="status" aria-live="polite"></p>
+      <p class="fs-privacidade">Seus dados vão só para a equipe da Mclair, para responder ao seu contato.</p>
+    </form>
+  </div>
+</section>
+
+<style is:global>
+.fs-secao { scroll-margin-top: 80px; }
+.fs-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.fs-texto { max-width: 460px; }
+.wa-form.fs-form { display: flex; flex-direction: column; gap: 20px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: clamp(22px, 3.5vw, 40px); box-shadow: 0 10px 40px rgba(28,26,23,.06); }
+.fs-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.fs-form .mc-campo { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.fs-form .mc-campo label { font-size: .95rem; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.fs-opc { font-weight: 400; color: var(--ink-3); }
+.fs-dica { margin: 0; font-size: .9rem; line-height: 1.5; color: var(--ink-3); }
+.fs-form .mc-campo input, .fs-form .mc-campo select, .fs-form .mc-campo textarea {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 1rem; color: var(--ink);
+  background: #fff; border: 1.5px solid var(--line-2); border-radius: 8px; padding: 12px 14px;
+  transition: border-color .2s, box-shadow .2s; scroll-margin-top: 120px;
+}
+.fs-form .mc-campo textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+.fs-form .mc-campo select { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%); background-position: calc(100% - 20px) 52%, calc(100% - 14px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
+.fs-form .mc-campo input::placeholder { color: var(--ink-4); }
+.fs-form .mc-campo input:focus-visible, .fs-form .mc-campo select:focus-visible, .fs-form .mc-campo textarea:focus-visible { outline: 3px solid rgba(200,16,46,.35); outline-offset: 1px; border-color: var(--red); }
+.fs-form .mc-campo [aria-invalid="true"] { border-color: #B42318; background: #FFFBFA; }
+.fs-form .mc-erro { margin: 0; font-size: .9rem; font-weight: 700; color: #B42318; line-height: 1.45; }
+.fs-form .mc-erro:empty { display: none; }
+.fs-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.fs-enviar { align-self: flex-start; border: 0; cursor: pointer; font-family: inherit; }
+.fs-enviar:focus-visible { outline: 3px solid rgba(200,16,46,.45); outline-offset: 3px; }
+.fs-aviso { margin: 0; font-size: .98rem; line-height: 1.55; color: var(--ink); font-weight: 700; }
+.fs-aviso:empty { display: none; }
+.fs-privacidade { margin: 0; font-size: .88rem; line-height: 1.5; color: var(--ink-3); }
+@media (max-width: 900px) {
+  .fs-grid { grid-template-columns: 1fr; }
+  .fs-texto { max-width: 680px; }
+}
+@media (max-width: 640px) {
+  .fs-linha { grid-template-columns: 1fr; }
+  .fs-enviar { align-self: stretch; justify-content: center; }
+}
+</style>

@@ -1,0 +1,168 @@
+---
+// /servicos/assessor-de-imprensa/
+// Página dona de "contratar assessor de imprensa", "assessoria de imprensa
+// freelancer", "contratar jornalista", "contratar jornalista freelancer" e
+// "jornalista para assessoria de imprensa" (mapa de palavras de 16/10/2026,
+// cluster C). O leitor quer contratar uma pessoa, não uma vaga: a SERP de
+// "assessor de imprensa" é de carreira, por isso o aviso discreto no topo.
+// Rota estática, com prioridade sobre src/pages/servicos/[...slug].astro;
+// não criar no CMS um serviço com o slug "assessor-de-imprensa".
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+import AssessoriaFilha from '../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../utils/blogAuthors';
+import { URL_HUB_ASSESSORIA, URL_ASSESSORIA_PRECO } from '../../data/assessoria-imprensa';
+import {
+  SEO_ASSESSOR, WA_ASSESSOR, FAQ_ASSESSOR,
+  URL_ASSESSOR, URL_CRISE, URL_MEDIA_TRAINING,
+} from '../../data/servicos-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSOR}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const TAREFAS = [
+  { nome: 'Encontrar a notícia', texto: 'Ler o seu negócio com olho de repórter: o lançamento, o dado que só a sua empresa tem, a opinião do seu especialista sobre o assunto do dia.' },
+  { nome: 'Escrever no formato da redação', texto: 'Release, sugestão de pauta, artigo assinado. O jornalista percebe na primeira linha quem conhece o formato.' },
+  { nome: 'Levar ao jornalista certo', texto: 'Saber quem cobre o quê em cada veículo, e quando cada editoria fecha, decide se o e-mail é aberto.' },
+  { nome: 'Preparar quem vai falar', texto: 'Antes da entrevista, o porta-voz recebe o briefing: quem é o repórter e qual o foco da matéria. Quem nunca falou com a imprensa passa antes pelo media training.' },
+  { nome: 'Mostrar o que saiu', texto: 'Cada matéria publicada vai para o clipping, com veículo, data e link, e entra no relatório do mês.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessor de imprensa para empresas',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSOR.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: { '@type': 'Country', name: 'Brasil' },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSOR.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessor de imprensa', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSOR.title}
+  description={SEO_ASSESSOR.description}
+  keywords={SEO_ASSESSOR.keywords}
+  ogImage="/kelly-pinheiro/kelly-pinheiro-og.jpg"
+  ogImageAlt="Kelly Pinheiro, jornalista e fundadora da Mclair Comunicação"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessor de imprensa' },
+  ]}
+  h1={SEO_ASSESSOR.h1}
+  intro="Você precisa de alguém que escreva como jornalista, saiba para qual repórter ligar e cuide da imprensa da sua empresa sem que você tenha de explicar tudo duas vezes. Esta página ajuda a decidir entre um freelancer e uma agência, e mostra como a Mclair trabalha."
+  wa={WA_ASSESSOR}
+  cta="Falar pelo WhatsApp"
+  ctaForm="Ou deixe seus dados"
+  introNota="Esta página é para empresas e profissionais que querem contratar um assessor de imprensa. Se você procura vaga na área, ela não é o lugar certo."
+  faq={FAQ_ASSESSOR}
+  faqTitulo="Perguntas de quem vai contratar um assessor"
+  fimTitulo="Quer um jornalista cuidando da sua imprensa?"
+  fimTexto="Conte o que a sua empresa tem para dizer. Na primeira conversa, a Mclair avalia o que é notícia, para quais veículos e quem pode falar."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Ou preencha o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">O que um assessor de imprensa faz pela sua empresa</h2>
+    <p class="af-p">Imagine que a sua empresa acabou de fechar uma parceria importante. Você sabe que aquilo é notícia, mas não sabe para quem contar, nem como. O assessor de imprensa é quem resolve essa distância. O trabalho dele, no dia a dia, tem cinco partes:</p>
+    <dl class="af-def">
+      {TAREFAS.map((t) => (
+        <div>
+          <dt>{t.nome}</dt>
+          <dd>{t.texto}</dd>
+        </div>
+      ))}
+    </dl>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Freelancer ou agência: o que cada um entrega</h2>
+    <p class="af-p">As duas escolhas funcionam, para situações diferentes. A pergunta certa é quanto trabalho de imprensa a sua empresa vai gerar e o que acontece se esse trabalho parar por algumas semanas.</p>
+
+    <h3 class="af-h3">Quando o freelancer faz sentido</h3>
+    <p class="af-p">Um jornalista freelancer bom costuma custar menos por mês e falar direto com você, sem intermediário. Ele é uma boa escolha quando a demanda é pequena e previsível: um release por mês, um evento local, um lançamento com data marcada.</p>
+    <p class="af-p">O limite está no tamanho de uma pessoa só. Se ele adoece, tira férias ou pega um cliente maior, a sua pauta espera. E numa crise, quando a imprensa liga ao mesmo tempo que as redes pegam fogo, uma pessoa sozinha precisa escolher o que atender primeiro.</p>
+
+    <h3 class="af-h3">Quando a agência faz sentido</h3>
+    <p class="af-p">A agência divide a sua conta entre jornalistas. O relacionamento com as redações não depende de uma agenda só, e alguém responde ao repórter mesmo quando o responsável principal está em outra reunião.</p>
+    <p class="af-p">Ela faz mais diferença quando a empresa quer presença constante na imprensa nacional, tem mais de um porta-voz, atua num setor sujeito a <a href={URL_CRISE}>crise de imagem</a> ou precisa de serviços que andam junto, como <a href={URL_MEDIA_TRAINING}>media training</a> para quem vai dar entrevista. O custo mensal é maior, e vale comparar o que entra no escopo de cada proposta.</p>
+
+    <h3 class="af-h3">O que perguntar aos dois</h3>
+    <ul class="af-lista">
+      <li><strong>Matérias publicadas, com link.</strong> Veículo, data e endereço. Número de alcance sem a matéria por trás não prova nada.</li>
+      <li><strong>Quem cuida da conta no dia a dia.</strong> Na agência, quem atende você e quem escreve. No freelancer, quanto tempo ele terá para a sua empresa.</li>
+      <li><strong>O que acontece nas ausências.</strong> Férias, doença, um pico de trabalho em outro cliente.</li>
+    </ul>
+    <p class="af-nota">Desconfie de qualquer um dos dois que garanta matéria num veículo escolhido por você. Quem decide o que sai é o editor. Para entender como cada formato cobra, veja <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a>.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Na Mclair, quem conduz a sua conta é jornalista</h2>
+      <p class="af-p">A Mclair é uma agência, mas foi fundada por uma jornalista e trabalha com a cabeça de redação. <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a> é jornalista desde 2004, foi colunista da Exame por dois anos e meio e, antes de abrir a agência em 2017, atuou em comunicação corporativa e gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais.</p>
+      <p class="af-p">Ela define a estratégia de cada cliente e acompanha a relação com ele. A rotina da conta fica com uma equipe de jornalistas, que escreve as pautas, conversa com as redações e prepara os porta-vozes.</p>
+      <p class="af-p">Foi esse trabalho que levou os leilões da <a href="/cases/fidalgo/">Fidalgo</a> à Folha de S.Paulo e o especialista em dados <a href="/cases/diego-nogare/">Diego Nogare</a> a duas matérias seguidas na home da CNN Brasil. Desde 2017, são mais de 11.600 inserções na mídia para mais de 200 clientes.</p>
+      <p class="af-p"><a href={KELLY}>Conheça a trajetória de Kelly Pinheiro</a> ou veja tudo o que entra no serviço de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>.</p>
+    </div>
+    <figure class="af-foto af-foto-retrato">
+      <img src="/kelly-pinheiro/kelly-pinheiro-mesa-notebook-800.webp" srcset="/kelly-pinheiro/kelly-pinheiro-mesa-notebook-800.webp 800w, /kelly-pinheiro/kelly-pinheiro-mesa-notebook-1600.webp 1600w" sizes="(max-width: 900px) 100vw, 40vw" width="1600" height="2400" alt="Kelly Pinheiro, jornalista e fundadora da Mclair, trabalhando ao notebook" loading="lazy" decoding="async" />
+      <figcaption>Kelly Pinheiro, jornalista desde 2004 e fundadora da Mclair.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-assessor"
+  ancora="fale-com-a-mclair"
+  titulo="Conte o que a sua empresa quer levar à imprensa"
+  assunto="Contratar assessor de imprensa (página assessor de imprensa)"
+  waIntro="Olá Mclair! Vim pela página sobre contratar assessor de imprensa e quero conversar sobre a minha empresa."
+  perguntaLabel="O que você quer levar à imprensa?"
+  perguntaDica="Um lançamento, um especialista da casa, uma parceria. Algumas linhas bastam."
+  perguntaRotulo="O que quero divulgar"
+  opcoesLabel="Em que ponto você está?"
+  opcoes={['Ainda comparando freelancer e agência', 'Já decidi contratar uma agência', 'Tenho um assessor e quero trocar']}
+  opcoesRotulo="Momento"
+>
+  <p class="af-p">Não precisa ter tudo definido. A primeira conversa serve para entender o que a sua empresa tem de notícia e qual formato de trabalho faz sentido, e não tem compromisso.</p>
+  <p class="af-p">Quando você enviar, a mensagem chega à Kelly Pinheiro por e-mail e o WhatsApp da Mclair abre com o texto pronto.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>
