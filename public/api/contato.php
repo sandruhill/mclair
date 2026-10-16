@@ -13,6 +13,9 @@
 declare(strict_types=1);
 
 const MC_DESTINO     = 'kelly@mclair.com.br';
+// Cópia oculta pedida em 16/10/2026 para testar a entrega numa caixa que a
+// IKOEH acompanha. Deixar vazio ('') para mandar só para a Kelly.
+const MC_COPIA       = 'marketing@mclair.com.br';
 const MC_REMETENTE   = 'site@mclair.com.br';
 const MC_NOME_REMET  = 'Site Mclair';
 const MC_MAX_BYTES   = 20000;
@@ -369,6 +372,7 @@ $cabecalhos = [
     'Content-Type: multipart/alternative; boundary="' . $fronteira . '"',
     'X-Mailer: mclair-site',
 ];
+if (MC_COPIA !== '') $cabecalhos[] = 'Bcc: ' . MC_COPIA;
 if ($email !== '') {
     // filter_var já recusa CR/LF; o str_replace é a segunda trava.
     $cabecalhos[] = 'Reply-To: ' . str_replace(["\r", "\n"], '', $email);
