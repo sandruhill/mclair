@@ -5,6 +5,11 @@
 <IfModule mod_rewrite.c>
   RewriteEngine On
 
+  # www -> sem www, numa volta só. O Bing ainda listava a home com www
+  # mostrando o título do site antigo (dossiê de SEO, 23/09/2026).
+  RewriteCond %{HTTP_HOST} ^www\.mclair\.com\.br$ [NC]
+  RewriteRule ^(.*)$ https://mclair.com.br/$1 [R=301,L]
+
   # Old PHP-era URLs (pre-Astro site) -> current routes, so any surviving
   # backlinks/bookmarks/search-index entries land on real content instead
   # of a dead end.

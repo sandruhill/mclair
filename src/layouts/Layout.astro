@@ -658,6 +658,9 @@ const websiteSchema = {
         if (name)       msg += 'Meu nome é ' + name + '. ';
         if (svc)        msg += 'Gostaria de saber mais sobre: ' + svc + '.';
         else            msg += 'Gostaria de conhecer os serviços.';
+        // De qual página veio o contato: a equipe vê na conversa e o
+        // relatório mensal conta contatos por página.
+        msg += '\n\n(Página: mclair.com.br' + location.pathname + ')';
         var url = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
         window.open(url, '_blank', 'noopener,noreferrer');
         closeModal();
