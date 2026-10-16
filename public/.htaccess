@@ -1,3 +1,9 @@
+# Arquivos de texto (llms.txt, robots.txt, chave do IndexNow) saíam como
+# "text/plain" sem charset, e navegador e alguns leitores de IA trocavam os
+# acentos por lixo ("AgÃªncia").
+AddDefaultCharset UTF-8
+AddCharset UTF-8 .txt .xml .json .md
+
 # Security headers — the equivalent vercel.json config stopped applying once
 # deploy moved from Vercel to plain static hosting on Hostinger/Apache.
 # /acesso/ (the CMS admin) gets its own .htaccess with its own CSP.
