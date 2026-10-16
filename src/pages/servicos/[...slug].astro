@@ -2,6 +2,8 @@
 export const prerender = true;
 import Layout from '../../layouts/Layout.astro';
 import { linkarPessoasEmTexto } from '../../utils/blogAuthors';
+import AssessoriaImprensa from '../../components/servicos/AssessoriaImprensa.astro';
+import { SLUG_ASSESSORIA, SEO_ASSESSORIA, WA_ASSESSORIA, FAQ_ASSESSORIA, CIDADES_ATENDIDAS } from '../../data/assessoria-imprensa';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços.';
 
@@ -55,15 +57,42 @@ export async function getStaticPaths() {
 }
 
 const { s, others } = Astro.props;
+// Assessoria de imprensa é a página de contratação principal do site: tem
+// title, H1, texto longo, FAQ e areaServed próprios (ver
+// src/data/assessoria-imprensa.ts e components/servicos/AssessoriaImprensa.astro).
+// O resto do CMS (intro, entregas, CTA) continua vindo do painel.
+const assessoria = s.slug === SLUG_ASSESSORIA;
+const tituloPagina = assessoria ? SEO_ASSESSORIA.title : `${s.title} | Mclair`;
+const h1 = assessoria ? SEO_ASSESSORIA.h1 : s.title;
+const descricao = assessoria ? SEO_ASSESSORIA.description : s.description;
+const palavras = assessoria
+  ? SEO_ASSESSORIA.keywords
+  : `${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`;
+const waServico = assessoria ? WA_ASSESSORIA : WA;
+const areaServed = assessoria
+  ? [{ '@type': 'Country', name: 'Brasil' }, ...CIDADES_ATENDIDAS.map((c) => ({ '@type': 'City', name: c }))]
+  : { '@type': 'Country', name: 'Brasil' };
+const faqSchema = assessoria
+  ? [{
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      '@id': `https://mclair.com.br/servicos/${s.path}/#faq`,
+      mainEntity: FAQ_ASSESSORIA.map((q) => ({
+        '@type': 'Question',
+        name: q.pergunta,
+        acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+      })),
+    }]
+  : [];
 const ogImg = s.image
   ? (s.image.startsWith('http') ? s.image : `https://mclair.com.br${s.image}`)
   : 'https://mclair.com.br/paginas/servicos-marketing-autoridade-mclair.jpg';
 ---
 
 <Layout
-  title={`${s.title} | Mclair`}
-  description={s.description}
-  keywords={`${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`}
+  title={tituloPagina}
+  description={descricao}
+  keywords={palavras}
   ogImage={ogImg}
   cmsEdit={{ type: 'service', slug: s.slug }}
   schema={[
@@ -72,10 +101,11 @@ const ogImg = s.image
       '@type': 'Service',
       '@id': `https://mclair.com.br/servicos/${s.path}#service`,
       name: s.title,
-      description: s.description || s.intro || s.headline,
+      description: descricao || s.intro || s.headline,
       provider: { '@id': 'https://mclair.com.br/#organization' },
       url: `https://mclair.com.br/servicos/${s.path}`,
-      areaServed: { '@type': 'Country', name: 'Brasil' },
+      areaServed,
+      ...(assessoria ? { serviceType: 'Assessoria de imprensa' } : {}),
       inLanguage: 'pt-BR',
       ...(s.items?.length ? {
         hasOfferCatalog: {
@@ -100,6 +130,7 @@ const ogImg = s.image
         { '@type': 'ListItem', position: 3 + s.ancestors.length, name: s.title, item: `https://mclair.com.br/servicos/${s.path}` },
       ],
     },
+    ...faqSchema,
   ]}
 >
 
@@ -122,10 +153,10 @@ const ogImg = s.image
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
-      <h1 class="sh-title hero-instant" data-anim data-delay="1">{s.title}</h1>
+      <h1 class="sh-title hero-instant" data-anim data-delay="1">{h1}</h1>
       <p class="sh-intro hero-instant" data-anim data-delay="3" set:html={linkarPessoasEmTexto(s.intro)}></p>
       <div class="sh-actions hero-instant" data-anim data-delay="4">
-        <a href={WA} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
+        <a href={waServico} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
         <a href="/contato/" class="btn-ghost-white">Ver todos os serviços</a>
       </div>
     </div>
@@ -147,6 +178,9 @@ const ogImg = s.image
 </section>
 
 <!-- CONTENT -->
+{assessoria ? (
+  <AssessoriaImprensa s={s} />
+) : (
 <section class="svc-content-section">
   <div class="container svc-content-grid">
     <div class="sc-left hero-instant" data-anim="left">
@@ -184,6 +218,7 @@ const ogImg = s.image
     </div>
   </div>
 </section>
+)}
 
 <!-- OTHER SERVICES -->
 <section class="other-services">
