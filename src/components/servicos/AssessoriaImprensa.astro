@@ -168,6 +168,18 @@ const CASES = [
   </div>
 </section>
 
+<section class="ai-secao ai-guias" aria-labelledby="ai-guias-titulo">
+  <div class="container ai-guias-wrap">
+    <h2 class="ai-h2" id="ai-guias-titulo">Para entender antes de contratar</h2>
+    <ul class="ai-guias-lista">
+      <li><a href="/guias/o-que-e-assessoria-de-imprensa/">O que é assessoria de imprensa</a> e o que dá para esperar dela.</li>
+      <li><a href="/guias/press-release/">Press release</a>: como escrever um que jornalista lê, com modelo comentado.</li>
+      <li><a href="/guias/como-aparecer-na-midia/">Como aparecer na mídia</a> sem pagar por isso.</li>
+    </ul>
+    <p class="ai-guias-todos"><a href="/guias/">Todos os guias de assessoria de imprensa</a></p>
+  </div>
+</section>
+
 <section class="ai-secao" id="perguntas-frequentes">
   <div class="container ai-faq-wrap">
     <h2 class="ai-h2">Perguntas de quem vai contratar</h2>
@@ -195,6 +207,12 @@ const CASES = [
 </section>
 
 <style>
+.ai-guias-wrap { max-width: 760px; }
+.ai-guias-lista { list-style: none; padding: 0; margin: 0; display: grid; gap: 14px; }
+.ai-guias-lista li { font-size: 1.08rem; line-height: 1.6; color: var(--ink-2); }
+.ai-guias-lista a, .ai-guias-todos a { color: var(--ink); font-weight: 700; text-decoration: underline; text-decoration-color: var(--red); text-underline-offset: 4px; }
+.ai-guias-lista a:hover, .ai-guias-todos a:hover { color: var(--red); }
+.ai-guias-todos { margin-top: 22px; font-size: .98rem; }
 .ai-h2 { font-size: clamp(1.7rem, 3vw, 2.5rem); font-weight: 900; letter-spacing: -.035em; line-height: 1.08; color: var(--ink); margin-bottom: 22px; text-wrap: balance; }
 .ai-h2-claro { color: #fff; }
 .ai-p { font-size: clamp(1rem, 1.25vw, 1.1rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.2em; text-wrap: pretty; }
