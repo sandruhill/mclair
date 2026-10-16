@@ -175,12 +175,50 @@ const websiteSchema = {
     browsers don't mid-parse re-decode/reparse the document and drop event
     listeners bound during the first pass -->
     <meta charset="UTF-8" />
-    <!-- Google Tag Manager -->
-    <script is:inline>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-P3JSQCGS');</script>
+    <!-- Google Tag Manager (carregamento adiado)
+         O dataLayer e o evento gtm.js nascem aqui, no começo da página, como no
+         snippet oficial. Só o download do gtm.js (GA4 e pixel da Meta vêm por
+         dentro dele) espera: primeira interação (toque, tecla, rolagem) ou 3 s
+         depois do load, o que vier antes. Assim ele não disputa o processador
+         com a pintura do conteúdo principal.
+         Enquanto o GTM não chegou, cliques em links wa.me e envios de
+         formulário viram no dataLayer os mesmos eventos que os ouvintes do
+         GTM criariam (gtm.linkClick e gtm.formSubmit, com URL e id do
+         elemento). Quando o GTM carrega, lê a fila e dispara as tags de
+         whatsapp_click, whatsapp_form_submit e contact_form_submit (GA4 e
+         Meta/CAPI) como antes. Depois que ele carregou, a ponte se desliga e
+         os ouvintes do próprio GTM assumem, sem evento em dobro. -->
+    <script is:inline>(function(w,d,l,i){
+    if(w.__mcGtm)return;w.__mcGtm=1;
+    w[l]=w[l]||[];w[l].push({'gtm.start':new Date().getTime(),event:'gtm.js'});
+    var pronto=false,pedido=false,ev=['pointerdown','keydown','touchstart','scroll','wheel'];
+    function gtmAtivo(){return pronto||!!(w.google_tag_manager&&w.google_tag_manager[i]);}
+    function carregar(){
+      if(pedido)return;pedido=true;
+      ev.forEach(function(e){w.removeEventListener(e,carregar,{passive:true,capture:true});});
+      var j=d.createElement('script');j.async=true;
+      j.src='https://www.googletagmanager.com/gtm.js?id='+i;
+      j.onload=function(){pronto=true;};
+      (d.head||d.documentElement).appendChild(j);
+    }
+    ev.forEach(function(e){w.addEventListener(e,carregar,{passive:true,capture:true});});
+    function depoisDoLoad(){setTimeout(carregar,3000);}
+    if(d.readyState==='complete')depoisDoLoad();else w.addEventListener('load',depoisDoLoad);
+    function el(x){return x&&x.nodeType===1?x:null;}
+    d.addEventListener('click',function(e){
+      if(gtmAtivo())return;
+      var a=el(e.target);a=a&&a.closest?a.closest('a[href]'):null;
+      if(!a||String(a.href).indexOf('wa.me')<0)return;
+      w[l].push({event:'gtm.linkClick','gtm.element':a,'gtm.elementClasses':a.className||'',
+        'gtm.elementId':a.id||'','gtm.elementTarget':a.target||'','gtm.elementUrl':a.href});
+    },true);
+    d.addEventListener('submit',function(e){
+      if(gtmAtivo())return;
+      var f=el(e.target);if(!f)return;
+      w[l].push({event:'gtm.formSubmit','gtm.element':f,'gtm.elementClasses':f.className||'',
+        'gtm.elementId':f.id||'','gtm.elementTarget':f.target||'','gtm.elementUrl':f.action||''});
+    },true);
+    })(window,document,'dataLayer','GTM-P3JSQCGS');</script>
     <!-- End Google Tag Manager -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
@@ -256,9 +294,13 @@ const websiteSchema = {
     ))}
 
     <!-- ── Fonts ── -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet" />
+    <!-- Lato hospedada no site (@font-face em global.css, font-display: swap).
+         Pré-carrega os pesos que aparecem na primeira tela: 900 nos títulos,
+         400 no texto e 300 nos subtítulos. -->
+    <link rel="preload" href="/fonts/lato/lato-900-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/lato/lato-400-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preload" href="/fonts/lato/lato-300-latin.woff2" as="font" type="font/woff2" crossorigin />
+    <slot name="head" />
     <!-- Envio dos formulários: e-mail para a Kelly (/api/contato.php) e
          WhatsApp. Idempotente, então pode reexecutar na troca de página. -->
     <script is:inline src="/form-contato.js" defer></script>

@@ -7,7 +7,16 @@ import { paginaDaPessoa } from '../utils/blogAuthors';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20conhecer%20os%20serviços.';
 
+// Vídeo de fundo do hero e a imagem parada que aparece antes dele. O vídeo
+// padrão tem imagem própria no site; se o CMS trocar o vídeo, a imagem vem
+// da capa do YouTube até alguém gerar a nova.
+const VIDEO_PADRAO = '1eeqZNn-k0Y';
+
 const hpContent = await getSingleton('homepage');
+const heroVideoId: string = hpContent?.heroVideoId || VIDEO_PADRAO;
+const posterVideo = heroVideoId === VIDEO_PADRAO
+  ? `/hero/home-video-${VIDEO_PADRAO}.webp`
+  : `https://i.ytimg.com/vi_webp/${heroVideoId}/hqdefault.webp`;
 const stats  = (hpContent?.stats ?? []);
 const testimonials = (hpContent?.testimonials ?? []);
 
@@ -56,15 +65,22 @@ const cases = (allCases as any[])
 
 <!-- ═══════════════ HERO ═══════════════ -->
 <section class="hero">
-  <!-- YouTube video background — carregado só depois que a página fica interativa -->
+  <!-- Fundo em vídeo do YouTube. Na primeira pintura entra só uma imagem
+       parada do próprio vídeo (webp leve, ~20 KB); o iframe (~1,7 MB entre
+       player e mídia) só é inserido depois do load, quando o navegador fica
+       ocioso. Com economia de dados ligada (Save-Data) ou com
+       prefers-reduced-motion, fica só a imagem. -->
   <div class="hero-video-wrap" aria-hidden="true" id="hero-video-wrap">
+    <img class="hero-video-poster" src={posterVideo} alt="" width="960" height="540" fetchpriority="high" />
     <div class="hero-video-overlay"></div>
   </div>
-  <script is:inline define:vars={{ videoId: hpContent?.heroVideoId ?? '1eeqZNn-k0Y' }}>
+  <script is:inline define:vars={{ videoId: heroVideoId }}>
   (function() {
+    var con = navigator.connection;
+    if ((con && con.saveData) || (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches)) return;
     function loadHeroVideo() {
       var wrap = document.getElementById('hero-video-wrap');
-      if (!wrap) return;
+      if (!wrap || wrap.querySelector('iframe')) return;
       var iframe = document.createElement('iframe');
       iframe.src = 'https://www.youtube.com/embed/' + videoId
         + '?autoplay=1&mute=1&loop=1&playlist=' + videoId
@@ -72,14 +88,26 @@ const cases = (allCases as any[])
       iframe.frameBorder = '0';
       iframe.allow = 'autoplay; encrypted-media; fullscreen; picture-in-picture';
       iframe.allowFullscreen = true;
+      iframe.tabIndex = -1;
       iframe.style.cssText = 'position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:max(100vw,177.78vh);height:max(100vh,56.25vw);min-width:100%;min-height:100%;pointer-events:none;opacity:.5;border:0;';
-      wrap.insertBefore(iframe, wrap.firstChild);
+      // Com o player carregado, a imagem parada some aos poucos: o resultado
+      // final fica igual ao de antes (vídeo a 50% sobre o fundo escuro).
+      var poster = wrap.querySelector('.hero-video-poster');
+      iframe.addEventListener('load', function() {
+        setTimeout(function() {
+          if (!poster) return;
+          poster.style.transition = 'opacity .8s ease';
+          poster.style.opacity = '0';
+        }, 1200);
+      }, { once: true });
+      wrap.insertBefore(iframe, wrap.querySelector('.hero-video-overlay'));
     }
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadHeroVideo, { timeout: 2500 });
-    } else {
-      window.addEventListener('load', loadHeroVideo);
+    function agendar() {
+      if ('requestIdleCallback' in window) requestIdleCallback(loadHeroVideo, { timeout: 4000 });
+      else setTimeout(loadHeroVideo, 2000);
     }
+    if (document.readyState === 'complete') agendar();
+    else window.addEventListener('load', agendar, { once: true });
   })();
   </script>
 
@@ -97,13 +125,13 @@ const cases = (allCases as any[])
       </div>
 
       <h1 class="hero-title">
-        <span class="hero-title-line word-reveal hero-instant">
+        <span class="hero-title-line word-reveal hero-instant sem-entrada">
           <span class="word"><span class="word-inner">Agência</span></span>{" "}
           <span class="word"><span class="word-inner">de</span></span>{" "}
           <span class="word"><span class="word-inner hero-accent">Comunicação</span></span>{" "}
           <span class="word"><span class="word-inner hero-accent">Estratégica</span></span>{" "}
         </span>
-        <span class="hero-title-line word-reveal wr-delay hero-instant">
+        <span class="hero-title-line word-reveal wr-delay hero-instant sem-entrada">
           <span class="word italic-light"><span class="word-inner">e</span></span>{" "}
           <span class="word"><span class="word-inner hero-accent">Marketing</span></span>{" "}
           <span class="word"><span class="word-inner hero-accent">de</span></span>{" "}
@@ -111,7 +139,7 @@ const cases = (allCases as any[])
         </span>
       </h1>
 
-      <p class="hero-sub hero-instant" data-anim data-delay="4">
+      <p class="hero-sub hero-instant sem-entrada" data-anim data-delay="4">
         ~9 anos, 200+ clientes, 11.600+ inserções na mídia. Posicionamos marcas como primeira escolha do mercado com Comunicação Estratégica e Marketing de Autoridade.
       </p>
 
@@ -511,6 +539,12 @@ const cases = (allCases as any[])
   height: max(100%, calc(100vw * 0.5625));
   min-width: 100%; min-height: 100%;
   pointer-events: none;
+  opacity: 0.5;
+}
+.hero-video-poster {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover; object-position: 50% 50%;
   opacity: 0.5;
 }
 .hero-video-overlay {

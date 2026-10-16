@@ -153,8 +153,8 @@ const ogImg = s.image
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
         <span>{s.title}</span>
       </div>
-      <h1 class="sh-title hero-instant" data-anim data-delay="1">{h1}</h1>
-      <p class="sh-intro hero-instant" data-anim data-delay="3" set:html={linkarPessoasEmTexto(s.intro)}></p>
+      <h1 class="sh-title hero-instant sem-entrada" data-anim data-delay="1">{h1}</h1>
+      <p class="sh-intro hero-instant sem-entrada" data-anim data-delay="3" set:html={linkarPessoasEmTexto(s.intro)}></p>
       <div class="sh-actions hero-instant" data-anim data-delay="4">
         <a href={waServico} class="btn-white" target="_blank" rel="noopener" style={`background:#fff;color:var(--dark)`}>{s.cta}</a>
         <a href="/contato/" class="btn-ghost-white">Ver todos os serviços</a>
