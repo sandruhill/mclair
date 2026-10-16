@@ -15,7 +15,7 @@ declare(strict_types=1);
 const MC_DESTINO     = 'kelly@mclair.com.br';
 // Cópia oculta pedida em 16/10/2026 para testar a entrega numa caixa que a
 // IKOEH acompanha. Deixar vazio ('') para mandar só para a Kelly.
-const MC_COPIA       = 'marketing@mclair.com.br';
+const MC_COPIA       = '';
 const MC_REMETENTE   = 'site@mclair.com.br';
 const MC_NOME_REMET  = 'Site Mclair';
 const MC_MAX_BYTES   = 20000;
