@@ -86,7 +86,7 @@ const servicos = [
   <div class="container contact-grid">
     <div class="form-wrap" data-anim="left">
       <h2 class="fw-title">Envie sua mensagem</h2>
-      <p class="fw-sub">Preencha os dados abaixo e vamos abrir o WhatsApp com sua mensagem pronta pra enviar. É só conferir e mandar.</p>
+      <p class="fw-sub">Preencha os dados abaixo. A mensagem chega à Kelly por e-mail e o WhatsApp abre com o texto pronto para você conferir e mandar.</p>
       <form class="contact-form" id="contact-form" novalidate>
         <div class="form-row">
           <div class="field">
@@ -264,6 +264,12 @@ const servicos = [
       + '.\n\n*Serviços de interesse:* ' + (servicos.length ? servicos.join(', ') : 'a definir')
       + '\n\n*Mensagem:* ' + msgVal
       + (tel ? '\n\n*Telefone:* ' + tel : '');
+    // E-mail para a Kelly sem esperar resposta; o WhatsApp abre no mesmo clique.
+    if (window.McContato) window.McContato.enviarEmail({
+      formulario: 'contact-form', nome: nomeVal, email: emailVal, telefone: tel, empresa: empresa,
+      assunto: servicos.length ? servicos.join(', ') : 'Consultoria',
+      servicos: servicos.join(', '), mensagem: msgVal
+    });
     window.open('https://wa.me/5511988600372?text=' + encodeURIComponent(text), '_blank');
   });
 })();

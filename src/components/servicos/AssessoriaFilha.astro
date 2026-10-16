@@ -16,8 +16,12 @@ interface Props {
   faqTitulo: string;
   fimTitulo: string;
   fimTexto: string;
+  /** Destino do botão do topo; sem ele, o botão vai para o WhatsApp. */
+  ctaHref?: string;
+  /** Âncora de um formulário na própria página; troca o link secundário do fechamento. */
+  fimForm?: { href: string; texto: string };
 }
-const { trilha, h1, intro, wa, cta, faq, faqTitulo, fimTitulo, fimTexto } = Astro.props;
+const { trilha, h1, intro, wa, cta, faq, faqTitulo, fimTitulo, fimTexto, ctaHref, fimForm } = Astro.props;
 ---
 
 <section class="af-hero">
@@ -33,7 +37,9 @@ const { trilha, h1, intro, wa, cta, faq, faqTitulo, fimTitulo, fimTexto } = Astr
     <h1 class="af-h1">{h1}</h1>
     <p class="af-intro">{intro}</p>
     <div class="af-acoes">
-      <a href={wa} class="btn-primary" target="_blank" rel="noopener">{cta}</a>
+      {ctaHref
+        ? <a href={ctaHref} class="btn-primary">{cta}</a>
+        : <a href={wa} class="btn-primary" target="_blank" rel="noopener">{cta}</a>}
     </div>
   </div></div>
 </section>
@@ -61,7 +67,9 @@ const { trilha, h1, intro, wa, cta, faq, faqTitulo, fimTitulo, fimTexto } = Astr
     <p>{fimTexto}</p>
     <div class="af-fim-acoes">
       <a href={wa} class="btn-primary" target="_blank" rel="noopener">Falar no WhatsApp</a>
-      <a href="/contato/" class="af-link-claro">Ou envie uma mensagem</a>
+      {fimForm
+        ? <a href={fimForm.href} class="af-link-claro">{fimForm.texto}</a>
+        : <a href="/contato/" class="af-link-claro">Ou envie uma mensagem</a>}
     </div>
   </div></div>
 </section>

@@ -259,6 +259,9 @@ const websiteSchema = {
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;0,900;1,300&display=swap" rel="stylesheet" />
+    <!-- Envio dos formulários: e-mail para a Kelly (/api/contato.php) e
+         WhatsApp. Idempotente, então pode reexecutar na troca de página. -->
+    <script is:inline src="/form-contato.js" defer></script>
     <ClientRouter />
   </head>
   <body data-cms-edit={cmsEdit ? JSON.stringify(cmsEdit) : ''}>
@@ -690,6 +693,13 @@ const websiteSchema = {
         // De qual página veio o contato: a equipe vê na conversa e o
         // relatório mensal conta contatos por página.
         msg += '\n\n(Página: mclair.com.br' + location.pathname + ')';
+        // Mesmo contato também vai por e-mail para a Kelly, sem esperar
+        // resposta; o WhatsApp abre logo abaixo, no mesmo clique.
+        if (window.McContato) window.McContato.enviarEmail({
+          formulario: 'wa-form', nome: name,
+          assunto: svc || 'Contato pela janela do WhatsApp',
+          mensagem: svc ? 'Quer saber mais sobre: ' + svc : 'Quer conhecer os serviços.'
+        });
         var url = 'https://wa.me/' + WA_NUM + '?text=' + encodeURIComponent(msg);
         window.open(url, '_blank', 'noopener,noreferrer');
         closeModal();

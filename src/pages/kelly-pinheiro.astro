@@ -411,8 +411,9 @@ const schema = [
       <h2 class="kp-titulo kp-titulo-claro kp-titulo-capa kp-reveal">Vamos conversar?</h2>
       <p class="kp-fim-lead kp-reveal">Para marcas e profissionais que querem ser lembrados pelo que realmente entregam, a conversa começa aqui.</p>
 
-      <!-- Mesmo destino do #wa-form do site (modal do Layout): monta a
-           mensagem e abre o WhatsApp da Mclair. Id próprio para não
+      <!-- Mesmo destino do #wa-form do site (modal do Layout): manda o
+           contato por e-mail para a Kelly (/form-contato.js) e abre o
+           WhatsApp da Mclair com a mensagem pronta. Id próprio para não
            colidir com o do modal; classe wa-form para o GTM reconhecer. -->
       <form id="wa-form-kelly" class="wa-form kp-form kp-reveal" novalidate>
         <div class="kp-form-campos">
@@ -511,6 +512,11 @@ const schema = [
       var msg = 'Olá Kelly! Meu nome é ' + nome + '. Assunto: ' + assunto + '.' + (zap ? ' Meu WhatsApp: ' + zap + '.' : '') + ' Vim pela sua página no site da Mclair.';
       window.dataLayer = window.dataLayer || [];
       window.dataLayer.push({ event: 'wa_form_submit', form_id: 'wa-form-kelly', assunto: assunto });
+      // E-mail para a Kelly sem esperar resposta; o WhatsApp abre no mesmo clique.
+      if (window.McContato) window.McContato.enviarEmail({
+        formulario: 'wa-form-kelly', nome: nome, telefone: zap, assunto: assunto,
+        mensagem: 'Veio pela página da Kelly. Assunto: ' + assunto + '.'
+      });
       window.open('https://wa.me/5511988600372?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
     });
   }

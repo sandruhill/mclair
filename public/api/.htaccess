@@ -3,3 +3,9 @@
 <Files "fb-capi-config.php">
   Require all denied
 </Files>
+
+# O PHP da Hostinger grava "error_log" na pasta do script. As mensagens do
+# contato.php não têm dado pessoal, mas o arquivo não precisa ser público.
+<Files "error_log">
+  Require all denied
+</Files>

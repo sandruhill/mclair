@@ -25,28 +25,34 @@ const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
 const PUBLICADO = '2026-10-16';
 
 const MODELOS = [
-  { nome: 'Fee mensal', texto: 'Um valor fixo por mês para um escopo combinado: quantas pautas, quantos porta-vozes, que tipo de relatório. É o modelo mais comum para quem quer presença contínua, porque o relacionamento com as redações se constrói com o tempo e o trabalho do mês seguinte aproveita o do anterior.' },
-  { nome: 'Projeto', texto: 'Preço fechado para uma entrega com começo e fim: o lançamento de um produto, a chegada de uma empresa ao Brasil, uma rodada de investimento, uma feira. Funciona quando existe um fato forte e uma data. Terminado o projeto, o contato com a imprensa costuma esfriar.' },
-  { nome: 'Por pauta ou por release', texto: 'Cobrança avulsa por texto produzido e enviado. É o formato de muitos freelancers. Sai mais barato no papel, mas raramente inclui o acompanhamento com o jornalista, que é a parte que decide se a matéria sai.' },
-  { nome: 'Evento ou coletiva', texto: 'Valor por evento, que reúne convite à imprensa, credenciamento, material de apoio, preparação de quem vai falar e atendimento aos jornalistas no dia. Pode ser contratado sozinho ou somado a um fee mensal.' },
+  { nome: 'Fee mensal', texto: 'Você paga um valor fixo por mês e recebe um escopo combinado: quantas pautas, quantos porta-vozes, que tipo de relatório. É o formato mais comum para quem quer aparecer com frequência, porque o relacionamento com as redações cresce com o tempo e cada mês aproveita o trabalho do anterior.' },
+  { nome: 'Projeto', texto: 'Preço fechado para uma entrega com começo e fim: o lançamento de um produto, a chegada da empresa ao Brasil, uma rodada de investimento, uma feira. Funciona bem quando existe um fato forte e uma data marcada. Terminado o projeto, o contato com os jornalistas tende a esfriar.' },
+  { nome: 'Por pauta ou por release', texto: 'Você paga por texto produzido e enviado, o formato de muitos freelancers. No papel sai mais barato, mas quase nunca inclui o acompanhamento com o jornalista, que é justamente a parte que decide se a matéria sai.' },
+  { nome: 'Evento ou coletiva', texto: 'Um valor por evento, que cobre convite à imprensa, credenciamento, material de apoio, preparação de quem vai falar e atendimento aos jornalistas no dia. Pode ser contratado sozinho ou somado a um fee mensal.' },
 ];
 
 const VARIAVEIS = [
-  { nome: 'Número de porta-vozes', texto: 'Cada pessoa que fala pela empresa precisa de pauta própria, media training e agenda de entrevistas. Dois porta-vozes dão mais trabalho que um.' },
-  { nome: 'Frequência de pautas', texto: 'Uma pauta forte por mês é um trabalho. Uma por semana, com artigos assinados e respostas rápidas a jornalistas, é outro.' },
+  { nome: 'Número de porta-vozes', texto: 'Cada pessoa que fala pela sua empresa precisa de pauta própria, media training e agenda de entrevistas. Dois porta-vozes dão mais trabalho que um.' },
+  { nome: 'Frequência de pautas', texto: 'Uma pauta forte por mês é um trabalho. Uma por semana, com artigos assinados e respostas rápidas aos jornalistas, é outro.' },
   { nome: 'Alcance', texto: 'Imprensa regional, nacional ou estrangeira pedem listas, idiomas e relacionamentos diferentes. No programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, a Mclair trabalhou com correspondentes estrangeiros e conteúdo em português e inglês.' },
-  { nome: 'Setor', texto: 'Tecnologia, finanças e indústria têm jornalistas especializados e exigem pauta técnica bem traduzida. Setores regulados, como saúde, pedem cuidado extra com o que se diz.' },
+  { nome: 'Setor', texto: 'Tecnologia, finanças e indústria têm jornalistas especializados e pedem pauta técnica bem traduzida para o leitor comum. Setores regulados, como saúde, exigem cuidado extra com cada frase.' },
   { nome: 'O que entra junto', texto: 'Media training, gestão de crise, conteúdo para redes sociais e eventos podem fazer parte do mesmo contrato ou ficar de fora.' },
-  { nome: 'Urgência', texto: 'Uma crise ou um anúncio marcado para a semana seguinte exigem equipe dedicada de imediato.' },
+  { nome: 'Urgência', texto: 'Uma crise ou um anúncio marcado para a semana que vem pedem equipe dedicada na hora.' },
 ];
 
 const ALERTAS = [
-  { nome: 'Garantia de publicação', texto: 'Quem decide o que sai é o editor. Uma agência que garante matéria em determinado veículo está vendendo espaço pago com outro nome ou prometendo o que não controla.' },
-  { nome: 'Cobrança por matéria publicada', texto: 'Parece justo, mas cria o incentivo errado: a agência corre atrás de sites que publicam qualquer release e esquece os veículos que o seu cliente lê.' },
-  { nome: 'Preço fechado sem conversa', texto: 'Se a proposta chega antes de alguém perguntar o que a empresa tem para contar, ela foi feita para qualquer empresa.' },
+  { nome: 'Garantia de publicação', texto: 'Quem decide o que sai é o editor. Se a agência garante matéria num veículo específico, ou está vendendo espaço pago com outro nome, ou está prometendo o que não controla.' },
+  { nome: 'Cobrança por matéria publicada', texto: 'Parece justo, mas cria o incentivo errado: a agência passa a correr atrás de sites que publicam qualquer release e esquece os veículos que o seu cliente lê.' },
+  { nome: 'Preço fechado sem conversa', texto: 'Se a proposta chegou antes de alguém perguntar o que a sua empresa tem para contar, ela foi feita para qualquer empresa.' },
   { nome: 'Disparo em massa', texto: 'Mandar o mesmo release para milhares de endereços não é relacionamento com a imprensa. O jornalista apaga sem ler.' },
   { nome: 'Relatório sem link', texto: 'Resultado de assessoria se mostra com a matéria publicada: veículo, data e endereço. Números de alcance sem a matéria por trás não provam nada.' },
 ];
+
+// Formulário do meio da página. Classe wa-form e id próprio para o GTM
+// reconhecer como os outros; o envio (e-mail para a Kelly e WhatsApp) é
+// feito por /form-contato.js, que liga todo form com data-mc-contato.
+const FORM_ID = 'wa-form-preco';
+const VERBA = ['Ainda não sei', 'Quero entender os modelos', 'Já tenho verba definida'];
 
 const schema = [
   {
@@ -106,27 +112,29 @@ const schema = [
     { nome: 'Quanto custa' },
   ]}
   h1={SEO_ASSESSORIA_PRECO.h1}
-  intro="Depende do escopo, e essa resposta só serve se vier explicada. Aqui estão os modelos de cobrança do mercado, o que faz o valor subir ou cair e os sinais de que uma proposta barata pode sair cara."
+  intro="Você pediu orçamento para duas ou três agências e recebeu números que não conversam entre si. Ou ainda nem pediu, porque não sabe bem o que perguntar. Aqui você entende como o mercado cobra, o que faz o valor mudar e o que observar numa proposta antes de assinar."
   wa={WA_ASSESSORIA_PRECO}
   cta="Pedir um diagnóstico"
+  ctaHref="#diagnostico"
   faq={FAQ_ASSESSORIA_PRECO}
   faqTitulo="Perguntas sobre preço"
   fimTitulo="Quer saber quanto custaria para a sua empresa?"
-  fimTexto="Mande uma mensagem contando o momento do seu negócio. A Mclair marca o diagnóstico e, depois dele, envia a proposta com escopo, prazo e forma de medir."
+  fimTexto="Conte o momento do seu negócio. A Mclair marca o diagnóstico e, depois dele, envia a proposta por escrito com escopo, prazo e forma de medir."
+  fimForm={{ href: '#diagnostico', texto: 'Ou preencha o formulário' }}
 >
 
 <section class="af-secao">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Por que não existe preço de tabela</h2>
-    <p class="af-p">Assessoria de imprensa é serviço de jornalista. O que se compra é tempo de gente que entende de pauta, escreve como a redação escreve e conversa com repórteres e editores. Esse tempo varia muito de uma empresa para outra.</p>
-    <p class="af-p">Uma leiloeira que tem um lote novo de imóveis por mês precisa de pauta rápida e recorrente. Um especialista que quer ser a fonte chamada quando o assunto dele entra em pauta precisa de artigo assinado, entrevista e paciência. Uma indústria que exporta precisa falar com jornalistas de outros países, em outro idioma. São três trabalhos com o mesmo nome e custos diferentes.</p>
+    <p class="af-p">Quando você contrata assessoria de imprensa, está pagando tempo de jornalista: gente que reconhece uma pauta, escreve no ritmo da redação e sabe para qual repórter ligar. O quanto desse tempo a sua empresa vai precisar é o que define o preço, e isso muda muito de um caso para outro.</p>
+    <p class="af-p">Pense em três empresas. Uma leiloeira que abre lotes novos de imóveis todo mês precisa de pauta rápida e recorrente. Um especialista que quer ser a fonte procurada quando o assunto dele aparece no noticiário precisa de artigo assinado, entrevista e paciência. Uma indústria que exporta precisa conversar com jornalistas de outros países, em outro idioma. As três contratam assessoria de imprensa, e cada uma paga por um trabalho diferente.</p>
   </div></div>
 </section>
 
 <section class="af-secao af-secao-creme">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Como o mercado cobra</h2>
-    <p class="af-p">Quase toda proposta de assessoria de imprensa no Brasil cai em um destes quatro formatos, ou em uma combinação deles.</p>
+    <p class="af-p">As propostas que chegam à sua mesa quase sempre seguem um destes quatro formatos, sozinhos ou combinados. Vale saber o que cada um entrega antes de comparar valores.</p>
     <dl class="af-def">
       {MODELOS.map((m) => (
         <div>
@@ -152,6 +160,7 @@ const schema = [
 <section class="af-secao">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">O que faz o valor subir ou cair</h2>
+    <p class="af-p">Na hora de comparar propostas, olhe para estes pontos. São eles que explicam por que duas agências cobram valores tão diferentes pelo que parece ser o mesmo serviço.</p>
     <dl class="af-def">
       {VARIAVEIS.map((v) => (
         <div>
@@ -163,10 +172,73 @@ const schema = [
   </div></div>
 </section>
 
-<section class="af-secao af-secao-creme">
+<section class="af-secao af-secao-creme qc-form-secao" id="diagnostico" aria-labelledby="qc-form-titulo">
+  <div class="container qc-form-grid">
+    <div class="qc-form-texto">
+      <h2 class="af-h2" id="qc-form-titulo">Comece pelo diagnóstico da sua empresa</h2>
+      <p class="af-p">Você já sabe o que pesa no preço. Agora conte o seu caso. Não precisa ter tudo definido: a primeira conversa serve justamente para isso, e não tem compromisso.</p>
+      <p class="af-p">Quando você enviar, a mensagem chega à Kelly Pinheiro por e-mail e o WhatsApp da Mclair abre com o texto pronto. Depois do diagnóstico, a proposta vem por escrito, com escopo, prazo e forma de medir.</p>
+    </div>
+
+    <form
+      id={FORM_ID}
+      class="wa-form qc-form"
+      novalidate
+      data-mc-contato
+      data-assunto="Diagnóstico de assessoria de imprensa (página de quanto custa)"
+      data-wa-intro="Olá Mclair! Li a página sobre quanto custa assessoria de imprensa e quero marcar o diagnóstico da minha empresa."
+    >
+      <div class="qc-linha">
+        <div class="mc-campo">
+          <label for="qc-nome">Nome</label>
+          <input id="qc-nome" name="nome" type="text" autocomplete="name" required maxlength="120" data-nome-campo="seu nome" data-wa="Nome" />
+        </div>
+        <div class="mc-campo">
+          <label for="qc-empresa">Empresa <span class="qc-opc">(opcional)</span></label>
+          <input id="qc-empresa" name="empresa" type="text" autocomplete="organization" maxlength="150" data-wa="Empresa" />
+        </div>
+      </div>
+      <div class="qc-linha">
+        <div class="mc-campo">
+          <label for="qc-email">E-mail</label>
+          <input id="qc-email" name="email" type="email" autocomplete="email" inputmode="email" required maxlength="190" data-nome-campo="seu e-mail" data-wa="E-mail" />
+        </div>
+        <div class="mc-campo">
+          <label for="qc-zap">WhatsApp com DDD</label>
+          <input id="qc-zap" name="whatsapp" type="tel" autocomplete="tel" inputmode="tel" required maxlength="40" placeholder="(11) 90000-0000" data-nome-campo="seu WhatsApp" data-wa="WhatsApp" />
+        </div>
+      </div>
+      <div class="mc-campo">
+        <label for="qc-objetivo">O que você quer levar à imprensa?</label>
+        <p class="qc-dica" id="qc-objetivo-dica">Um lançamento, um especialista da casa, a chegada a uma nova cidade. Algumas linhas bastam.</p>
+        <textarea id="qc-objetivo" name="objetivo" rows="3" required maxlength="1500" aria-describedby="qc-objetivo-dica" data-nome-campo="o que você quer divulgar" data-wa="O que quero divulgar"></textarea>
+      </div>
+      <div class="mc-campo">
+        <label for="qc-verba">Como está a verba para assessoria? <span class="qc-opc">(opcional)</span></label>
+        <select id="qc-verba" name="orcamento" data-wa="Verba">
+          <option value="">Escolha uma opção</option>
+          {VERBA.map((v) => <option value={v}>{v}</option>)}
+        </select>
+      </div>
+      <div class="mc-campo">
+        <label for="qc-msg">Mais alguma coisa? <span class="qc-opc">(opcional)</span></label>
+        <textarea id="qc-msg" name="mensagem" rows="3" maxlength="4000" data-wa="Mensagem"></textarea>
+      </div>
+      <div class="qc-hp" aria-hidden="true">
+        <label for="qc-website">Deixe este campo em branco</label>
+        <input id="qc-website" name="website" type="text" tabindex="-1" autocomplete="off" />
+      </div>
+      <button type="submit" class="btn-primary qc-enviar">Enviar e abrir o WhatsApp</button>
+      <p class="qc-aviso" data-mc-aviso role="status" aria-live="polite"></p>
+      <p class="qc-privacidade">Seus dados vão só para a equipe da Mclair, para responder ao seu contato.</p>
+    </form>
+  </div>
+</section>
+
+<section class="af-secao">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Sinais de alerta numa proposta</h2>
-    <p class="af-p">Preço baixo não é problema em si. O problema é quando ele vem acompanhado de uma destas promessas:</p>
+    <p class="af-p">Preço baixo, sozinho, não é defeito. Desconfie quando ele vem junto com uma destas promessas:</p>
     <dl class="af-def">
       {ALERTAS.map((a) => (
         <div>
@@ -178,11 +250,11 @@ const schema = [
   </div></div>
 </section>
 
-<section class="af-secao">
+<section class="af-secao af-secao-creme">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Como a Mclair monta a proposta</h2>
-    <p class="af-p">A proposta só sai depois do diagnóstico, que é a primeira conversa, sem compromisso. Nela, a Mclair quer entender quatro coisas: o que a empresa tem de novo para contar, quem pode falar por ela, quais veículos o cliente dela lê e o que seria um bom resultado daqui a seis meses.</p>
-    <p class="af-p">Com isso, a proposta chega por escrito com o escopo do mês (pautas, porta-vozes, media training, relatório), o modelo de cobrança que faz sentido para o caso e a forma de medir. Medir, para nós, é mostrar a matéria publicada. Foi assim com os leilões da <a href="/cases/fidalgo/">Fidalgo</a> na Folha de S.Paulo e com o artigo de <a href="/cases/diego-nogare/">Diego Nogare</a> na Exame.</p>
+    <p class="af-p">Antes de qualquer número vem o diagnóstico, uma primeira conversa sem compromisso. Nela, a Mclair quer entender quatro coisas: o que a sua empresa tem de novo para contar, quem pode falar por ela, quais veículos o seu cliente lê e o que seria um bom resultado daqui a seis meses.</p>
+    <p class="af-p">Com essas respostas, a proposta chega por escrito com o escopo do mês (pautas, porta-vozes, media training, relatório), o modelo de cobrança que faz sentido para o seu caso e a forma de medir. Medir, para nós, é mostrar a matéria publicada. Foi assim com os leilões da <a href="/cases/fidalgo/">Fidalgo</a> na Folha de S.Paulo e com o artigo de <a href="/cases/diego-nogare/">Diego Nogare</a> na Exame.</p>
     <p class="af-p">Quem conduz essa conversa é <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>, jornalista desde 2004, ex-colunista da Exame e fundadora da Mclair. Desde 2017, a agência soma mais de 11.600 inserções na mídia para mais de 200 clientes.</p>
     <p class="af-nota">Para ver o que entra no serviço, leia a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Se a sua empresa está na capital paulista, veja também <a href={URL_ASSESSORIA_SP}>assessoria de imprensa em São Paulo</a>.</p>
   </div></div>
@@ -190,3 +262,45 @@ const schema = [
 
 </AssessoriaFilha>
 </Layout>
+
+<style is:global>
+/* Formulário do diagnóstico. Global porque o conteúdo do slot não leva o
+   escopo do componente; o prefixo qc- evita colisão. */
+.qc-form-secao { scroll-margin-top: 80px; }
+.qc-form-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); gap: clamp(32px, 5vw, 72px); align-items: start; }
+.qc-form-texto { max-width: 460px; }
+.wa-form.qc-form { display: flex; flex-direction: column; gap: 20px; background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: clamp(22px, 3.5vw, 40px); box-shadow: 0 10px 40px rgba(28,26,23,.06); }
+.qc-linha { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.mc-campo { display: flex; flex-direction: column; gap: 7px; min-width: 0; }
+.mc-campo label { font-size: .95rem; font-weight: 700; color: var(--ink); line-height: 1.35; }
+.qc-opc { font-weight: 400; color: var(--ink-3); }
+.qc-dica { margin: 0; font-size: .9rem; line-height: 1.5; color: var(--ink-3); }
+.mc-campo input, .mc-campo select, .mc-campo textarea {
+  width: 100%; box-sizing: border-box; font: inherit; font-size: 1rem; color: var(--ink);
+  background: #fff; border: 1.5px solid var(--line-2); border-radius: 8px; padding: 12px 14px;
+  transition: border-color .2s, box-shadow .2s;
+}
+/* O cabeçalho fixo não cobre o campo com erro quando ele recebe o foco. */
+.mc-campo input, .mc-campo select, .mc-campo textarea { scroll-margin-top: 120px; }
+.mc-campo textarea { resize: vertical; min-height: 96px; line-height: 1.55; }
+.mc-campo select { appearance: none; -webkit-appearance: none; padding-right: 40px; background-image: linear-gradient(45deg, transparent 50%, var(--ink-3) 50%), linear-gradient(135deg, var(--ink-3) 50%, transparent 50%); background-position: calc(100% - 20px) 52%, calc(100% - 14px) 52%; background-size: 6px 6px; background-repeat: no-repeat; }
+.mc-campo input::placeholder { color: var(--ink-4); }
+.mc-campo input:focus-visible, .mc-campo select:focus-visible, .mc-campo textarea:focus-visible { outline: 3px solid rgba(200,16,46,.35); outline-offset: 1px; border-color: var(--red); }
+.mc-campo [aria-invalid="true"] { border-color: #B42318; background: #FFFBFA; }
+.mc-erro { margin: 0; font-size: .9rem; font-weight: 700; color: #B42318; line-height: 1.45; }
+.mc-erro:empty { display: none; }
+.qc-hp { position: absolute; left: -10000px; width: 1px; height: 1px; overflow: hidden; }
+.qc-enviar { align-self: flex-start; border: 0; cursor: pointer; font-family: inherit; }
+.qc-enviar:focus-visible { outline: 3px solid rgba(200,16,46,.45); outline-offset: 3px; }
+.qc-aviso { margin: 0; font-size: .98rem; line-height: 1.55; color: var(--ink); font-weight: 700; }
+.qc-aviso:empty { display: none; }
+.qc-privacidade { margin: 0; font-size: .88rem; line-height: 1.5; color: var(--ink-3); }
+@media (max-width: 900px) {
+  .qc-form-grid { grid-template-columns: 1fr; }
+  .qc-form-texto { max-width: 680px; }
+}
+@media (max-width: 640px) {
+  .qc-linha { grid-template-columns: 1fr; }
+  .qc-enviar { align-self: stretch; justify-content: center; }
+}
+</style>
