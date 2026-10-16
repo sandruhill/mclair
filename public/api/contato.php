@@ -291,15 +291,82 @@ $linhas[] = 'Página: https://mclair.com.br' . ($caminho !== '' ? $caminho : '/'
 $linhas[] = 'Enviado em: ' . (new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo')))->format('d/m/Y H:i');
 $linhas[] = 'A pessoa também foi levada ao WhatsApp com a mensagem pronta.';
 
+// ---------- Versão em HTML (a que a Kelly vê) ----------
+function mc_h(string $t): string
+{
+    return htmlspecialchars($t, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8');
+}
+function mc_linha_html(string $rotulo, string $valor): string
+{
+    return '<tr><td style="padding:10px 0;border-bottom:1px solid #EEECE8;width:150px;vertical-align:top;color:#8A847E;font-size:13px;">'
+        . mc_h($rotulo) . '</td><td style="padding:10px 0;border-bottom:1px solid #EEECE8;vertical-align:top;color:#1C1A17;font-size:15px;font-weight:600;">'
+        . $valor . '</td></tr>';
+}
+function mc_bloco_html(string $titulo, string $texto): string
+{
+    return '<p style="margin:28px 0 8px;color:#8A847E;font-size:13px;">' . mc_h($titulo) . '</p>'
+        . '<div style="background:#F6F5F3;border-radius:10px;padding:16px 18px;color:#1C1A17;font-size:15px;line-height:1.6;">'
+        . nl2br(mc_h($texto)) . '</div>';
+}
+
+$quando = (new DateTimeImmutable('now', new DateTimeZone('America/Sao_Paulo')))->format('d/m/Y \à\s H:i');
+$paginaUrl = 'https://mclair.com.br' . ($caminho !== '' ? $caminho : '/');
+$digitos = preg_replace('/\D+/', '', $telefone);
+if ($digitos !== '' && strlen($digitos) <= 11) $digitos = '55' . $digitos;
+$botoes = '';
+if ($digitos !== '' && strlen($digitos) >= 12 && strlen($digitos) <= 13) {
+    $botoes .= '<a href="https://wa.me/' . $digitos . '" style="display:inline-block;background:#C8102E;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 20px;border-radius:8px;margin:0 8px 8px 0;">Responder no WhatsApp</a>';
+}
+if ($email !== '') {
+    $botoes .= '<a href="mailto:' . mc_h($email) . '" style="display:inline-block;background:#1C1A17;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 20px;border-radius:8px;margin:0 8px 8px 0;">Responder por e-mail</a>';
+}
+
+$tabela = mc_linha_html('Nome', mc_h($nome))
+    . mc_linha_html('E-mail', $email !== '' ? '<a href="mailto:' . mc_h($email) . '" style="color:#C8102E;text-decoration:none;">' . mc_h($email) . '</a>' : ($emailIn !== '' ? mc_h($emailIn) . ' <span style="color:#C8102E;font-weight:400;">(formato inválido)</span>' : '<span style="color:#8A847E;font-weight:400;">não informado</span>'))
+    . mc_linha_html('WhatsApp', $telefone !== '' ? mc_h($telefone) : '<span style="color:#8A847E;font-weight:400;">não informado</span>')
+    . mc_linha_html('Empresa', $empresa !== '' ? mc_h($empresa) : '<span style="color:#8A847E;font-weight:400;">não informada</span>');
+if ($assunto !== '')   $tabela .= mc_linha_html('Assunto', mc_h($assunto));
+if ($servicos !== '')  $tabela .= mc_linha_html('Interesse', mc_h($servicos));
+if ($orcamento !== '') $tabela .= mc_linha_html('Verba', mc_h($orcamento));
+
+$html = '<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>' . mc_h($assuntoEmail) . '</title></head>'
+    . '<body style="margin:0;padding:0;background:#F1EFEC;font-family:Lato,Helvetica,Arial,sans-serif;">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#F1EFEC;"><tr><td align="center" style="padding:32px 16px;">'
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:600px;background:#ffffff;border-radius:14px;overflow:hidden;">'
+    . '<tr><td style="background:#151210;padding:26px 32px;">'
+    . '<p style="margin:0;color:#ffffff;font-size:22px;font-weight:900;letter-spacing:-0.02em;">Mclair</p>'
+    . '<p style="margin:6px 0 0;color:#C9C3BC;font-size:14px;">Novo contato pelo site</p></td></tr>'
+    . '<tr><td style="height:4px;background:#C8102E;line-height:4px;font-size:0;">&nbsp;</td></tr>'
+    . '<tr><td style="padding:30px 32px 8px;">'
+    . '<p style="margin:0 0 4px;color:#1C1A17;font-size:24px;font-weight:800;line-height:1.25;">' . mc_h($nome) . ' quer conversar</p>'
+    . '<p style="margin:0 0 22px;color:#6B6560;font-size:14px;">' . mc_h($rotuloForm) . ', ' . mc_h($quando) . '</p>'
+    . ($botoes !== '' ? '<div style="margin:0 0 18px;">' . $botoes . '</div>' : '')
+    . '<table role="presentation" width="100%" cellpadding="0" cellspacing="0">' . $tabela . '</table>'
+    . ($objetivo !== '' ? mc_bloco_html('O que quer divulgar', $objetivo) : '')
+    . ($mensagem !== '' ? mc_bloco_html('Mensagem', $mensagem) : '')
+    . '</td></tr>'
+    . '<tr><td style="padding:24px 32px 30px;">'
+    . '<p style="margin:0;color:#8A847E;font-size:13px;line-height:1.6;">Enviado da página <a href="' . mc_h($paginaUrl) . '" style="color:#8A847E;">' . mc_h($paginaUrl) . '</a>. A pessoa também foi levada ao WhatsApp da Mclair com a mensagem pronta.</p>'
+    . '</td></tr></table>'
+    . '<p style="margin:16px 0 0;color:#A29C96;font-size:12px;">Mclair Comunicação · mclair.com.br</p>'
+    . '</td></tr></table></body></html>';
+
 // Corpo em base64: nenhuma linha passa do limite do SMTP, ponto no começo
 // de linha não encerra a mensagem e o UTF-8 chega inteiro em qualquer MTA.
-$corpo = rtrim(chunk_split(base64_encode(implode("\r\n", $linhas)), 76, "\r\n"));
+// Duas partes: texto puro para quem não lê HTML e a versão bonita.
+$fronteira = 'mc_' . bin2hex(random_bytes(12));
+$corpo = '--' . $fronteira . "\r\n"
+    . "Content-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+    . rtrim(chunk_split(base64_encode(implode("\r\n", $linhas)), 76, "\r\n")) . "\r\n"
+    . '--' . $fronteira . "\r\n"
+    . "Content-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: base64\r\n\r\n"
+    . rtrim(chunk_split(base64_encode($html), 76, "\r\n")) . "\r\n"
+    . '--' . $fronteira . '--';
 
 $cabecalhos = [
     'From: ' . MC_NOME_REMET . ' <' . MC_REMETENTE . '>',
     'MIME-Version: 1.0',
-    'Content-Type: text/plain; charset=UTF-8',
-    'Content-Transfer-Encoding: base64',
+    'Content-Type: multipart/alternative; boundary="' . $fronteira . '"',
     'X-Mailer: mclair-site',
 ];
 if ($email !== '') {
