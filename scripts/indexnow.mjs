@@ -17,7 +17,7 @@ if (!urls.length) {
     urls.push(...(xml.match(/<loc>[^<]+<\/loc>/g) ?? []).map((l) => l.slice(5, -6)));
   }
 }
-const r = await fetch('https://api.indexnow.org/indexnow', {
+const r = await fetch('https://www.bing.com/indexnow', {
   method: 'POST',
   headers: { 'Content-Type': 'application/json; charset=utf-8' },
   body: JSON.stringify({ host: HOST, key, keyLocation: `https://${HOST}/${arq}`, urlList: urls.slice(0, 10000) }),
