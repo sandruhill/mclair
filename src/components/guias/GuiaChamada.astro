@@ -1,0 +1,18 @@
+---
+// Chamada discreta no meio de um guia: título curto, uma ou duas frases
+// (slot) e os caminhos para contratar. Estilos .g-chamada em GuiaArtigo.
+import { URL_HUB_ASSESSORIA, URL_PRECO } from './guias';
+
+interface Props { titulo: string; wa: string }
+const { titulo, wa } = Astro.props;
+---
+
+<aside class="g-chamada" aria-label={titulo}>
+  <p class="g-chamada-titulo">{titulo}</p>
+  <slot />
+  <div class="g-chamada-acoes">
+    <a href={wa} class="btn-primary" target="_blank" rel="noopener">Conversar no WhatsApp</a>
+    <a href={URL_HUB_ASSESSORIA}>Ver o serviço</a>
+    <a href={URL_PRECO}>Quanto custa</a>
+  </div>
+</aside>

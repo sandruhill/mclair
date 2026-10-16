@@ -1,0 +1,209 @@
+---
+// /guias/press-release/
+// Dono de "press release", "o que é press release", "como fazer um press
+// release" e "modelo de press release", mais as variantes "release de
+// imprensa", "modelo de release", "exemplo de release" e "como enviar
+// release para imprensa" (mapa de palavras de 16/10/2026, cluster H).
+// Não mirar "release" puro, que é ambíguo.
+// O modelo é de uma empresa FICTÍCIA (Empresa Exemplo), marcada como tal no
+// texto; números do modelo são inventados de propósito e ficam só nele.
+export const prerender = true;
+import GuiaArtigo from '../../components/guias/GuiaArtigo.astro';
+import GuiaChamada from '../../components/guias/GuiaChamada.astro';
+import { wa, URL_HUB_ASSESSORIA, URL_PRECO } from '../../components/guias/guias';
+
+const WA = wa('Olá Mclair! Li o guia de press release e quero ajuda para escrever e enviar um release da minha empresa.');
+
+const FAQ = [
+  { pergunta: 'O que é press release?', resposta: 'É um texto curto, no formato de notícia, que uma empresa envia aos jornalistas para informar um fato e sugerir que ele vire matéria. Traz nas primeiras linhas o que aconteceu, quem fez, quando, onde e por que interessa, e termina com um contato para a imprensa.' },
+  { pergunta: 'O que é release de imprensa?', resposta: 'É o mesmo que press release. No Brasil o texto também é chamado só de release, de comunicado à imprensa ou de nota à imprensa, quando é mais curto e responde a um fato específico.' },
+  { pergunta: 'Como fazer um release?', resposta: 'Escreva o fato em uma frase, transforme essa frase no título e responda no primeiro parágrafo o quê, quem, quando, onde e como. Depois acrescente contexto, uma citação do porta-voz, os dados práticos e um contato. Tudo em uma página, sem adjetivos de propaganda.' },
+  { pergunta: 'Como fazer um release para imprensa que o jornalista leia?', resposta: 'Comece pela informação mais forte, use números concretos e escreva para o leitor do veículo, não para a diretoria da empresa. Mande para poucos jornalistas que cobrem o assunto, com o texto no corpo do e-mail e o título no campo de assunto.' },
+  { pergunta: 'Como enviar release para imprensa?', resposta: 'Por e-mail individual, endereçado ao jornalista pelo nome, com o título do release no assunto e o texto no corpo da mensagem. Fotos vão por link, não em anexo pesado. Se não houver resposta, um único contato de acompanhamento dias depois é suficiente.' },
+  { pergunta: 'Com quanto tempo de antecedência enviar release para imprensa?', resposta: 'Depende do veículo e do fato. Para sites e jornais diários, uma referência comum é de uma a duas semanas antes de um evento, com um lembrete na véspera. Revistas mensais fecham as edições com meses de antecedência, e anúncios de resultado ou de negócio fechado vão no dia.' },
+  { pergunta: 'Como fazer um release de evento para imprensa?', resposta: 'Diga no título o que o evento tem de notícia; o nome do evento sozinho raramente basta. No texto, deixe claros data, horário, local, quem fala, se é aberto ao público e como o jornalista se credencia. Envie com antecedência e repita o convite perto da data.' },
+  { pergunta: 'Qual a diferença entre release e sugestão de pauta?', resposta: 'O release é um texto pronto, que pode ser publicado quase como está e costuma ir para mais de um veículo. A sugestão de pauta é uma proposta curta, feita sob medida para um jornalista, oferecendo um tema, um personagem ou um dado para uma matéria que ele vai apurar e escrever.' },
+];
+
+const SUMARIO = [
+  { id: 'o-que-e', texto: 'O que é press release' },
+  { id: 'quando-fazer', texto: 'Quando vale fazer um release' },
+  { id: 'como-fazer', texto: 'Como fazer, passo a passo' },
+  { id: 'modelo', texto: 'Modelo de press release comentado' },
+  { id: 'como-enviar', texto: 'Como enviar para a imprensa' },
+  { id: 'antecedencia', texto: 'Com quanto tempo de antecedência' },
+  { id: 'sugestao-de-pauta', texto: 'Release ou sugestão de pauta' },
+  { id: 'erros', texto: 'Erros que fazem o jornalista apagar' },
+];
+
+const MODELO = [
+  {
+    rotulo: 'Cabeçalho',
+    texto: ['Informação para a imprensa', 'Campinas (SP), [data de envio]'],
+    comentario: 'Diz logo o que é o texto e de onde ele vem. A data mostra ao jornalista se a informação é nova.',
+  },
+  {
+    rotulo: 'Título',
+    titulo: 'Empresa Exemplo abre 40 vagas para cozinheiros sem experiência em Campinas',
+    comentario: '<strong>Fato, número e lugar</strong> numa linha só, com verbo no presente. Se o jornalista ler só o título, já sabe do que se trata. Este é também o texto do campo de assunto do e-mail.',
+  },
+  {
+    rotulo: 'Linha fina',
+    texto: ['Selecionados fazem um curso de oito semanas pago pela rede e são contratados ao final; inscrições vão até 30 de abril'],
+    comentario: 'Completa o título com a segunda informação mais importante. Não repete palavras do título.',
+  },
+  {
+    rotulo: 'Primeiro parágrafo (lide)',
+    texto: ['A Empresa Exemplo, rede de restaurantes com 12 unidades no interior paulista, abre 40 vagas para cozinheiros sem experiência em Campinas. Os selecionados fazem um curso de oito semanas na cozinha-escola da rede, recebem bolsa durante a formação e são contratados com carteira assinada ao final. As inscrições vão até 30 de abril, pelo site da empresa.'],
+    comentario: '<strong>O parágrafo mais importante.</strong> Responde o quê, quem, onde, quando e como. Um repórter com pressa precisa conseguir escrever uma nota curta só com ele.',
+  },
+  {
+    rotulo: 'Contexto',
+    texto: ['Segundo a empresa, metade das vagas de cozinha abertas no último ano ficou mais de dois meses sem candidato com experiência. A cozinha-escola funciona desde 2024 na unidade central e já formou três turmas internas.'],
+    comentario: 'É o porquê da notícia. Dado da própria empresa vem identificado como dela; dado público vem com a fonte, para o jornalista poder conferir.',
+  },
+  {
+    rotulo: 'Citação',
+    texto: ['“Esperar o profissional pronto estava deixando restaurante sem gente na cozinha. Formar sai mais barato e a pessoa fica mais tempo com a gente”, diz [nome], fundadora da Empresa Exemplo.'],
+    comentario: 'A aspa explica uma decisão ou dá uma opinião. Frase como “estamos muito felizes com o lançamento” não serve para nada e o repórter corta.',
+  },
+  {
+    rotulo: 'Serviço',
+    texto: ['Inscrições: até 30 de abril, em [endereço do site]', 'Requisitos: ensino fundamental completo e 18 anos ou mais', 'Início do curso: 12 de maio'],
+    comentario: 'Dados práticos em linhas separadas. É a parte que o jornalista copia sem mudar.',
+  },
+  {
+    rotulo: 'Sobre a empresa',
+    texto: ['Sobre a Empresa Exemplo: fundada em 2015 em Campinas, a rede tem 12 restaurantes no interior de São Paulo e cerca de 300 funcionários.'],
+    comentario: 'Duas ou três linhas de fatos, sempre iguais em todos os releases. Missão e valores ficam de fora.',
+  },
+  {
+    rotulo: 'Contato para a imprensa',
+    texto: ['Informações para a imprensa: [nome da pessoa de contato], [telefone com DDD], [e-mail]'],
+    comentario: 'Um telefone que alguém atende no dia do envio. Jornalista sem resposta em poucas horas segue para outra pauta.',
+  },
+];
+---
+
+<GuiaArtigo
+  slug="press-release"
+  title="Press release: o que é, como fazer e modelo pronto"
+  description="O que é press release, como fazer um release que o jornalista lê e como enviar para a imprensa. Com modelo de press release comentado parte por parte."
+  keywords="press release, o que é press release, como fazer um press release, modelo de press release, release de imprensa, modelo de release, como enviar release para imprensa"
+  h1="Press release: o que é e como fazer um que a imprensa lê"
+  resposta="Press release é um texto curto, escrito no formato de notícia, que uma empresa envia aos jornalistas para informar um fato e sugerir que ele vire matéria. Um bom release responde nas primeiras linhas o que aconteceu, quem fez, quando, onde e por que isso interessa ao leitor do veículo, e termina com um contato para o repórter tirar dúvidas. No Brasil ele também é chamado de release de imprensa ou comunicado à imprensa."
+  sumario={SUMARIO}
+  faq={FAQ}
+  wa={WA}
+  fimTitulo="Tem um fato e não sabe se ele vira notícia?"
+  fimTexto="Mande o assunto para a Mclair. A equipe diz se ele tem cara de release, de sugestão de pauta ou de nenhum dos dois, e como seria o trabalho para levá-lo à imprensa."
+>
+
+<section class="g-secao" aria-labelledby="o-que-e">
+  <h2 class="g-h2" id="o-que-e">O que é press release?</h2>
+  <p class="g-p">Pense na caixa de entrada de um repórter de economia numa terça-feira. Chegam centenas de e-mails. Ele abre os que têm no assunto um fato claro, lê o primeiro parágrafo e decide em segundos se aquilo serve para a matéria do dia, para uma nota ou para a lixeira. O press release é o texto escrito para passar nesse teste.</p>
+  <p class="g-p">O nome vem do inglês e quer dizer, ao pé da letra, liberação para a imprensa. O formato copia o da notícia: título informativo, um primeiro parágrafo com o essencial e o resto em ordem decrescente de importância, o que os jornalistas chamam de pirâmide invertida. Assim, o repórter pode aproveitar só o começo, se tiver pouco espaço, ou usar tudo como ponto de partida para apurar mais.</p>
+  <p class="g-p">Veja como títulos de textos que a Mclair publicou para clientes já entregam o fato: “Indústria de máquinas projeta USD 15 MI em negócios internacionais durante Agrishow 2023”, do programa da <a href="/cases/bms-abimaq/">ABIMAQ com a ApexBrasil</a>; “Lambda3 completa 12 anos e lança podcast com olhar sobre negócios no contexto nacional”, da <a href="/cases/lambda3/">Lambda3</a>; “ZBRA anuncia Head de Novos Negócios”, da <a href="/cases/zbra/">Zbra</a>. Nenhum deles precisa de explicação.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="quando-fazer">
+  <h2 class="g-h2" id="quando-fazer">Quando vale a pena fazer um release?</h2>
+  <p class="g-p">Quando existe um fato que interessa a quem não trabalha na sua empresa. Alguns que costumam funcionar:</p>
+  <ul class="g-lista">
+    <li><strong>Números novos:</strong> resultado, pesquisa própria, balanço de um setor, volume de um leilão.</li>
+    <li><strong>Lançamentos e chegadas:</strong> produto, unidade, cidade nova, entrada num país.</li>
+    <li><strong>Pessoas:</strong> contratação de executivo, nova sociedade, prêmio.</li>
+    <li><strong>Negócios:</strong> aquisição, investimento recebido, parceria com uma marca conhecida.</li>
+    <li><strong>Eventos</strong> com algo a dizer além do nome, como uma estimativa de negócios ou um palestrante que é notícia.</li>
+  </ul>
+  <p class="g-p">Aniversário da empresa, troca de logotipo e “somos líderes em qualidade” raramente passam no teste sozinhos. Repare que o título da Lambda3 junta o aniversário a um lançamento, o podcast, e é o lançamento que faz dele uma notícia. Se o assunto é uma opinião ou uma análise, e não um fato, o formato melhor costuma ser a sugestão de pauta ou o artigo assinado.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="como-fazer">
+  <h2 class="g-h2" id="como-fazer">Como fazer um press release, passo a passo?</h2>
+  <ol class="g-passos">
+    <li><strong>Escreva o fato em uma frase</strong>, como se contasse para um amigo. Se não couber numa frase, ainda não está claro.</li>
+    <li><strong>Transforme essa frase no título.</strong> Sujeito, verbo no presente, número e lugar quando houver. Até umas 15 palavras.</li>
+    <li><strong>Escreva o primeiro parágrafo</strong> respondendo o quê, quem, quando, onde e como. O porquê pode vir no segundo.</li>
+    <li><strong>Acrescente contexto e dados</strong>, com fonte. É isso que transforma um anúncio em informação.</li>
+    <li><strong>Inclua uma citação</strong> do porta-voz com opinião ou explicação, nunca elogio à própria empresa.</li>
+    <li><strong>Feche com serviço, “sobre a empresa” e contato.</strong></li>
+    <li><strong>Corte.</strong> Uma página basta. Tire adjetivos como “inovador”, “referência” e “líder”, que o jornalista vai cortar de qualquer jeito.</li>
+  </ol>
+</section>
+
+<section class="g-secao" aria-labelledby="modelo">
+  <h2 class="g-h2" id="modelo">Modelo de press release comentado</h2>
+  <div class="g-modelo">
+    <p class="g-modelo-aviso"><strong>Exemplo fictício.</strong> A Empresa Exemplo, a fundadora e todos os números abaixo foram inventados para mostrar a estrutura. Troque pelo seu fato e pelos seus dados reais. Em cada parte vem primeiro o texto do release e, em seguida, o comentário.</p>
+    {MODELO.map((p) => (
+      <div class="g-modelo-parte">
+        <div class="g-modelo-texto">
+          <span class="g-modelo-rotulo">{p.rotulo}</span>
+          {p.titulo && <p class="g-modelo-titulo">{p.titulo}</p>}
+          {p.texto?.map((t) => <p>{t}</p>)}
+        </div>
+        <p class="g-modelo-com" set:html={p.comentario} />
+      </div>
+    ))}
+  </div>
+  <p class="g-p">Repare no que o modelo não tem: frase sobre a história da empresa no começo, parágrafo de missão, logotipo gigante, PDF anexo. Tudo isso atrasa o jornalista até a informação.</p>
+</section>
+
+<GuiaChamada titulo="Quer que um jornalista escreva e envie o seu release?" wa={WA}>
+  <p>Na Mclair, o release faz parte de um trabalho maior: escolher a pauta, procurar o repórter certo e preparar quem vai dar entrevista. A página do serviço mostra o que entra, e a de preço explica os formatos de contratação.</p>
+</GuiaChamada>
+
+<section class="g-secao" aria-labelledby="como-enviar">
+  <h2 class="g-h2" id="como-enviar">Como enviar release para a imprensa?</h2>
+  <ul class="g-lista">
+    <li><strong>Um e-mail por jornalista</strong>, com o nome dele na saudação. Lista com milhares de endereços em cópia oculta vai direto para o spam e queima o nome da empresa.</li>
+    <li><strong>O título do release no assunto do e-mail.</strong> Nada de “Release” ou “Sugestão” sozinhos.</li>
+    <li><strong>Duas linhas de abertura</strong> dizendo por que aquilo interessa ao leitor daquele veículo, e o release logo abaixo, no corpo da mensagem.</li>
+    <li><strong>Fotos e documentos por link.</strong> Anexo pesado trava a caixa de entrada e muitas redações bloqueiam.</li>
+    <li><strong>Lista feita à mão.</strong> Poucos repórteres que cobrem o assunto valem mais que um cadastro comprado.</li>
+    <li><strong>Um acompanhamento, no máximo.</strong> Se o jornalista não respondeu depois de alguns dias, uma mensagem curta oferecendo um dado novo ou uma entrevista. Ligar para perguntar “recebeu meu release?” irrita.</li>
+  </ul>
+  <p class="g-p">O case da <a href="/cases/fidalgo/">Fidalgo Leilões</a> mostra o efeito de uma pauta bem enviada: a cobertura dos leilões da Caixa saiu na Folha de S.Paulo e a mesma pauta foi replicada em Exame IN, O Povo, Bússola e outros veículos.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="antecedencia">
+  <h2 class="g-h2" id="antecedencia">Com quanto tempo de antecedência enviar o release?</h2>
+  <p class="g-p">Não existe regra oficial. A tabela traz referências que a Mclair usa no dia a dia; o que manda é o fechamento de cada veículo, e vale perguntar ao jornalista quando houver relação.</p>
+  <div class="g-tabela-caixa">
+    <table class="g-tabela">
+      <caption>Antecedência de envio, por tipo de fato</caption>
+      <thead>
+        <tr><th scope="col">Tipo de fato</th><th scope="col">Quando enviar</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Evento, feira ou palestra</th><td>De uma a duas semanas antes, com lembrete um ou dois dias antes</td></tr>
+        <tr><th scope="row">Lançamento com data marcada</th><td>Alguns dias antes, sob embargo (o jornalista recebe antes e só publica na data combinada)</td></tr>
+        <tr><th scope="row">Resultado, negócio fechado, contratação</th><td>No dia do anúncio, de preferência de manhã</td></tr>
+        <tr><th scope="row">Data comemorativa (Dia das Mães, Black Friday)</th><td>Três a quatro semanas antes para sites e jornais</td></tr>
+        <tr><th scope="row">Revista mensal</th><td>Dois a três meses antes da edição</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="g-secao" aria-labelledby="sugestao-de-pauta">
+  <h2 class="g-h2" id="sugestao-de-pauta">Qual a diferença entre release e sugestão de pauta?</h2>
+  <p class="g-p">O release é um texto pronto, que pode ser publicado quase sem mudança e costuma ir para vários veículos ao mesmo tempo. A sugestão de pauta é uma proposta curta e exclusiva para um jornalista, algo como: “você está cobrindo o aumento de leilões de imóveis; temos um leiloeiro que pode explicar por que os bancos estão retomando mais casas e mostrar os números do último trimestre”. Ele apura e escreve a matéria do jeito dele.</p>
+  <p class="g-p">Muitas das melhores matérias nascem da sugestão de pauta, porque o repórter recebe algo sob medida. É por isso que assessoria de imprensa dá trabalho: cada veículo pede uma abordagem diferente. O guia <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a> mostra como isso se encaixa na rotina.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="erros">
+  <h2 class="g-h2" id="erros">Erros que fazem o jornalista apagar o release</h2>
+  <ul class="g-lista">
+    <li><strong>Começar pela história da empresa</strong> em vez do fato.</li>
+    <li><strong>Título vago</strong>, como “Empresa X reforça seu compromisso com a inovação”.</li>
+    <li><strong>Adjetivo no lugar de número.</strong> “Crescimento expressivo” não diz nada; “vendas 30% maiores que no ano passado” diz.</li>
+    <li><strong>Mandar para o jornalista errado</strong>, como release de cosmético para o repórter de agronegócio.</li>
+    <li><strong>Sem contato ou com contato que não atende.</strong></li>
+    <li><strong>Enviar a mesma coisa toda semana</strong> sem fato novo. O jornalista passa a ignorar o remetente.</li>
+  </ul>
+  <p class="g-p">Se o seu objetivo vai além de um release e você quer que a empresa apareça na imprensa com regularidade, continue pelo guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a>. Para contratar quem faça isso, veja a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> e a de <a href={URL_PRECO}>quanto custa</a>.</p>
+</section>
+
+</GuiaArtigo>

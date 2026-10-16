@@ -1,0 +1,160 @@
+---
+// /guias/o-que-e-assessoria-de-imprensa/
+// Dono de "o que é assessoria de imprensa", "o que faz uma assessoria de
+// imprensa", "o que faz um assessor de imprensa", "assessoria de imprensa o
+// que é" e "mídia espontânea" (mapa de palavras de 16/10/2026, cluster J e a
+// definição de mídia espontânea; o "como conseguir" fica em
+// /guias/como-aparecer-na-midia/). Não mirar "assessoria de imprensa" puro,
+// que é do hub /servicos/assessoria-de-imprensa/.
+// Exemplos só com fatos dos cases publicados em /cases/.
+export const prerender = true;
+import GuiaArtigo from '../../components/guias/GuiaArtigo.astro';
+import GuiaChamada from '../../components/guias/GuiaChamada.astro';
+import { wa, URL_HUB_ASSESSORIA, URL_PRECO, URL_KELLY } from '../../components/guias/guias';
+
+const WA = wa('Olá Mclair! Li o guia sobre o que é assessoria de imprensa e quero entender como funcionaria para a minha empresa.');
+
+const FAQ = [
+  { pergunta: 'O que é assessoria de imprensa?', resposta: 'É o trabalho de levar as informações de uma empresa ou de uma pessoa até os jornalistas, para que elas virem notícia sem pagamento pelo espaço. O assessor encontra o assunto que interessa à redação, escreve o material, fala com o repórter e prepara quem vai dar entrevista.' },
+  { pergunta: 'O que faz um assessor de imprensa?', resposta: 'Ele acompanha o noticiário, transforma o que acontece na empresa em pauta, escreve releases e sugestões de pauta, procura o jornalista certo para cada assunto e prepara o porta-voz para a entrevista. Depois, reúne as matérias publicadas num relatório e ajuda a empresa a responder quando um repórter procura por ela, inclusive em momentos de crise.' },
+  { pergunta: 'O que é mídia espontânea?', resposta: 'Mídia espontânea é a matéria, a entrevista ou a citação que um veículo publica porque decidiu que a informação interessa ao leitor, sem cobrar nada por isso. É o oposto do anúncio e do publieditorial, em que a empresa paga pelo espaço e controla o texto.' },
+  { pergunta: 'Para que serve assessoria de imprensa?', resposta: 'Serve para que outras pessoas, os jornalistas, contem a história da sua empresa, o que dá a ela uma credibilidade que o anúncio não tem. As matérias também ficam no Google por anos e são uma das fontes que as ferramentas de inteligência artificial usam para responder sobre uma marca.' },
+  { pergunta: 'Como funciona assessoria de imprensa?', resposta: 'Começa por um diagnóstico do que a empresa tem de notícia e de quem pode falar por ela. Depois vem um plano de pautas, a abordagem aos jornalistas de cada assunto, a preparação das entrevistas e a medição pelas matérias publicadas, com veículo, data e link.' },
+  { pergunta: 'Qual é o canal da assessoria de imprensa?', resposta: 'O canal é a própria imprensa: jornais, revistas, sites de notícia, rádio, TV, podcasts e newsletters jornalísticas. O contato com os jornalistas costuma ser feito por e-mail, telefone e mensagem, sempre de forma individual, com o material certo para cada repórter.' },
+  { pergunta: 'Como surgiu a assessoria de imprensa?', resposta: 'A referência mais citada é o jornalista americano Ivy Lee, que em 1906 publicou uma declaração de princípios prometendo informar a imprensa com transparência em nome dos clientes. No Brasil, o marco mais lembrado é o departamento de relações públicas criado pela companhia de energia Light, em São Paulo, em 1914.' },
+  { pergunta: 'Como contratar uma assessoria de imprensa?', resposta: 'Pergunte quem vai atender a sua conta, quais matérias a agência conseguiu para clientes parecidos com você e como ela mede o resultado. Desconfie de quem garante publicação. Para entender os formatos de cobrança, veja a página sobre quanto custa assessoria de imprensa.' },
+];
+
+const SUMARIO = [
+  { id: 'em-palavras-simples', texto: 'O que é, em palavras simples' },
+  { id: 'o-que-faz', texto: 'O que faz um assessor de imprensa' },
+  { id: 'midia-espontanea', texto: 'O que é mídia espontânea' },
+  { id: 'como-funciona', texto: 'Como funciona, passo a passo' },
+  { id: 'para-que-serve', texto: 'Para que serve' },
+  { id: 'garante', texto: 'A matéria sai com certeza?' },
+  { id: 'diferencas', texto: 'Diferença para marketing e RP' },
+  { id: 'quem-precisa', texto: 'Quem precisa' },
+  { id: 'como-contratar', texto: 'Como contratar' },
+];
+---
+
+<GuiaArtigo
+  slug="o-que-e-assessoria-de-imprensa"
+  title="O que é assessoria de imprensa e o que faz um assessor"
+  description="O que é assessoria de imprensa, o que faz um assessor de imprensa no dia a dia e o que é mídia espontânea. Guia da jornalista Kelly Pinheiro, com exemplos reais."
+  keywords="o que é assessoria de imprensa, o que faz uma assessoria de imprensa, o que faz um assessor de imprensa, assessoria de imprensa o que é, mídia espontânea"
+  h1="O que é assessoria de imprensa"
+  resposta="Assessoria de imprensa é o trabalho de levar a história de uma empresa ou de uma pessoa até os jornalistas, para que ela vire notícia sem que ninguém pague pelo espaço. O assessor de imprensa encontra o assunto que interessa à redação, escreve o material, conversa com o repórter e prepara quem vai dar entrevista. O resultado tem nome: mídia espontânea, a matéria que o veículo publicou porque achou a informação relevante para o leitor."
+  sumario={SUMARIO}
+  faq={FAQ}
+  wa={WA}
+  fimTitulo="Quer saber o que a sua empresa tem de notícia?"
+  fimTexto="Na primeira conversa, a Mclair olha para o seu momento e diz, com franqueza, que assuntos têm chance com os jornalistas e quais ainda não têm. Sem compromisso."
+>
+
+<section class="g-secao" aria-labelledby="em-palavras-simples">
+  <h2 class="g-h2" id="em-palavras-simples">O que é assessoria de imprensa, em palavras simples?</h2>
+  <p class="g-p">Você abre a Folha de S.Paulo e lê uma reportagem sobre imóveis da Caixa Econômica Federal indo a leilão com desconto. No meio do texto aparece o nome de uma leiloeira, com os dados do pregão e uma explicação de como participar. O repórter não achou essa leiloeira por acaso. Alguém percebeu que o leilão tinha número, prazo e interesse do leitor, escreveu a informação no formato que a redação usa e procurou o jornalista que cobre o assunto.</p>
+  <p class="g-p">Esse alguém é o assessor de imprensa. No exemplo, foi a Mclair trabalhando para a <a href="/cases/fidalgo/">Fidalgo Leilões</a>, cliente desde janeiro de 2022: a cobertura dos leilões da Caixa saiu na Folha, a mesma pauta foi replicada em Exame IN, O Povo e Bússola, e uma das matérias foi a mais lida da Valor Investe e, no mesmo dia, apareceu em destaque no Globo.com.</p>
+  <p class="g-p">Em resumo, a assessoria de imprensa faz a ponte entre quem tem uma informação e quem decide o que vira notícia. Quem decide continua sendo o jornalista. O papel do assessor é fazer com que a informação chegue a ele no momento certo, do jeito certo, e com alguém preparado para falar.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="o-que-faz">
+  <h2 class="g-h2" id="o-que-faz">O que faz um assessor de imprensa no dia a dia?</h2>
+  <p class="g-p">Pouca coisa no trabalho é disparar e-mail. A maior parte do tempo vai para ler, escolher e conversar. Uma semana comum inclui:</p>
+  <ul class="g-lista">
+    <li><strong>Ler o noticiário do setor do cliente</strong>, para saber o que os jornalistas estão cobrindo e onde a empresa pode entrar com dado, opinião ou exemplo.</li>
+    <li><strong>Transformar fatos internos em pauta.</strong> Um lançamento, um balanço, uma contratação, um estudo próprio, uma data do calendário. Nem tudo vira notícia, e cabe ao assessor dizer isso ao cliente.</li>
+    <li><strong>Escrever o material.</strong> Release, sugestão de pauta, artigo assinado pelo porta-voz, resposta a uma pergunta de repórter. Cada um tem formato próprio, como explicamos no <a href="/guias/press-release/">guia de press release</a>.</li>
+    <li><strong>Escolher e procurar o jornalista certo.</strong> O repórter de economia de um jornal não recebe a mesma pauta que a editora de um site de tecnologia. Lista boa é curta e feita à mão.</li>
+    <li><strong>Preparar o porta-voz.</strong> Antes da entrevista, o assessor combina as mensagens principais, antecipa perguntas difíceis e, quando precisa, faz media training.</li>
+    <li><strong>Acompanhar a entrevista e o depois.</strong> Enviar dados que o repórter pediu, checar uma informação, agradecer, guardar o contato.</li>
+    <li><strong>Medir.</strong> Reunir as matérias publicadas, com veículo, data e link, no que o mercado chama de clipping.</li>
+    <li><strong>Atender quando a imprensa procura.</strong> Inclusive nos dias ruins, quando o assunto é uma reclamação ou uma crise e a primeira resposta conta muito.</li>
+  </ul>
+  <p class="g-p">Uma agência de assessoria de imprensa faz o mesmo trabalho com uma equipe: jornalistas que dividem pautas, setores e clientes, e alguém que responde pela estratégia da conta.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="midia-espontanea">
+  <h2 class="g-h2" id="midia-espontanea">O que é mídia espontânea?</h2>
+  <p class="g-p">Mídia espontânea é tudo o que um veículo publica sobre a sua empresa por decisão própria, sem cobrar: a matéria, a entrevista, a citação de um especialista seu, o artigo assinado aceito pelo editor. É o que a assessoria de imprensa busca. O nome vem do contraste com a mídia paga, em que a empresa compra o espaço.</p>
+  <p class="g-p">A diferença aparece para o leitor. Num anúncio, ele sabe que é a marca falando de si. Numa matéria, quem fala é o jornal, e o leitor confia mais nisso. A tabela resume os três formatos que mais se confundem:</p>
+  <div class="g-tabela-caixa">
+    <table class="g-tabela g-tabela-larga">
+      <caption>Mídia espontânea, publicidade e publieditorial</caption>
+      <thead>
+        <tr><th scope="col"></th><th scope="col">Mídia espontânea</th><th scope="col">Publicidade</th><th scope="col">Publieditorial</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Quem paga</th><td>Ninguém paga pelo espaço</td><td>A empresa</td><td>A empresa</td></tr>
+        <tr><th scope="row">Quem decide o texto</th><td>O jornalista</td><td>A empresa</td><td>A empresa, com o veículo</td></tr>
+        <tr><th scope="row">Como o leitor vê</th><td>Como notícia</td><td>Como anúncio</td><td>Com selo de conteúdo patrocinado</td></tr>
+        <tr><th scope="row">Garantia de sair</th><td>Nenhuma</td><td>Total</td><td>Total</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="g-p">Os três têm lugar num plano de comunicação. Só não dá para vender um como se fosse o outro. Se você quer o caminho prático para conseguir mídia espontânea, ele está no guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a>.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="como-funciona">
+  <h2 class="g-h2" id="como-funciona">Como funciona uma assessoria de imprensa, passo a passo?</h2>
+  <p class="g-p">Na Mclair, o trabalho com um cliente novo segue esta ordem. Outras agências usam nomes diferentes, mas as etapas costumam ser parecidas.</p>
+  <ol class="g-passos">
+    <li><strong>Diagnóstico.</strong> Uma conversa para entender o que a empresa tem de novo, quem pode falar por ela, que veículos o cliente dela lê e o que seria um bom resultado em seis meses.</li>
+    <li><strong>Porta-vozes.</strong> Definir quem dá entrevista e sobre o quê. Um diretor financeiro fala de números; uma fundadora fala da história e do mercado.</li>
+    <li><strong>Plano de pautas.</strong> Uma lista de assuntos para os próximos meses, misturando fatos da empresa e temas que o noticiário vai cobrir de qualquer jeito.</li>
+    <li><strong>Abordagem.</strong> Cada pauta vai para poucos jornalistas escolhidos, com o material pronto e uma explicação curta de por que interessa ao leitor deles.</li>
+    <li><strong>Entrevista.</strong> O assessor marca, prepara o porta-voz e acompanha.</li>
+    <li><strong>Medição.</strong> O relatório mostra a matéria publicada. Sem link, não conta.</li>
+  </ol>
+  <p class="g-p">Um exemplo de como o plano vira rotina: para a <a href="/cases/vip-leiloes/">VIP Leilões</a>, cada parceria bancária virou uma pauta própria. Quando Caixa e Bradesco levaram 571 imóveis a leilão com até 76% de desconto, a notícia saiu no Extra. Quando Santander, Bradesco e Caixa somaram 1.135 imóveis, saiu na IstoÉ Dinheiro. Valor Investe, InfoMoney e Folha de S.Paulo publicaram outras pautas da mesma série.</p>
+</section>
+
+<GuiaChamada titulo="Prefere que alguém cuide disso por você?" wa={WA}>
+  <p>A Mclair faz assessoria de imprensa para empresas e especialistas do Brasil todo, a partir de São Paulo. A página do serviço explica o que entra no contrato, e a de preço mostra como o mercado cobra.</p>
+</GuiaChamada>
+
+<section class="g-secao" aria-labelledby="para-que-serve">
+  <h2 class="g-h2" id="para-que-serve">Para que serve assessoria de imprensa?</h2>
+  <p class="g-p">O ganho principal é a credibilidade emprestada. Quando um jornal publica que a sua empresa fez algo, o leitor recebe a informação de alguém que ele já considera isento. Nenhum anúncio compra isso.</p>
+  <p class="g-p">Há ganhos menos óbvios. Uma matéria fica no Google por anos e aparece quando um cliente, um investidor ou um candidato a vaga pesquisa o nome da empresa. As ferramentas de inteligência artificial também usam reportagens de veículos conhecidos como fonte quando alguém pergunta sobre um setor ou uma marca. E cada entrevista bem feita aumenta a chance de o mesmo jornalista voltar a procurar o porta-voz.</p>
+  <p class="g-p">Foi o que aconteceu com o especialista em dados <a href="/cases/diego-nogare/">Diego Nogare</a>, que teve duas matérias consecutivas na home da CNN Brasil sobre inteligência artificial, além de artigos na Exame, no IT Forum e na HSM Management. E com a <a href="/cases/lambda3/">Lambda3</a>, empresa de tecnologia atendida pela Mclair por cinco anos, que deu entrevistas a SBT, Record TV, Band e Gazeta.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="garante">
+  <h2 class="g-h2" id="garante">A assessoria de imprensa garante que a matéria sai?</h2>
+  <p class="g-p">Não. Quem decide é o editor, e ele pode trocar a pauta no fim da tarde por um assunto mais urgente. Uma assessoria séria trabalha para aumentar muito a chance de publicação: escolhe a pauta com critério jornalístico, procura o repórter certo e entrega tudo o que ele precisa para fechar o texto. Mas não promete veículo nem data.</p>
+  <p class="g-p">Se alguém garante uma matéria num jornal específico, provavelmente está vendendo espaço pago, que tem outro nome e outro preço. Vale perguntar com clareza antes de assinar.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="diferencas">
+  <h2 class="g-h2" id="diferencas">Qual a diferença entre assessoria de imprensa, marketing e relações públicas?</h2>
+  <p class="g-p">Marketing cuida da relação da marca com quem compra, por meio de anúncio, conteúdo próprio, redes sociais e vendas. Relações públicas cuida da relação da empresa com todos os públicos que importam para ela: funcionários, governo, comunidade, investidores. A assessoria de imprensa é a parte das relações públicas dedicada a um público específico, os jornalistas.</p>
+  <p class="g-p">Na prática, as três áreas conversam o tempo todo. A matéria publicada vira post nas redes; o lançamento planejado pelo marketing vira pauta; a crise com um público vira, quase sempre, pergunta de repórter.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="quem-precisa">
+  <h2 class="g-h2" id="quem-precisa">Quem precisa de assessoria de imprensa?</h2>
+  <p class="g-p">Quem tem algo a contar com frequência e quer que o mercado ouça de uma fonte independente. Nos cases da Mclair, quatro situações aparecem bastante:</p>
+  <ul class="g-lista">
+    <li><strong>Empresas com fato novo todo mês</strong>, como leiloeiras que abrem lotes em parceria com bancos. A <a href="/cases/globo-leiloes/">Globo Leilões</a> somou 685 inserções na mídia, com cobertura em Extra, IstoÉ Dinheiro, Folha Vitória e Exame.</li>
+    <li><strong>Especialistas que querem ser a fonte procurada</strong> quando o assunto deles aparece no noticiário, como <a href="/cases/elemar-jr/">Elemar Jr.</a>, com colunas e entrevistas em CanalTech, UOL Tecnologia, IT Forum 365 e Baguete.</li>
+    <li><strong>Empresas que vendem para fora do país.</strong> O programa Brazil Machinery Solutions, da <a href="/cases/bms-abimaq/">ABIMAQ com a ApexBrasil</a>, teve 1.734 publicações na imprensa internacional, em mais de 15 países.</li>
+    <li><strong>Momentos sensíveis</strong>, como uma venda ou fusão. A Mclair cuidou da comunicação da aquisição da Emergee pelo Itaú para <a href="/cases/alexandre-magno/">Alexandre Magno</a>.</li>
+  </ul>
+  <p class="g-p">Se a sua empresa ainda não tem nada de novo para contar, o primeiro passo talvez seja outro. Uma boa assessoria diz isso na primeira conversa.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="como-contratar">
+  <h2 class="g-h2" id="como-contratar">Como contratar uma assessoria de imprensa?</h2>
+  <p class="g-p">Antes de comparar preços, faça quatro perguntas a cada agência:</p>
+  <ol class="g-passos">
+    <li><strong>Quem vai cuidar da minha conta no dia a dia?</strong> Pergunte se é jornalista e há quanto tempo trabalha com imprensa.</li>
+    <li><strong>Que matérias vocês conseguiram para clientes parecidos?</strong> Peça os links.</li>
+    <li><strong>Como vocês medem?</strong> A resposta boa é: pela matéria publicada, com veículo, data e endereço.</li>
+    <li><strong>Como vocês cobram?</strong> Fee mensal, projeto ou por pauta mudam muito o que você recebe. A página <a href={URL_PRECO}>quanto custa assessoria de imprensa</a> explica cada modelo.</li>
+  </ol>
+  <p class="g-p">Na Mclair, quem conduz essa primeira conversa é <a href={URL_KELLY}>Kelly Pinheiro</a>, jornalista e fundadora da agência. O que entra no serviço está na página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>.</p>
+</section>
+
+</GuiaArtigo>

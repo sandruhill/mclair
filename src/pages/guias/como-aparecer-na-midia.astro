@@ -1,0 +1,149 @@
+---
+// /guias/como-aparecer-na-midia/
+// Dono de "como aparecer na mídia", "como sair na imprensa", "como virar
+// fonte de jornalista" e "como divulgar minha empresa na imprensa", mais
+// "como aparecer na tv", "como ser entrevistado" e "como sair na Exame /
+// Folha / Forbes" (mapa de palavras de 16/10/2026, cluster I). A definição
+// de mídia espontânea é do guia /guias/o-que-e-assessoria-de-imprensa/;
+// aqui ela aparece só como caminho, com link para lá.
+// Exemplos só com fatos dos cases publicados em /cases/.
+export const prerender = true;
+import GuiaArtigo from '../../components/guias/GuiaArtigo.astro';
+import GuiaChamada from '../../components/guias/GuiaChamada.astro';
+import { wa, URL_HUB_ASSESSORIA, URL_PRECO, URL_KELLY } from '../../components/guias/guias';
+
+const WA = wa('Olá Mclair! Li o guia sobre como aparecer na mídia e quero levar a minha empresa à imprensa.');
+
+const FAQ = [
+  { pergunta: 'Como aparecer na mídia?', resposta: 'Ofereça ao jornalista algo que interessa ao leitor dele: um fato novo, um dado exclusivo ou um especialista que explica bem um assunto do noticiário. Leve isso ao repórter que cobre o tema, no formato que a redação usa, e tenha alguém preparado para dar entrevista no mesmo dia.' },
+  { pergunta: 'Como sair na imprensa sem pagar?', resposta: 'O caminho é a mídia espontânea: matéria, entrevista ou artigo que o veículo publica por decisão própria. Para chegar lá é preciso pauta com interesse jornalístico, contato direto com os repórteres certos e constância, porque uma única tentativa raramente funciona.' },
+  { pergunta: 'Como virar fonte de jornalista?', resposta: 'Escolha um tema estreito em que você sabe mais que a maioria, esteja disponível quando o repórter liga, responda com clareza e dados e diga quando não sabe. Artigos assinados e entrevistas anteriores ajudam o jornalista a encontrar você e a confiar no que você fala.' },
+  { pergunta: 'Como divulgar minha empresa na imprensa?', resposta: 'Comece listando o que a empresa tem de notícia nos próximos meses e quais veículos o seu cliente lê. Depois prepare um release ou uma sugestão de pauta para cada assunto, envie de forma individual a poucos jornalistas e acompanhe. Uma assessoria de imprensa faz esse trabalho de forma contínua.' },
+  { pergunta: 'Como aparecer na TV?', resposta: 'A televisão precisa de imagem, de personagem e de alguém que fale bem em poucos segundos. Ofereça um porta-voz treinado, um lugar para gravar e uma história que possa ser mostrada, e esteja pronto para atender no horário da produção, que costuma ser curto.' },
+  { pergunta: 'Como sair na Exame ou na Folha?', resposta: 'Descubra qual seção do veículo cobre o seu assunto e quem são os repórteres dela, e ofereça uma pauta que sirva ao leitor daquela seção. Grandes veículos também têm espaços para artigos de especialistas. Ninguém pode garantir publicação: quem decide é o editor.' },
+  { pergunta: 'Qual a diferença entre mídia espontânea e publieditorial?', resposta: 'Na mídia espontânea o veículo decide publicar e escreve o texto, sem cobrar. No publieditorial a empresa paga pelo espaço, aprova o texto e o leitor vê um aviso de conteúdo patrocinado. O primeiro tem mais credibilidade; o segundo tem publicação garantida.' },
+  { pergunta: 'A assessoria de imprensa garante que vou sair na mídia?', resposta: 'Não. Uma assessoria séria aumenta muito a chance de publicação, com pauta bem escolhida, abordagem ao jornalista certo e porta-voz preparado, mas não controla a decisão do editor. Desconfie de quem promete matéria num veículo específico.' },
+];
+
+const SUMARIO = [
+  { id: 'por-que', texto: 'Por que o jornalista escolhe uma empresa' },
+  { id: 'passo-a-passo', texto: 'Como aparecer na mídia, passo a passo' },
+  { id: 'virar-fonte', texto: 'Como virar fonte de jornalista' },
+  { id: 'grandes-veiculos', texto: 'Como sair na Exame, na Folha ou na Forbes' },
+  { id: 'tv', texto: 'Como aparecer na TV' },
+  { id: 'fora', texto: 'Imprensa de outro estado ou país' },
+  { id: 'formatos', texto: 'Espontânea, publieditorial ou anúncio' },
+  { id: 'tempo', texto: 'Quanto tempo leva' },
+];
+---
+
+<GuiaArtigo
+  slug="como-aparecer-na-midia"
+  title="Como aparecer na mídia e sair na imprensa sem pagar"
+  description="Como aparecer na mídia, sair na imprensa sem pagar e virar fonte de jornalista. Passo a passo da jornalista Kelly Pinheiro, com exemplos reais de clientes da Mclair."
+  keywords="como aparecer na mídia, como sair na imprensa, como virar fonte de jornalista, como divulgar minha empresa na imprensa, como aparecer na tv, como sair na exame"
+  h1="Como aparecer na mídia e sair em veículos como Exame e Folha"
+  resposta="Para aparecer na mídia sem pagar, a sua empresa precisa oferecer ao jornalista algo que interessa ao leitor dele: um fato novo, um dado que ninguém tem ou um especialista que explica bem um assunto do noticiário. Depois, é preciso levar isso ao repórter certo, no formato que a redação usa, e ter alguém pronto para dar entrevista. Feito com constância, esse trabalho transforma a empresa em fonte, e aí são os jornalistas que passam a procurá-la."
+  sumario={SUMARIO}
+  faq={FAQ}
+  wa={WA}
+  fimTitulo="Quer ver a sua empresa na imprensa?"
+  fimTexto="Conte o que a sua empresa faz e o que ela tem de novo. A Mclair responde com uma avaliação honesta das pautas possíveis e de como seria o trabalho."
+>
+
+<section class="g-secao" aria-labelledby="por-que">
+  <h2 class="g-h2" id="por-que">Por que o jornalista escolhe uma empresa e não outra?</h2>
+  <p class="g-p">Imagine a repórter de um site de economia às dez da manhã. Ela tem até as quatro da tarde para entregar uma matéria sobre leilões de imóveis e precisa de três coisas: números atualizados, alguém que explique o assunto em linguagem simples e um exemplo concreto para o leitor. A empresa que entregar isso rápido entra no texto. A que mandar um folheto institucional, não.</p>
+  <p class="g-p">É assim todos os dias. O jornalista não está procurando empresas para divulgar, está procurando informação para o leitor dele. O que costuma decidir a escolha:</p>
+  <ul class="g-lista">
+    <li><strong>Novidade.</strong> Algo que aconteceu agora ou vai acontecer em breve.</li>
+    <li><strong>Número.</strong> Quantos imóveis, quanto de desconto, quantos países. Dado concreto vira título.</li>
+    <li><strong>Utilidade para o leitor.</strong> Como participar, quanto custa, o que muda na vida dele.</li>
+    <li><strong>Um bom personagem.</strong> Alguém que fala com clareza e tem autoridade no assunto.</li>
+    <li><strong>Disponibilidade.</strong> Fonte que responde em uma hora vale mais que a melhor fonte que responde amanhã.</li>
+  </ul>
+</section>
+
+<section class="g-secao" aria-labelledby="passo-a-passo">
+  <h2 class="g-h2" id="passo-a-passo">Como aparecer na mídia, passo a passo?</h2>
+  <ol class="g-passos">
+    <li><strong>Descubra o que você tem de notícia.</strong> Faça uma lista dos próximos seis meses: lançamentos, números, contratações, eventos, parcerias. Acrescente os temas do noticiário em que a sua empresa tem algo a dizer.</li>
+    <li><strong>Escolha os veículos que o seu cliente lê.</strong> “Sair na mídia” é vago. Uma indústria que vende para o agronegócio ganha mais com uma revista do setor do que com um portal de celebridades.</li>
+    <li><strong>Defina quem fala pela empresa.</strong> Uma ou duas pessoas, com assuntos combinados. Se possível, com media training antes da primeira entrevista.</li>
+    <li><strong>Prepare o material.</strong> Para fato novo, um release; para análise ou personagem, uma sugestão de pauta feita para um jornalista. O <a href="/guias/press-release/">guia de press release</a> tem um modelo comentado.</li>
+    <li><strong>Procure o repórter certo.</strong> Leia o que ele escreveu nos últimos meses antes de mandar qualquer coisa. Mensagem individual, curta, explicando por que aquilo serve ao leitor dele.</li>
+    <li><strong>Responda rápido.</strong> Quando o jornalista pedir um dado ou uma entrevista, atenda no mesmo dia.</li>
+    <li><strong>Repita com constância.</strong> Uma pauta por mês, todo mês, constrói relação. Dez pautas numa semana e nada depois, não.</li>
+  </ol>
+  <p class="g-p">O passo 7 é o que mais pesa. Para a <a href="/cases/fidalgo/">Fidalgo Leilões</a>, atendida pela Mclair desde janeiro de 2022, a repetição de pautas sobre os leilões da Caixa, da Justiça Federal e dos Correios somou mais de 1.600 inserções na mídia, com matérias na Folha de S.Paulo, na Valor Investe e no Globo.com.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="virar-fonte">
+  <h2 class="g-h2" id="virar-fonte">Como virar fonte de jornalista?</h2>
+  <p class="g-p">Fonte é a pessoa que o jornalista procura quando precisa explicar um assunto. Chegar lá leva tempo, mas o caminho é conhecido:</p>
+  <ul class="g-lista">
+    <li><strong>Tenha um tema estreito.</strong> “Inteligência artificial nas empresas” funciona melhor que “tecnologia”.</li>
+    <li><strong>Fale com clareza.</strong> Frase curta, exemplo do cotidiano, nenhum jargão sem explicação.</li>
+    <li><strong>Traga dado.</strong> Número próprio ou de fonte confiável, que o repórter possa citar.</li>
+    <li><strong>Esteja disponível</strong> e avise quando não puder. Sumir no meio de uma apuração queima a relação.</li>
+    <li><strong>Diga quando não sabe</strong> e indique quem sabe. O jornalista lembra.</li>
+    <li><strong>Deixe rastros.</strong> Artigos assinados, entrevistas anteriores e um perfil atualizado no site e no LinkedIn ajudam o repórter a achar você e a confiar no que você diz.</li>
+  </ul>
+  <p class="g-p">O especialista em dados <a href="/cases/diego-nogare/">Diego Nogare</a> seguiu esse caminho com a Mclair. Com pauta constante sobre inteligência artificial, teve duas matérias consecutivas na home da CNN Brasil, coluna na HSM Management e textos na Exame, no IT Forum e no Baguete. <a href="/cases/elemar-jr/">Elemar Jr.</a>, de arquitetura de software, assinou colunas no CanalTech e no IT Forum 365 e foi entrevistado pelo Baguete.</p>
+</section>
+
+<GuiaChamada titulo="Não tem tempo para fazer isso toda semana?" wa={WA}>
+  <p>É exatamente o trabalho de uma assessoria de imprensa: achar a pauta, falar com o jornalista e preparar quem vai dar entrevista, todo mês. Veja como a Mclair faz e como o mercado cobra por isso.</p>
+</GuiaChamada>
+
+<section class="g-secao" aria-labelledby="grandes-veiculos">
+  <h2 class="g-h2" id="grandes-veiculos">Como sair na Exame, na Folha ou na Forbes?</h2>
+  <p class="g-p">Grandes veículos são vários veículos dentro de um só. A Folha de S.Paulo tem cadernos de mercado, cotidiano, tecnologia, cada um com repórteres e editores próprios. Mandar uma pauta “para a Folha” não funciona; mandar para a repórter que cobre mercado imobiliário, com um assunto que ela ainda não publicou, funciona melhor.</p>
+  <p class="g-p">Três caminhos costumam abrir as portas desses veículos:</p>
+  <ul class="g-lista">
+    <li><strong>Pauta com número e alcance nacional.</strong> Foi assim que os leilões da Caixa divulgados para a Fidalgo chegaram à Folha e foram replicados em Exame IN e Bússola.</li>
+    <li><strong>Artigo de especialista.</strong> Vários veículos reservam espaço para opinião assinada. <a href="/cases/claudia-elisa/">Claudia Elisa</a> publicou na Exame um artigo sobre as gerações Y e Z e o ESG, e <a href="/cases/diego-nogare/">Diego Nogare</a>, outro sobre vibe coding e os riscos da IA para as empresas. A própria <a href={URL_KELLY}>Kelly Pinheiro</a> foi colunista da Exame por dois anos e meio.</li>
+    <li><strong>Notícia de negócio.</strong> Aquisição, investimento e mudança de marca entram nas seções de negócios. O rebranding da <a href="/cases/zbra/">Zbra</a> saiu na Exame e no Grandes Nomes da Propaganda.</li>
+  </ul>
+  <p class="g-p">Vale o aviso de sempre: ninguém garante publicação num veículo específico. Quando há garantia, quase sempre o espaço é pago, o que é um publieditorial.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="tv">
+  <h2 class="g-h2" id="tv">Como aparecer na TV?</h2>
+  <p class="g-p">A televisão pede coisas que o texto não pede. A produção precisa de imagem para cobrir a fala, de um entrevistado que diga o essencial em 20 ou 30 segundos e de alguém disponível no horário dela, que muitas vezes é o mesmo dia. Pautas de serviço, que ajudam o espectador a decidir algo, têm mais chance.</p>
+  <p class="g-p">Antes de oferecer um porta-voz à TV, treine com ele respostas curtas e prepare um lugar para gravar que não seja uma sala vazia. A <a href="/cases/lambda3/">Lambda3</a> deu entrevistas a SBT, Record TV, Band e Gazeta durante o trabalho com a Mclair, e Claudia Elisa falou à TV sobre empresas familiares no Brasil.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="fora">
+  <h2 class="g-h2" id="fora">Como divulgar minha empresa na imprensa de outro estado ou de outro país?</h2>
+  <p class="g-p">O mesmo fato pode interessar a veículos regionais se tiver um ângulo local: imóveis à venda na cidade do leitor, uma fábrica que contrata na região, um evento que acontece ali. A <a href="/cases/globo-leiloes/">Globo Leilões</a> teve cobertura simultânea em Extra, IstoÉ Dinheiro, Folha Vitória e Exame, somando 685 inserções na mídia.</p>
+  <p class="g-p">Para o exterior, a conversa é com correspondentes estrangeiros e jornalistas de comércio internacional, com material no idioma do veículo. No programa Brazil Machinery Solutions, da <a href="/cases/bms-abimaq/">ABIMAQ com a ApexBrasil</a>, a Mclair produziu conteúdo em português e inglês e planejou a cobertura por região e setor. O resultado foram 1.734 publicações na imprensa internacional, em mais de 15 países.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="formatos">
+  <h2 class="g-h2" id="formatos">Mídia espontânea, publieditorial ou anúncio: qual escolher?</h2>
+  <p class="g-p">Depende do que você precisa. A diferença entre os três está explicada no guia <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a>; aqui vai o uso de cada um.</p>
+  <div class="g-tabela-caixa">
+    <table class="g-tabela">
+      <caption>Qual formato serve para cada objetivo</caption>
+      <thead>
+        <tr><th scope="col">Se você precisa de</th><th scope="col">O formato mais indicado</th></tr>
+      </thead>
+      <tbody>
+        <tr><th scope="row">Credibilidade e reputação</th><td>Mídia espontânea, conseguida com assessoria de imprensa</td></tr>
+        <tr><th scope="row">Ser citado pelo Google e pelas IAs quando pesquisam o seu setor</th><td>Mídia espontânea em veículos conhecidos, com constância</td></tr>
+        <tr><th scope="row">Publicação garantida numa data</th><td>Publieditorial ou anúncio</td></tr>
+        <tr><th scope="row">Controle total da mensagem</th><td>Anúncio ou conteúdo nos seus próprios canais</td></tr>
+        <tr><th scope="row">Venda imediata de uma oferta</th><td>Anúncio, com a matéria publicada como reforço</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section class="g-secao" aria-labelledby="tempo">
+  <h2 class="g-h2" id="tempo">Quanto tempo leva para sair a primeira matéria?</h2>
+  <p class="g-p">Com um fato forte e o jornalista certo, a primeira matéria pode sair em poucos dias. Sem fato forte, pode não sair nunca, e uma assessoria honesta avisa isso antes de começar. Virar fonte, aquela empresa que o repórter procura por conta própria, leva meses de pauta constante.</p>
+  <p class="g-p">Se quiser fazer sozinho, comece pela lista do passo a passo e pelo <a href="/guias/press-release/">modelo de press release</a>. Se preferir uma equipe de jornalistas cuidando disso, conheça a <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa da Mclair</a> e veja <a href={URL_PRECO}>quanto custa</a>.</p>
+</section>
+
+</GuiaArtigo>
