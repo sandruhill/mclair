@@ -373,10 +373,9 @@ $cabecalhos = [
     'X-Mailer: mclair-site',
 ];
 if (MC_COPIA !== '') $cabecalhos[] = 'Bcc: ' . MC_COPIA;
-if ($email !== '') {
-    // filter_var já recusa CR/LF; o str_replace é a segunda trava.
-    $cabecalhos[] = 'Reply-To: ' . str_replace(["\r", "\n"], '', $email);
-}
+// Sem Reply-To: com o e-mail de quem preencheu (outro domínio) o Gmail
+// mostrava "as respostas são enviadas para outro endereço". Para responder,
+// o e-mail traz os botões de e-mail e de WhatsApp da pessoa.
 
 $ok = @mail(
     MC_DESTINO,
