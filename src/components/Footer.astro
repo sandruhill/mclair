@@ -3,19 +3,24 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!';
 const nav = [
   { label: 'Início',    href: '/' },
   { label: 'Sobre',     href: '/sobre/' },
+  { label: 'Kelly Pinheiro', href: '/kelly-pinheiro/' },
   { label: 'Serviços',  href: '/servicos/' },
   { label: 'Mentorias', href: '/mentorias/' },
   { label: 'Cases',     href: '/cases/' },
   { label: 'Contato',   href: '/contato/' },
 ];
+// Os serviços do rodapé eram só texto: as páginas de dinheiro perdiam o
+// link de rodapé, e /marketing-para-leiloeiros/ ficava sem nenhum link vindo
+// do resto do site (rastreamento de 16/10/2026).
 const servicos = [
-  'Marketing de Autoridade',
-  'Assessoria de Imprensa',
-  'Branding Estratégico',
-  'Marketing Digital',
-  'Consultoria em Comunicação',
-  'Mentoria Bolder',
-  'Mentoria Bolder Press',
+  { label: 'Assessoria de Imprensa',      href: '/servicos/assessoria-de-imprensa/' },
+  { label: 'Marketing de Autoridade',     href: '/servicos/marketing-de-autoridade/' },
+  { label: 'Branding Estratégico',        href: '/servicos/branding-estrategico/' },
+  { label: 'Marketing Digital',           href: '/servicos/marketing-digital/' },
+  { label: 'Consultoria em Comunicação',  href: '/servicos/consultoria-em-comunicacao/' },
+  { label: 'Marketing para Leiloeiros',   href: '/marketing-para-leiloeiros/' },
+  { label: 'Mentoria Bolder',             href: '/mentorias/#bolder' },
+  { label: 'Mentoria Bolder Press',       href: '/mentorias/#bolder-press' },
 ];
 ---
 
@@ -69,7 +74,7 @@ const servicos = [
 
       <div class="ft-col">
         <p class="ft-col-h">Serviços</p>
-        <ul>{servicos.map(s => <li><span>{s}</span></li>)}</ul>
+        <ul>{servicos.map(s => <li><a href={s.href}>{s.label}</a></li>)}</ul>
       </div>
 
       <div class="ft-col">

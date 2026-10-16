@@ -1,13 +1,29 @@
 User-agent: *
 Allow: /
-
-# Bloquear áreas administrativas e sensíveis dos crawlers
 Disallow: /acesso/
 
-# Sitemaps
-Sitemap: https://mclair.com.br/sitemap-index.xml
-Sitemap: https://mclair.com.br/sitemap-0.xml
+# Robôs de busca e de IA liberados de forma explícita. Alguns provedores
+# leem só o bloco com o próprio nome, então cada um ganha o seu.
+# Atenção: o GPTBot recebe 429 do firewall da Hostinger (proteção anti-bot
+# do hPanel), não deste arquivo. Liberar lá também.
+User-agent: Googlebot
+User-agent: Bingbot
+User-agent: Applebot
+User-agent: Applebot-Extended
+User-agent: Google-Extended
+User-agent: GPTBot
+User-agent: OAI-SearchBot
+User-agent: ChatGPT-User
+User-agent: PerplexityBot
+User-agent: Perplexity-User
+User-agent: ClaudeBot
+User-agent: Claude-User
+User-agent: Claude-SearchBot
+User-agent: CCBot
+User-agent: Meta-ExternalAgent
+User-agent: DuckAssistBot
+User-agent: MistralAI-User
+Allow: /
+Disallow: /acesso/
 
-# Verificado e resincronizado em 2026-08-17 — remove bloqueio a Googlebot
-# que havia sido adicionado direto no servidor, fora do deploy via git.
-# Corrigido em 2026-08-19 — sitemap apontava pro domínio antigo do Hostinger.
+Sitemap: https://mclair.com.br/sitemap-index.xml

@@ -205,8 +205,21 @@ function resolveMenuHref(item: DbMenuItem): string {
     case 'singleton': return SINGLETON_ROUTES[item.link_value] ?? '/';
     case 'service': return `/servicos/${item.link_value}/`;
     case 'blog_index': return '/blog/';
-    default: return item.link_value || '#';
+    default: return comBarraFinal(item.link_value || '#');
   }
+}
+
+// Link interno digitado à mão no CMS ("/servicos", "/cases/fidalgo") sem a
+// barra final pagava um 301 a cada clique: o "Serviços" do menu fazia isso
+// em todas as páginas do site (834 links no rastreamento de 16/10/2026).
+// Só mexe em caminho relativo do próprio site, sem extensão, query nem âncora.
+export function comBarraFinal(href: string): string {
+  if (!href || !href.startsWith('/') || href.startsWith('//')) return href;
+  const m = href.match(/^([^?#]*)([?#].*)?$/);
+  if (!m) return href;
+  const [, caminho, resto = ''] = m;
+  if (caminho.endsWith('/') || /\.[a-z0-9]{2,5}$/i.test(caminho)) return href;
+  return `${caminho}/${resto}`;
 }
 
 export const getMenuItems = () => fetchType<DbMenuItem>('menu');

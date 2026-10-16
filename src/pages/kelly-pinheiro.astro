@@ -6,7 +6,7 @@
 // vêm de lá, não inventar nem atualizar sem ela.
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { getSingleton, getBlogPosts, getBlogAuthors, getBlogPostAuthors } from '../utils/cmsApi';
+import { getSingleton, getBlogPosts, getBlogAuthors, getBlogPostAuthors, comBarraFinal } from '../utils/cmsApi';
 import { idDaPessoa, PESSOAS_CANONICAS, autoresComPosts, urlDoAutor } from '../utils/blogAuthors';
 
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
@@ -207,7 +207,7 @@ const schema = [
   </div>
   <div class="container kp-ab-texto">
     <h1 class="kp-nome">
-      <span class="kp-nome-linha"><span class="kp-nome-inner">Kelly</span></span>
+      <span class="kp-nome-linha"><span class="kp-nome-inner">Kelly</span>{' '}</span>
       <span class="kp-nome-linha"><span class="kp-nome-inner">Pinheiro</span></span>
     </h1>
     <p class="kp-lead">
@@ -345,7 +345,7 @@ const schema = [
         {clientes.map((c) => (
           <li>
             {c.case ? (
-              <a href={c.case} title={c.name ? `Case ${c.name}` : 'Ver case'}>
+              <a href={comBarraFinal(c.case)} title={c.name ? `Case ${c.name}` : 'Ver case'}>
                 <img src={c.logo} alt={c.name || 'Cliente Mclair'} loading="lazy" decoding="async" onerror="this.closest('li').style.display='none'" />
               </a>
             ) : (

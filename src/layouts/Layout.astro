@@ -46,7 +46,31 @@ const {
 // every call site.
 const absoluteOgImage = ogImage.startsWith('http') ? ogImage : `${BASE}${ogImage}`;
 const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
-const schemas = Array.isArray(schema) ? schema : schema ? [schema] : [];
+// A 404 é servida com status 404 pelo ErrorDocument, mas saía com canônica
+// para /404/ e "index". Sem canônica e com noindex ela não compete com nada.
+const ehPagina404 = /^\/404(\.html|\/)?$/.test(Astro.url.pathname);
+// O site inteiro é canônico com barra final, mas várias páginas montam o
+// schema com URL sem barra (".../cases/fidalgo#case", breadcrumb ".../blog").
+// Aí @id, mainEntityOfPage e item não batem com a canônica e o Google trata
+// como entidades diferentes. Normaliza aqui, num lugar só: URL do próprio
+// site, sem extensão de arquivo e sem query, ganha a barra antes do # ou do fim.
+function comBarraFinal(valor: unknown): unknown {
+  if (typeof valor === 'string') {
+    if (!valor.startsWith(BASE)) return valor;
+    const m = valor.match(/^([^?#]*)(#.*)?$/);
+    if (!m) return valor;
+    const [, caminho, frag = ''] = m;
+    if (caminho === BASE) return `${BASE}/${frag}`;
+    if (caminho.endsWith('/') || /\.[a-z0-9]{2,5}$/i.test(caminho)) return valor;
+    return `${caminho}/${frag}`;
+  }
+  if (Array.isArray(valor)) return valor.map(comBarraFinal);
+  if (valor && typeof valor === 'object') {
+    return Object.fromEntries(Object.entries(valor).map(([k, v]) => [k, comBarraFinal(v)]));
+  }
+  return valor;
+}
+const schemas = (Array.isArray(schema) ? schema : schema ? [schema] : []).map(comBarraFinal) as object[];
 
 const orgSchema = {
   '@context': 'https://schema.org',
@@ -54,7 +78,9 @@ const orgSchema = {
   '@id': `${BASE}/#organization`,
   name: 'Mclair Comunicação Estratégica',
   alternateName: ['Mclair', 'Mclair Agência', 'Mclair Marketing'],
-  url: BASE,
+  url: `${BASE}/`,
+  telephone: '+55-11-98860-0372',
+  email: 'kelly@mclair.com.br',
   logo: {
     '@type': 'ImageObject',
     url: `${BASE}/logos/logo-negativo.png`,
@@ -91,19 +117,22 @@ const orgSchema = {
       contactType: 'customer service',
     },
   ],
+  // Só perfis oficiais de terceiros: o próprio site não entra em sameAs.
+  // Facebook fica de fora até haver página oficial confirmada.
   sameAs: [
     'https://instagram.com/mclair.com.br',
     'https://linkedin.com/company/mclair-comunicacao',
-    'https://mclair.com.br',
   ],
-  areaServed: {
-    '@type': 'Country',
-    name: 'Brasil',
-  },
+  // Mesmas cidades do Service de /servicos/assessoria-de-imprensa/.
+  areaServed: [
+    { '@type': 'Country', name: 'Brasil' },
+    ...['São Paulo', 'Rio de Janeiro', 'Belo Horizonte', 'Porto Alegre', 'Curitiba', 'Florianópolis', 'Joinville', 'Brasília', 'Goiânia']
+      .map((name) => ({ '@type': 'City', name })),
+  ],
   knowsAbout: [
-    'Marketing de Autoridade',
-    'Comunicação Estratégica',
     'Assessoria de Imprensa',
+    'Comunicação Estratégica',
+    'Marketing de Autoridade',
     'Branding Estratégico',
     'Marketing Digital',
     'Consultoria em Comunicação',
@@ -116,8 +145,8 @@ const orgSchema = {
     '@type': 'OfferCatalog',
     name: 'Serviços de Marketing e Comunicação',
     itemListElement: [
+      { '@type': 'Offer', itemOffered: { '@type': 'Service', '@id': `${BASE}/servicos/assessoria-de-imprensa/#service`, name: 'Assessoria de Imprensa', url: `${BASE}/servicos/assessoria-de-imprensa/` } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Marketing de Autoridade' } },
-      { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Assessoria de Imprensa' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Branding Estratégico' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Marketing Digital Integrado' } },
       { '@type': 'Offer', itemOffered: { '@type': 'Service', name: 'Consultoria em Comunicação' } },
@@ -131,7 +160,7 @@ const websiteSchema = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   '@id': `${BASE}/#website`,
-  url: BASE,
+  url: `${BASE}/`,
   name: 'Mclair: Agência de Marketing e Comunicação Estratégica',
   description: 'Agência de Marketing especializada em Comunicação Estratégica e Marketing de Autoridade. São Paulo, desde 2017.',
   publisher: { '@id': `${BASE}/#organization` },
@@ -156,7 +185,7 @@ const websiteSchema = {
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <link rel="canonical" href={canonicalURL} />
+    {!ehPagina404 && <link rel="canonical" href={canonicalURL} />}
 
     <!-- ── Favicons ── -->
     <link rel="icon" type="image/x-icon" href="/favicon.ico" />
@@ -203,7 +232,7 @@ const websiteSchema = {
     {articleAuthor && <meta name="twitter:creator" content={`@${articleAuthor.toLowerCase().replace(/\s+/g,'')}`} />}
 
     <!-- ── SEO + GEO ── -->
-    <meta name="robots"           content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1" />
+    <meta name="robots"           content={ehPagina404 ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
     <meta name="build-id"         content={BUILD_ID} />
     <meta name="author"           content={articleAuthor || 'Mclair Comunicação Estratégica'} />
     {keywords && <meta name="keywords" content={keywords} />}

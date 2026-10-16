@@ -88,13 +88,16 @@ const FALLBACK_CUSTOM_PAGES = [
   'https://mclair.com.br/marketing-para-leiloeiros/',
 ];
 
+const EXPORT_URL = process.env.CMS_EXPORT_URL || 'https://mclair.com.br/acesso/api-export.php';
+const fetchExport = (type) =>
+  fetch(`${EXPORT_URL}?type=${type}`, { headers: { 'X-Export-Token': process.env.CMS_EXPORT_TOKEN } })
+    .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${type}: HTTP ${r.status}`))));
+
 async function buildCustomPages() {
   const token = process.env.CMS_EXPORT_TOKEN;
   if (!token) return FALLBACK_CUSTOM_PAGES;
   try {
-    const fetchType = (type) =>
-      fetch(`https://mclair.com.br/acesso/api-export.php?type=${type}`, { headers: { 'X-Export-Token': token } })
-        .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${type}: HTTP ${r.status}`))));
+    const fetchType = fetchExport;
     const [services, cases] = await Promise.all([fetchType('services'), fetchType('cases')]);
     // Services can be nested (child.parent_slug -> parent), same ancestry walk
     // src/pages/servicos/[...slug].astro uses to build each real URL path.
@@ -112,6 +115,7 @@ async function buildCustomPages() {
     };
     const urls = [
       'https://mclair.com.br/sobre/',
+      'https://mclair.com.br/kelly-pinheiro/',
       'https://mclair.com.br/servicos/',
       ...services.map((s) => `https://mclair.com.br/servicos/${servicePath(s.slug)}/`),
       'https://mclair.com.br/mentorias/',
@@ -128,6 +132,25 @@ async function buildCustomPages() {
 }
 const customPages = await buildCustomPages();
 
+// Os posts vêm do CMS (MySQL), não de src/data/blog.json nem de
+// src/content/blog, que não existem mais. Sem isto o mapa de datas ficava
+// vazio e o sitemap saía com o horário do build em todas as 404 URLs, o
+// que ensina o Google a ignorar o lastmod. Agora vale a data do post.
+async function addCmsBlogDates(map) {
+  if (!process.env.CMS_EXPORT_TOKEN) return;
+  try {
+    const posts = await fetchExport('blog_posts');
+    for (const p of posts) {
+      if (!p?.slug || !p?.post_date) continue;
+      const d = new Date(String(p.post_date).slice(0, 10));
+      if (!isNaN(d.getTime())) map.set(p.slug, d);
+    }
+  } catch {
+    // API fora do ar: fica sem lastmod nos posts, não derruba o build
+  }
+}
+await addCmsBlogDates(blogDates);
+
 export default defineConfig({
   site: 'https://mclair.com.br',
   output: 'static',
@@ -138,9 +161,8 @@ export default defineConfig({
   trailingSlash: 'always',
   integrations: [
     sitemap({
-      changefreq: 'weekly',
-      priority: 0.8,
-      lastmod: new Date(),
+      // Sem lastmod global: data do build em toda URL não é data de mudança.
+      // Só os posts levam lastmod, com a data real vinda do CMS.
       serialize(item) {
         const match = item.url.match(/\/blog\/([^/]+)\/?$/);
         if (match) {
@@ -149,35 +171,8 @@ export default defineConfig({
         }
         return item;
       },
-      customPages: [
-        'https://mclair.com.br/sobre/',
-        'https://mclair.com.br/kelly-pinheiro/',
-        'https://mclair.com.br/servicos/',
-        'https://mclair.com.br/servicos/marketing-de-autoridade/',
-        'https://mclair.com.br/servicos/assessoria-de-imprensa/',
-        'https://mclair.com.br/servicos/branding-estrategico/',
-        'https://mclair.com.br/servicos/marketing-digital/',
-        'https://mclair.com.br/servicos/consultoria-em-comunicacao/',
-        'https://mclair.com.br/servicos/mentorias-exclusivas/',
-        'https://mclair.com.br/mentorias/',
-        'https://mclair.com.br/cases/',
-        'https://mclair.com.br/cases/claudia-elisa/',
-        'https://mclair.com.br/cases/fidalgo/',
-        'https://mclair.com.br/cases/alexandre-magno/',
-        'https://mclair.com.br/cases/elemar-jr/',
-        'https://mclair.com.br/cases/bms-abimaq/',
-        'https://mclair.com.br/cases/diego-nogare/',
-        'https://mclair.com.br/cases/insight-rh/',
-        'https://mclair.com.br/cases/lambda3/',
-        'https://mclair.com.br/cases/nexinvoice/',
-        'https://mclair.com.br/cases/silene-chiconini/',
-        'https://mclair.com.br/cases/zbra/',
-        'https://mclair.com.br/cases/globo-leiloes/',
-        'https://mclair.com.br/cases/vip-leiloes/',
-        'https://mclair.com.br/clientes/',
-        'https://mclair.com.br/contato/',
-        'https://mclair.com.br/marketing-para-leiloeiros/',
-      ],
+      customPages,
+      filter: (page) => !/\/404\/?$/.test(page),
     }),
   ],
 });

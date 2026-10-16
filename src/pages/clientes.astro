@@ -1,7 +1,7 @@
 ---
 export const prerender = true;
 import Layout from '../layouts/Layout.astro';
-import { getSingleton } from '../utils/cmsApi';
+import { getSingleton, comBarraFinal } from '../utils/cmsApi';
 
 const clientesContent = await getSingleton('clientes');
 const clients = (clientesContent?.clients ?? []) as any[];
@@ -64,7 +64,7 @@ const seo = clientesContent?.seo ?? {};
     <div class="logos-grid stagger-children">
       {clients.map((c, i) => (
         c.case ? (
-          <a class="logo-card" data-anim data-delay={((i % 4) + 1).toString()} href={c.case}>
+          <a class="logo-card" data-anim data-delay={((i % 4) + 1).toString()} href={comBarraFinal(c.case)}>
             <img src={c.logo} alt={c.name ? `${c.name}, Cliente Mclair` : 'Cliente Mclair'} title={c.name || 'Cliente Mclair'} loading="lazy" class="logo-img"
               onerror="this.style.opacity='0';this.style.pointerEvents='none'" />
             <span class="logo-name">Ver case →</span>
