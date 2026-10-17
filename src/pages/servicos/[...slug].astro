@@ -4,6 +4,8 @@ import Layout from '../../layouts/Layout.astro';
 import { linkarPessoasEmTexto } from '../../utils/blogAuthors';
 import AssessoriaImprensa from '../../components/servicos/AssessoriaImprensa.astro';
 import { SLUG_ASSESSORIA, SEO_ASSESSORIA, WA_ASSESSORIA, FAQ_ASSESSORIA, CIDADES_ATENDIDAS } from '../../data/assessoria-imprensa';
+import ServicoAmpliado from '../../components/servicos/ServicoAmpliado.astro';
+import { SERVICOS_AMPLIADOS } from '../../data/servicos-ampliados';
 
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20saber%20mais%20sobre%20os%20serviços.';
 
@@ -62,22 +64,28 @@ const { s, others } = Astro.props;
 // src/data/assessoria-imprensa.ts e components/servicos/AssessoriaImprensa.astro).
 // O resto do CMS (intro, entregas, CTA) continua vindo do painel.
 const assessoria = s.slug === SLUG_ASSESSORIA;
-const tituloPagina = assessoria ? SEO_ASSESSORIA.title : `${s.title} | Mclair`;
-const h1 = assessoria ? SEO_ASSESSORIA.h1 : s.title;
-const descricao = assessoria ? SEO_ASSESSORIA.description : s.description;
+// Marketing de autoridade, branding, marketing digital, consultoria e
+// mentorias: texto próprio, FAQ e formulário em src/data/servicos-ampliados.ts.
+const ampliado = SERVICOS_AMPLIADOS[s.slug];
+const tituloPagina = assessoria ? SEO_ASSESSORIA.title : ampliado ? ampliado.seo.title : `${s.title} | Mclair`;
+const h1 = assessoria ? SEO_ASSESSORIA.h1 : ampliado ? ampliado.seo.h1 : s.title;
+const descricao = assessoria ? SEO_ASSESSORIA.description : ampliado ? ampliado.seo.description : s.description;
 const palavras = assessoria
   ? SEO_ASSESSORIA.keywords
+  : ampliado
+  ? ampliado.seo.keywords
   : `${(s.title ?? '').toLowerCase()}, ${(s.title ?? '').toLowerCase()} agência, comunicação estratégica, marketing de autoridade, mclair, assessoria imprensa, são paulo`;
-const waServico = assessoria ? WA_ASSESSORIA : WA;
+const waServico = assessoria ? WA_ASSESSORIA : ampliado ? ampliado.wa : WA;
 const areaServed = assessoria
   ? [{ '@type': 'Country', name: 'Brasil' }, ...CIDADES_ATENDIDAS.map((c) => ({ '@type': 'City', name: c }))]
   : { '@type': 'Country', name: 'Brasil' };
-const faqSchema = assessoria
+const faqLista = assessoria ? FAQ_ASSESSORIA : ampliado ? ampliado.faq : [];
+const faqSchema = faqLista.length
   ? [{
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
       '@id': `https://mclair.com.br/servicos/${s.path}/#faq`,
-      mainEntity: FAQ_ASSESSORIA.map((q) => ({
+      mainEntity: faqLista.map((q) => ({
         '@type': 'Question',
         name: q.pergunta,
         acceptedAnswer: { '@type': 'Answer', text: q.resposta },
@@ -105,7 +113,7 @@ const ogImg = s.image
       provider: { '@id': 'https://mclair.com.br/#organization' },
       url: `https://mclair.com.br/servicos/${s.path}`,
       areaServed,
-      ...(assessoria ? { serviceType: 'Assessoria de imprensa' } : {}),
+      ...(assessoria ? { serviceType: 'Assessoria de imprensa' } : ampliado ? { serviceType: ampliado.serviceType } : {}),
       inLanguage: 'pt-BR',
       ...(s.items?.length ? {
         hasOfferCatalog: {
@@ -180,6 +188,8 @@ const ogImg = s.image
 <!-- CONTENT -->
 {assessoria ? (
   <AssessoriaImprensa s={s} />
+) : ampliado ? (
+  <ServicoAmpliado s={s} d={ampliado} />
 ) : (
 <section class="svc-content-section">
   <div class="container svc-content-grid">
