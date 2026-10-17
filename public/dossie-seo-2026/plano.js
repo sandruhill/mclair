@@ -1,6 +1,8 @@
 /*
- * Plano de 12 meses da Mclair (outubro de 2026 a setembro de 2027).
- * Segunda parte da página /dossie-seo-2026/. As tarefas ficam em WEEKS:
+ * Plano de 12 meses da Mclair (outubro de 2026 a setembro de 2027), o corpo
+ * da página /dossie-seo-2026/. Daqui saem "Onde estamos", o cronograma, "O que
+ * depende da Mclair" e a lista de tarefas, todos montados de WEEKS e do estado
+ * gravado, para nenhum número ficar velho no texto. As tarefas ficam em WEEKS:
  * id (minúsculas e números, até 12), w ("IKOEH" ou "Mclair"), t (texto HTML
  * escrito por nós), g (pronto quando), e (prazo), img (prints em capturas/),
  * s (estado inicial) e desc (motivo de tarefa descartada, que sai da contagem).
@@ -156,6 +158,7 @@ const ICON = {
 
 const state = {};
 const stamps = {};
+const isos = {};
 WEEKS.forEach(w => w.tasks.forEach(t => { state[t.id] = t.s || "todo"; }));
 const DESC = new Set();
 WEEKS.forEach(w => w.tasks.forEach(t => { if (t.desc) DESC.add(t.id); }));
@@ -300,7 +303,7 @@ function buildWeeks(){
   host.innerHTML = WEEKS.map(w => `
     <section class="week" id="s${w.n}" data-week="${w.n}">
       <header class="whead">
-        <h3>Mês ${w.n}: ${esc(w.t)}</h3>
+        <h3>Mês ${w.n}: ${esc(w.t)}</h3>${w.n === mesAtual() ? `<span class="wagora">mês atual</span>` : ``}
         <span class="wdate">${esc(w.d)}</span>
       </header>
       <ul class="tasks">
@@ -323,10 +326,169 @@ function buildWeeks(){
       </ul>
       ${w.gate ? `<div class="gatebar"><span class="mark">Meta do mês:</span><span>${esc(w.gate)}</span></div>` : ``}
     </section>`).join("");
+}
 
-  el("rail").innerHTML = WEEKS.map(w =>
-    `<a href="#s${w.n}" title="Mês ${w.n}: ${esc(w.t)}"><span class="bar" data-bar="${w.n}"><em style="height:0"></em></span><span class="n">${w.n}</span></a>`
-  ).join("");
+/* ---- Resumo, cronograma e pedidos à Mclair ----
+   Tudo calculado a partir de WEEKS e do estado. O mês 1 é outubro de 2026. */
+const MES_CURTO = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
+
+function mesAtual(){
+  let a = 2026, m = 10;
+  try {
+    const p = new Intl.DateTimeFormat("en-CA", {timeZone: "America/Sao_Paulo", year: "numeric", month: "2-digit"}).format(new Date());
+    [a, m] = p.split("-").map(Number);
+  } catch { const d = new Date(); a = d.getFullYear(); m = d.getMonth() + 1; }
+  return Math.min(12, Math.max(1, (a - 2026) * 12 + (m - 10) + 1));
+}
+function nomeMes(w){ return w.d.charAt(0).toUpperCase() + w.d.slice(1); }
+
+/* Título (o primeiro negrito), o primeiro link e o que falta (o texto depois de "Falta:"). */
+const PARTES = {};
+function partes(t){
+  if (PARTES[t.id]) return PARTES[t.id];
+  const tp = document.createElement("template");
+  tp.innerHTML = t.t;
+  const b = tp.content.querySelector("b");
+  const a = tp.content.querySelector("a[href]");
+  const titulo = b ? b.textContent.trim().replace(/[.:]$/, "") : tp.content.textContent.trim();
+  let falta = "";
+  const i = t.t.indexOf("<b>Falta:</b>");
+  if (i >= 0) falta = t.t.slice(i).trim();
+  else { if (b) b.remove(); falta = tp.innerHTML.trim(); }
+  return PARTES[t.id] = {titulo, href: a ? a.getAttribute("href") : "", falta};
+}
+
+function plural(n, um, varios){ return n + " " + (n === 1 ? um : varios); }
+function listaPt(xs){ return xs.length < 2 ? xs.join("") : xs.slice(0, -1).join(", ") + " e " + xs[xs.length - 1]; }
+function dataCurta(iso){
+  try {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleDateString("pt-BR", {day: "numeric", month: "short", timeZone: "America/Sao_Paulo"}).replace(" de ", " ").replace(".", "");
+  } catch { return ""; }
+}
+function dataLonga(iso){
+  try {
+    const d = new Date(iso);
+    if (isNaN(d)) return "";
+    return d.toLocaleDateString("pt-BR", {day: "numeric", month: "long", year: "numeric", timeZone: "America/Sao_Paulo"});
+  } catch { return ""; }
+}
+
+/* Os pedidos à Mclair são desenhados uma vez (têm formulário dentro); render() só esconde os que ficaram feitos. */
+function buildDepende(){
+  const atual = mesAtual();
+  const item = (w, t) => {
+    const p = partes(t);
+    return `<li class="dep-item" id="d-${t.id}" data-id="${t.id}">
+      <p class="dep-tit"><b>${esc(p.titulo)}</b></p>
+      <p class="dep-meta">${t.e ? `<span class="envio">${esc(t.e)}</span>` : ``}<a href="#t-${t.id}">${esc(nomeMes(w))}, no plano</a><span class="dep-estado" data-dep-estado="${t.id}"></span></p>
+      <div class="dep-falta">${p.falta}</div>
+      <div class="resp" data-resp="${t.id}" data-pref="d"></div>
+    </li>`;
+  };
+  const agora = [], depois = [];
+  WEEKS.forEach(w => w.tasks.forEach(t => {
+    if (t.w !== "Mclair" || t.desc) return;
+    (w.n <= atual ? agora : depois).push(item(w, t));
+  }));
+  el("dep-agora").innerHTML = agora.join("");
+  el("dep-depois").innerHTML = depois.join("");
+}
+
+function renderResumo(counts){
+  const atual = mesAtual();
+  const total = counts.todo + counts.doing + counts.done + counts.blocked;
+
+  /* Onde estamos */
+  const partesConta = [
+    plural(counts.done, "feita", "feitas"),
+    plural(counts.doing, "em andamento", "em andamento"),
+    plural(counts.blocked, "bloqueada", "bloqueadas"),
+    plural(counts.todo, "pendente", "pendentes")
+  ];
+  const mclair = WEEKS.flatMap(w => w.tasks).filter(t => t.w === "Mclair" && !t.desc && state[t.id] !== "done").length;
+  el("onde-conta").innerHTML = `O plano tem ${total} tarefas: ${listaPt(partesConta)}. `
+    + (mclair ? `<a href="#depende">${plural(mclair, "pedido espera", "pedidos esperam")} a Mclair</a>.` : `Nenhum pedido espera a Mclair agora.`);
+  const pc = n => total ? (n / total * 100) : 0;
+  el("track").innerHTML =
+    `<i class="d" style="width:${pc(counts.done)}%"></i>` +
+    `<i class="g" style="width:${pc(counts.doing)}%"></i>` +
+    `<i class="b" style="width:${pc(counts.blocked)}%"></i>`;
+  el("track").setAttribute("aria-label", `${Math.round(pc(counts.done))}% das tarefas feitas`);
+
+  const ordem = {};
+  let k = 0;
+  WEEKS.forEach(w => w.tasks.forEach(t => { ordem[t.id] = k++; }));
+  const feitas = WEEKS.flatMap(w => w.tasks)
+    .filter(t => !t.desc && state[t.id] === "done" && isos[t.id])
+    .sort((a, b) => (isos[b.id] > isos[a.id] ? 1 : isos[b.id] < isos[a.id] ? -1 : ordem[a.id] - ordem[b.id]))
+    .slice(0, 6);
+  el("entregas").innerHTML = feitas.length ? feitas.map(t => {
+    const p = partes(t);
+    const nome = p.titulo.replace(/\s*\(\d{2}\/\d{2}\)$/, "");
+    const tit = p.href ? `<a href="${esc(p.href)}">${esc(nome)}</a>` : esc(nome);
+    return `<li><time datetime="${esc(isos[t.id])}">${esc(dataCurta(isos[t.id]))}</time><span>${tit} <a class="ver" href="#t-${t.id}">ver tarefa</a></span></li>`;
+  }).join("") : `<li><span>Nenhuma entrega marcada ainda.</span></li>`;
+
+  const paradas = WEEKS.flatMap(w => w.tasks).filter(t => !t.desc && state[t.id] === "blocked");
+  el("onde-parado").hidden = !paradas.length;
+  el("onde-parado").innerHTML = paradas.length ? `<b>Parado:</b> ` + paradas.map(t =>
+    `<a href="#t-${t.id}">${esc(partes(t).titulo)}</a>${t.e && !partes(t).titulo.includes(t.e) ? ` (${esc(t.e)})` : ``}`).join("; ") + "." : "";
+
+  const w = WEEKS.find(x => x.n === atual);
+  if (w) {
+    const abertas = w.tasks.filter(t => !t.desc && state[t.id] !== "done");
+    const daMclair = abertas.filter(t => t.w === "Mclair").length;
+    const corte = w.gate.indexOf(": ");
+    const quando = corte > 0 ? w.gate.slice(0, corte) : "";
+    const oque = corte > 0 ? w.gate.slice(corte + 2) : w.gate;
+    el("marco").innerHTML = `<b>Meta de ${esc(w.d)}, conferida em ${esc(quando)}:</b> ${esc(oque)} `
+      + (abertas.length ? `Faltam ${plural(abertas.length, "tarefa", "tarefas")} deste mês${daMclair ? `, ${daMclair} da Mclair` : ``}. ` : `Todas as tarefas do mês estão feitas. `)
+      + `<a href="#s${w.n}">Ver o mês</a>.`;
+  }
+
+  /* Cronograma */
+  el("crono").innerHTML = WEEKS.map(w => {
+    const ts = w.tasks.filter(t => !t.desc);
+    const feitas = ts.filter(t => state[t.id] === "done").length;
+    const pct = ts.length ? Math.round(feitas / ts.length * 100) : 0;
+    const fase = w.n < atual ? "passado" : w.n === atual ? "atual" : "futuro";
+    const [mes, ano] = [w.d.split(" de ")[0], w.d.split(" de ")[1]];
+    const corte = w.gate.indexOf(": ");
+    const quando = corte > 0 ? w.gate.slice(0, corte) : "";
+    const oque = corte > 0 ? w.gate.slice(corte + 2) : w.gate;
+    return `<li class="cr cr-${fase}${pct === 100 ? " cr-cheio" : ""}"${fase === "atual" ? ` aria-current="date"` : ``}>
+      <a href="#s${w.n}" data-mes="${w.n}">
+        <span class="cr-ponto" aria-hidden="true"></span>
+        <span class="cr-mes">${esc(mes)} ${esc(ano)}${fase === "atual" ? ` <span class="cr-agora">mês atual</span>` : ``}</span>
+        <span class="cr-tema">${esc(w.t)}</span>
+        <span class="cr-conta">${plural(ts.length, "tarefa", "tarefas")}, ${pct}% feito</span>
+        <span class="cr-barra" aria-hidden="true"><em style="width:${pct}%"></em></span>
+        <span class="cr-meta"><b>Meta em ${esc(quando)}:</b> ${esc(oque)}</span>
+      </a>
+    </li>`;
+  }).join("");
+
+  /* O que depende da Mclair */
+  let nAgora = 0, nDepois = 0;
+  document.querySelectorAll(".dep-item").forEach(li => {
+    const s = state[li.dataset.id] || "todo";
+    li.hidden = s === "done";
+    if (li.hidden) return;
+    if (li.closest("#dep-depois")) nDepois++; else nAgora++;
+    const est = li.querySelector("[data-dep-estado]");
+    if (est) est.textContent = s === "todo" ? "" : LABEL[s].toLowerCase();
+  });
+  el("depende-conta").textContent = nAgora
+    ? `${plural(nAgora, "pedido está aberto", "pedidos estão abertos")} agora. É o que trava as próximas tarefas da IKOEH, então vale começar por aqui.`
+    : `Nenhum pedido aberto para agora.`;
+  el("dep-depois-box").hidden = !nDepois;
+  el("dep-depois-tit").textContent = `Mais adiante: ${plural(nDepois, "pedido já previsto", "pedidos já previstos")}, cada um com a data do pedido`;
+
+  /* Data do topo */
+  const ult = Object.values(isos).sort().pop();
+  if (ult && el("atualizado")) el("atualizado").textContent = dataLonga(ult);
 }
 
 /* ---- Respostas dentro de cada tarefa ----
@@ -361,19 +523,22 @@ function buildResp(){
   RESP.forEach(m => { if (m.tarefa) (porTarefa[m.tarefa] = porTarefa[m.tarefa] || []).push(m); });
   const q = new URLSearchParams(location.search);
   const volta = q.get("t") || "";
+  /* A volta do envio abre o formulário num lugar só: no pedido à Mclair, se a tarefa estiver lá, ou na tarefa. */
+  const voltaNoPedido = volta !== "" && !!document.getElementById("d-" + volta) && (state[volta] || "todo") !== "done";
   document.querySelectorAll(".resp").forEach(box => {
-    const id = box.dataset.resp, lista = porTarefa[id] || [], n = lista.length;
+    const id = box.dataset.resp, pref = box.dataset.pref || "", lista = porTarefa[id] || [], n = lista.length;
+    const aqui = volta === id && (pref === "d") === voltaNoPedido;
     let aviso = "", erro = false;
-    if (volta === id) {
+    if (aqui) {
       if (q.has("ok")) { const r = Number(q.get("r") || 0); aviso = r > 0 ? `Recebido. ${r} arquivo(s) não foram aceitos por tipo ou tamanho.` : "Recebido. Obrigado, já vamos ver."; }
       else if (q.has("apagado")) aviso = "Resposta apagada.";
       else if (q.has("e")) { const e = q.get("e"); aviso = Object.hasOwn(RESP_ERR, e) ? RESP_ERR[e] : "Não foi possível enviar. Tente de novo."; erro = true; }
     }
-    const aberto = volta === id;
+    const aberto = aqui;
     box.innerHTML = `
-      <button type="button" class="resp-btn" aria-expanded="${aberto}" aria-controls="rp-${id}">Responder${n ? ` <span class="resp-n">${n} ${n === 1 ? "resposta" : "respostas"}</span>` : ``}</button>
+      <button type="button" class="resp-btn" aria-expanded="${aberto}" aria-controls="rp-${pref}${id}">Responder${n ? ` <span class="resp-n">${n} ${n === 1 ? "resposta" : "respostas"}</span>` : ``}</button>
       ${n ? `<ol class="resp-lista">${lista.map(respItem).join("")}</ol>` : ``}
-      <div class="resp-panel" id="rp-${id}"${aberto ? `` : ` hidden`}>
+      <div class="resp-panel" id="rp-${pref}${id}"${aberto ? `` : ` hidden`}>
         ${aviso ? `<p class="resp-aviso${erro ? " resp-aviso-erro" : ""}" role="status">${esc(aviso)}</p>` : ``}
         <form class="resp-form" method="post" action="${BASE}?plano=responder&amp;t=${encodeURIComponent(id)}" enctype="multipart/form-data">
           <input type="hidden" name="token" value="${esc(DADOS.token || "")}">
@@ -402,12 +567,9 @@ function buildResp(){
       const btn = f.querySelector(".resp-enviar"); btn.disabled = true; btn.textContent = "Enviando";
     });
   });
-  if (volta) { const li = document.getElementById("t-" + volta); if (li) li.scrollIntoView({block: "start"}); }
-  document.querySelectorAll(".falta a[href^='#t-']").forEach(a => a.addEventListener("click", ev => {
-    const li = document.getElementById(a.getAttribute("href").slice(1));
-    if (li) { ev.preventDefault(); li.scrollIntoView({block: "start", behavior: "smooth"}); history.replaceState(null, "", a.getAttribute("href")); }
-  }));
+  if (volta) ALVO_INICIAL = (voltaNoPedido ? "d-" : "t-") + volta;
 }
+let ALVO_INICIAL = "";
 
 function render(){
   const counts = {todo:0, doing:0, done:0, blocked:0};
@@ -433,8 +595,6 @@ function render(){
   WEEKS.forEach(w => {
     const total = w.tasks.filter(t => !t.desc).length;
     const done = w.tasks.filter(t => !t.desc && state[t.id] === "done").length;
-    const bar = document.querySelector(`[data-bar="${w.n}"] em`);
-    if (bar) bar.style.height = (total ? Math.round(done / total * 100) : 0) + "%";
     const sec = el("s" + w.n);
     if (sec) {
       sec.classList.toggle("done", total > 0 && done === total);
@@ -449,20 +609,8 @@ function render(){
 
   const faltaAg = [...document.querySelectorAll('.task[data-who="Mclair"]')].filter(li => (state[li.dataset.id] || "todo") !== "done").length;
   el("f-ag-n").textContent = faltaAg;
-  el("falta-n").textContent = faltaAg;
   el("filtro-aviso").textContent = filter === "Mclair" ? `Mostrando só as ${faltaAg} tarefas que faltam da Mclair. O que já foi feito fica escondido; "Tudo" mostra de novo.` : "";
-  const total = Object.values(counts).reduce((a,b) => a+b, 0) || 1;
-  const pct = Math.round(counts.done / total * 100);
-  el("pct").textContent = pct + "%";
-  el("pctlabel").textContent = `do plano concluído, ${counts.done} de ${total} tarefas`;
-  el("c-done").textContent = counts.done;
-  el("c-doing").textContent = counts.doing;
-  el("c-blocked").textContent = counts.blocked;
-  el("c-todo").textContent = counts.todo;
-  el("track").innerHTML =
-    `<i class="d" style="width:${counts.done/total*100}%"></i>` +
-    `<i class="g" style="width:${counts.doing/total*100}%"></i>` +
-    `<i class="b" style="width:${counts.blocked/total*100}%"></i>`;
+  renderResumo(counts);
 }
 
 function fmt(iso){
@@ -480,17 +628,27 @@ function aplicarEstado(dados){
     if (!(id in state)) return;
     const d = dados[id];
     if (d && ORDER.includes(d.status) && state[id] !== d.status) { state[id] = d.status; mudou = true; }
-    if (d && d.updatedAt) stamps[id] = fmt(d.updatedAt);
+    if (d && d.updatedAt) { stamps[id] = fmt(d.updatedAt); if (isos[id] !== d.updatedAt) { isos[id] = d.updatedAt; mudou = true; } }
   });
   return mudou;
 }
 
-function aplicarFiltro(f){
+function aplicarFiltro(f, rolar = true){
   filter = f;
   document.querySelectorAll(".filter").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.f === filter)));
   render();
-  document.querySelector(".controls").scrollIntoView({block: "start", behavior: "smooth"});
+  if (rolar) document.querySelector(".controls").scrollIntoView({block: "start", behavior: "smooth"});
+}
+
+/* Link para uma tarefa ou mês escondido pelo filtro volta para "Tudo"; link para o anexo abre o anexo. */
+function irPara(id, suave){
+  const alvo = id && document.getElementById(id);
+  if (!alvo) return false;
+  if (id === "dossie" && alvo.tagName === "DETAILS") alvo.open = true;
+  if (alvo.closest("[hidden]") && alvo.closest("#plano")) aplicarFiltro("all", false);
+  alvo.scrollIntoView({block: "start", behavior: suave ? "smooth" : "auto"});
+  return true;
 }
 
 function guardar(id, status){
@@ -501,7 +659,7 @@ function guardar(id, status){
     body: JSON.stringify({k: CHAVE, id, status})
   }).then(r => r.json()).then(r => {
     if (!r.ok) el("offline").hidden = false;
-    else if (r.updatedAt) { stamps[id] = fmt(r.updatedAt); render(); }
+    else if (r.updatedAt) { stamps[id] = fmt(r.updatedAt); isos[id] = r.updatedAt; render(); }
   }).catch(() => { el("offline").hidden = false; });
 }
 
@@ -513,14 +671,18 @@ el("aviso").textContent = PUEDE_EDITAR
   : "Acompanhamento ao vivo do plano. A página se atualiza sozinha a cada minuto conforme a equipe avança. Para mandar um material ou tirar uma dúvida, use o Responder da tarefa.";
 
 buildWeeks();
+buildDepende();
 buildResp();
 buildDesempeno();
 buildPalabras();
 render();
 if (!PUEDE_EDITAR) document.body.classList.add("solo-leitura");
-if (location.hash) {
-  const alvo = document.getElementById(location.hash.slice(1));
-  if (alvo) alvo.scrollIntoView({block: "start"});
+{
+  const inicial = ALVO_INICIAL || decodeURIComponent(location.hash.slice(1));
+  if (inicial && irPara(inicial, false)) {
+    // O navegador tenta de novo a âncora no load, quando as imagens chegam: mantém o mesmo alvo.
+    window.addEventListener("load", () => irPara(inicial, false), {once: true});
+  }
 }
 
 document.addEventListener("click", ev => {
@@ -531,12 +693,18 @@ document.addEventListener("click", ev => {
     const next = ORDER[(ORDER.indexOf(state[id] || "todo") + 1) % ORDER.length];
     state[id] = next;
     stamps[id] = fmt(new Date().toISOString());
+    isos[id] = new Date().toISOString().slice(0, 19) + "Z";
     render();
     guardar(id, next);
     return;
   }
   const f = ev.target.closest(".filter");
-  if (f) aplicarFiltro(f.dataset.f);
+  if (f) { aplicarFiltro(f.dataset.f); return; }
+  const a = ev.target.closest('a[href^="#"]');
+  if (a && !ev.metaKey && !ev.ctrlKey && !ev.shiftKey) {
+    const id = decodeURIComponent(a.getAttribute("href").slice(1));
+    if (irPara(id, true)) { ev.preventDefault(); history.replaceState(null, "", "#" + id); }
+  }
 });
 el("falta-ver").addEventListener("click", () => aplicarFiltro("Mclair"));
 

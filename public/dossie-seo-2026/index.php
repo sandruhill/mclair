@@ -324,7 +324,7 @@ $atualizado = new DateTimeImmutable((string) $doc['atualizado_em']);
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="googlebot" content="noindex, nofollow">
 <meta name="referrer" content="no-referrer">
-<title><?= htmlspecialchars((string) $doc['titulo'], ENT_QUOTES, 'UTF-8') ?></title>
+<title><?= $editar ? 'Editando o dossiê: ' : '' ?>SEO da Mclair: plano e acompanhamento</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,300;0,400;0,700;1,400&display=swap" rel="stylesheet">
@@ -428,6 +428,18 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
 :where(.dossie) details{margin-top:56px; border-top:1px solid var(--line); padding-top:22px}
 :where(.dossie) summary{cursor:pointer; font-weight:700; font-size:15px; color:var(--ink-2)}
 :where(.dossie) details table{font-size:14px; margin-top:16px; min-width:0}
+/* Anexo: o dossiê de setembro, recolhido */
+details.anexo{margin-top:64px; padding-top:28px; border-top:1px solid var(--line-2); scroll-margin-top:12px}
+details.anexo > summary{cursor:pointer; list-style:none; display:grid; gap:4px}
+details.anexo > summary::-webkit-details-marker{display:none}
+.anexo-tit{font-size:clamp(24px,3.4vw,30px); font-weight:700; letter-spacing:-0.015em; line-height:1.2}
+.anexo-sub{font-size:15px; color:var(--ink-3)}
+.anexo-acao{color:var(--red); font-weight:700; text-decoration:underline; text-underline-offset:3px}
+details.anexo > summary:hover .anexo-tit{color:var(--red)}
+details.anexo > summary:focus-visible{outline:2px solid var(--teal); outline-offset:4px; border-radius:4px}
+details.anexo[open] .anexo-abrir, details.anexo:not([open]) .anexo-fechar{display:none}
+details.anexo > .dossie{margin-top:28px}
+details.anexo article > h1:first-child{font-size:clamp(24px,3.4vw,30px)}
 .rodape{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-4)}
 @media (max-width:560px){
   body{font-size:16px}
@@ -444,17 +456,19 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
     <span class="reservado">Documento interno, fora dos buscadores</span>
   </header>
 
-
-  <div class="dossie" id="dossie">
-
   <?php if ($aviso): ?>
-    <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?></p>
+    <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?> O texto está no <a href="#dossie">anexo do diagnóstico de setembro</a>.</p>
   <?php endif; ?>
-  <?php if ($erro): ?>
+  <?php if ($erro && !$editar): ?>
     <p class="recado recado-erro"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
   <?php endif; ?>
 
   <?php if ($editar): ?>
+
+  <div class="dossie" id="dossie">
+    <?php if ($erro): ?>
+      <p class="recado recado-erro"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
+    <?php endif; ?>
 
     <h1>Editando o dossiê</h1>
     <p class="dica">O texto usa markdown: <code>##</code> para título de seção, <code>|</code> para tabelas,
@@ -471,8 +485,18 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
         <a class="btn" href="/dossie-seo-2026/">Cancelar</a>
       </div>
     </form>
+  </div>
 
   <?php else: ?>
+
+  <?php planoSecao($plano); ?>
+
+  <details class="anexo" id="dossie"<?= ($aviso || $erro) ? ' open' : '' ?>>
+    <summary>
+      <span class="anexo-tit">Anexo: diagnóstico de setembro</span>
+      <span class="anexo-sub">O dossiê de concorrência de 23 de setembro de 2026, de onde saiu o plano. <span class="anexo-acao anexo-abrir">Abrir o diagnóstico</span><span class="anexo-acao anexo-fechar">Fechar</span></span>
+    </summary>
+    <div class="dossie">
 
     <div class="acoes">
       <a class="btn btn-forte" href="/dossie-seo-2026/?editar=1">Editar</a>
@@ -508,11 +532,10 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
     </details>
     <?php endif; ?>
 
+    </div>
+  </details>
+
   <?php endif; ?>
-
-  </div>
-
-  <?php if (!$editar) { planoSecao($plano); } ?>
 
   <p class="rodape">
     Esta página pede aos buscadores que não a listem, mas o endereço continua público:

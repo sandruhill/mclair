@@ -1,6 +1,6 @@
 <?php
 /**
- * Plano de 12 meses: a segunda parte da página do dossiê (/dossie-seo-2026/#plano).
+ * Plano de 12 meses: o corpo da página /dossie-seo-2026/ (o dossiê de setembro fica no anexo).
  *
  * Só funciona incluído pelo index.php, que já abriu a conexão e a sessão.
  * Aberto a qualquer um com o link, como o dossiê, com duas exceções:
@@ -834,5 +834,24 @@ function planoSecao(array $p): void
         JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_INVALID_UTF8_SUBSTITUTE
     ) ?: '{}';
     $versao = substr((string) @md5_file(__DIR__ . '/plano.js'), 0, 10);
+    $atualizado = planoUltimaData($p['estado']);
     require __DIR__ . '/plano-secao.php';
+}
+
+/** Data da mudança de estado mais recente; sem estado, a data do plano.js. */
+function planoUltimaData(array $estado): string
+{
+    $t = 0;
+    foreach ($estado as $e) {
+        $t = max($t, (int) strtotime((string) ($e['updatedAt'] ?? '')));
+    }
+    if ($t <= 0) {
+        $t = (int) @filemtime(__DIR__ . '/plano.js');
+    }
+    if ($t <= 0) {
+        return '';
+    }
+    $d = (new DateTimeImmutable('@' . $t))->setTimezone(new DateTimeZone('America/Sao_Paulo'));
+    $meses = ['janeiro', 'fevereiro', 'março', 'abril', 'maio', 'junho', 'julho', 'agosto', 'setembro', 'outubro', 'novembro', 'dezembro'];
+    return $d->format('j') . ' de ' . $meses[(int) $d->format('n') - 1] . ' de ' . $d->format('Y');
 }
