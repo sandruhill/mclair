@@ -20,6 +20,14 @@ export async function getStaticPaths({ paginate }: any) {
   const topicsBySlug = (await import('../../../../data/blog-topics.json')).default as Record<string, string>;
   const posts = await getBlogPosts();
 
+  // Post novo que ainda não está no blog-topics.json: se o título fala de
+  // leilão (leilão, leilões, leiloa, leiloam, leiloeiro), entra em Leilões.
+  // A lista do JSON manda; a regra só cobre quem não está nela.
+  const leilaoRe = /\bleil(ão|ao|ões|oes|oa|oam|oeir)/i;
+  function categoriaDe(p: any): string | undefined {
+    return topicsBySlug[p.slug] ?? (leilaoRe.test(p.title ?? '') ? 'leiloes' : undefined);
+  }
+
   function ts(d: string) {
     return d ? new Date(d).getTime() : 0;
   }
@@ -33,7 +41,7 @@ export async function getStaticPaths({ paginate }: any) {
       author: p.author ?? 'Equipe Mclair',
       image: resolveBlogImage(p.featured_image, p.image_url),
       content: renderizarPost(p.content_md),
-      categoria: topicsBySlug[p.slug],
+      categoria: categoriaDe(p),
     }))
     .filter((p: any) => p.categoria)
     .sort((a: any, b: any) => ts(b.date) - ts(a.date));
