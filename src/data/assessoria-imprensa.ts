@@ -101,6 +101,8 @@ export const FAQ_ASSESSORIA: Pergunta[] = [
 export const URL_HUB_ASSESSORIA = '/servicos/assessoria-de-imprensa/';
 export const URL_ASSESSORIA_SP = '/servicos/assessoria-de-imprensa/sao-paulo/';
 export const URL_ASSESSORIA_PRECO = '/servicos/assessoria-de-imprensa/quanto-custa/';
+export const URL_ASSESSORIA_BSB = '/servicos/assessoria-de-imprensa/brasilia/';
+export const URL_ASSESSORIA_POA = '/servicos/assessoria-de-imprensa/porto-alegre/';
 
 /**
  * Cidades com página própria de assessoria de imprensa. Alimenta o bloco
@@ -110,6 +112,8 @@ export const URL_ASSESSORIA_PRECO = '/servicos/assessoria-de-imprensa/quanto-cus
  */
 export const CIDADES_COM_PAGINA: { nome: string; href: string }[] = [
   { nome: 'São Paulo', href: URL_ASSESSORIA_SP },
+  { nome: 'Brasília', href: URL_ASSESSORIA_BSB },
+  { nome: 'Porto Alegre', href: URL_ASSESSORIA_POA },
 ];
 
 export const SEO_ASSESSORIA_SP = {
@@ -211,5 +215,114 @@ export const FAQ_ASSESSORIA_PRECO: Pergunta[] = [
     pergunta: 'Assessoria de imprensa vale a pena?',
     resposta:
       'Vale quando a empresa tem o que contar e alguém disponível para falar com a imprensa. Uma matéria editorial tem credibilidade que anúncio não compra, continua no Google por anos e pode virar fonte para ferramentas de inteligência artificial. Não vale para quem precisa de venda na semana seguinte: isso é papel de mídia paga.',
+  },
+];
+
+/* ------------------------------------------------------------------------
+ * Páginas de cidade fora de São Paulo (pesquisa de SERP de 15/10/2026,
+ * ~/cofre-sandru/pesquisas/mclair/sul-df-go-mt.md). A Mclair não tem
+ * escritório nessas cidades: o texto diz isso, e nenhum case é apresentado
+ * como local. Veículos da cidade aparecem só como contexto.
+ * --------------------------------------------------------------------- */
+
+export const SEO_ASSESSORIA_BSB = {
+  title: 'Assessoria de Imprensa em Brasília e no DF | Mclair',
+  h1: 'Assessoria de imprensa em Brasília',
+  description:
+    'Assessoria de imprensa em Brasília e no DF para associações, entidades de classe e porta-vozes, com media training e gestão de crise. Atendimento remoto da Mclair.',
+  keywords:
+    'assessoria de imprensa brasília, assessoria de imprensa em brasília, assessoria de imprensa df, assessoria de imprensa brasilia, assessoria de imprensa distrito federal, mclair',
+};
+
+export const WA_ASSESSORIA_BSB =
+  'https://wa.me/5511988600372?text=' +
+  encodeURIComponent('Olá Mclair! Vim pela página de Assessoria de Imprensa em Brasília e quero conversar sobre a minha entidade ou empresa.');
+
+export const FAQ_ASSESSORIA_BSB: Pergunta[] = [
+  {
+    pergunta: 'Quanto custa uma assessoria de imprensa em Brasília?',
+    resposta:
+      'O preço sai do tamanho do trabalho: quantos porta-vozes, com que frequência há posição a defender, se o alvo é a imprensa do DF ou a nacional, e se entram media training e plano de crise. A proposta vem depois de uma conversa de diagnóstico.',
+  },
+  {
+    pergunta: 'A Mclair tem escritório em Brasília?',
+    resposta:
+      'Não. A equipe trabalha de São Paulo e atende o Distrito Federal de forma remota, por vídeo, telefone e WhatsApp. Quando o trabalho pede um encontro presencial, como o treino de um porta-voz antes de uma entrevista grande, ele pode ser combinado.',
+  },
+  {
+    pergunta: 'Vocês trabalham com associações e entidades de classe?',
+    resposta:
+      'Sim. Um exemplo é o programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, em que a Mclair produziu textos em vários idiomas, cobriu feiras do setor e escreveu manuais de comunicação. Foram mais de 2 mil inserções na mídia.',
+  },
+  {
+    pergunta: 'Vocês garantem matéria no Correio Braziliense, no Metrópoles ou no Poder360?',
+    resposta:
+      'Não. A Mclair não tem acordo com esses veículos e não vende espaço em nenhum deles. Quem decide o que sai é o editor. A assessoria leva ao repórter do assunto um fato novo, um dado conferido e uma fonte disponível na hora do fechamento.',
+  },
+  {
+    pergunta: 'Como preparar o presidente de uma entidade para falar com a imprensa?',
+    resposta:
+      'Com media training: entrevista simulada, as perguntas mais duras sobre o tema e duas ou três mensagens que ele precisa dizer em poucos segundos, por telefone ou ao vivo.',
+  },
+  {
+    pergunta: 'O que fazer quando a entidade vira alvo de notícia negativa?',
+    resposta:
+      'Não responder no impulso. Primeiro, reunir os fatos, escolher um único porta-voz e preparar uma nota curta com o que se sabe e o que está sendo feito. Depois, atender os repórteres dentro do prazo deles.',
+  },
+  {
+    pergunta: 'Faz diferença a assessoria não ser de Brasília?',
+    resposta:
+      'O repórter avalia a pauta e a fonte, não o endereço de quem envia. A Mclair monta a lista de jornalistas de cada assunto, com repórteres da capital quando a pauta pede e veículos nacionais de política e economia.',
+  },
+];
+
+export const SEO_ASSESSORIA_POA = {
+  title: 'Assessoria de Imprensa em Porto Alegre e no RS | Mclair',
+  h1: 'Assessoria de imprensa em Porto Alegre',
+  description:
+    'Assessoria de imprensa em Porto Alegre e no Rio Grande do Sul para indústria, agro e tecnologia, com pauta para a imprensa gaúcha e a nacional. Fale com a Mclair.',
+  keywords:
+    'assessoria de imprensa porto alegre, assessoria de imprensa em porto alegre, assessoria de imprensa rs, assessoria de imprensa rio grande do sul, assessoria de imprensa caxias do sul, mclair',
+};
+
+export const WA_ASSESSORIA_POA =
+  'https://wa.me/5511988600372?text=' +
+  encodeURIComponent('Olá Mclair! Vim pela página de Assessoria de Imprensa em Porto Alegre e quero conversar sobre a minha empresa no Rio Grande do Sul.');
+
+export const FAQ_ASSESSORIA_POA: Pergunta[] = [
+  {
+    pergunta: 'Quanto custa assessoria de imprensa em Porto Alegre?',
+    resposta:
+      'Varia com o escopo: número de porta-vozes, pautas por mês, foco na imprensa gaúcha, na nacional ou nas duas, e serviços como media training. A Mclair faz um diagnóstico na primeira conversa e só depois apresenta a proposta.',
+  },
+  {
+    pergunta: 'A Mclair tem escritório no Rio Grande do Sul?',
+    resposta:
+      'Não. A agência fica em São Paulo e atende empresas gaúchas a distância, com reuniões por vídeo e conversa diária por WhatsApp e telefone. Encontros presenciais podem ser combinados quando o trabalho pede.',
+  },
+  {
+    pergunta: 'Vocês atendem empresas de Caxias do Sul e do interior gaúcho?',
+    resposta:
+      'Sim, do mesmo jeito que em Porto Alegre. Para uma empresa da Serra ou de outra região do estado, a lista de envio junta o jornal da cidade, a imprensa da capital e os veículos de economia e os setoriais de alcance nacional.',
+  },
+  {
+    pergunta: 'Dá para garantir matéria na Zero Hora, no Correio do Povo ou no Jornal do Comércio?',
+    resposta:
+      'Não. Nenhum desses veículos vende espaço editorial, e a Mclair não tem parceria com eles. A pauta é apresentada ao jornalista que cobre o assunto, com dado do Rio Grande do Sul e porta-voz disponível. Se ele achar relevante para o leitor, publica.',
+  },
+  {
+    pergunta: 'Minha empresa deve focar na imprensa gaúcha ou na nacional?',
+    resposta:
+      'Depende de quem compra de você. Se o cliente está no estado, a imprensa do RS costuma render mais do que uma nota perdida num portal nacional. Se a empresa exporta ou vende para o país todo, vale combinar as duas, começando pela pauta que tem mais chance em cada uma.',
+  },
+  {
+    pergunta: 'A Mclair já trabalhou com indústria e agronegócio?',
+    resposta:
+      'Sim. No programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, a Mclair cobriu feiras como a Agrishow e a FEIMEC e levou a indústria de máquinas a mais de 2 mil inserções na mídia, 1.734 delas fora do Brasil.',
+  },
+  {
+    pergunta: 'Como fico sabendo do que saiu sobre a minha empresa?',
+    resposta:
+      'Cada publicação entra no clipping com o nome do veículo, a data e o link. No relatório periódico vêm também as pautas em andamento e os pedidos de entrevista que chegaram das redações, gaúchas ou não.',
   },
 ];

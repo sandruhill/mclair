@@ -13,12 +13,13 @@ import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro'
 import { paginaDaPessoa } from '../../../utils/blogAuthors';
 import {
   SEO_ASSESSORIA_SP, WA_ASSESSORIA_SP, FAQ_ASSESSORIA_SP,
-  URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO, CIDADES_COM_PAGINA,
 } from '../../../data/assessoria-imprensa';
 
 const BASE = 'https://mclair.com.br';
 const URL = `${BASE}${URL_ASSESSORIA_SP}`;
 const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+const OUTRAS = CIDADES_COM_PAGINA.filter((c) => c.href !== URL_ASSESSORIA_SP);
 
 const CASES = [
   { href: '/cases/fidalgo/', nome: 'Fidalgo Leilões', texto: 'Os leilões de imóveis da Caixa Econômica Federal viraram matéria na Folha de S.Paulo. A mesma pauta saiu na Exame IN, e outra foi a matéria mais lida do Valor Investe.' },
@@ -157,6 +158,9 @@ const schema = [
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Antes de contratar</h2>
     <p class="af-p">Se você ainda está entendendo o serviço, a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> mostra o que entra no trabalho e como ele funciona, do diagnóstico ao clipping. Se a dúvida é orçamento, a página sobre <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> explica como o mercado cobra e o que faz o valor mudar.</p>
+    <p class="af-p">Para empresas de outras praças, a Mclair tem páginas sobre {OUTRAS.map((c, i) => (
+      <>{i > 0 && (i === OUTRAS.length - 1 ? ' e ' : ', ')}<a href={c.href}>assessoria de imprensa em {c.nome}</a></>
+    ))}.</p>
   </div></div>
 </section>
 

@@ -1,0 +1,173 @@
+---
+// /servicos/assessoria-de-imprensa/porto-alegre/
+// Página dona de "assessoria de imprensa porto alegre", "assessoria de
+// imprensa rs" e "assessoria de imprensa rio grande do sul" (pesquisa de
+// SERP de 15/10/2026). Caxias do Sul entra como seção, não como página. A
+// Mclair não tem escritório no RS e não há case gaúcho: os cases citados são
+// de outros lugares e servem como prova de método. GZH/Zero Hora, Correio do
+// Povo, Jornal do Comércio e RBS TV aparecem só como contexto. Rota
+// estática: não criar no CMS um serviço filho com o slug "porto-alegre".
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import {
+  SEO_ASSESSORIA_POA, WA_ASSESSORIA_POA, FAQ_ASSESSORIA_POA,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_POA, URL_ASSESSORIA_SP, URL_ASSESSORIA_BSB, URL_ASSESSORIA_PRECO,
+} from '../../../data/assessoria-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_POA}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const PROVAS = [
+  { href: '/cases/bms-abimaq/', nome: 'Indústria de máquinas na Agrishow', texto: 'Para o programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil, a Mclair transformou a presença dos fabricantes na feira em notícia de negócio. A AgroBand, da Band, publicou que o setor projetava US$ 15 milhões em negócios internacionais.' },
+  { href: '/cases/diego-nogare/', nome: 'Inteligência artificial no Baguete e no IT Forum', texto: 'O especialista Diego Nogare falou ao portal Baguete sobre a nova fase da inteligência artificial e assinou artigo no IT Forum sobre os testes que medem modelos de IA.' },
+  { href: '/cases/lambda3/', nome: 'Software explicado na TV', texto: 'Em cinco anos de trabalho com a Mclair, a Lambda3 teve porta-vozes entrevistados por SBT, Record TV, Band e Gazeta, quatro emissoras de TV aberta.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa em Porto Alegre',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_POA.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Porto Alegre',
+      containedInPlace: { '@type': 'State', name: 'Rio Grande do Sul' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_POA.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Porto Alegre', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_POA.title}
+  description={SEO_ASSESSORIA_POA.description}
+  keywords={SEO_ASSESSORIA_POA.keywords}
+  ogImage="/cases-img/bms-abimaq-2.webp"
+  ogImageAlt="Matéria da AgroBand sobre a indústria de máquinas na Agrishow e cobertura internacional do programa Brazil Machinery Solutions"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Porto Alegre' },
+  ]}
+  h1={SEO_ASSESSORIA_POA.h1}
+  intro="O gaúcho lê o jornal do próprio estado, ouve a rádio do próprio estado e vê o telejornal feito em Porto Alegre. Para uma empresa do Rio Grande do Sul, aparecer ali costuma valer mais do que uma nota solta num portal nacional. A Mclair monta a pauta que interessa ao editor gaúcho e, quando faz sentido, ao do resto do país."
+  wa={WA_ASSESSORIA_POA}
+  cta="Falar sobre o RS no WhatsApp"
+  ctaForm="Ou deixe seus dados"
+  faq={FAQ_ASSESSORIA_POA}
+  faqTitulo="Perguntas de empresas gaúchas"
+  fimTitulo="Sua empresa tem uma notícia para o Rio Grande do Sul?"
+  fimTexto="Conte o que mudou no negócio: uma fábrica nova, uma safra, um produto, um número. Na primeira conversa, a Mclair diz para qual imprensa a história tem mais chance."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Ou preencha o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Uma imprensa regional forte e exigente</h2>
+    <p class="af-p">Poucos estados têm um sistema de mídia regional tão completo. O Grupo RBS reúne a RBS TV, afiliada da Globo, e a GZH, plataforma digital da Zero Hora. O Correio do Povo circula desde 1895 e é um dos jornais mais antigos do Brasil. O Jornal do Comércio, de Porto Alegre, é a leitura de economia e negócios do empresário gaúcho.</p>
+    <p class="af-p">Isso tem duas consequências para quem contrata assessoria. Uma empresa do RS pode construir reputação sólida sem depender de São Paulo, porque o cliente dela lê a imprensa do estado. E o jornalista daqui identifica rápido o release genérico, escrito para o país inteiro e disparado para todo mundo. O que abre espaço é o dado gaúcho: quantas vagas a fábrica abre na Serra, quanto o produtor do estado exporta, o que muda para quem mora na capital.</p>
+    <p class="af-p">Os veículos aparecem aqui como contexto. A Mclair não tem parceria com nenhum deles e não vende espaço editorial.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Indústria, campo e tecnologia rendem mais pauta</h2>
+    <ul class="af-lista">
+      <li><strong>Indústria.</strong> A Serra Gaúcha, com Caxias do Sul à frente, concentra um dos maiores polos metalmecânicos do país, com fabricantes de máquinas, autopeças, implementos e carrocerias. Exportação, contratação e investimento em fábrica interessam às editorias de economia.</li>
+      <li><strong>Agronegócio.</strong> Soja, arroz, carne e máquinas agrícolas movem a economia do estado. Safra, clima e preço viram assunto o ano todo.</li>
+      <li><strong>Tecnologia.</strong> Porto Alegre tem parques tecnológicos ligados às universidades e uma comunidade de software e startups que conversa com a imprensa de negócios e com os portais especializados em TI.</li>
+    </ul>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">O método aplicado nesses setores</h2>
+      <p class="af-p">Os exemplos a seguir não são de empresas do Rio Grande do Sul. Eles mostram como a Mclair trabalhou com indústria, agro e tecnologia, que são os setores que mais pesam no estado.</p>
+      <dl class="af-def">
+        {PROVAS.map((c) => (
+          <div>
+            <dt><a href={c.href}>{c.nome}</a></dt>
+            <dd>{c.texto}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/bms-abimaq-2.webp" alt="Matéria da AgroBand: Agrishow, setor de máquinas projeta US$ 15 milhões em negócios internacionais, ao lado de reportagem em espanhol sobre o Brazil Machinery Solutions" width="1400" height="736" loading="lazy" decoding="async" />
+      <figcaption>AgroBand e EFEcomunica sobre a indústria brasileira de máquinas, pauta da Mclair para o <a href="/cases/bms-abimaq/">programa Brazil Machinery Solutions</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Caxias do Sul e o interior gaúcho</h2>
+    <p class="af-p">Caxias do Sul tem procura própria por assessoria de imprensa e um jornal diário que acompanha a indústria da Serra de perto, o Pioneiro. Passo Fundo, Santa Maria e Pelotas também têm imprensa local com leitor fiel.</p>
+    <p class="af-p">Para uma empresa do interior, a pauta costuma ter três camadas. O jornal da cidade quer saber do emprego e do investimento ali. A imprensa de Porto Alegre olha para o efeito no estado. Os veículos nacionais de economia e os setoriais querem o número de exportação. A Mclair monta a lista de jornalistas de cada camada e decide com o cliente em que ordem a notícia sai.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Quem cuida da conta, e de onde</h2>
+    <p class="af-p">A Mclair fica em São Paulo e não tem escritório no Rio Grande do Sul. Empresas gaúchas são atendidas a distância, com reuniões por vídeo e conversa diária por WhatsApp e telefone. Encontros presenciais podem ser combinados quando o trabalho pede, como um media training antes de uma entrevista de TV.</p>
+    <p class="af-p">A estratégia de cada cliente passa por <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>, jornalista desde 2004, ex-colunista da Exame e fundadora da agência. Uma equipe de jornalistas faz o dia a dia: pauta, release, contato com as redações e clipping.</p>
+    <p class="af-p">Para ver tudo o que entra no serviço, abra a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Para orçamento, leia <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a>. Há também páginas para <a href={URL_ASSESSORIA_SP}>São Paulo</a> e <a href={URL_ASSESSORIA_BSB}>Brasília</a>.</p>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-porto-alegre"
+  ancora="fale-com-a-mclair"
+  titulo="Conte a notícia da sua empresa"
+  assunto="Assessoria de imprensa em Porto Alegre (página de cidade)"
+  waIntro="Olá Mclair! Vim pela página de Assessoria de Imprensa em Porto Alegre e quero conversar sobre a minha empresa no Rio Grande do Sul."
+  perguntaLabel="O que a sua empresa quer contar à imprensa?"
+  perguntaDica="Pode ser curto: um lançamento, uma expansão, um dado do setor."
+  perguntaRotulo="Notícia"
+  opcoesLabel="Onde você quer aparecer?"
+  opcoes={['Na imprensa gaúcha', 'Na imprensa nacional', 'Nas duas', 'Ainda não sei']}
+  opcoesRotulo="Imprensa"
+>
+  <p class="af-p">Ao enviar, os dados chegam por e-mail à Kelly Pinheiro e o WhatsApp da Mclair abre com a mensagem pronta para você mandar.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>

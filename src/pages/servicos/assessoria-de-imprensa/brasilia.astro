@@ -1,0 +1,171 @@
+---
+// /servicos/assessoria-de-imprensa/brasilia/
+// Página dona de "assessoria de imprensa brasília", "em brasília" e
+// "assessoria de imprensa df" (pesquisa de SERP de 15/10/2026). A Mclair não
+// tem escritório no DF: a página diz isso e não apresenta case como local.
+// O case BMS/ABIMAQ entra como exemplo de trabalho com associação setorial,
+// sem dizer que é de Brasília. Correio Braziliense, Metrópoles e Poder360
+// aparecem só como contexto. Rota estática, como sao-paulo.astro: não criar
+// no CMS um serviço filho com o slug "brasilia".
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import {
+  SEO_ASSESSORIA_BSB, WA_ASSESSORIA_BSB, FAQ_ASSESSORIA_BSB,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_BSB, URL_ASSESSORIA_SP, URL_ASSESSORIA_POA, URL_ASSESSORIA_PRECO,
+} from '../../../data/assessoria-imprensa';
+import { URL_CRISE, URL_MEDIA_TRAINING } from '../../../data/servicos-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_BSB}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const ENTIDADE = [
+  { titulo: 'Nota de posição no dia da medida.', texto: 'Saiu a portaria, a votação ou a consulta pública. O repórter quer a opinião do setor antes do fim da tarde, e quem responde primeiro, com número, costuma ser citado.' },
+  { titulo: 'Dado próprio que vira pauta.', texto: 'Pesquisa com associados, emprego, exportação. É o material que a redação não tem e que faz da entidade uma fonte fixa.' },
+  { titulo: 'Artigo assinado pelo presidente.', texto: 'Um texto de opinião bem argumentado leva a posição do setor para a página de debate, onde quem decide em Brasília também lê.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa em Brasília',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_BSB.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Brasília',
+      containedInPlace: { '@type': 'State', name: 'Distrito Federal' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_BSB.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Brasília', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_BSB.title}
+  description={SEO_ASSESSORIA_BSB.description}
+  keywords={SEO_ASSESSORIA_BSB.keywords}
+  ogImage="/cases-img/bms-abimaq-1.webp"
+  ogImageAlt="Números do programa Brazil Machinery Solutions, da ABIMAQ com a ApexBrasil: 2.097 inserções na mídia entre 2022 e 2023"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Brasília' },
+  ]}
+  h1={SEO_ASSESSORIA_BSB.h1}
+  intro="Uma portaria publicada de manhã no Diário Oficial pode ser manchete no fim da tarde. Associações, entidades de classe e empresas afetadas por decisões da capital precisam estar nessa matéria com dado, argumento e um porta-voz preparado."
+  wa={WA_ASSESSORIA_BSB}
+  cta="Falar sobre Brasília no WhatsApp"
+  ctaForm="Ou deixe seus dados"
+  faq={FAQ_ASSESSORIA_BSB}
+  faqTitulo="Dúvidas de quem precisa de assessoria no DF"
+  fimTitulo="A sua entidade tem uma posição para levar à imprensa?"
+  fimTexto="Diga qual é o tema e quem fala pelo setor. Na primeira conversa, a Mclair avalia o que tem valor de notícia em Brasília e no resto do país."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Ou preencha o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Onde a pauta política e econômica é decidida</h2>
+    <p class="af-p">Brasília reúne o Congresso, os ministérios, as agências reguladoras e os tribunais superiores. Os grandes veículos do país mantêm repórteres fixos na cidade, atrás de quem explique o efeito de uma votação ou de uma regra nova.</p>
+    <p class="af-p">A imprensa da capital também pesa. O Correio Braziliense é o jornal tradicional do Distrito Federal, o Metrópoles nasceu na internet e ganhou leitores no país todo, e o Poder360 se dedica à cobertura do poder. Eles aparecem aqui para mostrar o terreno: a Mclair não tem acordo com nenhum desses veículos e não promete publicação. Quem decide é o editor.</p>
+    <p class="af-p">Esse repórter recebe, todo dia, notas de partidos, órgãos públicos, sindicatos e empresas. A sua só passa do assunto do e-mail se trouxer um número inédito, um caso concreto ou uma fonte nova.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Uma associação fala por um setor inteiro</h2>
+      <p class="af-p">Uma entidade de classe não vende produto. Ela defende uma posição, e a imprensa dá peso a essa posição diante do governo, do Congresso e do associado. A pauta precisa representar o setor sem soar como propaganda de uma empresa.</p>
+      <p class="af-p">A Mclair conhece esse formato. Para o programa Brazil Machinery Solutions, parceria da ABIMAQ, a associação da indústria de máquinas e equipamentos, com a ApexBrasil, a agência produziu 122 textos para a imprensa em vários idiomas, cobriu feiras do setor e desenvolveu 14 manuais de comunicação e boas práticas. Foram mais de 2 mil inserções na mídia, 1.734 delas na imprensa internacional. <a href="/cases/bms-abimaq/">Veja o case completo</a>.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/bms-abimaq-1.webp" alt="Quadro de resultados do programa Brazil Machinery Solutions de 2022 a 2023: 122 textos, 2.097 inserções na mídia e 14 manuais de comunicação" width="1400" height="847" loading="lazy" decoding="async" />
+      <figcaption>Resultados do <a href="/cases/bms-abimaq/">programa Brazil Machinery Solutions</a>, da ABIMAQ com a ApexBrasil, entre abril de 2022 e julho de 2023.</figcaption>
+    </figure>
+  </div>
+  <div class="af-estreito">
+    <h3 class="af-h3">O que entra na assessoria de uma entidade</h3>
+    <ul class="af-lista">
+      {ENTIDADE.map((e) => (
+        <li><strong>{e.titulo}</strong> {e.texto}</li>
+      ))}
+    </ul>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Porta-voz treinado para a pergunta incômoda</h2>
+    <p class="af-p">Na capital, a entrevista raramente é marcada com folga. Ela acontece por telefone, com o repórter a vinte minutos do fechamento, ou ao vivo num canal de notícias. Quem fala por uma entidade precisa saber o número do setor de cor, a posição oficial em uma frase e o que não vai comentar.</p>
+    <p class="af-p">O <a href={URL_MEDIA_TRAINING}>media training</a> da Mclair simula essas situações. O porta-voz enfrenta as perguntas mais duras do tema e aprende a voltar à sua mensagem quando o entrevistador puxa a conversa para outro lado.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Quando a notícia é contra você</h2>
+    <p class="af-p">Em Brasília, uma crise de reputação raramente fica só no jornal. Ela vira assunto de gabinete, pedido de explicação de órgão regulador ou discurso na tribuna. A resposta precisa ser rápida, igual na boca de todos os porta-vozes e verdadeira.</p>
+    <p class="af-p"><a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>, jornalista desde 2004 e fundadora da Mclair, atuou em gerenciamento de crise para instituições governamentais e empresas nacionais e multinacionais antes de abrir a agência. Na Mclair, conduziu a comunicação da aquisição da Emergee pelo Itaú, como mostra o <a href="/cases/alexandre-magno/">case de Alexandre Magno</a>. Veja como funciona a <a href={URL_CRISE}>gestão de crise</a>.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Atendimento ao DF a partir de São Paulo</h2>
+    <p class="af-p">A Mclair não tem escritório em Brasília. A equipe de jornalistas trabalha de São Paulo, e a rotina com clientes do Distrito Federal corre por vídeo, telefone e WhatsApp. Quando o trabalho pede um encontro presencial, como o treino de um porta-voz antes de uma entrevista grande, ele pode ser combinado.</p>
+    <p class="af-p">Para entender o serviço por inteiro, veja a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Para saber como o mercado cobra, leia <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a>. A Mclair também tem páginas para <a href={URL_ASSESSORIA_SP}>São Paulo</a> e <a href={URL_ASSESSORIA_POA}>Porto Alegre</a>.</p>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-brasilia"
+  ancora="fale-com-a-mclair"
+  titulo="Conte o que a sua entidade quer dizer"
+  assunto="Assessoria de imprensa em Brasília (página de cidade)"
+  waIntro="Olá Mclair! Vim pela página de Assessoria de Imprensa em Brasília e quero conversar sobre a minha entidade ou empresa."
+  perguntaLabel="Qual é o tema ou a posição que vocês querem levar à imprensa?"
+  perguntaDica="Uma ou duas frases bastam. Os detalhes ficam para a conversa."
+  perguntaRotulo="Tema"
+  opcoesLabel="Que imprensa interessa mais?"
+  opcoes={['A imprensa de Brasília', 'A imprensa nacional', 'As duas', 'Ainda não sei']}
+  opcoesRotulo="Imprensa"
+>
+  <p class="af-p">O formulário manda os seus dados por e-mail para a Kelly Pinheiro e abre o WhatsApp da Mclair com a mensagem pronta. Se preferir, fale direto pelo WhatsApp.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>

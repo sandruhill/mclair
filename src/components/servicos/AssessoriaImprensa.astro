@@ -5,7 +5,7 @@
 // o CMS já traz (headline, texto e lista de entregas). Toda prova citada
 // aqui vem dos cases publicados em /cases/ e dos números da página /sobre/.
 import { paginaDaPessoa, linkarPessoasEmTexto } from '../../utils/blogAuthors';
-import { FAQ_ASSESSORIA, WA_ASSESSORIA, CIDADES_ATENDIDAS, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO } from '../../data/assessoria-imprensa';
+import { FAQ_ASSESSORIA, WA_ASSESSORIA, CIDADES_ATENDIDAS, CIDADES_COM_PAGINA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO } from '../../data/assessoria-imprensa';
 import { URL_ASSESSOR, URL_CRISE, URL_MEDIA_TRAINING } from '../../data/servicos-imprensa';
 
 interface Props {
@@ -191,7 +191,11 @@ const CASES = [
         </details>
       ))}
     </div>
-    <p class="ai-cidades">Base em São Paulo (veja a <a href={URL_ASSESSORIA_SP}>assessoria de imprensa em São Paulo</a>), atendimento remoto para o Brasil todo, com clientes e pautas em {CIDADES_ATENDIDAS.slice(0, -1).join(', ')} e {CIDADES_ATENDIDAS[CIDADES_ATENDIDAS.length - 1]}, entre outras cidades.</p>
+    <p class="ai-cidades">Base em São Paulo (veja a <a href={URL_ASSESSORIA_SP}>assessoria de imprensa em São Paulo</a>), atendimento remoto para o Brasil todo, com clientes e pautas em {CIDADES_ATENDIDAS.map((nome, i) => {
+      const pagina = CIDADES_COM_PAGINA.find((c) => c.nome === nome && c.href !== URL_ASSESSORIA_SP);
+      const sep = i === 0 ? '' : i === CIDADES_ATENDIDAS.length - 1 ? ' e ' : ', ';
+      return <>{sep}{pagina ? <a href={pagina.href}>{nome}</a> : nome}</>;
+    })}, entre outras cidades.</p>
   </div>
 </section>
 
