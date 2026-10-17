@@ -1,3 +1,5 @@
+import { existsSync } from 'node:fs';
+import { join } from 'node:path';
 // Fetches content from the MySQL-backed export API at build time.
 // Used by every page that used to read from Keystatic/git-tracked files.
 // CMS_EXPORT_URL só existe para build local contra um mock da API (testes);
@@ -173,7 +175,19 @@ export async function getBlogPostAuthors(): Promise<DbBlogPostAuthor[]> {
   }
 }
 export const getServices = () => fetchType<DbService>('services');
-export const getCases = () => fetchType<DbCase>('cases');
+// Logo de case gravado no CMS com uma extensão que não existe mais em
+// public/ (ex.: /clientes/eximiaco-logo.png, quando só há o .webp) dava 404
+// em /cases/ e no tooltip da home. O painel não tem campo para o logo, então
+// a troca é feita aqui, no build, só quando o arquivo original não existe.
+function logoQueExiste(logo: string | null): string | null {
+  if (!logo || !logo.startsWith('/')) return logo;
+  const pub = join(process.cwd(), 'public');
+  if (existsSync(join(pub, logo))) return logo;
+  const webp = logo.replace(/\.(png|jpe?g)$/i, '.webp');
+  return webp !== logo && existsSync(join(pub, webp)) ? webp : logo;
+}
+export const getCases = async () =>
+  (await fetchType<DbCase>('cases')).map((c) => ({ ...c, logo: logoQueExiste(c.logo) }));
 export const getSingletons = () => fetchType<DbSingleton>('singletons');
 
 export async function getSingleton(slug: string): Promise<any> {
