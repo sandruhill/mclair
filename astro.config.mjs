@@ -1,5 +1,6 @@
 // @ts-check
 import fs from 'node:fs';
+import { FORA_DO_GOOGLE } from './src/data/fora-do-google.ts';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
@@ -172,7 +173,7 @@ export default defineConfig({
         return item;
       },
       customPages,
-      filter: (page) => !/\/404\/?$/.test(page),
+      filter: (page) => !/\/404\/?$/.test(page) && !FORA_DO_GOOGLE.some((p) => page.endsWith(p)),
     }),
   ],
 });

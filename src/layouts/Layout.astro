@@ -1,4 +1,5 @@
 ---
+import { foraDoGoogle } from '../data/fora-do-google';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
@@ -49,6 +50,7 @@ const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
 // A 404 é servida com status 404 pelo ErrorDocument, mas saía com canônica
 // para /404/ e "index". Sem canônica e com noindex ela não compete com nada.
 const ehPagina404 = /^\/404(\.html|\/)?$/.test(Astro.url.pathname);
+const semIndexar = ehPagina404 || foraDoGoogle(Astro.url.pathname);
 // O site inteiro é canônico com barra final, mas várias páginas montam o
 // schema com URL sem barra (".../cases/fidalgo#case", breadcrumb ".../blog").
 // Aí @id, mainEntityOfPage e item não batem com a canônica e o Google trata
@@ -270,7 +272,7 @@ const websiteSchema = {
     {articleAuthor && <meta name="twitter:creator" content={`@${articleAuthor.toLowerCase().replace(/\s+/g,'')}`} />}
 
     <!-- ── SEO + GEO ── -->
-    <meta name="robots"           content={ehPagina404 ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
+    <meta name="robots"           content={semIndexar ? 'noindex, follow' : 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'} />
     <meta name="build-id"         content={BUILD_ID} />
     <meta name="author"           content={articleAuthor || 'Mclair Comunicação Estratégica'} />
     {keywords && <meta name="keywords" content={keywords} />}
