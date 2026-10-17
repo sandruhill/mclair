@@ -1,6 +1,8 @@
 // @ts-check
 import fs from 'node:fs';
 import { FORA_DO_GOOGLE } from './src/data/fora-do-google.ts';
+import { POSTS_COM_CANONICA_FORA } from './src/data/canonicos-posts.ts';
+import { execFileSync } from 'node:child_process';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'astro/config';
@@ -94,12 +96,66 @@ const fetchExport = (type) =>
   fetch(`${EXPORT_URL}?type=${type}`, { headers: { 'X-Export-Token': process.env.CMS_EXPORT_TOKEN } })
     .then((r) => (r.ok ? r.json() : Promise.reject(new Error(`${type}: HTTP ${r.status}`))));
 
+// lastmod das páginas fixas e das páginas do CMS (fora os posts, que usam a
+// data do post). Página fixa: data do último commit do próprio arquivo em
+// src/pages. Case e serviço do CMS: coluna updated_at, se a API exportar.
+// Sem git (build fora do repositório) ou sem a coluna, a URL sai sem lastmod,
+// que é melhor que a data do build.
+const pageDates = new Map();
+
+function gitDate(file) {
+  try {
+    const out = execFileSync('git', ['log', '-1', '--format=%cI', '--', file], {
+      cwd: __dirname,
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).toString().trim();
+    const d = out ? new Date(out) : null;
+    return d && !isNaN(d.getTime()) ? d : null;
+  } catch {
+    return null;
+  }
+}
+
+const maisRecente = (...datas) => datas.filter(Boolean).sort((a, b) => b - a)[0] ?? null;
+
+// Arquivos .astro sem colchete no nome viram URL direta (index.astro = a pasta).
+function addStaticPageDates() {
+  const raiz = path.join(__dirname, 'src/pages');
+  const andar = (dir) => {
+    let entradas = [];
+    try { entradas = fs.readdirSync(dir, { withFileTypes: true }); } catch { return; }
+    for (const e of entradas) {
+      const abs = path.join(dir, e.name);
+      if (e.isDirectory()) { if (!e.name.includes('[')) andar(abs); continue; }
+      if (!e.name.endsWith('.astro') || e.name.includes('[') || e.name === '404.astro') continue;
+      const rel = path.relative(raiz, abs).replace(/\\/g, '/').replace(/\.astro$/, '').replace(/(^|\/)index$/, '');
+      const d = gitDate(path.relative(__dirname, abs));
+      if (d) pageDates.set(`/${rel ? rel + '/' : ''}`, d);
+    }
+  };
+  andar(raiz);
+}
+addStaticPageDates();
+
+function cmsDate(row) {
+  const v = row?.updated_at;
+  if (!v) return null;
+  const d = new Date(String(v).replace(' ', 'T'));
+  return isNaN(d.getTime()) ? null : d;
+}
+
 async function buildCustomPages() {
   const token = process.env.CMS_EXPORT_TOKEN;
   if (!token) return FALLBACK_CUSTOM_PAGES;
   try {
     const fetchType = fetchExport;
     const [services, cases] = await Promise.all([fetchType('services'), fetchType('cases')]);
+    // O hub de assessoria é serviço do CMS, mas quase todo o texto mora em
+    // código; vale a data mais nova entre o registro e esses dois arquivos.
+    const hubAssessoria = maisRecente(
+      gitDate('src/components/servicos/AssessoriaImprensa.astro'),
+      gitDate('src/data/assessoria-imprensa.ts'),
+    );
     // Services can be nested (child.parent_slug -> parent), same ancestry walk
     // src/pages/servicos/[...slug].astro uses to build each real URL path.
     const bySlug = new Map(services.map((s) => [s.slug, s]));
@@ -114,6 +170,15 @@ async function buildCustomPages() {
       }
       return chain.join('/');
     };
+    for (const sv of services) {
+      const p = `/servicos/${servicePath(sv.slug)}/`;
+      const d = sv.slug === 'assessoria-de-imprensa' ? maisRecente(cmsDate(sv), hubAssessoria) : cmsDate(sv);
+      if (d) pageDates.set(p, d);
+    }
+    for (const c of cases) {
+      const d = cmsDate(c);
+      if (d) pageDates.set(`/cases/${c.slug}/`, d);
+    }
     const urls = [
       'https://mclair.com.br/sobre/',
       'https://mclair.com.br/kelly-pinheiro/',
@@ -163,17 +228,26 @@ export default defineConfig({
   integrations: [
     sitemap({
       // Sem lastmod global: data do build em toda URL não é data de mudança.
-      // Só os posts levam lastmod, com a data real vinda do CMS.
+      // Posts levam a data do post, vinda do CMS.
+      // Páginas fixas e do CMS levam a data da última mudança (pageDates).
       serialize(item) {
         const match = item.url.match(/\/blog\/([^/]+)\/?$/);
         if (match) {
           const date = blogDates.get(match[1]);
           if (date) item.lastmod = date.toISOString();
+        } else {
+          const date = pageDates.get(new URL(item.url).pathname);
+          if (date) item.lastmod = date.toISOString();
         }
         return item;
       },
       customPages,
-      filter: (page) => !/\/404\/?$/.test(page) && !FORA_DO_GOOGLE.some((p) => page.endsWith(p)),
+      // Fora: 404, posts tirados do Google e posts repetidos com canônica em
+      // outro post (src/data/canonicos-posts.ts).
+      filter: (page) =>
+        !/\/404\/?$/.test(page) &&
+        !FORA_DO_GOOGLE.some((p) => page.endsWith(p)) &&
+        !POSTS_COM_CANONICA_FORA.some((p) => page.endsWith(p)),
     }),
   ],
 });

@@ -22,6 +22,9 @@ interface Props {
   nextUrl?: string;
   schema?: object | object[];
   cmsEdit?: { type: 'post' | 'case' | 'service' | 'page'; slug: string };
+  // Canônica para outra página (post repetido apontando para o mais completo,
+  // ver src/data/canonicos-posts.ts). Sem isto, a canônica é a própria URL.
+  canonical?: string;
 }
 
 const BASE = Astro.site ? Astro.site.origin : 'https://mclair.com.br';
@@ -40,13 +43,14 @@ const {
   nextUrl,
   schema,
   cmsEdit,
+  canonical,
 } = Astro.props;
 // Social crawlers (Facebook/Twitter/LinkedIn) don't reliably resolve a
 // relative og:image, and CMS-editable image fields store paths relative to
 // site root (e.g. /uploads/x.jpg) -- normalize here once instead of at
 // every call site.
 const absoluteOgImage = ogImage.startsWith('http') ? ogImage : `${BASE}${ogImage}`;
-const canonicalURL = new URL(Astro.url.pathname, BASE).toString();
+const canonicalURL = new URL(canonical || Astro.url.pathname, BASE).toString();
 // A 404 é servida com status 404 pelo ErrorDocument, mas saía com canônica
 // para /404/ e "index". Sem canônica e com noindex ela não compete com nada.
 const ehPagina404 = /^\/404(\.html|\/)?$/.test(Astro.url.pathname);

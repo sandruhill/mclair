@@ -100,8 +100,8 @@ const schema = [
     <div>
       <h2 class="af-h2">A cidade onde a imprensa nacional é feita</h2>
       <p class="af-p">Boa parte do noticiário de economia e negócios do Brasil sai de São Paulo. A Folha de S.Paulo e o Estadão têm sede aqui. A Exame, o Valor Econômico, o InfoMoney e a CNN Brasil também. Band, Record TV e SBT têm sede na Grande São Paulo.</p>
-      <p class="af-p">Para uma assessoria de imprensa, estar na mesma cidade muda o trabalho. A equipe lê esses veículos todo dia, acompanha quem cobre cada assunto e sabe quando uma editoria está buscando fonte. O release chega à pessoa certa, no momento em que ela precisa da pauta.</p>
-      <p class="af-p">Nenhum desses veículos tem espaço à venda, e a Mclair não promete publicação em nenhum deles. O que dá para prometer é método: pauta com fato novo, porta-voz preparado e acompanhamento até a resposta da redação.</p>
+      <p class="af-p">Para uma assessoria de imprensa, estar na mesma cidade muda o trabalho. A equipe lê esses veículos todo dia, acompanha quem cobre cada assunto e sabe quando uma editoria está buscando fonte. O <a href="/guias/press-release/">release</a> chega à pessoa certa, no momento em que ela precisa da pauta.</p>
+      <p class="af-p">Nenhum desses veículos tem espaço à venda, e a Mclair não promete publicação em nenhum deles. O que dá para prometer é método: pauta com fato novo, porta-voz preparado e acompanhamento até a resposta da redação. Quem quer entender esse percurso antes de contratar encontra o passo a passo no guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a>.</p>
     </div>
     <figure class="af-foto">
       <img src="/cases-img/fidalgo-press-1.webp" alt="Matéria da Folha de S.Paulo: Caixa realiza leilões de imóveis com até 95% de desconto" width="1400" height="1100" loading="lazy" decoding="async" />
@@ -157,7 +157,7 @@ const schema = [
 <section class="af-secao">
   <div class="container"><div class="af-estreito">
     <h2 class="af-h2">Antes de contratar</h2>
-    <p class="af-p">Se você ainda está entendendo o serviço, a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> mostra o que entra no trabalho e como ele funciona, do diagnóstico ao clipping. Se a dúvida é orçamento, a página sobre <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> explica como o mercado cobra e o que faz o valor mudar.</p>
+    <p class="af-p">Se você ainda está entendendo o serviço, o guia <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a> explica o básico, e a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> mostra o que entra no trabalho e como ele funciona, do diagnóstico ao clipping. Se a dúvida é orçamento, a página sobre <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> explica como o mercado cobra e o que faz o valor mudar.</p>
     <p class="af-p">Para empresas de outras praças, a Mclair tem páginas sobre {OUTRAS.map((c, i) => (
       <>{i > 0 && (i === OUTRAS.length - 1 ? ' e ' : ', ')}<a href={c.href}>assessoria de imprensa em {c.nome}</a></>
     ))}.</p>

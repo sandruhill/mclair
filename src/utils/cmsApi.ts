@@ -42,6 +42,10 @@ export type DbBlogPost = {
   // Só existe depois de db/migrations/2026-09-25-blog-autores.sql; antes
   // disso a chave nem vem no JSON.
   blog_author_id?: number | null;
+  // Colunas opcionais: só são lidas se a tabela um dia tiver.
+  seo_title?: string | null;
+  meta_title?: string | null;
+  updated_at?: string | null;
 };
 
 // Autor do blog (assinatura no fim do post + página /blog/autores/<slug>/).
@@ -80,6 +84,7 @@ export type DbService = {
   image: string | null;
   cta: string;
   meta_description: string;
+  updated_at?: string | null;
 };
 
 export type DbCase = {
@@ -98,6 +103,7 @@ export type DbCase = {
   gallery: { src: string; caption: string }[];
   home_result: string;
   meta_description: string;
+  updated_at?: string | null;
 };
 
 export type DbSingleton = { slug: string; data: any };

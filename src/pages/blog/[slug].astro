@@ -9,6 +9,8 @@ import { getBlogPosts, getBlogAuthors, getBlogPostAuthors, resolveBlogImage } fr
 import type { DbBlogPost, DbBlogAuthor } from '../../utils/cmsApi';
 import { mapaDeAutores, mapaDeVinculos, autoresDoPost, linkDoAutor, schemaAutoresDoPost, ligarNomes, paginaPorNome } from '../../utils/blogAuthors';
 import { isoComFuso, dataPorExtenso } from '../../utils/datas';
+import { tituloDoPost, descricaoSeo } from '../../utils/seoTexto';
+import { CANONICO_DO_POST } from '../../data/canonicos-posts';
 
 export async function getStaticPaths() {
   const [posts, autores, vinculos] = await Promise.all([getBlogPosts(), getBlogAuthors(), getBlogPostAuthors()]);
@@ -21,6 +23,9 @@ export async function getStaticPaths() {
     title: p.title,
     subtitle: p.subtitle ?? '',
     metaDescription: p.meta_description ?? '',
+    // Título próprio para o Google, se o painel um dia tiver o campo; hoje a
+    // tabela não tem e vale o título do post.
+    seoTitle: p.seo_title ?? p.meta_title ?? '',
     date: p.post_date ?? '',
     // Com autores cadastrados, o nome exibido vem do cadastro ("A e B"); o
     // painel mantém a coluna de texto em sincronia, mas o cadastro é a fonte.
@@ -74,10 +79,12 @@ function stripHtml(html: string) {
 
 // ── SEO ───────────────────────────────────────────────────────
 const plainText = stripHtml(post.content);
-const metaDesc  = (post.metaDescription || post.subtitle || plainText).slice(0, 160).trimEnd();
-const seoTitle  = post.title.length <= 52
-  ? `${post.title} | Blog Mclair`
-  : `${post.title.slice(0, 52).trimEnd()}… | Mclair`;
+// Corte só em fim de palavra e sem reticências (ver src/utils/seoTexto.ts).
+const metaDesc  = descricaoSeo(post.metaDescription || post.subtitle || plainText);
+const seoTitle  = tituloDoPost(post.title, post.seoTitle);
+// Post repetido: canônica no mais completo (src/data/canonicos-posts.ts).
+const canonicoDe = CANONICO_DO_POST[post.slug];
+const canonicaExterna = canonicoDe ? `${BASE}/blog/${canonicoDe}/` : undefined;
 const dateISO   = isoDate(post.date);
 const ogImg     = post.image || `${BASE}/android-chrome-512x512.png`;
 
@@ -169,6 +176,7 @@ const relatedPosts = [...related, ...relatedFallback].slice(0, 3);
 <Layout
   title={seoTitle}
   description={metaDesc}
+  canonical={canonicaExterna}
   ogImage={ogImg}
   ogType="article"
   cmsEdit={{ type: 'post', slug: post.slug }}
