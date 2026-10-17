@@ -11,3 +11,6 @@ dist/
 .secrets/
 public/acesso/config.php
 audit-out/
+
+# contatos do formulario (dados pessoais) ficam so na maquina
+.mclair-contato/
