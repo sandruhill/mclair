@@ -419,7 +419,7 @@ const MARKETING_DIGITAL: ServicoAmpliado = {
     {
       pergunta: 'Quanto devo investir em anúncios?',
       resposta:
-        'Não existe um número certo para todo mundo. A verba depende do custo por clique do seu setor, da meta de contatos e da margem do produto. O plano parte de um valor combinado e é ajustado pelo resultado.',
+        'Não existe um número certo para todo mundo. A verba depende do custo por clique do seu setor, da meta de contatos e da margem do produto. A verba é definida com você no diagnóstico, antes de qualquer anúncio entrar no ar.',
     },
     {
       pergunta: 'Em quanto tempo aparecem os resultados?',
