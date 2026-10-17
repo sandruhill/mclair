@@ -14,3 +14,6 @@ audit-out/
 
 # contatos do formulario (dados pessoais) ficam so na maquina
 .mclair-contato/
+
+# Quadro antigo da Mclair: tem repositório próprio (sandruhill/mclair-ruta)
+mclair-ruta/
