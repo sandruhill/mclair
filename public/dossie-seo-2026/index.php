@@ -253,7 +253,7 @@ $pdo     = cmsDb();
 
 dossieSchema($pdo);
 
-// Segunda parte da página: o Plano de 12 meses. As ações ?plano=... (estado,
+// O corpo da página é o Plano de 12 meses; este dossiê vira um dos anexos. As ações ?plano=... (estado,
 // salvar, responder, apagar, baixar) terminam dentro de planoInicia().
 define('DOSSIE_PLANO', true);
 require __DIR__ . '/plano.php';
@@ -428,17 +428,18 @@ textarea:focus,input:focus{outline:2px solid var(--teal); outline-offset:1px}
 :where(.dossie) details{margin-top:56px; border-top:1px solid var(--line); padding-top:22px}
 :where(.dossie) summary{cursor:pointer; font-weight:700; font-size:15px; color:var(--ink-2)}
 :where(.dossie) details table{font-size:14px; margin-top:16px; min-width:0}
-/* Anexo: o dossiê de setembro, recolhido */
-details.anexo{margin-top:64px; padding-top:28px; border-top:1px solid var(--line-2); scroll-margin-top:12px}
+/* Anexos: Estratégia e o dossiê de setembro, recolhidos */
+details.anexo{border-top:1px solid var(--line); padding:22px 0; scroll-margin-top:12px}
+details.anexo:last-child{border-bottom:1px solid var(--line)}
 details.anexo > summary{cursor:pointer; list-style:none; display:grid; gap:4px}
 details.anexo > summary::-webkit-details-marker{display:none}
-.anexo-tit{font-size:clamp(24px,3.4vw,30px); font-weight:700; letter-spacing:-0.015em; line-height:1.2}
+.anexo-tit{font-size:clamp(20px,2.6vw,23px); font-weight:700; letter-spacing:-0.012em; line-height:1.25}
 .anexo-sub{font-size:15px; color:var(--ink-3)}
-.anexo-acao{color:var(--red); font-weight:700; text-decoration:underline; text-underline-offset:3px}
+.anexo-acao{color:var(--red); font-weight:700; text-decoration:underline; text-underline-offset:3px; white-space:nowrap}
 details.anexo > summary:hover .anexo-tit{color:var(--red)}
 details.anexo > summary:focus-visible{outline:2px solid var(--teal); outline-offset:4px; border-radius:4px}
 details.anexo[open] .anexo-abrir, details.anexo:not([open]) .anexo-fechar{display:none}
-details.anexo > .dossie{margin-top:28px}
+details.anexo > .dossie, details.anexo > .plano{margin-top:24px}
 details.anexo article > h1:first-child{font-size:clamp(24px,3.4vw,30px)}
 .rodape{margin-top:56px; padding-top:20px; border-top:1px solid var(--line); font-size:13px; color:var(--ink-4)}
 @media (max-width:560px){
@@ -457,7 +458,7 @@ details.anexo article > h1:first-child{font-size:clamp(24px,3.4vw,30px)}
   </header>
 
   <?php if ($aviso): ?>
-    <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?> O texto está no <a href="#dossie">anexo do diagnóstico de setembro</a>.</p>
+    <p class="recado recado-ok"><?= htmlspecialchars($aviso, ENT_QUOTES, 'UTF-8') ?> O texto está no anexo <a href="#dossie">Diagnóstico de setembro</a>, no fim da página.</p>
   <?php endif; ?>
   <?php if ($erro && !$editar): ?>
     <p class="recado recado-erro"><?= htmlspecialchars($erro, ENT_QUOTES, 'UTF-8') ?></p>
@@ -489,11 +490,10 @@ details.anexo article > h1:first-child{font-size:clamp(24px,3.4vw,30px)}
 
   <?php else: ?>
 
-  <?php planoSecao($plano); ?>
-
+  <?php ob_start(); ?>
   <details class="anexo" id="dossie"<?= ($aviso || $erro) ? ' open' : '' ?>>
     <summary>
-      <span class="anexo-tit">Anexo: diagnóstico de setembro</span>
+      <span class="anexo-tit">Diagnóstico de setembro</span>
       <span class="anexo-sub">O dossiê de concorrência de 23 de setembro de 2026, de onde saiu o plano. <span class="anexo-acao anexo-abrir">Abrir o diagnóstico</span><span class="anexo-acao anexo-fechar">Fechar</span></span>
     </summary>
     <div class="dossie">
@@ -534,6 +534,7 @@ details.anexo article > h1:first-child{font-size:clamp(24px,3.4vw,30px)}
 
     </div>
   </details>
+  <?php planoSecao($plano, (string) ob_get_clean()); ?>
 
   <?php endif; ?>
 

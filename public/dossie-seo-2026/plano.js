@@ -1,8 +1,9 @@
 /*
  * Plano de 12 meses da Mclair (outubro de 2026 a setembro de 2027), o corpo
- * da página /dossie-seo-2026/. Daqui saem "Onde estamos", o cronograma, "O que
- * depende da Mclair" e a lista de tarefas, todos montados de WEEKS e do estado
- * gravado, para nenhum número ficar velho no texto. As tarefas ficam em WEEKS:
+ * da página /dossie-seo-2026/. Daqui saem o resumo do topo, "O que depende da
+ * Mclair" e o plano mês a mês (cada mês com as tarefas abertas e, compactas,
+ * as feitas), todos montados de WEEKS e do estado gravado, para nenhum número
+ * ficar velho no texto. Cada tarefa aparece uma vez no plano. As tarefas ficam em WEEKS:
  * id (minúsculas e números, até 12), w ("Sandru" ou "Mclair"), t (texto HTML
  * escrito por nós), g (pronto quando), e (prazo), img (prints em capturas/),
  * s (estado inicial) e desc (motivo de tarefa descartada, que sai da contagem).
@@ -308,37 +309,69 @@ function buildDesempeno(){
     <div class="cal"><b>Medição no dia 15 de cada mês:</b> ${cal}. As feitas ficam em verde.</div>`;
 }
 
-function buildWeeks(){
-  const host = el("weeks");
-  host.innerHTML = WEEKS.map(w => `
-    <section class="week" id="s${w.n}" data-week="${w.n}">
-      <header class="whead">
-        <h3>Mês ${w.n}: ${esc(w.t)}</h3>${w.n === mesAtual() ? `<span class="wagora">mês atual</span>` : ``}
-        <span class="wdate">${esc(w.d)}</span>
-      </header>
-      <ul class="tasks">
-        ${w.tasks.map(t => `
-          <li class="task${t.desc ? " is-desc" : ""}" id="t-${t.id}" data-id="${t.id}" data-who="${t.w}"${t.desc ? ` data-desc="1"` : ""}>
-            ${t.desc ? `<span class="cyc-off" aria-hidden="true"></span>` : `<button class="cyc" type="button" data-id="${t.id}" data-s="todo" aria-label="Estado da tarefa"></button>`}
-            <div class="body">
-              <div class="txt">${t.t}</div>
-              ${t.desc ? `<p class="desc"><b>Por quê:</b> ${t.desc}</p>` : ``}
-              ${t.img ? `<div class="shots">${t.img.map(i => `<figure><a href="${i.s}" target="_blank" rel="noopener"><img src="${i.s}" alt="${esc(i.c)}" loading="lazy"></a><figcaption>${i.c}</figcaption></figure>`).join("")}</div>` : ``}
-              <div class="meta">
-                <span class="who">${t.desc ? "Descartada" : "Responsável: " + t.w}</span>
-                ${t.e ? `<span class="envio">Prazo: ${t.e}</span>` : ``}
-                ${t.g ? `<span class="gate"><b>Pronto quando:</b> ${t.g}</span>` : ``}
-                <span class="stamp" data-stamp="${t.id}"></span>
-              </div>
-              <div class="resp" data-resp="${t.id}"></div>
-            </div>
-          </li>`).join("")}
-      </ul>
-      ${w.gate ? `<div class="gatebar"><span class="mark">Meta do mês:</span><span>${esc(w.gate)}</span></div>` : ``}
-    </section>`).join("");
+/* ---- Plano mês a mês ----
+   Um <details> por mês. Cada tarefa é desenhada uma vez (tem formulário de
+   resposta dentro) e render() só a muda de lista: abertas no corpo do mês,
+   feitas na sublista "Feito neste mês", compactas numa linha que abre. */
+function corteMeta(w){
+  const corte = w.gate.indexOf(": ");
+  return {quando: corte > 0 ? w.gate.slice(0, corte) : "", oque: corte > 0 ? w.gate.slice(corte + 2) : w.gate};
 }
 
-/* ---- Resumo, cronograma e pedidos à Mclair ----
+function buildMeses(){
+  const atual = mesAtual();
+  el("meses").innerHTML = WEEKS.map(w => {
+    const m = corteMeta(w);
+    return `
+    <details class="mes${w.n < atual ? " mes-passado" : w.n === atual ? " mes-atual" : ""}" id="s${w.n}" data-week="${w.n}"${w.n === atual ? " open" : ""}>
+      <summary>
+        <span class="mes-cab">
+          <span class="mes-nome">${esc(nomeMes(w))}</span>${w.n === atual ? `<span class="mes-agora">mês atual</span>` : ``}
+          <span class="mes-conta" data-conta="${w.n}"></span>
+          <span class="mes-barra" aria-hidden="true"><em data-barra="${w.n}"></em></span>
+        </span>
+        <span class="mes-tema">${esc(w.t)}</span>
+        <span class="mes-meta"><b>Meta${m.quando ? ` em ${esc(m.quando)}` : ``}:</b> ${esc(m.oque)}</span>
+      </summary>
+      <div class="mes-corpo">
+        <ul class="tasks tasks-abertas" data-abertas="${w.n}"></ul>
+        <p class="mes-vazio" data-vazio="${w.n}" hidden>Todas as tarefas deste mês estão feitas.</p>
+        <h4 class="feito-tit" data-feito-tit="${w.n}">Feito neste mês</h4>
+        <ul class="tasks tasks-feitas" data-feitas="${w.n}"></ul>
+      </div>
+    </details>`;
+  }).join("");
+
+  WEEKS.forEach(w => {
+    el("s" + w.n).querySelector("[data-abertas]").innerHTML = w.tasks.map(t => `
+          <li class="task${t.desc ? " is-desc" : ""}" id="t-${t.id}" data-id="${t.id}" data-who="${t.w}"${t.desc ? ` data-desc="1"` : ""}>
+            <button type="button" class="task-linha" aria-expanded="false" aria-controls="tc-${t.id}"><b>${esc(partes(t).titulo)}</b><span class="task-data" data-data="${t.id}"></span></button>
+            <div class="task-corpo" id="tc-${t.id}">
+              ${t.desc ? `<span class="cyc-off" aria-hidden="true"></span>` : `<button class="cyc" type="button" data-id="${t.id}" data-s="todo" aria-label="Estado da tarefa"></button>`}
+              <div class="body">
+                <div class="txt">${t.t}</div>
+                ${t.desc ? `<p class="desc"><b>Por quê:</b> ${t.desc}</p>` : ``}
+                ${t.img ? `<div class="shots">${t.img.map(i => `<figure><a href="${i.s}" target="_blank" rel="noopener"><img src="${i.s}" alt="${esc(i.c)}" loading="lazy"></a><figcaption>${i.c}</figcaption></figure>`).join("")}</div>` : ``}
+                <div class="meta">
+                  <span class="who">${t.desc ? "Descartada" : "Responsável: " + t.w}</span>
+                  ${t.e ? `<span class="envio">Prazo: ${t.e}</span>` : ``}
+                  ${t.g ? `<span class="gate"><b>Pronto quando:</b> ${t.g}</span>` : ``}
+                  <span class="stamp" data-stamp="${t.id}"></span>
+                </div>
+                <div class="resp" data-resp="${t.id}"></div>
+              </div>
+            </div>
+          </li>`).join("");
+  });
+}
+
+function expande(li, abrir){
+  li.classList.toggle("expandida", abrir);
+  const b = li.querySelector(".task-linha");
+  if (b) b.setAttribute("aria-expanded", String(abrir));
+}
+
+/* ---- Resumo do topo e pedidos à Mclair ----
    Tudo calculado a partir de WEEKS e do estado. O mês 1 é outubro de 2026. */
 const MES_CURTO = ["jan","fev","mar","abr","mai","jun","jul","ago","set","out","nov","dez"];
 
@@ -410,75 +443,20 @@ function renderResumo(counts){
   const atual = mesAtual();
   const total = counts.todo + counts.doing + counts.done + counts.blocked;
 
-  /* Onde estamos */
-  const partesConta = [
-    plural(counts.done, "feita", "feitas"),
-    plural(counts.doing, "em andamento", "em andamento"),
-    plural(counts.blocked, "bloqueada", "bloqueadas"),
-    plural(counts.todo, "pendente", "pendentes")
-  ];
-  const mclair = WEEKS.flatMap(w => w.tasks).filter(t => t.w === "Mclair" && !t.desc && state[t.id] !== "done").length;
-  el("onde-conta").innerHTML = `O plano tem ${total} tarefas: ${listaPt(partesConta)}. `
-    + (mclair ? `<a href="#depende">${plural(mclair, "pedido espera", "pedidos esperam")} a Mclair</a>.` : `Nenhum pedido espera a Mclair agora.`);
-  const pc = n => total ? (n / total * 100) : 0;
-  el("track").innerHTML =
-    `<i class="d" style="width:${pc(counts.done)}%"></i>` +
-    `<i class="g" style="width:${pc(counts.doing)}%"></i>` +
-    `<i class="b" style="width:${pc(counts.blocked)}%"></i>`;
-  el("track").setAttribute("aria-label", `${Math.round(pc(counts.done))}% das tarefas feitas`);
-
-  const ordem = {};
-  let k = 0;
-  WEEKS.forEach(w => w.tasks.forEach(t => { ordem[t.id] = k++; }));
-  const feitas = WEEKS.flatMap(w => w.tasks)
-    .filter(t => !t.desc && state[t.id] === "done" && isos[t.id])
-    .sort((a, b) => (isos[b.id] > isos[a.id] ? 1 : isos[b.id] < isos[a.id] ? -1 : ordem[a.id] - ordem[b.id]))
-    .slice(0, 6);
-  el("entregas").innerHTML = feitas.length ? feitas.map(t => {
-    const p = partes(t);
-    const nome = p.titulo.replace(/\s*\(\d{2}\/\d{2}\)$/, "");
-    const tit = p.href ? `<a href="${esc(p.href)}">${esc(nome)}</a>` : esc(nome);
-    return `<li><time datetime="${esc(isos[t.id])}">${esc(dataCurta(isos[t.id]))}</time><span>${tit} <a class="ver" href="#t-${t.id}">ver tarefa</a></span></li>`;
-  }).join("") : `<li><span>Nenhuma entrega marcada ainda.</span></li>`;
-
-  const paradas = WEEKS.flatMap(w => w.tasks).filter(t => !t.desc && state[t.id] === "blocked");
-  el("onde-parado").hidden = !paradas.length;
-  el("onde-parado").innerHTML = paradas.length ? `<b>Parado:</b> ` + paradas.map(t =>
-    `<a href="#t-${t.id}">${esc(partes(t).titulo)}</a>${t.e && !partes(t).titulo.includes(t.e) ? ` (${esc(t.e)})` : ``}`).join("; ") + "." : "";
+  /* Topo: onde estamos e o próximo marco */
+  /* Mesma conta de "Para agora" em "O que depende da Mclair": pedidos abertos até o mês atual. */
+  const mclair = WEEKS.filter(x => x.n <= atual).flatMap(x => x.tasks).filter(t => t.w === "Mclair" && !t.desc && state[t.id] !== "done").length;
+  el("onde-conta").innerHTML = `${counts.done} de ${total} tarefas feitas`
+    + (mclair ? `; <a href="#depende">${plural(mclair, "pedido da Mclair está aberto", "pedidos da Mclair estão abertos")} agora</a>.` : `; nenhum pedido da Mclair aberto agora.`);
+  const pc = total ? Math.round(counts.done / total * 100) : 0;
+  el("barra").querySelector("em").style.width = pc + "%";
+  el("barra").setAttribute("aria-label", `${pc}% das tarefas feitas`);
 
   const w = WEEKS.find(x => x.n === atual);
   if (w) {
-    const abertas = w.tasks.filter(t => !t.desc && state[t.id] !== "done");
-    const daMclair = abertas.filter(t => t.w === "Mclair").length;
-    const corte = w.gate.indexOf(": ");
-    const quando = corte > 0 ? w.gate.slice(0, corte) : "";
-    const oque = corte > 0 ? w.gate.slice(corte + 2) : w.gate;
-    el("marco").innerHTML = `<b>Meta de ${esc(w.d)}, conferida em ${esc(quando)}:</b> ${esc(oque)} `
-      + (abertas.length ? `Faltam ${plural(abertas.length, "tarefa", "tarefas")} deste mês${daMclair ? `, ${daMclair} da Mclair` : ``}. ` : `Todas as tarefas do mês estão feitas. `)
-      + `<a href="#s${w.n}">Ver o mês</a>.`;
+    const m = corteMeta(w);
+    el("marco").innerHTML = `<b>Próximo marco${m.quando ? `, ${esc(m.quando)}` : ``}.</b> ${esc(m.oque)} <a href="#s${w.n}">Ver ${esc(w.d.split(" de ")[0])}</a>.`;
   }
-
-  /* Cronograma */
-  el("crono").innerHTML = WEEKS.map(w => {
-    const ts = w.tasks.filter(t => !t.desc);
-    const feitas = ts.filter(t => state[t.id] === "done").length;
-    const pct = ts.length ? Math.round(feitas / ts.length * 100) : 0;
-    const fase = w.n < atual ? "passado" : w.n === atual ? "atual" : "futuro";
-    const [mes, ano] = [w.d.split(" de ")[0], w.d.split(" de ")[1]];
-    const corte = w.gate.indexOf(": ");
-    const quando = corte > 0 ? w.gate.slice(0, corte) : "";
-    const oque = corte > 0 ? w.gate.slice(corte + 2) : w.gate;
-    return `<li class="cr cr-${fase}${pct === 100 ? " cr-cheio" : ""}"${fase === "atual" ? ` aria-current="date"` : ``}>
-      <a href="#s${w.n}" data-mes="${w.n}">
-        <span class="cr-ponto" aria-hidden="true"></span>
-        <span class="cr-mes">${esc(mes)} ${esc(ano)}${fase === "atual" ? ` <span class="cr-agora">mês atual</span>` : ``}</span>
-        <span class="cr-tema">${esc(w.t)}</span>
-        <span class="cr-conta">${plural(ts.length, "tarefa", "tarefas")}, ${pct}% feito</span>
-        <span class="cr-barra" aria-hidden="true"><em style="width:${pct}%"></em></span>
-        <span class="cr-meta"><b>Meta em ${esc(quando)}:</b> ${esc(oque)}</span>
-      </a>
-    </li>`;
-  }).join("");
 
   /* O que depende da Mclair */
   let nAgora = 0, nDepois = 0;
@@ -581,45 +559,67 @@ function buildResp(){
 }
 let ALVO_INICIAL = "";
 
+function passa(t){
+  const s = state[t.id] || "todo";
+  return filter === "all" ? true
+    : filter === "open" ? s !== "done" && !t.desc
+    : filter === "Mclair" ? t.w === "Mclair" && s !== "done"
+    : t.w === filter;
+}
+const feita = t => !!t.desc || (state[t.id] || "todo") === "done";
+
+/* Põe cada tarefa na lista certa sem mexer nas que já estão no lugar
+   (mexer num nó tira o foco de quem está escrevendo uma resposta). */
+function arruma(ul, lis){
+  lis.forEach((li, i) => { if (ul.children[i] !== li) ul.insertBefore(li, ul.children[i] || null); });
+}
+
 function render(){
   const counts = {todo:0, doing:0, done:0, blocked:0};
-  document.querySelectorAll(".task").forEach(li => {
-    const id = li.dataset.id, s = state[id] || "todo", desc = DESC.has(id);
-    if (!desc) counts[s]++;
-    const btn = li.querySelector(".cyc");
-    if (btn) {
-      btn.dataset.s = s;
-      btn.innerHTML = ICON[s];
-      btn.setAttribute("aria-label", "Estado: " + LABEL[s] + (PUEDE_EDITAR ? ". Clique para mudar" : ""));
-    }
-    li.classList.toggle("is-done", s === "done" && !desc);
-    const st = li.querySelector("[data-stamp]");
-    st.textContent = stamps[id] ? (desc ? "decidido em " : "atualizado em ") + stamps[id] : "";
-    const show = filter === "all" ? true
-      : filter === "open" ? s !== "done" && !desc
-      : filter === "Mclair" ? li.dataset.who === "Mclair" && s !== "done"
-      : li.dataset.who === filter;
-    li.hidden = !show;
-  });
-
   WEEKS.forEach(w => {
-    const total = w.tasks.filter(t => !t.desc).length;
-    const done = w.tasks.filter(t => !t.desc && state[t.id] === "done").length;
     const sec = el("s" + w.n);
-    if (sec) {
-      sec.classList.toggle("done", total > 0 && done === total);
-      const vis = w.tasks.some(t => {
-        const s = state[t.id] || "todo";
-        return filter === "all" ? true : filter === "open" ? s !== "done" && !t.desc
-          : filter === "Mclair" ? t.w === "Mclair" && s !== "done" : t.w === filter;
-      });
-      sec.hidden = !vis;
-    }
+    if (!sec) return;
+    const ulA = sec.querySelector("[data-abertas]"), ulF = sec.querySelector("[data-feitas]");
+    const lis = w.tasks.map(t => el("t-" + t.id));
+    w.tasks.forEach((t, i) => {
+      const li = lis[i], s = state[t.id] || "todo", desc = !!t.desc;
+      if (!desc) counts[s]++;
+      const btn = li.querySelector(".cyc");
+      if (btn) {
+        btn.dataset.s = s;
+        btn.innerHTML = ICON[s];
+        btn.setAttribute("aria-label", "Estado: " + LABEL[s] + (PUEDE_EDITAR ? ". Clique para mudar" : ""));
+      }
+      li.classList.toggle("is-done", feita(t));
+      li.querySelector("[data-stamp]").textContent = stamps[t.id] ? (desc ? "decidido em " : "atualizado em ") + stamps[t.id] : "";
+      li.querySelector("[data-data]").textContent = desc ? "descartada" + (isos[t.id] ? ", " + dataCurta(isos[t.id]) : "") : (isos[t.id] ? dataCurta(isos[t.id]) : "");
+      li.hidden = !passa(t);
+      const alvo = feita(t) ? ulF : ulA;
+      if (li.parentNode !== alvo) { li.remove(); if (alvo === ulA) expande(li, false); }
+    });
+    arruma(ulA, lis.filter((li, i) => !feita(w.tasks[i])));
+    arruma(ulF, lis.filter((li, i) => feita(w.tasks[i])));
+
+    const ts = w.tasks.filter(t => !t.desc);
+    const nFeitas = ts.filter(t => state[t.id] === "done").length;
+    const pct = ts.length ? Math.round(nFeitas / ts.length * 100) : 0;
+    sec.querySelector("[data-conta]").textContent = `${nFeitas} de ${ts.length} feitas`;
+    sec.querySelector("[data-barra]").style.width = pct + "%";
+    sec.classList.toggle("mes-cheio", ts.length > 0 && nFeitas === ts.length);
+    const visA = w.tasks.some(t => !feita(t) && passa(t));
+    const visF = w.tasks.some(t => feita(t) && passa(t));
+    ulA.hidden = !visA;
+    sec.querySelector("[data-vazio]").hidden = visA || filter !== "all";
+    sec.querySelector("[data-feito-tit]").hidden = !visF;
+    ulF.hidden = !visF;
+    sec.hidden = !(visA || visF);
   });
 
-  const faltaAg = [...document.querySelectorAll('.task[data-who="Mclair"]')].filter(li => (state[li.dataset.id] || "todo") !== "done").length;
+  const faltaAg = WEEKS.flatMap(w => w.tasks).filter(t => t.w === "Mclair" && (state[t.id] || "todo") !== "done").length;
   el("f-ag-n").textContent = faltaAg;
-  el("filtro-aviso").textContent = filter === "Mclair" ? `Mostrando só as ${faltaAg} tarefas que faltam da Mclair. O que já foi feito fica escondido; "Tudo" mostra de novo.` : "";
+  el("filtro-aviso").textContent = filter === "Mclair" ? `Mostrando só as ${faltaAg} tarefas que faltam da Mclair, com os meses delas abertos. O que já foi feito fica escondido; "Tudo" mostra de novo.`
+    : filter === "open" ? `Mostrando só o que falta fazer, com os meses abertos. "Tudo" mostra de novo.`
+    : filter === "Sandru" ? `Mostrando só as tarefas do Sandru, com os meses abertos. "Tudo" mostra de novo.` : "";
   renderResumo(counts);
 }
 
@@ -643,20 +643,28 @@ function aplicarEstado(dados){
   return mudou;
 }
 
+/* Com filtro, abrem os meses que têm resultado; de volta a "Tudo", só o mês atual fica aberto. */
 function aplicarFiltro(f, rolar = true){
   filter = f;
   document.querySelectorAll(".filter").forEach(b =>
     b.setAttribute("aria-pressed", String(b.dataset.f === filter)));
   render();
+  const atual = mesAtual();
+  document.querySelectorAll("details.mes").forEach(d => {
+    d.open = filter === "all" ? Number(d.dataset.week) === atual : !d.hidden;
+  });
   if (rolar) document.querySelector(".controls").scrollIntoView({block: "start", behavior: "smooth"});
 }
 
-/* Link para uma tarefa ou mês escondido pelo filtro volta para "Tudo"; link para o anexo abre o anexo. */
+/* Link para uma tarefa ou mês: tira o filtro se ele esconde o alvo, abre o
+   mês (e a linha da tarefa feita) e rola até lá. Link para anexo abre o anexo. */
 function irPara(id, suave){
   const alvo = id && document.getElementById(id);
   if (!alvo) return false;
-  if (id === "dossie" && alvo.tagName === "DETAILS") alvo.open = true;
   if (alvo.closest("[hidden]") && alvo.closest("#plano")) aplicarFiltro("all", false);
+  if (alvo.tagName === "DETAILS") alvo.open = true;
+  for (let d = alvo.parentElement && alvo.parentElement.closest("details"); d; d = d.parentElement && d.parentElement.closest("details")) d.open = true;
+  if (alvo.classList.contains("task") && alvo.closest(".tasks-feitas")) expande(alvo, true);
   alvo.scrollIntoView({block: "start", behavior: suave ? "smooth" : "auto"});
   return true;
 }
@@ -680,7 +688,7 @@ el("aviso").textContent = PUEDE_EDITAR
   ? "Modo de edição. Um clique no quadradinho de cada tarefa muda o estado e fica salvo para todos."
   : "Acompanhamento ao vivo do plano. A página se atualiza sozinha a cada minuto conforme a equipe avança. Para mandar um material ou tirar uma dúvida, use o Responder da tarefa.";
 
-buildWeeks();
+buildMeses();
 buildDepende();
 buildResp();
 buildDesempeno();
@@ -710,6 +718,8 @@ document.addEventListener("click", ev => {
   }
   const f = ev.target.closest(".filter");
   if (f) { aplicarFiltro(f.dataset.f); return; }
+  const linha = ev.target.closest(".task-linha");
+  if (linha) { const li = linha.closest(".task"); expande(li, !li.classList.contains("expandida")); return; }
   const a = ev.target.closest('a[href^="#"]');
   if (a && !ev.metaKey && !ev.ctrlKey && !ev.shiftKey) {
     const id = decodeURIComponent(a.getAttribute("href").slice(1));
@@ -717,6 +727,8 @@ document.addEventListener("click", ev => {
   }
 });
 el("falta-ver").addEventListener("click", () => aplicarFiltro("Mclair"));
+// Link colado na barra de endereço com a página já aberta: abre o mês ou o anexo do mesmo jeito.
+window.addEventListener("hashchange", () => irPara(decodeURIComponent(location.hash.slice(1)), true));
 
 // Atualização periódica para o cliente ver as mudanças sem recarregar.
 if (!PUEDE_EDITAR) {

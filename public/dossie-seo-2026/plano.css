@@ -1,6 +1,6 @@
 /* ---- Plano de 12 meses: mesma base visual do dossiê (Lato, tinta, linhas finas) ---- */
 
-.plano{
+.plano,.anexos{
   --surface:#fff; --surface-2:var(--cream-2); --surface-3:var(--cream-3);
   --soft:var(--ink-2); --faint:var(--ink-3);
   --todo:#9C9590; --doing:#1d6fa3; --done:#1B7A5C; --blocked:#b3324f;
@@ -21,57 +21,21 @@
 /* Topo */
 .abre h1{margin:0 0 10px}
 .quem{color:var(--soft); font-size:16px}
+.resumo{margin-top:20px; display:grid; gap:8px; max-width:70ch; font-size:16.5px; color:var(--ink-2)}
+.resumo p{text-wrap:pretty}
+.resumo b{color:var(--ink)}
+.resumo a{color:var(--red)}
+.barra{display:inline-block; vertical-align:middle; width:120px; height:5px; border-radius:3px; background:var(--surface-3); overflow:hidden; margin-left:6px}
+.barra em{display:block; height:100%; width:0; background:var(--done)}
 .indice{margin-top:22px; display:flex; flex-wrap:wrap; gap:6px 20px; font-size:15px}
 .indice a{color:var(--ink-2); text-decoration:underline; text-decoration-color:var(--line-2); text-underline-offset:4px}
 .indice a:hover{color:var(--red); text-decoration-color:currentColor}
 
 /* Cada parte da página */
 .sec{margin-top:64px; padding-top:28px; border-top:1px solid var(--line-2); scroll-margin-top:12px}
-.plano .sec > h2{font-size:clamp(24px,3.4vw,30px); margin-bottom:10px}
+.plano .sec > h2,.anexos > h2{font-size:clamp(24px,3.4vw,30px); margin-bottom:10px}
 .sec > h3{margin:30px 0 10px}
 .sec-intro{color:var(--soft); max-width:66ch; text-wrap:pretty}
-
-/* Onde estamos */
-.onde-conta{font-size:18px; line-height:1.55; max-width:62ch; text-wrap:pretty}
-.onde-conta a{font-weight:700}
-.onde-legenda{margin-top:10px; display:flex; flex-wrap:wrap; gap:6px 18px; font-size:14.5px; color:var(--soft)}
-.onde-legenda span{display:inline-flex; align-items:center; gap:7px}
-.entregas{list-style:none; margin:0; padding:0}
-.entregas li{display:grid; grid-template-columns:64px 1fr; gap:12px; padding:9px 0; border-top:1px solid var(--line); font-size:16px}
-.entregas li:first-child{border-top:0; padding-top:2px}
-.entregas time{color:var(--faint); font-size:14.5px; font-variant-numeric:tabular-nums; padding-top:1px}
-.entregas a{color:var(--ink); text-decoration-color:var(--line-2)}
-.entregas a:hover{color:var(--red)}
-.entregas a.ver{color:var(--faint); font-size:14px; margin-left:4px; white-space:nowrap}
-.onde-parado{margin-top:14px; font-size:15.5px; color:var(--soft)}
-.onde-parado b{color:var(--blocked)}
-.onde-parado a{color:var(--ink)}
-.marco{max-width:66ch; color:var(--soft); text-wrap:pretty}
-.marco b{color:var(--ink)}
-
-/* Cronograma: linha do tempo; quatro meses por linha no computador, lista no celular */
-.crono{list-style:none; margin:22px 0 0; padding:0; display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); row-gap:30px}
-.cr{position:relative; min-width:0}
-.cr::before{content:""; position:absolute; top:7px; left:0; right:0; height:2px; background:var(--line-2)}
-.cr:nth-child(4n+1)::before{left:7px}
-.cr:nth-child(4n)::before{right:auto; width:14px}
-.cr:last-child::before{right:auto; width:14px}
-.cr a{position:relative; display:flex; flex-direction:column; gap:5px; padding:0 18px 0 0; color:inherit; text-decoration:none; height:100%}
-.cr-ponto{width:16px; height:16px; border-radius:50%; background:var(--cream); border:2px solid var(--line-2); margin-bottom:6px; flex:none}
-.cr-passado .cr-ponto,.cr-cheio .cr-ponto{background:var(--done); border-color:var(--done)}
-.cr-atual .cr-ponto{background:var(--red); border-color:var(--red); box-shadow:0 0 0 4px var(--cream), 0 0 0 5px var(--red)}
-.cr-mes{font-weight:700; font-size:15px; color:var(--ink-2); text-transform:capitalize}
-.cr-atual .cr-mes{color:var(--red)}
-.cr-agora{text-transform:none; font-weight:700; font-size:13.5px; color:var(--red); white-space:nowrap}
-.cr-tema{font-weight:700; font-size:16px; line-height:1.35; color:var(--ink); text-wrap:balance}
-.cr a:hover .cr-tema{text-decoration:underline; text-underline-offset:3px}
-.cr a:focus-visible{outline:2px solid var(--teal); outline-offset:4px; border-radius:4px}
-.cr-conta{font-size:14px; color:var(--soft); font-variant-numeric:tabular-nums}
-.cr-barra{display:block; height:4px; border-radius:2px; background:var(--surface-3); overflow:hidden; max-width:140px}
-.cr-barra em{display:block; height:100%; background:var(--done)}
-.cr-meta{font-size:13.5px; line-height:1.45; color:var(--faint); text-wrap:pretty; margin-top:2px}
-.cr-meta b{color:var(--soft); font-weight:700}
-.cr-futuro .cr-tema{color:var(--ink-2)}
 
 /* O que depende da Mclair */
 .dep{list-style:none; margin:18px 0 0; padding:0}
@@ -91,16 +55,6 @@
 .btn-linha{margin-top:16px; font-size:15px; font-weight:700; background:var(--surface); color:var(--ink); border:1px solid var(--line-2); border-radius:6px; padding:9px 16px; cursor:pointer}
 .btn-linha:hover{border-color:var(--ink-4)}
 .btn-linha:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
-
-/* Barra de avanço */
-.track{margin-top:16px; height:10px; border-radius:5px; background:var(--surface-3); overflow:hidden; display:flex; max-width:620px}
-.track i{display:block; height:100%}
-.track i.d{background:var(--done)}
-.track i.g{background:var(--doing)}
-.track i.b{background:var(--blocked)}
-.dot{width:9px; height:9px; border-radius:50%; flex:none; display:inline-block}
-.dot-done{background:var(--done)} .dot-doing{background:var(--doing)}
-.dot-blocked{background:var(--blocked)} .dot-todo{background:var(--todo)}
 
 .plano .aviso{margin-top:16px; font-size:15.5px; color:var(--soft); max-width:66ch}
 .plano .aviso:empty{display:none}
@@ -154,17 +108,50 @@
 .filtro-aviso{margin-top:6px; font-size:15px; color:var(--soft)}
 .filtro-aviso:empty{display:none}
 
-/* Meses e tarefas */
-.week{margin-top:24px; background:var(--surface); border:1px solid var(--line); border-radius:10px; overflow:hidden; scroll-margin-top:64px}
-.week.done{border-color:var(--done)}
-.week[hidden],.task[hidden]{display:none}
-.wagora{font-size:14px; font-weight:700; color:var(--red)}
-.whead{display:flex; flex-wrap:wrap; align-items:baseline; gap:4px 14px; padding:15px 20px; border-bottom:1px solid var(--line); background:var(--surface-2)}
-.wdate{font-size:14px; color:var(--faint); margin-left:auto}
+/* Plano mês a mês: um bloco por mês, só o atual aberto */
+.meses{margin-top:14px; border-bottom:1px solid var(--line)}
+.meses noscript{display:block; padding:14px 0}
+.mes{border-top:1px solid var(--line); scroll-margin-top:64px}
+.mes[hidden]{display:none}
+.mes > summary{list-style:none; cursor:pointer; display:grid; gap:3px; padding:16px 34px 16px 0; position:relative}
+.mes > summary::-webkit-details-marker{display:none}
+.mes > summary::after{content:""; position:absolute; right:8px; top:22px; width:9px; height:9px; border-right:2px solid var(--ink-3); border-bottom:2px solid var(--ink-3); transform:rotate(45deg); transition:transform .15s}
+.mes[open] > summary::after{transform:rotate(-135deg); top:27px}
+.mes > summary:hover .mes-tema{color:var(--red)}
+.mes > summary:focus-visible{outline:2px solid var(--teal); outline-offset:2px; border-radius:4px}
+.mes-cab{display:flex; flex-wrap:wrap; align-items:center; gap:4px 12px}
+.mes-nome{font-weight:700; font-size:15px; color:var(--ink-2)}
+.mes-atual .mes-nome,.mes-agora{color:var(--red)}
+.mes-agora{font-size:14px; font-weight:700}
+.mes-conta{font-size:14px; color:var(--soft); font-variant-numeric:tabular-nums; margin-left:auto}
+.mes-barra{display:block; width:90px; height:4px; border-radius:2px; background:var(--surface-3); overflow:hidden}
+.mes-barra em{display:block; height:100%; width:0; background:var(--done)}
+.mes-tema{font-weight:700; font-size:18px; line-height:1.35; color:var(--ink); text-wrap:balance}
+.mes-meta{font-size:14.5px; line-height:1.5; color:var(--faint); max-width:72ch; text-wrap:pretty}
+.mes-meta b{color:var(--soft)}
+.mes-corpo{padding:2px 0 24px}
+.mes-vazio{font-size:15.5px; color:var(--soft); padding:4px 0 2px}
+.feito-tit{margin:22px 0 8px; font-size:15px; font-weight:700; color:var(--ink-2)}
+.feito-tit[hidden],.tasks[hidden]{display:none}
+.tasks{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--surface)}
+.tasks-abertas .task-linha{display:none}
+.tasks-feitas .task{padding:0; display:block}
+.tasks-feitas .task:not(.expandida) .task-corpo{display:none}
+.tasks-feitas .task-corpo{padding:4px 20px 14px}
+.task-linha{display:flex; gap:6px 14px; align-items:baseline; width:100%; text-align:left; font:inherit; font-size:15.5px; line-height:1.45; color:var(--ink-2); background:none; border:0; padding:10px 20px; cursor:pointer}
+.task-linha b{flex:1; min-width:0; font-weight:700; text-wrap:pretty}
+.task-linha::after{content:"+"; flex:none; width:14px; text-align:center; color:var(--faint); font-weight:700}
+.expandida > .task-linha::after{content:"\2212"}
+.task-linha:hover b{color:var(--red)}
+.task-linha:focus-visible{outline:2px solid var(--teal); outline-offset:-2px}
+.task-data{flex:none; font-size:14px; color:var(--faint); font-variant-numeric:tabular-nums; white-space:nowrap}
+.task-corpo{display:flex; gap:13px; align-items:flex-start; min-width:0}
 .tasks{list-style:none; margin:0; padding:0}
-.task{display:flex; gap:13px; align-items:flex-start; padding:14px 20px; border-top:1px solid var(--line); scroll-margin-top:64px}
+.task[hidden]{display:none}
+.task{padding:14px 20px; border-top:1px solid var(--line); scroll-margin-top:64px}
 .task:first-child{border-top:0}
-.task.is-done{background:var(--done-bg)}
+.tasks-feitas .task{background:var(--surface)}
+.tasks-feitas .task.expandida{background:var(--done-bg)}
 .task:not(.is-done)[data-who="Mclair"]{background:var(--agency-bg)}
 .task:not(.is-done):not([data-who="Mclair"]){background:var(--ikoeh-bg)}
 .task.is-desc{background:var(--surface-2)}
@@ -197,8 +184,6 @@ body.solo-leitura .cyc{cursor:default}
 .gate b{color:var(--soft)}
 .stamp{font-family:var(--mono); font-size:13px}
 .envio{color:var(--red); font-weight:700}
-.gatebar{padding:13px 20px; border-top:1px solid var(--line); background:var(--surface-2); font-size:15.5px; color:var(--soft); display:flex; gap:10px; align-items:flex-start}
-.gatebar .mark{font-weight:700; color:var(--ink); flex:none}
 
 /* Responder dentro de cada tarefa */
 .resp{margin-top:10px}
@@ -240,31 +225,30 @@ body.solo-leitura .cyc{cursor:default}
   .kw th,.kw td{padding:9px 12px; font-size:14.5px}
   .kw .dest,.kw th.dest{display:none}
 }
-@media (max-width:760px){
-  .crono{grid-template-columns:1fr; row-gap:0}
-  .cr::before,.cr:nth-child(4n+1)::before,.cr:nth-child(4n)::before,.cr:last-child::before{top:0; bottom:0; left:7px; right:auto; width:2px; height:auto}
-  .cr:first-child::before{top:8px}
-  .cr:last-child::before{bottom:auto; height:8px}
-  .cr a{padding:0 0 26px 32px}
-  .cr-ponto{position:absolute; left:0; top:1px; margin:0}
-}
 @media (max-width:640px){
-  .wdate{margin-left:0; width:100%}
+  .mes-conta{margin-left:0}
   .capas .n,.capas .e{width:auto; white-space:normal}
   .capas td{padding:12px 14px; font-size:15px}
 }
 @media (max-width:560px){
-  .task{padding:12px 14px; gap:10px}
+  .task{padding:12px 14px}
+  .mes-barra{flex-basis:100%; max-width:160px; order:5}
+  .barra{display:block; margin:6px 0 0}
+  .task-corpo{gap:10px}
+  .tasks-feitas .task-corpo{padding:4px 14px 12px}
+  .task-linha{padding:10px 14px; flex-wrap:wrap}
+  .task-linha b{flex-basis:calc(100% - 28px)}
+  .task-data{order:3}
   .task .resp-panel,.task .resp-lista{margin-left:-32px}
   .resp-btn,.resp-enviar{width:100%}
   .kw h3,.kw .intro,.kw .cal,.kw .leyenda div{padding-left:14px; padding-right:14px}
-  .entregas li{grid-template-columns:52px 1fr; gap:10px}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important; scroll-behavior:auto!important}}
 
 /* Plano ilustrado: diagramas com as cores da página */
 .ilustrado{--fg:var(--ink); --fg-2:var(--ink-2); --fg-3:var(--ink-3); --bg:#fff; --tint:var(--cream-2); --ink-on-red:#fff}
-.ilustrado h3{font-size:1.2rem; margin:36px 0 0}
+.ilustrado > h3{font-size:1.2rem; margin:36px 0 0}
+.ilustrado > p:first-child{margin-top:0}
 .ilustrado p, .ilustrado li{color:var(--ink-2); line-height:1.7; max-width:70ch}
 .ilustrado p{margin-top:12px}
 .ilustrado .resumen{font-size:18px; color:var(--ink-2); margin-top:4px}

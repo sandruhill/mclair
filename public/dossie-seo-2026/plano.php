@@ -1,6 +1,6 @@
 <?php
 /**
- * Plano de 12 meses: o corpo da página /dossie-seo-2026/ (o dossiê de setembro fica no anexo).
+ * Plano de 12 meses: o corpo da página /dossie-seo-2026/ (o dossiê de setembro fica nos anexos).
  *
  * Só funciona incluído pelo index.php, que já abriu a conexão e a sessão.
  * Aberto a qualquer um com o link, como o dossiê, com duas exceções:
@@ -811,8 +811,12 @@ function planoDadosJson(string $arquivo): ?array
     return is_array($d) ? $d : null;
 }
 
-/** Desenha a seção do plano. Os dados vão num bloco JSON não executável, escapado. */
-function planoSecao(array $p): void
+/**
+ * Desenha a página do plano. Os dados vão num bloco JSON não executável,
+ * escapado. $anexoDossie é o HTML do diagnóstico de setembro, já escapado
+ * pelo index.php, que entra no fim, junto da Estratégia, entre os anexos.
+ */
+function planoSecao(array $p, string $anexoDossie = ''): void
 {
     $dados = [
         'editar'     => $p['editar'],
