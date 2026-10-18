@@ -17,7 +17,7 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado)) {
 
     <section class="abre" aria-labelledby="titulo">
       <h1 id="titulo">SEO da Mclair: plano e acompanhamento</h1>
-      <p class="quem">Plano e execução da IKOEH. Atualizado em <span id="atualizado"><?= planoH($atualizado) ?></span>.</p>
+      <p class="quem">Plano e execução: Sandru. Atualizado em <span id="atualizado"><?= planoH($atualizado) ?></span>.</p>
       <p class="sub">Doze meses, de outubro de 2026 a setembro de 2027, para a <b>Mclair</b> virar referência em assessoria de imprensa no Google, no Bing e nas respostas das IAs, em São Paulo e em mais nove capitais.</p>
       <p class="aviso" id="aviso"></p>
       <nav class="indice" aria-label="Partes desta página">
@@ -211,7 +211,7 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado)) {
       <div class="controls">
         <span class="lbl">Ver:</span>
         <button class="filter" type="button" data-f="all" aria-pressed="true">Tudo</button>
-        <button class="filter" type="button" data-f="IKOEH" aria-pressed="false">IKOEH</button>
+        <button class="filter" type="button" data-f="Sandru" aria-pressed="false">Sandru</button>
         <button class="filter" type="button" data-f="Mclair" aria-pressed="false">Falta da Mclair (<span id="f-ag-n">0</span>)</button>
         <button class="filter" type="button" data-f="open" aria-pressed="false">Sem terminar</button>
       </div>
@@ -219,7 +219,7 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado)) {
 
       <div id="weeks"><noscript><p class="regla">A lista de tarefas precisa de JavaScript ligado no navegador.</p></noscript></div>
 
-      <p class="note"><b>Como se usa.</b> O quadradinho de cada tarefa passa por quatro estados: pendente, em andamento, feito e bloqueado. Quem marca é a equipe da IKOEH, e o que for marcado aparece para todos. A meta no pé de cada mês não é opinião: se confere com um comando ou com um número do Search Console, e se não passar, o que vem depois é adiado. As tarefas com prazo trazem a data ao lado.</p>
+      <p class="note"><b>Como se usa.</b> O quadradinho de cada tarefa passa por quatro estados: pendente, em andamento, feito e bloqueado. Quem marca é o Sandru, e o que for marcado aparece para todos. A meta no pé de cada mês não é opinião: se confere com um comando ou com um número do Search Console, e se não passar, o que vem depois é adiado. As tarefas com prazo trazem a data ao lado.</p>
       <p class="offline" id="offline" hidden>Sem conexão com o armazenamento compartilhado. Dá para ler o plano, mas as mudanças de estado não são salvas nesta tela.</p>
     </section>
 
