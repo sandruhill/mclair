@@ -326,9 +326,7 @@ const cases = (allCases as any[])
     </div>
 
     <div id="case-tooltip" class="case-tooltip" aria-hidden="true">
-      <div class="case-tooltip-img-wrap">
-        <img class="case-tooltip-img" src="" alt="" />
-      </div>
+      <div class="case-tooltip-img-wrap"></div>
       <p class="case-tooltip-text"></p>
     </div>
 
@@ -464,13 +462,14 @@ const cases = (allCases as any[])
 
     // Cases hover tooltip — follows cursor, shows image + challenge text
     const tooltip = document.getElementById('case-tooltip') as HTMLElement;
-    const tooltipImg = tooltip?.querySelector('.case-tooltip-img') as HTMLImageElement;
+    const tooltipImgWrap = tooltip?.querySelector('.case-tooltip-img-wrap') as HTMLElement;
+    let tooltipImg: HTMLImageElement | null = null;
     const tooltipText = tooltip?.querySelector('.case-tooltip-text') as HTMLElement;
     const caseRows = document.querySelectorAll('.case-row');
     const TOOLTIP_OFFSET = 20;
     const TOOLTIP_WIDTH = 230;
 
-    if (tooltip && tooltipImg && tooltipText) {
+    if (tooltip && tooltipImgWrap && tooltipText) {
       let tipH = 0;
       let headerH = 0;
 
@@ -490,6 +489,12 @@ const cases = (allCases as any[])
 
         el.addEventListener('mouseenter', (e) => {
           if (!el.dataset.img) return;
+          if (!tooltipImg) {
+            tooltipImg = document.createElement('img');
+            tooltipImg.className = 'case-tooltip-img';
+            tooltipImg.alt = '';
+            tooltipImgWrap.appendChild(tooltipImg);
+          }
           tooltipImg.src = el.dataset.img;
           tooltipText.textContent = el.dataset.challenge || '';
           tooltip.classList.add('is-visible');
@@ -823,7 +828,7 @@ const cases = (allCases as any[])
 }
 .case-tooltip.is-visible { opacity:1;visibility:visible; }
 .case-tooltip-img-wrap { aspect-ratio:21/9;background:var(--cream-2); }
-.case-tooltip-img { width:100%;height:100%;object-fit:cover;display:block; }
+.case-tooltip-img-wrap :global(.case-tooltip-img) { width:100%;height:100%;object-fit:cover;display:block; }
 .case-tooltip-text {
   margin:0;padding:10px 12px 12px;font-size:.78rem;line-height:1.5;color:var(--ink-3);
   display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;

@@ -103,7 +103,7 @@ const breadcrumbSchema = {
 
 <Layout
   title={`${label}${page.currentPage > 1 ? ` | Página ${page.currentPage}` : ''} | Blog Mclair`}
-  description={`Posts do blog Mclair sobre ${label}. ${page.total} artigo${page.total === 1 ? '' : 's'} publicados.`}
+  description={`${page.currentPage > 1 ? `Página ${page.currentPage} dos posts` : 'Posts'} do blog Mclair sobre ${label}. ${page.total} artigo${page.total === 1 ? '' : 's'} publicados.`}
   ogImage="https://mclair.com.br/paginas/sobre-estrategia-comunicacao-mclair.jpg"
   prevUrl={page.url.prev || undefined}
   nextUrl={page.url.next || undefined}

@@ -130,10 +130,6 @@ const articleSchema: Record<string, any> = {
   ...(aboutTopics.length && {
     about: aboutTopics.map((k) => ({ '@type': 'Thing', name: k })),
   }),
-  speakable: {
-    '@type': 'SpeakableSpecification',
-    cssSelector: ['.ph-title', '.ph-subtitle', '.post-content p'],
-  },
 };
 
 // ── JSON-LD: Breadcrumb ───────────────────────────────────────

@@ -82,8 +82,12 @@ function formatDate(d: string) {
 ---
 
 <Layout
-  title={`Blog${page.currentPage > 1 ? ` | Página ${page.currentPage}` : ''} | Mclair`}
-  description="Artigos, insights e conteúdos sobre marketing, comunicação e branding da equipe Mclair."
+  title={page.currentPage > 1
+    ? `Blog de Assessoria de Imprensa, Página ${page.currentPage} | Mclair`
+    : 'Blog de Assessoria de Imprensa e Marketing | Mclair'}
+  description={page.currentPage > 1
+    ? `Página ${page.currentPage} do blog da Mclair: artigos sobre assessoria de imprensa, marketing de autoridade, branding e comunicação estratégica.`
+    : 'Artigos da equipe Mclair sobre assessoria de imprensa, marketing de autoridade, branding e comunicação estratégica para empresas e especialistas.'}
   ogImage="https://mclair.com.br/paginas/sobre-estrategia-comunicacao-mclair.jpg"
   prevUrl={page.url.prev || undefined}
   nextUrl={page.url.next || undefined}
