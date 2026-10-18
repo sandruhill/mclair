@@ -1,5 +1,6 @@
 ---
 import { CIDADES_COM_PAGINA } from '../data/assessoria-imprensa';
+import { PRIVACIDADE_ATIVA, CAMINHO_POLITICA } from '../data/privacidade';
 const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!';
 const nav = [
   { label: 'Início',    href: '/' },
@@ -123,7 +124,9 @@ const servicos = [
     <div class="container ft-bottom-inner">
       <span>© {new Date().getFullYear()} Mclair Comunicação. Todos os direitos reservados.</span>
       <div class="ft-bottom-links">
-        <a href="/contato/">Dúvidas sobre privacidade e dados</a>
+        {PRIVACIDADE_ATIVA
+          ? <a href={CAMINHO_POLITICA}>Política de privacidade</a>
+          : <a href="/contato/">Dúvidas sobre privacidade e dados</a>}
       </div>
     </div>
   </div>

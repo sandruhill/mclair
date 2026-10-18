@@ -1,0 +1,406 @@
+---
+// /politica-de-privacidade/
+// Política de privacidade conforme a LGPD (Lei 13.709/2018).
+// RASCUNHO até a Mclair aprovar: enquanto PRIVACIDADE_ATIVA = false
+// (src/data/privacidade.ts) a página sai com noindex, fora do sitemap e com a
+// faixa de rascunho no topo. Como ligar: ver o topo de src/data/privacidade.ts.
+//
+// Fatos conferidos no código em 17/10/2026:
+// - formulários: public/form-contato.js e public/api/contato.php (nome,
+//   e-mail, WhatsApp/telefone, empresa, assunto, serviços, verba, o que quer
+//   divulgar, mensagem e a página de origem); e-mail para kelly@mclair.com.br
+//   e abertura do WhatsApp da Mclair (wa.me/5511988600372);
+// - limite de envios: arquivo com hash SHA-256 do IP e horários dos envios,
+//   fora do public_html, apagado depois de um dia sem uso;
+// - GTM-P3JSQCGS com GA4 e pixel da Meta; public/api/fb-capi.php manda à
+//   Meta nome do evento, horário, id do evento, URL da página, IP, user agent
+//   e os cookies _fbp/_fbc. Não manda nome, e-mail, telefone nem mensagem;
+// - painel /acesso/: login próprio, senha com hash, cookie de sessão só em
+//   /acesso/ que expira ao fechar o navegador;
+// - vídeo do YouTube em /marketing-para-leiloeiros/ (youtube.com).
+// Itens marcados CONFIRMAR COM A MCLAIR nos comentários abaixo.
+export const prerender = true;
+import Layout from '../layouts/Layout.astro';
+import {
+  PRIVACIDADE_ATIVA,
+  CONTROLADOR,
+  ENCARREGADO,
+  POLITICA_ATUALIZADA_EM,
+} from '../data/privacidade';
+
+const rascunho = !PRIVACIDADE_ATIVA;
+const emailEncarregado = ENCARREGADO.email || CONTROLADOR.email;
+const nomeEncarregado = ENCARREGADO.nome || (rascunho ? '[a definir pela Mclair]' : '');
+
+// CONFIRMAR NO GTM: _gcl_au só existe se o contêiner tiver Google Ads ou o
+// vinculador de conversões; se não tiver, tirar a linha e o Google Ads da lista
+// de compartilhamento.
+const COOKIES = [
+  { nome: '_ga', quem: 'Google Analytics 4', para: 'Distinguir visitantes para contar visitas', prazo: '2 anos', tipo: 'Medição' },
+  { nome: '_ga_<ID>', quem: 'Google Analytics 4', para: 'Guardar o estado da sessão de navegação', prazo: '2 anos', tipo: 'Medição' },
+  { nome: '_gcl_au', quem: 'Google (Ads, pelo GTM)', para: 'Ligar uma visita vinda de anúncio do Google a uma conversão', prazo: '90 dias', tipo: 'Publicidade' },
+  { nome: '_fbp', quem: 'Meta (pixel)', para: 'Identificar o navegador para medir e mostrar anúncios da Mclair no Facebook e no Instagram', prazo: '90 dias', tipo: 'Publicidade' },
+  { nome: '_fbc', quem: 'Meta (pixel)', para: 'Guardar o clique em um anúncio da Meta que trouxe a visita', prazo: '90 dias', tipo: 'Publicidade' },
+  { nome: 'fr e outros', quem: 'Meta (domínio facebook.com)', para: 'Publicidade, para quem está logado no Facebook ou no Instagram', prazo: 'Até 90 dias', tipo: 'Publicidade' },
+  { nome: 'mclair:consentimento', quem: 'Mclair (armazenamento local do navegador)', para: 'Lembrar se você aceitou ou recusou os cookies', prazo: 'Até você apagar os dados do navegador', tipo: 'Necessário' },
+  { nome: 'PHPSESSID', quem: 'Mclair (só no painel /acesso/)', para: 'Manter o login da equipe no painel', prazo: 'Até fechar o navegador', tipo: 'Necessário' },
+];
+
+const SUMARIO = [
+  { id: 'quem-somos', texto: 'Quem cuida dos seus dados' },
+  { id: 'dados', texto: 'Que dados coletamos e por quê' },
+  { id: 'compartilhamento', texto: 'Com quem compartilhamos' },
+  { id: 'internacional', texto: 'Transferência para outros países' },
+  { id: 'prazo', texto: 'Por quanto tempo guardamos' },
+  { id: 'cookies', texto: 'Cookies' },
+  { id: 'direitos', texto: 'Seus direitos e como pedir' },
+  { id: 'seguranca', texto: 'Segurança' },
+  { id: 'mudancas', texto: 'Mudanças nesta política' },
+];
+---
+
+<Layout
+  title="Política de privacidade | Mclair"
+  description="Como a Mclair Comunicação coleta, usa, guarda e protege os dados de quem visita o site e fala com a agência, conforme a LGPD. Cookies, direitos e contato."
+>
+
+<section class="pp-hero">
+  <div class="container pp-hero-inner">
+    <h1 class="pp-title">Política de privacidade</h1>
+    <p class="pp-sub">Como a Mclair trata os dados de quem visita este site e entra em contato com a agência, conforme a Lei Geral de Proteção de Dados (Lei 13.709/2018).</p>
+    <p class="pp-data">Atualizada em {POLITICA_ATUALIZADA_EM}</p>
+  </div>
+</section>
+
+<section class="pp-corpo">
+  <div class="container pp-wrap">
+    {rascunho && (
+      <p class="pp-rascunho" role="note">
+        <strong>Rascunho em revisão pela Mclair.</strong> Este texto ainda não foi aprovado e não está publicado oficialmente.
+      </p>
+    )}
+
+    <nav class="pp-sumario" aria-label="Nesta página">
+      <p class="pp-sumario-h">Nesta página</p>
+      <ol>
+        {SUMARIO.map((s) => <li><a href={`#${s.id}`}>{s.texto}</a></li>)}
+      </ol>
+    </nav>
+
+    <article class="pp-texto">
+      <p>
+        Esta política vale para o site mclair.com.br. Ela explica, em linguagem direta, que dados pessoais
+        passam pela Mclair quando você navega aqui ou fala com a gente, para que servem, com quem são
+        compartilhados, por quanto tempo ficam guardados e como você pode pedir acesso, correção ou
+        exclusão.
+      </p>
+
+      <h2 id="quem-somos">Quem cuida dos seus dados</h2>
+      <p>
+        A responsável pelos dados (o "controlador", nos termos da LGPD) é a
+        {' '}<strong>{CONTROLADOR.razaoSocial}</strong>, nome fantasia {CONTROLADOR.nomeFantasia},
+        CNPJ {CONTROLADOR.cnpj}, com sede em {CONTROLADOR.cidade}.
+        {/* CONFIRMAR COM A MCLAIR: razão social, CNPJ e se quer o endereço completo aqui. */}
+      </p>
+      <p>
+        Encarregado pelo tratamento de dados pessoais:
+        {nomeEncarregado && <> <strong>{nomeEncarregado}</strong>,</>}
+        {' '}pelo e-mail <a href={`mailto:${emailEncarregado}`}>{emailEncarregado}</a>.
+        É com essa pessoa que você fala sobre qualquer assunto desta política.
+      </p>
+
+      <h2 id="dados">Que dados coletamos e por quê</h2>
+
+      <h3>Quando você preenche um formulário</h3>
+      <p>
+        Os formulários do site (página de contato, janela do WhatsApp, página da Kelly Pinheiro e páginas
+        de serviço) pedem <strong>nome, e-mail, WhatsApp ou telefone, empresa e mensagem</strong>. Alguns
+        também perguntam o assunto, os serviços de interesse, a verba prevista e o que você quer divulgar.
+        Junto vai o endereço da página em que você estava.
+      </p>
+      <p>
+        Ao enviar, duas coisas acontecem: os dados seguem por e-mail para a equipe comercial da Mclair
+        (kelly@mclair.com.br), e o seu WhatsApp abre com a mensagem pronta para a Mclair. A mensagem pelo
+        WhatsApp só sai se você tocar em enviar.
+      </p>
+      <p>
+        <strong>Para quê:</strong> responder ao seu contato, entender o que você precisa e preparar uma
+        proposta. <strong>Base legal:</strong> procedimentos preliminares a um contrato, a seu pedido
+        (art. 7º, V, da LGPD). Se você virar cliente, os dados passam a ser usados para cumprir o contrato.
+      </p>
+      <p>
+        Você não é obrigado a dar dados para navegar no site. Sem nome e um meio de contato, apenas não
+        conseguimos responder.
+      </p>
+
+      <h3>Para proteger o formulário contra abuso</h3>
+      <p>
+        Para impedir que robôs usem o formulário para disparar e-mails, o servidor conta quantos envios
+        saem de um mesmo endereço IP em um intervalo curto. Ele não guarda o IP em si: grava só um código
+        embaralhado (hash) gerado a partir dele e o horário dos envios, em um arquivo fora da parte pública
+        do site, apagado depois de um dia sem uso. Também existe um campo invisível que só robôs preenchem.
+      </p>
+      <p>
+        <strong>Base legal:</strong> legítimo interesse da Mclair em manter o site seguro e funcionando
+        (art. 7º, IX), com o mínimo de dados possível.
+      </p>
+
+      <h3>Registros de acesso do servidor</h3>
+      <p>
+        Como qualquer site, o servidor de hospedagem registra dados técnicos de cada acesso, como endereço
+        IP, data e hora, página pedida e tipo de navegador. Esses registros servem para segurança e para
+        resolver problemas. <strong>Base legal:</strong> cumprimento de obrigação legal, já que o Marco
+        Civil da Internet (Lei 12.965/2014, art. 15) exige guardar registros de acesso a aplicações por
+        seis meses (art. 7º, II, da LGPD), e legítimo interesse em segurança (art. 7º, IX).
+        {/* CONFIRMAR COM A MCLAIR: prazo dos logs na Hostinger. */}
+      </p>
+
+      <h3>Medição de visitas e publicidade (cookies)</h3>
+      <p>
+        Se você aceitar no aviso de cookies, o site carrega, pelo Google Tag Manager, duas ferramentas:
+      </p>
+      <ul>
+        <li>
+          <strong>Google Analytics 4</strong>, para saber quantas pessoas visitam o site, por quais páginas
+          passam, de que tipo de aparelho e região aproximada, e quantas clicam no WhatsApp ou enviam um
+          formulário. Os relatórios são de números agregados; não usamos o Analytics para identificar
+          quem você é.
+        </li>
+        <li>
+          <strong>Pixel da Meta</strong>, para medir os resultados dos anúncios da Mclair no Facebook e no
+          Instagram e mostrar anúncios a quem já visitou o site. Para que a medição funcione mesmo quando o
+          navegador bloqueia o pixel, o nosso servidor também avisa a Meta (pela API de Conversões) de
+          eventos como clique no WhatsApp, envio de formulário ou leitura da página até o fim. Esse aviso
+          leva o nome do evento, o horário, o endereço da página, o seu IP, o tipo de navegador e os
+          identificadores dos cookies da Meta. <strong>Não leva</strong> nome, e-mail, telefone nem o texto
+          que você escreveu no formulário.
+        </li>
+      </ul>
+      <p>
+        <strong>Base legal:</strong> o seu consentimento (art. 7º, I). Se você recusar, essas ferramentas
+        não gravam cookies nem mandam dados de publicidade. O Google pode receber apenas sinais sem cookie e
+        sem identificação, previstos no modo de consentimento dele, para estimar o total de visitas. Você
+        pode mudar de ideia quando quiser, no botão do fim da seção de cookies.
+      </p>
+
+      <h3>Vídeo incorporado</h3>
+      <p>
+        A página de marketing para leiloeiros mostra um vídeo do YouTube. Quando o vídeo carrega, o Google
+        pode receber dados de navegação conforme a política dele.
+      </p>
+
+      <h3>Painel de administração</h3>
+      <p>
+        O endereço /acesso/ é o painel usado só pela equipe da Mclair para editar o site. Ele guarda nome de
+        usuário e senha (cifrada) de quem tem acesso e usa um cookie de sessão necessário para o login, que
+        some quando o navegador é fechado. <strong>Base legal:</strong> legítimo interesse em administrar o
+        site com segurança (art. 7º, IX). Visitantes do site não passam por ele.
+      </p>
+
+      <p>
+        A Mclair não vende dados pessoais, não toma decisões automatizadas sobre você e não usa os dados
+        para finalidades diferentes das descritas aqui. O site não é dirigido a crianças e adolescentes.
+      </p>
+
+      <h2 id="compartilhamento">Com quem compartilhamos</h2>
+      <p>Só com quem precisa dos dados para o serviço funcionar:</p>
+      <ul>
+        <li><strong>Google</strong>: Google Tag Manager, Google Analytics 4, Google Ads e YouTube, nos usos descritos acima.</li>
+        <li><strong>Meta</strong>: pixel e API de Conversões (Facebook e Instagram) e o WhatsApp, por onde segue a conversa que você inicia.</li>
+        <li><strong>Hostinger</strong>: empresa que hospeda o site, o servidor que envia os e-mails do formulário e o painel.</li>
+        <li><strong>Provedores de e-mail</strong>: o serviço de e-mail em que a caixa da Mclair recebe as mensagens do formulário.{/* CONFIRMAR COM A MCLAIR: qual provedor (Hostinger, Google Workspace, Microsoft etc.). */}</li>
+        <li><strong>Autoridades</strong>: quando a lei ou uma ordem judicial exigir.</li>
+      </ul>
+      <p>
+        Cada uma dessas empresas trata os dados conforme o contrato com a Mclair e a própria política de
+        privacidade. As do Google e da Meta estão em policies.google.com/privacy e
+        facebook.com/privacy/policy.
+      </p>
+
+      <h2 id="internacional">Transferência para outros países</h2>
+      <p>
+        Google e Meta guardam dados em servidores nos Estados Unidos e em outros países, e a hospedagem
+        pode estar fora do Brasil conforme o servidor contratado. Essas transferências seguem o art. 33 da
+        LGPD, com as garantias que esses fornecedores oferecem, como as cláusulas-padrão contratuais
+        previstas pela Autoridade Nacional de Proteção de Dados (ANPD).
+        {/* CONFIRMAR COM A MCLAIR: país do servidor contratado na Hostinger. */}
+      </p>
+
+      <h2 id="prazo">Por quanto tempo guardamos</h2>
+      {/* CONFIRMAR COM A MCLAIR: prazos dos contatos e de retenção do GA4 (Admin > Coleta e retenção de dados). */}
+      <ul>
+        <li>
+          <strong>Mensagens dos formulários e do WhatsApp</strong>: pelo tempo necessário para responder e
+          acompanhar a conversa. Se o contato não virar contrato, apagamos em até 2 anos depois da última
+          conversa. Se virar, guardamos durante o contrato e pelos prazos legais depois dele (por exemplo,
+          5 anos para fins fiscais e para defesa em processos).
+        </li>
+        <li><strong>Controle de envios do formulário</strong> (hash do IP): apagado depois de um dia sem uso.</li>
+        <li><strong>Registros de acesso do servidor</strong>: 6 meses, como pede o Marco Civil da Internet.</li>
+        <li><strong>Dados do Google Analytics</strong>: até 14 meses, conforme a configuração da conta.</li>
+        <li><strong>Cookies</strong>: os prazos estão na tabela abaixo.</li>
+      </ul>
+      <p>Passados esses prazos, os dados são apagados ou anonimizados.</p>
+
+      <h2 id="cookies">Cookies</h2>
+      <p>
+        Cookies são pequenos arquivos que o site grava no seu navegador. Os necessários funcionam sempre.
+        Os de medição e de publicidade só entram se você clicar em "Aceitar" no aviso.
+      </p>
+      <div class="pp-tabela-wrap">
+        <table class="pp-tabela">
+          <caption class="sr-only">Cookies usados no site</caption>
+          <thead>
+            <tr><th scope="col">Nome</th><th scope="col">De quem</th><th scope="col">Para quê</th><th scope="col">Prazo</th><th scope="col">Tipo</th></tr>
+          </thead>
+          <tbody>
+            {COOKIES.map((c) => (
+              <tr>
+                <td data-r="Nome"><code>{c.nome}</code></td>
+                <td data-r="De quem">{c.quem}</td>
+                <td data-r="Para quê">{c.para}</td>
+                <td data-r="Prazo">{c.prazo}</td>
+                <td data-r="Tipo">{c.tipo}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p>
+        A lista pode mudar quando o Google ou a Meta atualizam as ferramentas. Você também pode apagar ou
+        bloquear cookies nas configurações do navegador.
+      </p>
+      <p class="pp-acao">
+        <button type="button" class="btn-outline pp-btn-cookies" data-abrir-cookies hidden={rascunho}>
+          Mudar minha escolha de cookies
+        </button>
+      </p>
+
+      <h2 id="direitos">Seus direitos e como pedir</h2>
+      <p>Pelo art. 18 da LGPD, você pode pedir à Mclair, a qualquer momento:</p>
+      <ul>
+        <li>confirmação de que tratamos dados seus;</li>
+        <li>acesso aos dados;</li>
+        <li>correção de dados incompletos, errados ou desatualizados;</li>
+        <li>anonimização, bloqueio ou eliminação de dados desnecessários, excessivos ou tratados em desacordo com a lei;</li>
+        <li>portabilidade dos dados para outro fornecedor;</li>
+        <li>eliminação dos dados tratados com o seu consentimento;</li>
+        <li>informação sobre com quem compartilhamos os dados;</li>
+        <li>informação sobre a possibilidade de não dar consentimento e o que acontece se você não der;</li>
+        <li>revogação do consentimento.</li>
+      </ul>
+      <p>
+        Você também pode se opor a um tratamento feito com base em legítimo interesse, se achar que ele
+        não respeita a lei.
+      </p>
+      <p>
+        <strong>Como pedir:</strong> mande um e-mail para <a href={`mailto:${emailEncarregado}`}>{emailEncarregado}</a>
+        {' '}dizendo o que você quer. Podemos pedir alguma informação para confirmar que o pedido é seu,
+        para não entregar seus dados a outra pessoa. A confirmação e o acesso em formato simplificado são
+        respondidos de imediato; a declaração completa sai em até 15 dias (art. 19 da LGPD). O pedido é
+        gratuito.
+      </p>
+      <p>
+        Se achar que o seu pedido não foi atendido, você pode reclamar à Autoridade Nacional de Proteção
+        de Dados, em gov.br/anpd.
+      </p>
+
+      <h2 id="seguranca">Segurança</h2>
+      <p>
+        O site funciona só em conexão cifrada (HTTPS). O formulário aceita envios apenas do próprio site,
+        limita a quantidade de envios e não grava os dados em log. O painel tem acesso restrito por senha,
+        com limite de tentativas. Nenhum sistema é infalível; se acontecer um incidente que traga risco
+        relevante a você, avisaremos você e a ANPD, como manda a lei.
+      </p>
+
+      <h2 id="mudancas">Mudanças nesta política</h2>
+      <p>
+        Quando mudarmos a forma de tratar dados, esta página será atualizada e a data no topo muda. Se a
+        mudança for importante, avisaremos no próprio site.
+      </p>
+      <p class="pp-fim">
+        {CONTROLADOR.razaoSocial}, CNPJ {CONTROLADOR.cnpj}, {CONTROLADOR.cidade}. Atualizada em {POLITICA_ATUALIZADA_EM}.
+      </p>
+    </article>
+  </div>
+</section>
+
+</Layout>
+
+{PRIVACIDADE_ATIVA && (
+  <script is:inline>
+    (function () {
+      function ligar() {
+        var b = document.querySelector('[data-abrir-cookies]');
+        if (!b || b.dataset.ligado) return;
+        b.dataset.ligado = '1';
+        b.addEventListener('click', function () { if (window.McCookies) window.McCookies.abrir(); });
+      }
+      ligar();
+      document.addEventListener('astro:page-load', ligar);
+    })();
+  </script>
+)}
+
+<style>
+  .pp-hero {
+    background: var(--dark);
+    padding-block: clamp(120px, 14vw, 168px) clamp(48px, 6vw, 72px);
+  }
+  .pp-hero-inner { max-width: 820px; }
+  .pp-title {
+    color: #fff; font-weight: 900; letter-spacing: -.02em; line-height: 1.08;
+    font-size: clamp(2.1rem, 5vw, 3.4rem); margin: 0 0 18px;
+  }
+  .pp-sub { color: rgba(255,255,255,.72); font-size: clamp(1rem, 1.6vw, 1.15rem); line-height: 1.6; max-width: 680px; margin: 0 0 14px; text-wrap: pretty; }
+  .pp-data { color: rgba(255,255,255,.5); font-size: .88rem; margin: 0; }
+
+  .pp-corpo { padding-block: clamp(40px, 6vw, 72px) clamp(64px, 8vw, 104px); }
+  .pp-wrap { max-width: 820px; }
+
+  .pp-rascunho {
+    background: #FFF4D6; color: #5A4300; border: 1px solid #E8CF85;
+    border-radius: var(--r-md); padding: 14px 18px; margin: 0 0 32px; font-size: .95rem; line-height: 1.5;
+  }
+
+  .pp-sumario { border: 1px solid var(--line); border-radius: var(--r-lg); padding: 20px 24px; margin: 0 0 40px; background: #fff; }
+  .pp-sumario-h { font-weight: 800; color: var(--ink); margin: 0 0 10px; font-size: .95rem; }
+  .pp-sumario ol { margin: 0; padding-left: 1.2em; columns: 2 260px; column-gap: 32px; }
+  .pp-sumario li { margin: 0 0 6px; break-inside: avoid; }
+  .pp-sumario a { color: var(--ink-2); text-decoration: none; }
+  .pp-sumario a:hover { color: var(--red); }
+
+  .pp-texto { color: var(--ink-2); font-size: 1.02rem; line-height: 1.72; }
+  .pp-texto p, .pp-texto ul { margin: 0 0 16px; text-wrap: pretty; }
+  .pp-texto ul { padding-left: 1.2em; }
+  .pp-texto li { margin: 0 0 8px; }
+  .pp-texto h2 {
+    color: var(--ink); font-weight: 900; letter-spacing: -.01em; line-height: 1.2;
+    font-size: clamp(1.4rem, 2.6vw, 1.75rem); margin: 48px 0 16px; scroll-margin-top: 96px;
+  }
+  .pp-texto h3 { color: var(--ink); font-weight: 800; font-size: 1.1rem; margin: 28px 0 10px; }
+  .pp-texto strong { color: var(--ink); }
+  .pp-texto a { color: var(--red); text-underline-offset: 3px; overflow-wrap: anywhere; }
+
+  .pp-tabela-wrap { margin: 8px 0 20px; }
+  .pp-tabela { width: 100%; border-collapse: collapse; font-size: .9rem; line-height: 1.5; background: #fff; border: 1px solid var(--line); border-radius: var(--r-md); }
+  .pp-tabela th, .pp-tabela td { text-align: left; vertical-align: top; padding: 10px 12px; border-bottom: 1px solid var(--line); }
+  .pp-tabela th { color: var(--ink); font-weight: 800; background: var(--cream-2); }
+  .pp-tabela code { font-size: .85rem; color: var(--ink); overflow-wrap: anywhere; }
+  .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+
+  /* No celular cada cookie vira um bloco com o rótulo ao lado do valor. */
+  @media (max-width: 680px) {
+    .pp-tabela, .pp-tabela tbody, .pp-tabela tr, .pp-tabela td { display: block; width: 100%; }
+    .pp-tabela thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+    .pp-tabela tr { border-bottom: 1px solid var(--line); padding: 8px 0; }
+    .pp-tabela tr:last-child { border-bottom: 0; }
+    .pp-tabela td { border: 0; padding: 4px 14px; display: grid; grid-template-columns: 88px 1fr; gap: 10px; }
+    .pp-tabela td::before { content: attr(data-r); font-weight: 800; color: var(--ink); }
+  }
+
+  .pp-acao { margin: 8px 0 0; }
+  .pp-btn-cookies { cursor: pointer; font: inherit; font-weight: 700; }
+  .pp-btn-cookies[hidden] { display: none; }
+  .pp-fim { margin-top: 40px; font-size: .88rem; color: var(--ink-3); }
+</style>

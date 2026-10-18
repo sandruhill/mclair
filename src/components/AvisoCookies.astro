@@ -1,0 +1,106 @@
+---
+/*
+ * Aviso de cookies (LGPD). Só é renderizado com PRIVACIDADE_ATIVA = true
+ * (src/data/privacidade.ts). O estado padrão "negado" do Consent Mode é
+ * aplicado antes do GTM por ConsentimentoPadrao.astro; aqui só se grava a
+ * escolha e se manda o update.
+ *
+ * Aceitar: localStorage = 'aceito', consent update para granted e evento
+ *   "consentimento_aceito" no dataLayer (acionador da tag base do pixel no GTM).
+ * Recusar: localStorage = 'recusado', consent continua denied. Se a pessoa
+ *   tinha aceitado antes, manda update para denied e apaga os cookies de
+ *   medição e publicidade do domínio.
+ * window.McCookies.abrir() reabre o aviso (botão na política).
+ *
+ * Com o ClientRouter o <body> é trocado a cada navegação; o script roda de
+ * novo e liga o aviso da página nova. O window.McCookies é criado uma vez.
+ */
+import { PRIVACIDADE_ATIVA, CAMINHO_POLITICA, CHAVE_CONSENTIMENTO } from '../data/privacidade';
+
+const config = JSON.stringify({ chave: CHAVE_CONSENTIMENTO });
+const codigo = `(function(w,d,c){
+var CHAVE=c.chave;
+function ler(){try{return w.localStorage.getItem(CHAVE);}catch(x){return null;}}
+function gravar(v){try{w.localStorage.setItem(CHAVE,v);}catch(x){}}
+function gtag(){w.dataLayer=w.dataLayer||[];w.dataLayer.push(arguments);}
+function apagarCookies(){
+  var nomes=d.cookie.split(';').map(function(s){return s.split('=')[0].trim();})
+    .filter(function(n){return /^(_ga|_gid|_gat|_gcl|_fbp|_fbc)/.test(n);});
+  var h=location.hostname.split('.'),doms=[''];
+  for(var i=0;i<h.length-1;i++)doms.push(';domain=.'+h.slice(i).join('.'));
+  nomes.forEach(function(n){doms.forEach(function(dm){d.cookie=n+'=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'+dm;});});
+}
+function el(){return d.getElementById('aviso-cookies');}
+function mostrar(){var a=el();if(!a)return;a.hidden=false;}
+function esconder(){var a=el();if(a)a.hidden=true;}
+function aceitar(){
+  gravar('aceito');
+  gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});
+  w.dataLayer.push({event:'consentimento_aceito'});
+  esconder();
+}
+function recusar(){
+  var antes=ler();gravar('recusado');
+  if(antes==='aceito'){
+    gtag('consent','update',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied'});
+    apagarCookies();
+  }
+  w.dataLayer=w.dataLayer||[];w.dataLayer.push({event:'consentimento_recusado'});
+  esconder();
+}
+function ligar(){
+  var a=el();if(!a||a.dataset.ligado)return;a.dataset.ligado='1';
+  a.querySelector('[data-cookies="aceitar"]').addEventListener('click',aceitar);
+  a.querySelector('[data-cookies="recusar"]').addEventListener('click',recusar);
+  if(!ler())mostrar();
+}
+if(!w.McCookies){
+  w.McCookies={abrir:function(){ligar();mostrar();var b=el();b&&b.querySelector('button').focus();},escolha:ler};
+  d.addEventListener('astro:page-load',ligar);
+}
+ligar();
+})(window,document,${config});`;
+---
+{PRIVACIDADE_ATIVA && (
+  <>
+    <div id="aviso-cookies" class="ck" role="region" aria-label="Aviso de cookies" hidden>
+      <p class="ck-txt">
+        Usamos cookies do Google e da Meta para medir as visitas e mostrar anúncios da Mclair. Eles só entram se você aceitar.{' '}
+        <a href={CAMINHO_POLITICA}>Política de privacidade</a>
+      </p>
+      <div class="ck-acoes">
+        <button type="button" class="ck-btn ck-recusar" data-cookies="recusar">Recusar</button>
+        <button type="button" class="ck-btn ck-aceitar" data-cookies="aceitar">Aceitar</button>
+      </div>
+    </div>
+    <script is:inline set:html={codigo} />
+    <style is:inline>
+      .ck {
+        position: fixed; z-index: 450; left: 22px; bottom: 22px;
+        width: min(420px, calc(100vw - 32px));
+        background: var(--dark); color: rgba(255,255,255,.82);
+        border: 1px solid rgba(255,255,255,.1); border-radius: var(--r-lg);
+        box-shadow: 0 12px 40px rgba(0,0,0,.28);
+        padding: 18px 20px; font-size: .88rem; line-height: 1.55;
+      }
+      .ck[hidden] { display: none; }
+      .ck-txt { margin: 0 0 14px; text-wrap: pretty; }
+      .ck-txt a { color: #fff; text-decoration: underline; text-underline-offset: 3px; white-space: nowrap; }
+      .ck-acoes { display: flex; gap: 10px; }
+      .ck-btn {
+        flex: 1; min-height: 44px; border-radius: var(--r-md);
+        font: inherit; font-weight: 700; font-size: .86rem; cursor: pointer;
+        transition: background .15s, border-color .15s;
+      }
+      .ck-recusar { background: transparent; color: #fff; border: 1px solid rgba(255,255,255,.4); }
+      .ck-recusar:hover { border-color: #fff; background: rgba(255,255,255,.08); }
+      .ck-aceitar { background: var(--red); color: #fff; border: 1px solid var(--red); }
+      .ck-aceitar:hover { background: var(--red-2); border-color: var(--red-2); }
+      .ck-btn:focus-visible, .ck-txt a:focus-visible { outline: 3px solid #fff; outline-offset: 2px; }
+      @media (max-width: 640px) {
+        .ck { left: 16px; right: 16px; bottom: 16px; width: auto; }
+      }
+    </style>
+  </>
+)}
+

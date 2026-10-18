@@ -1,0 +1,59 @@
+---
+/*
+ * Consent Mode v2 do Google: estado padrão "negado" antes do GTM.
+ *
+ * Fica no <head>, logo depois do charset e ANTES do snippet do GTM em
+ * src/layouts/Layout.astro. O GTM carrega com atraso (primeira interação ou
+ * 3 s depois do load), mas o comando de consentimento precisa estar na fila
+ * do dataLayer antes do evento gtm.js, que o snippet empurra de imediato.
+ * Por isso este script vem antes dele, e não junto do aviso.
+ *
+ * Só é aplicado com PRIVACIDADE_ATIVA = true (src/data/privacidade.ts).
+ * Com false não sai nada e a medição segue como hoje.
+ *
+ * Quem já aceitou em outra visita (localStorage) recebe o "update" para
+ * concedido aqui mesmo, ainda antes do gtm.js, para as tags da página
+ * dispararem normalmente. O aviso (AvisoCookies.astro) faz o update na hora
+ * do clique e empurra o evento "consentimento_aceito" no dataLayer.
+ *
+ * ---------------------------------------------------------------------
+ * O QUE MUDAR NO GTM (GTM-P3JSQCGS) ANTES DE LIGAR. Não é feito pelo código.
+ * ---------------------------------------------------------------------
+ * 1. Admin > Configurações do contêiner: marcar "Ativar visão geral de
+ *    consentimento". Publicar.
+ * 2. Tags do Google (Tag do Google / GA4 e eventos GA4, Google Ads, Vinculador
+ *    de conversões): não precisam de mudança. Elas têm verificação de
+ *    consentimento integrada e respeitam analytics_storage e ad_storage.
+ *    Na visão geral de consentimento, deixá-las como "Não é necessário
+ *    consentimento adicional".
+ * 3. Todas as tags da Meta: a tag base do pixel (fbq init/PageView), as tags
+ *    de evento do pixel (whatsapp_click, whatsapp_form_submit,
+ *    contact_form_submit, scroll_90) e as tags HTML personalizadas que fazem
+ *    POST para /api/fb-capi.php. Em cada uma: Configurações avançadas >
+ *    Configurações de consentimento > "Exigir consentimento adicional para a
+ *    tag disparar" e acrescentar ad_storage e ad_user_data.
+ * 4. Na tag base do pixel, acrescentar um segundo acionador: Evento
+ *    personalizado com nome "consentimento_aceito". Assim o pixel liga na
+ *    mesma página em que a pessoa aceitou (o acionador de página já passou e
+ *    ficou bloqueado). Em Configurações avançadas, "Opções de disparo da tag":
+ *    "Uma vez por página", para não contar PageView em dobro.
+ * 5. Se houver alguma outra tag HTML personalizada de terceiro (LinkedIn,
+ *    TikTok, Hotjar etc.), mesma regra do item 3 (ad_storage para publicidade,
+ *    analytics_storage para medição).
+ * 6. Testar no modo Visualizar do GTM: sem escolha, as tags da Meta aparecem
+ *    como "bloqueadas por consentimento"; depois de Aceitar, disparam.
+ */
+import { PRIVACIDADE_ATIVA, CHAVE_CONSENTIMENTO } from '../data/privacidade';
+
+const codigo = `(function(w){
+if(w.__mcConsent)return;w.__mcConsent=1;
+w.dataLayer=w.dataLayer||[];
+function gtag(){w.dataLayer.push(arguments);}
+w.gtag=w.gtag||gtag;
+gtag('consent','default',{ad_storage:'denied',ad_user_data:'denied',ad_personalization:'denied',analytics_storage:'denied',wait_for_update:500});
+gtag('set','ads_data_redaction',true);
+var e=null;try{e=w.localStorage.getItem(${JSON.stringify(CHAVE_CONSENTIMENTO)});}catch(x){}
+if(e==='aceito')gtag('consent','update',{ad_storage:'granted',ad_user_data:'granted',ad_personalization:'granted',analytics_storage:'granted'});
+})(window);`;
+---
+{PRIVACIDADE_ATIVA && <script is:inline set:html={codigo} />}

@@ -3,6 +3,8 @@ import { foraDoGoogle } from '../data/fora-do-google';
 import { ClientRouter } from 'astro:transitions';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import ConsentimentoPadrao from '../components/ConsentimentoPadrao.astro';
+import AvisoCookies from '../components/AvisoCookies.astro';
 import '../styles/global.css';
 import { BUILD_ID } from '../utils/build';
 import { idDaPessoa, paginaDaPessoa } from '../utils/blogAuthors';
@@ -181,6 +183,8 @@ const websiteSchema = {
     browsers don't mid-parse re-decode/reparse the document and drop event
     listeners bound during the first pass -->
     <meta charset="UTF-8" />
+    {/* Consent Mode do Google: antes do GTM. Só sai com PRIVACIDADE_ATIVA (src/data/privacidade.ts). */}
+    <ConsentimentoPadrao />
     <!-- Google Tag Manager (carregamento adiado)
          O dataLayer e o evento gtm.js nascem aqui, no começo da página, como no
          snippet oficial. Só o download do gtm.js (GA4 e pixel da Meta vêm por
@@ -328,6 +332,7 @@ const websiteSchema = {
       <slot />
     </main>
     <Footer />
+    <AvisoCookies />
 
     <!-- CMS edit affordance: only rendered for logged-in admin/editor/author, checked client-side -->
     <a id="cms-edit-fab" class="cms-edit-fab" style="display:none" rel="nofollow">
