@@ -17,6 +17,7 @@
   RewriteRule ^menu/?$ menu.php [L,QSA]
   RewriteRule ^usuarios/?$ users.php [L,QSA]
   RewriteRule ^configuracoes/?$ settings.php [L,QSA]
+  RewriteRule ^mensagens/?$ messages.php [L,QSA]
 </IfModule>
 
 <Files "config.php">
@@ -36,5 +37,19 @@
 </Files>
 
 <Files "auth.php">
+  Require all denied
+</Files>
+
+<Files "mensagens-lib.php">
+  Require all denied
+</Files>
+
+<Files "mmdb.php">
+  Require all denied
+</Files>
+
+# O PHP da Hostinger grava "error_log" na pasta do script; pode conter
+# mensagem de exceção com dado de lead. Não é para ser público.
+<Files "error_log">
   Require all denied
 </Files>

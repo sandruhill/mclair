@@ -64,6 +64,7 @@ function adminLayoutTop(string $active, string $title, ?array $crumb = null, ?st
   .sidebar nav a:hover { color:var(--ink); background:var(--soft); }
   .sidebar nav a.active { color:var(--red); background:rgba(200,16,46,.08); }
   .sidebar nav a.active svg { opacity:1; }
+  .sidebar nav a .nav-num { margin-left:auto; min-width:20px; height:20px; padding:0 6px; border-radius:10px; background:var(--red); color:#fff; font-size:.68rem; font-weight:800; display:inline-flex; align-items:center; justify-content:center; }
   .nav-tree { display:flex; flex-direction:column; margin:2px 0 4px 22px; padding-left:12px; border-left:1.5px solid var(--line); }
   .nav-tree a { display:block; padding:7px 10px; margin:1px 0; font-size:.8rem; font-weight:600; color:var(--ink-3); border-radius:8px; }
   .nav-tree a:hover { color:var(--ink); background:var(--soft); }
@@ -599,6 +600,14 @@ function askUrl(anchor, cb) {
       <div><strong>Mclair</strong><small>Painel de conteúdo</small></div>
     </div>
     <nav>
+      <?php if (cmsRole() !== 'author'): require_once __DIR__ . '/mensagens-lib.php'; $novasMensagens = mcmNovos(cmsDb()); ?>
+      <div class="nav-label">Atendimento</div>
+      <a href="/acesso/mensagens" class="<?= $active === 'messages' ? 'active' : '' ?>">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16v11H8l-4 4z"/><path d="M8 9h8M8 12h5"/></svg>
+        Mensagens
+        <?php if ($novasMensagens > 0): ?><span class="nav-num" title="novas, sem atendimento"><?= $novasMensagens ?></span><?php endif; ?>
+      </a>
+      <?php endif; ?>
       <div class="nav-label">Conteúdo</div>
       <a href="/acesso/posts" class="<?= $active === 'blog' ? 'active' : '' ?>">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h13v16H4z"/><path d="M8 8h5M8 12h5M8 16h3"/></svg>

@@ -535,6 +535,13 @@ const desafios = [
       + '.\n\n*Principal desafio hoje:* ' + desafio
       + '\n\n*E-mail:* ' + email
       + '\n\n*WhatsApp:* ' + whats;
+    // Grava em Mensagens (painel) e manda e-mail para a Kelly sem esperar
+    // resposta; o WhatsApp abre no mesmo clique.
+    if (window.McContato) window.McContato.enviarEmail({
+      formulario: 'leiloes-form', nome: nome, email: email, telefone: whats, empresa: empresa,
+      assunto: desafio || 'Marketing para leiloeiros',
+      mensagem: 'Veio pela página de marketing para leiloeiros.' + (desafio ? ' Principal desafio: ' + desafio + '.' : '')
+    });
     window.open('https://wa.me/' + WA_NUMBER + '?text=' + encodeURIComponent(text), '_blank');
   });
 })();
