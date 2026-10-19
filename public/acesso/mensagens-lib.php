@@ -481,6 +481,65 @@ function mcmGeo(string $ip): ?array
     ];
 }
 
+// --------------------------------------------------------------- GA4 (MP)
+
+const MCM_GA4_ID_PADRAO = 'G-4D9MHSHXNE';
+
+/**
+ * Configuração do Measurement Protocol, FORA do public_html:
+ * /home/.../domains/mclair.com.br/.mclair-config/ga4.php devolvendo
+ * ['measurement_id' => 'G-...', 'api_secret' => '...']. Sem arquivo ou sem
+ * api_secret, o envio ao GA4 é pulado sem erro (a chave só existe depois de
+ * aceitar os termos no GA4).
+ */
+function mcmGa4Config(): ?array
+{
+    $arq = dirname(__DIR__, 2) . '/.mclair-config/ga4.php';
+    if (!is_file($arq)) return null;
+    $c = @include $arq;
+    if (!is_array($c)) return null;
+    $secret = trim((string)($c['api_secret'] ?? ''));
+    $mid = trim((string)($c['measurement_id'] ?? MCM_GA4_ID_PADRAO));
+    if ($secret === '' || !preg_match('/^G-[A-Z0-9]{6,12}$/', $mid)) return null;
+    return ['measurement_id' => $mid, 'api_secret' => $secret];
+}
+
+/**
+ * Manda generate_lead ao GA4 pelo servidor (o push no navegador pode se
+ * perder quando o WhatsApp abre e a página vai para segundo plano). Só com
+ * client_id do cookie _ga e com a chave configurada. Devolve 'pulado', 'ok'
+ * ou 'erro: ...'. Nada de dado pessoal vai no evento.
+ */
+function mcmGa4GenerateLead(array $m, string $sessao = ''): string
+{
+    $cfg = mcmGa4Config();
+    $cid = (string)($m['ga_client_id'] ?? '');
+    if ($cfg === null || $cid === '') return 'pulado';
+    $params = [
+        'form_id' => (string)($m['formulario'] ?? ''),
+        'page_path' => (string)($m['pagina'] ?? ''),
+        'lead_id' => (string)(int)($m['id'] ?? 0),
+        'engagement_time_msec' => 100,
+    ];
+    if (preg_match('/^\d{6,}$/', $sessao)) $params['session_id'] = $sessao;
+    $corpo = json_encode(['client_id' => $cid, 'non_personalized_ads' => false, 'events' => [['name' => 'generate_lead', 'params' => $params]]]);
+    $url = 'https://www.google-analytics.com/mp/collect?measurement_id=' . rawurlencode($cfg['measurement_id']) . '&api_secret=' . rawurlencode($cfg['api_secret']);
+    if (!function_exists('curl_init')) return 'erro: extensão curl ausente';
+    try {
+        $ch = curl_init($url);
+        curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $corpo, CURLOPT_HTTPHEADER => ['Content-Type: application/json'], CURLOPT_RETURNTRANSFER => true, CURLOPT_TIMEOUT => 4, CURLOPT_CONNECTTIMEOUT => 3]);
+        curl_exec($ch);
+        $http = (int)curl_getinfo($ch, CURLINFO_RESPONSE_CODE);
+        $err = curl_error($ch);
+        curl_close($ch);
+    } catch (Throwable $e) {
+        return 'erro: ' . mc_linha($e->getMessage(), 120);
+    }
+    // O MP responde 2xx mesmo para payload que ele descarta; o que dá para
+    // garantir aqui é que o pedido chegou.
+    return ($http >= 200 && $http < 300) ? 'ok' : 'erro: HTTP ' . $http . ($err !== '' ? ' ' . mc_linha($err, 100) : '');
+}
+
 // ----------------------------------------------------------------- eventos
 
 function mcmEvento(PDO $pdo, int $mensagemId, string $tipo, string $texto = '', ?int $usuarioId = null): void

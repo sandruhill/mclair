@@ -236,7 +236,7 @@ if ($id > 0) {
     }
     $rotuloEvento = [
         'rascunho' => 'Começou a preencher', 'enviado' => 'Formulário enviado', 'email_ok' => 'E-mail de aviso enviado', 'email_falhou' => 'E-mail de aviso falhou',
-        'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'reenviado' => 'E-mail reenviado',
+        'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'ga4' => 'GA4', 'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'reenviado' => 'E-mail reenviado',
     ];
 
     adminLayoutTop('messages', $titulo, ['label' => 'Mensagens', 'href' => '/acesso/mensagens']);

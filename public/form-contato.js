@@ -117,6 +117,18 @@
     } catch (e) { return ''; }
   }
 
+  // Sessão do GA4 (cookie _ga_<id>): "GS1.1.<sessao>.<n>..." ou "GS2.1.s<sessao>$o..."
+  function gaSessao() {
+    try {
+      var m = document.cookie.match(/(?:^|;\s*)_ga_[A-Z0-9]+=([^;]+)/);
+      if (!m) return '';
+      var p = decodeURIComponent(m[1]).split('.');
+      if (p.length < 3) return '';
+      var s = p[2].match(/^s?(\d{6,})/);
+      return s ? s[1] : '';
+    } catch (e) { return ''; }
+  }
+
   // ---------- Chave do rascunho (por formulário, nesta aba) ----------
   function chaveDe(formId, criar) {
     var k = 'mclair:chave:' + (formId || 'form');
@@ -144,6 +156,7 @@
       try { var ref = document.referrer || ''; if (ref && new URL(ref).host !== location.host) visita.ref = ref.slice(0, 300); } catch (e) { /* sem referrer */ }
       corpo.visita = visita;
       var ga = gaClientId(); if (ga) corpo.ga = ga;
+      var sess = gaSessao(); if (sess) corpo.ga_sessao = sess;
     }
     try { corpo.tela = window.screen.width + 'x' + window.screen.height; } catch (e) { /* sem tela */ }
     try { corpo.fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { /* sem fuso */ }

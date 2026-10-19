@@ -151,7 +151,7 @@ $telDigitos = strlen(preg_replace('/\D+/', '', $telefone) ?? '');
 $camposExtra = [];
 foreach ($dados as $k => $v) {
     $k = preg_replace('/[^a-z0-9_\-]/', '', strtolower((string)$k)) ?? '';
-    if ($k === '' || in_array($k, ['website', 'modo', 'chave', 'visita', 'ga', 'tela', 'fuso', 'idioma', 'titulo', 'pagina', 'formulario'], true)) continue;
+    if ($k === '' || in_array($k, ['website', 'modo', 'chave', 'visita', 'ga', 'ga_sessao', 'tela', 'fuso', 'idioma', 'titulo', 'pagina', 'formulario'], true)) continue;
     $val = is_array($v) ? mc_linha($v, 300) : mc_texto($v, 1500);
     if ($val !== '') $camposExtra[$k] = $val;
     if (count($camposExtra) >= 30) break;
@@ -491,6 +491,22 @@ if ($pdo !== null && $id > 0) {
     }
 }
 if (!$okMail) error_log('contato.php: mail() falhou: ' . $erroMail);
+
+// ---------- generate_lead no GA4 pelo servidor ----------
+// O navegador também empurra o evento no dataLayer; aqui é a garantia para
+// quem fechou a página assim que o WhatsApp abriu. Pulado sem a chave.
+if ($id > 0 && $pdo !== null && (string)($registroSalvo['ga_client_id'] ?? '') !== '') {
+    $sessao = mc_linha($dados['ga_sessao'] ?? '', 20);
+    $ga4 = mcmGa4GenerateLead($registroSalvo, $sessao);
+    if ($ga4 !== 'pulado') {
+        try {
+            mcmEvento($pdo, $id, 'ga4', $ga4 === 'ok' ? 'generate_lead enviado ao GA4 pelo servidor (Measurement Protocol)' : 'generate_lead não chegou ao GA4: ' . $ga4);
+        } catch (Throwable $e) {
+            error_log('contato.php: evento ga4 não gravado: ' . $e->getMessage());
+        }
+        if ($ga4 !== 'ok') error_log('contato.php: GA4 MP: ' . $ga4);
+    }
+}
 
 if (!$okMail && $id === 0) {
     // Nem gravou nem mandou: o único caso em que a pessoa vê erro.
