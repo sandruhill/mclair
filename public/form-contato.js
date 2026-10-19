@@ -129,6 +129,22 @@
     } catch (e) { return ''; }
   }
 
+  // ---------- Cliques em WhatsApp antes de preencher ----------
+  // Todo link wa.me do site abre a janela de contato (Layout). O clique fica
+  // guardado nesta aba e vai junto com o próximo rascunho ou envio, com a
+  // hora real, para a ficha mostrar "clicou em WhatsApp às 14:03".
+  var K_WA = 'mclair:wa_cliques';
+  function waCliquesLer() { try { var v = ss(K_WA); var a = v ? JSON.parse(v) : []; return Array.isArray(a) ? a.slice(-10) : []; } catch (e) { return []; } }
+  function waCliquesLimpar() { ssDel(K_WA); }
+  document.addEventListener('click', function (e) {
+    var a = e.target && e.target.closest ? e.target.closest('a[href*="wa.me"], a[href*="api.whatsapp.com"]') : null;
+    if (!a) return;
+    var onde = limpa(a.getAttribute('aria-label') || a.id || a.textContent, 60) || 'link';
+    var lista = waCliquesLer();
+    lista.push({ ts: Date.now(), onde: onde, pagina: location.pathname });
+    ssSet(K_WA, JSON.stringify(lista.slice(-10)));
+  }, true);
+
   // ---------- Chave do rascunho (por formulário, nesta aba) ----------
   function chaveDe(formId, criar) {
     var k = 'mclair:chave:' + (formId || 'form');
@@ -161,6 +177,7 @@
     try { corpo.tela = window.screen.width + 'x' + window.screen.height; } catch (e) { /* sem tela */ }
     try { corpo.fuso = Intl.DateTimeFormat().resolvedOptions().timeZone || ''; } catch (e) { /* sem fuso */ }
     corpo.idioma = (navigator.language || '').slice(0, 24);
+    var cliques = waCliquesLer(); if (cliques.length) corpo.wa_cliques = cliques;
     return corpo;
   }
 
@@ -170,6 +187,7 @@
       for (var k in dados) {
         if (Object.prototype.hasOwnProperty.call(dados, k) && dados[k] != null && dados[k] !== '') corpo[k] = dados[k];
       }
+      if (!corpo.canal) corpo.canal = 'whatsapp'; // todo formulário do site abre o WhatsApp no mesmo clique
       enriquecer(corpo, '');
       var formId = corpo.formulario || '';
       // A partir daqui nenhum rascunho sai para este formulário (o WhatsApp
@@ -188,6 +206,7 @@
         }).then(function (res) {
           if (res.ok) {
             marcarEnviado(formId);
+            waCliquesLimpar();
             if (res.j && res.j.id) {
               window.dataLayer = window.dataLayer || [];
               window.dataLayer.push({ event: 'generate_lead', form_id: formId, page_path: location.pathname, lead_id: res.j.id });
@@ -252,8 +271,10 @@
     try {
       if (usarBeacon && navigator.sendBeacon) {
         navigator.sendBeacon(ENDPOINT, new Blob([json], { type: 'application/json' }));
+        waCliquesLimpar();
       } else if (window.fetch) {
-        fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json, credentials: 'same-origin', keepalive: true }).catch(function () {});
+        fetch(ENDPOINT, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: json, credentials: 'same-origin', keepalive: true })
+          .then(function (r) { if (r.ok) waCliquesLimpar(); }).catch(function () {});
       }
     } catch (e) { /* rascunho é melhor esforço */ }
   }

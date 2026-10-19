@@ -151,7 +151,7 @@ $telDigitos = strlen(preg_replace('/\D+/', '', $telefone) ?? '');
 $camposExtra = [];
 foreach ($dados as $k => $v) {
     $k = preg_replace('/[^a-z0-9_\-]/', '', strtolower((string)$k)) ?? '';
-    if ($k === '' || in_array($k, ['website', 'modo', 'chave', 'visita', 'ga', 'ga_sessao', 'tela', 'fuso', 'idioma', 'titulo', 'pagina', 'formulario'], true)) continue;
+    if ($k === '' || in_array($k, ['website', 'modo', 'chave', 'visita', 'ga', 'ga_sessao', 'tela', 'fuso', 'idioma', 'titulo', 'pagina', 'formulario', 'canal', 'wa_cliques'], true)) continue;
     $val = is_array($v) ? mc_linha($v, 300) : mc_texto($v, 1500);
     if ($val !== '') $camposExtra[$k] = $val;
     if (count($camposExtra) >= 30) break;
@@ -274,6 +274,21 @@ $fuso = mc_linha($dados['fuso'] ?? '', 64);
 if (!preg_match('#^[A-Za-z_]+(/[A-Za-z_\-+0-9]+){0,2}$#', $fuso)) $fuso = '';
 $tela = mc_linha($dados['tela'] ?? '', 20);
 if (!preg_match('/^\d{2,5}x\d{2,5}$/', $tela)) $tela = '';
+// Canal: 'whatsapp' quando o envio também abre o WhatsApp com a mensagem
+// pronta (todos os formulários do site hoje); 'email' quando só grava.
+$canal = in_array($dados['canal'] ?? '', ['whatsapp', 'email'], true) ? (string)$dados['canal'] : '';
+// Cliques em botões/links de WhatsApp antes de preencher, guardados pelo
+// navegador (sessionStorage) e mandados junto: viram eventos com a hora real.
+$waCliques = [];
+if (is_array($dados['wa_cliques'] ?? null)) {
+    $agoraMs = time() * 1000;
+    foreach (array_slice($dados['wa_cliques'], 0, 10) as $c) {
+        if (!is_array($c) || !is_numeric($c['ts'] ?? null)) continue;
+        $ts = (int)$c['ts'];
+        if ($ts < $agoraMs - 7 * 86400000 || $ts > $agoraMs + 60000) continue;
+        $waCliques[] = ['ts' => $ts, 'onde' => mc_linha($c['onde'] ?? '', 80), 'pagina' => mcmCaminho($c['pagina'] ?? '')];
+    }
+}
 
 $registro = [
     'chave' => $chave !== '' ? $chave : null,
@@ -320,6 +335,7 @@ $registro = [
     'fuso' => $fuso,
     'tela' => $tela,
     'ip' => mb_substr($ip, 0, 45),
+    'canal' => $canal,
 ];
 
 // ---------- Gravação ----------
@@ -375,6 +391,8 @@ if ($pdo !== null) {
             $registro['geo_estado'] = $geo['estado'] ?? '';
             $registro['geo_pais'] = $geo['pais'] ?? '';
             $registro['geo_fonte'] = $geo['fonte'] ?? '';
+            $registro['geo_lat'] = $geo['lat'] ?? null;
+            $registro['geo_lng'] = $geo['lng'] ?? null;
             $cols = array_keys($registro);
             $sql = 'INSERT INTO cmstest_mensagens (' . implode(', ', $cols) . ', criado_em, atualizado_em, enviado_em, email_status) VALUES ('
                 . implode(', ', array_fill(0, count($cols), '?')) . ', UTC_TIMESTAMP(), UTC_TIMESTAMP(), '
@@ -396,14 +414,8 @@ if ($pdo !== null) {
                 // nada, e um envio repetido da mesma aba não duplica. Se o
                 // e-mail daquela vez falhou, tenta de novo agora.
                 if (!$rascunho && $existente['email_status'] === 'falhou') {
-                    [$okRe, $erroRe] = mcmEmailEnviar($existente);
-                    $eid = (int)$existente['id'];
-                    if ($okRe) {
-                        $pdo->prepare("UPDATE cmstest_mensagens SET email_status = 'enviado', email_erro = '', email_enviado_em = UTC_TIMESTAMP() WHERE id = ?")->execute([$eid]);
-                        mcmEvento($pdo, $eid, 'email_ok', 'Aviso enviado por e-mail para ' . MCM_DESTINO . ' (segunda tentativa)');
-                    } else {
-                        $pdo->prepare("UPDATE cmstest_mensagens SET email_erro = ? WHERE id = ?")->execute([$erroRe, $eid]);
-                    }
+                    [$okRe, $erroRe, $metaRe] = mcmEmailEnviar($existente);
+                    mcmEmailRegistrar($pdo, (int)$existente['id'], $okRe, $erroRe, $metaRe, 'Aviso enviado na segunda tentativa');
                 }
                 mc_responde(200, ['ok' => true, 'id' => (int)$existente['id'], 'repetido' => true]);
             }
@@ -455,6 +467,18 @@ if ($id > 0 && $pdo !== null) {
             }
         } else {
             mcmEvento($pdo, $id, 'enviado', $existente !== null ? 'Formulário enviado (completou o rascunho)' : 'Formulário enviado');
+            if ($canal === 'whatsapp') mcmEvento($pdo, $id, 'whatsapp', 'Levada ao WhatsApp da Mclair com a mensagem pronta no mesmo clique (não dá para saber se chegou a enviar lá)');
+        }
+        // Cliques em WhatsApp com a hora real; o mesmo clique não entra duas vezes.
+        $ja = $pdo->prepare("SELECT COUNT(*) FROM cmstest_mensagens_eventos WHERE mensagem_id = ? AND tipo = 'wa_clique' AND criado_em = ?");
+        $tot = $pdo->prepare("SELECT COUNT(*) FROM cmstest_mensagens_eventos WHERE mensagem_id = ? AND tipo = 'wa_clique'");
+        $tot->execute([$id]);
+        if ((int)$tot->fetchColumn() >= 30) $waCliques = []; // teto por mensagem
+        foreach ($waCliques as $c) {
+            $quando = gmdate('Y-m-d H:i:s', intdiv($c['ts'], 1000));
+            $ja->execute([$id, $quando]);
+            if ((int)$ja->fetchColumn() > 0) continue;
+            mcmEvento($pdo, $id, 'wa_clique', 'Clicou em WhatsApp' . ($c['onde'] !== '' ? ' (' . $c['onde'] . ')' : '') . ($c['pagina'] !== '' ? ' na página ' . $c['pagina'] : '') . '; abriu a janela de contato', null, $quando);
         }
     } catch (Throwable $e) {
         error_log('contato.php: evento não gravado: ' . $e->getMessage());
@@ -476,16 +500,10 @@ if ($rascunho) {
 }
 
 // ---------- E-mail (depois de gravado) ----------
-[$okMail, $erroMail] = mcmEmailEnviar($registroSalvo);
+[$okMail, $erroMail, $metaMail] = mcmEmailEnviar($registroSalvo);
 if ($pdo !== null && $id > 0) {
     try {
-        if ($okMail) {
-            $pdo->prepare("UPDATE cmstest_mensagens SET email_status = 'enviado', email_erro = '', email_enviado_em = UTC_TIMESTAMP() WHERE id = ?")->execute([$id]);
-            mcmEvento($pdo, $id, 'email_ok', 'Aviso enviado por e-mail para ' . MCM_DESTINO);
-        } else {
-            $pdo->prepare("UPDATE cmstest_mensagens SET email_status = 'falhou', email_erro = ? WHERE id = ?")->execute([$erroMail, $id]);
-            mcmEvento($pdo, $id, 'email_falhou', 'O e-mail de aviso não saiu: ' . $erroMail);
-        }
+        mcmEmailRegistrar($pdo, $id, $okMail, $erroMail, $metaMail);
     } catch (Throwable $e) {
         error_log('contato.php: não marcou o e-mail: ' . $e->getMessage());
     }

@@ -32,11 +32,28 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $id = (int)($_POST['id'] ?? 0);
     $acao = (string)($_POST['action'] ?? '');
+    if ($acao === 'criar') {
+        $nome = mc_linha($_POST['nome'] ?? '', 120);
+        if (mb_strlen($nome) < 2) { http_response_code(422); die('Informe o nome.'); }
+        $emailIn = mc_linha($_POST['email'] ?? '', 190);
+        $canalManual = (string)($_POST['canal_manual'] ?? '');
+        if (!isset(MCM_CANAIS_MANUAIS[$canalManual])) $canalManual = 'outro';
+        $st = $pdo->prepare("INSERT INTO cmstest_mensagens (criado_em, atualizado_em, enviado_em, formulario, nome, email, email_valido, telefone, empresa, assunto, mensagem, origem, origem_detalhe, canal, email_status, status, responsavel_id)
+            VALUES (UTC_TIMESTAMP(), UTC_TIMESTAMP(), UTC_TIMESTAMP(), 'manual', ?, ?, ?, ?, ?, ?, ?, 'manual', ?, ?, 'nao_aplica', 'em_atendimento', ?)");
+        $st->execute([$nome, $emailIn, $emailIn !== '' && filter_var($emailIn, FILTER_VALIDATE_EMAIL) ? 1 : 0, mc_linha($_POST['telefone'] ?? '', 40), mc_linha($_POST['empresa'] ?? '', 150),
+            mc_linha($_POST['assunto'] ?? '', 150), mc_texto($_POST['mensagem'] ?? '', 4000), MCM_CANAIS_MANUAIS[$canalManual], $canalManual, $meuId ?: null]);
+        $novoId = (int)$pdo->lastInsertId();
+        mcmEvento($pdo, $novoId, 'criado', 'Cadastrada à mão; chegou por ' . mb_strtolower(MCM_CANAIS_MANUAIS[$canalManual]), $meuId);
+        header('Location: mensagens?id=' . $novoId . '&ok=criada');
+        exit;
+    }
     $st = $pdo->prepare('SELECT * FROM cmstest_mensagens WHERE id = ?');
     $st->execute([$id]);
     $m = $st->fetch();
     if (!$m) { http_response_code(404); die('Mensagem não encontrada.'); }
     $volta = 'mensagens?id=' . $id;
+    if ($acao === 'reenviar' && ($m['formulario'] === 'manual' || $m['anonimizado_em'] !== null)) { http_response_code(400); die('Cadastro à mão ou dados apagados: não há aviso a reenviar.'); }
+    if (in_array($acao, ['nota', 'editar'], true) && $m['anonimizado_em'] !== null) { http_response_code(400); die('Dados apagados pela retenção; a ficha não recebe mais texto.'); }
 
     if ($acao === 'status') {
         $novo = (string)($_POST['status'] ?? '');
@@ -60,6 +77,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
         header('Location: ' . $volta . '&ok=responsavel');
+        exit;
+    }
+    if ($acao === 'editar') {
+        if ($m['anonimizado_em'] !== null) { http_response_code(400); die('Dados apagados pela retenção; não há o que editar.'); }
+        $novo = [
+            'nome' => mc_linha($_POST['nome'] ?? '', 120), 'email' => mc_linha($_POST['email'] ?? '', 190), 'telefone' => mc_linha($_POST['telefone'] ?? '', 40),
+            'empresa' => mc_linha($_POST['empresa'] ?? '', 150), 'assunto' => mc_linha($_POST['assunto'] ?? '', 150),
+        ];
+        $mudou = [];
+        foreach ($novo as $k => $v) if ($v !== (string)$m[$k]) $mudou[] = ['nome' => 'nome', 'email' => 'e-mail', 'telefone' => 'telefone', 'empresa' => 'empresa', 'assunto' => 'assunto'][$k] . ': "' . $m[$k] . '" virou "' . $v . '"';
+        if ($mudou) {
+            $pdo->prepare('UPDATE cmstest_mensagens SET nome = ?, email = ?, email_valido = ?, telefone = ?, empresa = ?, assunto = ?, atualizado_em = UTC_TIMESTAMP() WHERE id = ?')
+                ->execute([$novo['nome'], $novo['email'], $novo['email'] !== '' && filter_var($novo['email'], FILTER_VALIDATE_EMAIL) ? 1 : 0, $novo['telefone'], $novo['empresa'], $novo['assunto'], $id]);
+            mcmEvento($pdo, $id, 'editado', implode("\n", $mudou), $meuId);
+        }
+        header('Location: ' . $volta . '&ok=editada');
         exit;
     }
     if ($acao === 'nota') {
@@ -89,14 +122,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($acao === 'reenviar') {
         if ($m['enviado_em'] === null) { http_response_code(400); die('Esta mensagem não foi enviada pela pessoa; não há aviso a reenviar.'); }
-        [$ok, $erro] = mcmEmailEnviar($m);
-        if ($ok) {
-            $pdo->prepare("UPDATE cmstest_mensagens SET email_status = 'enviado', email_erro = '', email_enviado_em = UTC_TIMESTAMP() WHERE id = ?")->execute([$id]);
-            mcmEvento($pdo, $id, 'reenviado', 'Aviso reenviado por e-mail para ' . MCM_DESTINO, $meuId);
-        } else {
-            $pdo->prepare("UPDATE cmstest_mensagens SET email_status = 'falhou', email_erro = ? WHERE id = ?")->execute([$erro, $id]);
-            mcmEvento($pdo, $id, 'email_falhou', 'Reenvio falhou: ' . $erro, $meuId);
-        }
+        [$ok, $erro, $meta] = mcmEmailEnviar($m);
+        mcmEmailRegistrar($pdo, $id, $ok, $erro, $meta, 'Aviso reenviado', $meuId);
         header('Location: ' . $volta . '&ok=' . ($ok ? 'reenviado' : 'reenvio_falhou'));
         exit;
     }
@@ -189,10 +216,10 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
     header('Cache-Control: no-store');
     $out = fopen('php://output', 'w');
     fwrite($out, "\xEF\xBB\xBF");
-    $cab = ['id', 'criado_em', 'enviado_em', 'status', 'responsavel', 'formulario', 'nome', 'email', 'telefone', 'empresa', 'assunto', 'servicos', 'orcamento', 'objetivo', 'mensagem', 'pagina', 'pagina_entrada', 'referrer', 'origem', 'origem_detalhe', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'ga_client_id', 'cidade', 'estado', 'pais', 'dispositivo', 'navegador', 'sistema', 'visitas', 'paginas_vistas', 'primeira_visita_em', 'email_aviso'];
+    $cab = ['id', 'criado_em', 'enviado_em', 'status', 'responsavel', 'formulario', 'nome', 'email', 'telefone', 'empresa', 'assunto', 'servicos', 'orcamento', 'objetivo', 'mensagem', 'pagina', 'pagina_entrada', 'referrer', 'origem', 'origem_detalhe', 'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'ga_client_id', 'cidade', 'estado', 'pais', 'dispositivo', 'navegador', 'sistema', 'visitas', 'paginas_vistas', 'primeira_visita_em', 'email_aviso', 'email_para', 'email_message_id', 'canal', 'latitude', 'longitude', 'dados_apagados_em'];
     fputcsv($out, $cab, ';', '"', '');
     // Célula começando com = + - @ vira fórmula no Excel: neutraliza.
-    $seg = static fn($v): string => preg_match('/^[=+\-@\t\r]/', (string)$v) ? "'" . $v : (string)$v;
+    $seg = static fn($v): string => (!is_numeric($v) && preg_match('/^[=+\-@\t\r]/', (string)$v)) ? "'" . $v : (string)$v;
     foreach ($linhas as $m) {
         fputcsv($out, array_map($seg, [
             $m['id'], mcmDataLocal($m['criado_em']), mcmDataLocal($m['enviado_em']), $m['enviado_em'] === null ? 'nao_enviado' : $m['status'], nomeUsuario($equipe, $m['responsavel_id']),
@@ -200,6 +227,7 @@ if (isset($_GET['export']) && $_GET['export'] === 'csv') {
             $m['pagina'], $m['landing'], $m['referrer'], MCM_ORIGENS[$m['origem']] ?? '', $m['origem_detalhe'],
             $m['utm_source'], $m['utm_medium'], $m['utm_campaign'], $m['utm_term'], $m['utm_content'], $m['gclid'], $m['gbraid'], $m['wbraid'], $m['fbclid'], $m['ga_client_id'],
             $m['geo_cidade'], $m['geo_estado'], $m['geo_pais'], $m['dispositivo'], $m['navegador'], $m['sistema'], $m['visitas'], $m['paginas_vistas'], mcmDataLocal($m['primeira_visita_em']), $m['email_status'],
+            $m['email_para'], $m['email_message_id'], $m['canal'], $m['geo_lat'], $m['geo_lng'], mcmDataLocal($m['anonimizado_em']),
         ]), ';', '"', '');
     }
     if ($cortou) fputcsv($out, ['A exportação para em 5000 linhas. Use o filtro de período para exportar o resto.'], ';', '"', '');
@@ -218,39 +246,62 @@ if ($id > 0) {
     $ev->execute([$id]);
     $eventos = $ev->fetchAll();
     $toques = json_decode((string)$m['toques'], true);
+    if (!is_array($toques)) $toques = null;
     $jornada = json_decode((string)$m['jornada'], true);
+    if (!is_array($jornada) || empty($jornada['paginas'])) $jornada = null;
     $campos = json_decode((string)$m['campos'], true);
     if (!is_array($campos)) $campos = [];
     $waDigitos = mcmTelefoneWa((string)$m['telefone']);
     $abandonada = $m['enviado_em'] === null;
-    $titulo = $m['nome'] !== '' ? $m['nome'] : 'Mensagem #' . $id;
+    $anonima = $m['anonimizado_em'] !== null;
+    $manual = $m['formulario'] === 'manual';
+    $local = mcmLocal($m);
+    $horaLocal = mcmHoraLocal((string)$m['fuso']);
+    $itens = mcmJornadaItens($jornada, (string)$m['fuso']);
+    $resumoJ = mcmJornadaResumo($jornada);
+    $primeiroToque = $toques['primeiro'] ?? null;
+    $ultimoToque = $toques['ultimo'] ?? null;
+    $logEmail = $m['email_message_id'] !== '' ? mcmEmailNoLog((string)$m['email_message_id']) : '';
+    $foiWhats = false;
+    $responsavelDesde = '';
+    foreach ($eventos as $e) {
+        if ($e['tipo'] === 'whatsapp') $foiWhats = true;
+        if ($e['tipo'] === 'responsavel') $responsavelDesde = (string)$e['criado_em'];
+    }
+    $titulo = $m['nome'] !== '' ? $m['nome'] : ($anonima ? 'Dados apagados' : 'Mensagem #' . $id);
     $okMsg = [
-        'status' => 'Status atualizado.', 'responsavel' => 'Responsável atualizado.', 'nota' => 'Anotação guardada.',
-        'restaurada' => 'Mensagem restaurada.', 'reenviado' => 'Aviso reenviado por e-mail.', 'reenvio_falhou' => 'O reenvio falhou. Veja o motivo em "E-mail de aviso".',
+        'status' => 'Status atualizado.', 'responsavel' => 'Responsável atualizado.', 'nota' => 'Anotação guardada.', 'editada' => 'Dados atualizados.', 'criada' => 'Mensagem cadastrada.',
+        'restaurada' => 'Mensagem restaurada.', 'reenviado' => 'Aviso reenviado por e-mail (aceito pelo servidor).', 'reenvio_falhou' => 'O reenvio falhou. Veja o motivo em "E-mail de aviso".',
     ][$_GET['ok'] ?? ''] ?? null;
 
     // Texto para o botão "Copiar dados".
     $copiar = [];
-    foreach ([['Nome', $m['nome']], ['E-mail', $m['email']], ['WhatsApp', $m['telefone']], ['Empresa', $m['empresa']], ['Assunto', $m['assunto']], ['Serviços', $m['servicos']], ['Verba', $m['orcamento']], ['O que quer divulgar', $m['objetivo']], ['Mensagem', $m['mensagem']], ['Formulário', MCM_FORMULARIOS[$m['formulario']] ?? $m['formulario']], ['Página', $m['pagina'] !== '' ? 'https://mclair.com.br' . $m['pagina'] : ''], ['Recebido em', mcmDataLocal($m['enviado_em'] ?? $m['criado_em'])], ['Origem', origemTexto($m)]] as [$r, $v]) {
+    foreach ([['Nome', $m['nome']], ['E-mail', $m['email']], ['WhatsApp', $m['telefone']], ['Empresa', $m['empresa']], ['Assunto', $m['assunto']], ['Serviços', $m['servicos']], ['Verba', $m['orcamento']], ['O que quer divulgar', $m['objetivo']], ['Mensagem', $m['mensagem']], ['Formulário', MCM_FORMULARIOS[$m['formulario']] ?? $m['formulario']], ['Página', $m['pagina'] !== '' ? 'https://mclair.com.br' . $m['pagina'] : ''], ['Recebido em', mcmDataLocal($m['enviado_em'] ?? $m['criado_em'])], ['Origem', origemTexto($m)], ['Local', $local['rotulo'] ?? '']] as [$r, $v]) {
         if ((string)$v !== '') $copiar[] = $r . ': ' . $v;
     }
     $rotuloEvento = [
-        'rascunho' => 'Começou a preencher', 'enviado' => 'Formulário enviado', 'email_ok' => 'E-mail de aviso enviado', 'email_falhou' => 'E-mail de aviso falhou',
-        'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'ga4' => 'GA4', 'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'reenviado' => 'E-mail reenviado',
+        'rascunho' => 'Começou a preencher', 'enviado' => 'Formulário enviado', 'whatsapp' => 'Levada ao WhatsApp', 'wa_clique' => 'Clique em WhatsApp',
+        'email_ok' => 'E-mail de aviso', 'email_falhou' => 'E-mail de aviso falhou', 'reenviado' => 'E-mail reenviado', 'ga4' => 'GA4',
+        'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'editado' => 'Dados editados', 'criado' => 'Cadastrada à mão',
+        'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'anonimizado' => 'Dados apagados',
     ];
+    $temGeo = $local !== null && $local['lat'] !== null && $local['lng'] !== null;
 
     adminLayoutTop('messages', $titulo, ['label' => 'Mensagens', 'href' => '/acesso/mensagens']);
     ?>
+    <?php if ($temGeo): ?><link rel="stylesheet" href="/acesso/vendor/leaflet/leaflet.css" /><?php endif; ?>
     <style>
-      .mg-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-bottom:20px; }
+      .mg-head { display:flex; align-items:flex-start; justify-content:space-between; gap:18px; flex-wrap:wrap; margin-bottom:16px; }
       .mg-who { display:flex; align-items:center; gap:14px; min-width:0; }
       .mg-avatar { width:52px; height:52px; border-radius:50%; background:var(--red); color:#fff; display:flex; align-items:center; justify-content:center; font-weight:800; font-size:1.1rem; flex-shrink:0; }
       .mg-avatar.off { background:#9CA3AF; }
       .mg-who h2 { margin:0 0 4px; font-size:1.25rem; letter-spacing:-.01em; }
-      .mg-who .sub { font-size:.84rem; color:var(--ink-3); font-weight:600; display:flex; flex-wrap:wrap; gap:4px 12px; }
-      .mg-who .sub a { color:var(--ink); }
-      .mg-who .sub a:hover { color:var(--red); }
-      .mg-acoes { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+      .mg-who .ask { font-size:.9rem; color:var(--ink); margin:0 0 6px; }
+      .mg-who .sub { font-size:.8rem; color:var(--ink-3); font-weight:600; display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; }
+      .mg-place { text-align:right; font-size:.84rem; color:var(--ink-3); min-width:0; }
+      .mg-place strong { display:block; color:var(--ink); font-size:.92rem; }
+      .mg-place .clock { font-size:1.3rem; font-weight:800; color:var(--ink); letter-spacing:-.01em; }
+      .mg-acoes { display:flex; flex-wrap:wrap; gap:8px; align-items:center; margin-bottom:18px; }
       .mg-acoes .btn { padding:9px 14px; font-size:.8rem; }
       .btn.wa { background:#1E7F4D; }
       .st { display:inline-block; padding:4px 10px; border-radius:6px; font-size:.72rem; font-weight:700; white-space:nowrap; background:var(--soft); color:var(--ink-3); }
@@ -261,44 +312,67 @@ if ($id > 0) {
       .st-fechado { background:#1E7F4D; color:#fff; }
       .st-perdido { background:#F1F2F4; color:#6B7280; }
       .st-abandonado { background:#FFF4E5; color:#9A5B00; }
-      .mg-grid { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:20px; align-items:start; }
+      .st-ok { background:#E6F4EC; color:#1E7F4D; }
+      .st-falha { background:rgba(200,16,46,.1); color:var(--red); }
+      .mg-grid { display:grid; grid-template-columns:minmax(0,1fr) 360px; gap:20px; align-items:start; }
       @media (max-width: 980px) { .mg-grid { grid-template-columns:1fr; } }
       .mg-card { background:var(--paper); border:1px solid var(--line); border-radius:12px; padding:20px 22px; box-shadow:0 1px 3px rgba(0,0,0,.04); margin-bottom:18px; }
       .mg-card h3 { margin:0 0 14px; font-size:.95rem; }
       .mg-card h3 small { font-weight:600; color:var(--ink-3); font-size:.76rem; margin-left:8px; }
-      dl.kv { margin:0; display:grid; grid-template-columns:150px minmax(0,1fr); gap:9px 14px; font-size:.86rem; }
+      .mg-card h4 { margin:18px 0 8px; font-size:.78rem; font-weight:700; color:var(--ink-3); text-transform:uppercase; letter-spacing:.04em; }
+      dl.kv { margin:0; display:grid; grid-template-columns:140px minmax(0,1fr); gap:9px 14px; font-size:.86rem; }
+      dl.kv.estreita { grid-template-columns:110px minmax(0,1fr); }
       dl.kv dt { color:var(--ink-3); font-weight:600; }
       dl.kv dd { margin:0; word-break:break-word; }
       dl.kv dd.pre { white-space:pre-wrap; line-height:1.55; }
-      dl.kv dd .muted, .muted { color:#9CA3AF; }
-      @media (max-width: 480px) { dl.kv { grid-template-columns:1fr; gap:2px 0; } dl.kv dd { margin-bottom:8px; } }
+      dl.kv dd.mono { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:.78rem; }
+      .muted { color:#9CA3AF; }
+      @media (max-width: 480px) { dl.kv, dl.kv.estreita { grid-template-columns:1fr; gap:2px 0; } dl.kv dd { margin-bottom:8px; } }
       .mg-bloco { background:var(--soft); border-radius:10px; padding:14px 16px; white-space:pre-wrap; line-height:1.6; font-size:.9rem; margin:6px 0 14px; }
-      .mg-aviso { border:1px solid var(--line); background:var(--soft); border-radius:10px; padding:12px 16px; font-size:.86rem; margin-bottom:18px; line-height:1.5; }
+      .mg-aviso { border:1px solid var(--line); background:var(--soft); border-radius:10px; padding:12px 16px; font-size:.86rem; margin-bottom:14px; line-height:1.5; }
       .mg-aviso.atencao { background:#FFF4E5; border-color:#F3D9A4; color:#7A4A00; }
       .mg-aviso.falha { background:rgba(200,16,46,.07); border-color:rgba(200,16,46,.25); color:#8A0C20; }
       .mg-form-linha { display:flex; gap:8px; align-items:flex-end; flex-wrap:wrap; }
       .mg-form-linha > div { flex:1; min-width:160px; }
       .mg-form-linha label { margin-top:0; }
       .mg-form-linha .btn { padding:10px 14px; }
+      .mg-edit { display:grid; grid-template-columns:1fr 1fr; gap:0 14px; }
+      @media (max-width: 600px) { .mg-edit { grid-template-columns:1fr; } }
+      .mg-edit label { margin-top:10px; }
       .tl { list-style:none; margin:0; padding:0; }
-      .tl li { display:grid; grid-template-columns:120px minmax(0,1fr); gap:0 14px; padding:10px 0; border-top:1px solid var(--line); font-size:.85rem; }
+      .tl li { display:grid; grid-template-columns:110px minmax(0,1fr); gap:0 14px; padding:10px 0; border-top:1px solid var(--line); font-size:.85rem; }
       .tl li:first-child { border-top:none; padding-top:0; }
       .tl .quando { color:var(--ink-3); font-weight:600; font-size:.76rem; line-height:1.5; }
       .tl .tipo { font-weight:700; }
       .tl .texto { white-space:pre-wrap; line-height:1.5; margin-top:2px; }
       .tl .quem { color:var(--ink-3); font-size:.76rem; font-weight:600; margin-top:2px; }
       .tl li.nota .texto { background:var(--soft); border-radius:8px; padding:10px 12px; margin-top:6px; }
+      .tl li.whatsapp .tipo, .tl li.wa_clique .tipo { color:#1E7F4D; }
+      .tl li.email_falhou .tipo { color:var(--red); }
       @media (max-width: 480px) { .tl li { grid-template-columns:1fr; } }
-      .pags { list-style:none; margin:0; padding:0; font-size:.82rem; }
-      .pags li { display:flex; justify-content:space-between; gap:10px; padding:6px 0; border-top:1px solid var(--line); }
-      .pags li:first-child { border-top:none; }
-      .pags li span:first-child { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
-      .pags li span:last-child { color:var(--ink-3); font-weight:600; flex-shrink:0; }
+      .rec { list-style:none; margin:0; padding:0; font-size:.83rem; }
+      .rec li { display:grid; grid-template-columns:72px minmax(0,1fr); gap:0 10px; padding:7px 0; border-top:1px solid var(--line); }
+      .rec li:first-child { border-top:none; }
+      .rec li.corte { display:block; padding:6px 0; color:var(--ink-3); font-weight:600; font-size:.76rem; text-align:center; background:var(--soft); border-radius:6px; margin:6px 0; border-top:none; }
+      .rec .h { color:var(--ink-3); font-weight:600; font-size:.76rem; line-height:1.5; }
+      .rec .t a { font-weight:700; }
+      .rec .t a:hover { color:var(--red); }
+      .rec .d { display:block; color:var(--ink-3); font-size:.74rem; font-weight:600; }
+      .rec li.ultima .t a { color:var(--red); }
+      .mg-mapa { height:220px; border-radius:10px; border:1px solid var(--line); background:var(--soft); overflow:hidden; margin-bottom:12px; z-index:0; }
+      .mg-pino { width:16px; height:16px; border-radius:50%; background:var(--red); border:3px solid #fff; box-shadow:0 0 0 2px rgba(200,16,46,.45); }
+      .mg-resumo { font-size:.84rem; margin:0 0 10px; }
       textarea.nota { min-height:90px; }
       .mg-rodape-acoes { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:6px; font-size:.8rem; }
       .mg-rodape-acoes button.link { background:none; border:none; padding:0; color:#9a1f1f; text-decoration:underline; font-weight:700; cursor:pointer; font-family:inherit; font-size:.8rem; }
       .geo-atrib { font-size:.7rem; color:#9CA3AF; margin:10px 0 0; }
       .geo-atrib a { color:inherit; text-decoration:underline; }
+      details.mg-det > summary { cursor:pointer; font-weight:700; font-size:.85rem; color:var(--ink); list-style:none; display:flex; align-items:center; gap:8px; }
+      details.mg-det > summary::-webkit-details-marker { display:none; }
+      details.mg-det > summary::before { content:''; width:7px; height:7px; border-right:2px solid var(--ink-3); border-bottom:2px solid var(--ink-3); transform:rotate(-45deg); transition:transform .15s; }
+      details.mg-det[open] > summary::before { transform:rotate(45deg); }
+      details.mg-det > summary + * { margin-top:14px; }
+      pre.mg-email { background:var(--soft); border-radius:8px; padding:12px 14px; font-size:.76rem; line-height:1.5; white-space:pre-wrap; word-break:break-word; margin:10px 0 0; max-height:360px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
     </style>
 
     <?php if ($okMsg): ?><div class="msg ok"><?= cmsCheckIcon() ?><span><?= hh($okMsg) ?></span></div><?php endif; ?>
@@ -307,20 +381,34 @@ if ($id > 0) {
       <div class="mg-who">
         <div class="mg-avatar <?= $abandonada ? 'off' : '' ?>"><?= hh(iniciais((string)$m['nome'])) ?></div>
         <div>
-          <h2><?= hh($m['nome'] !== '' ? $m['nome'] : 'Sem nome') ?> <span class="muted" style="font-weight:600;font-size:.9rem">#<?= $id ?></span></h2>
+          <h2><?= hh($m['nome'] !== '' ? $m['nome'] : ($anonima ? 'Dados apagados' : 'Sem nome')) ?> <span class="muted" style="font-weight:600;font-size:.9rem">#<?= $id ?></span></h2>
+          <?php $interesse = rotuloInteresse($m); ?>
+          <p class="ask"><?php if ($interesse !== ''): ?>Quer falar sobre <strong><?= hh($interesse) ?></strong><?php else: ?><?= hh(MCM_FORMULARIOS[$m['formulario']] ?? 'Formulário do site') ?><?php endif; ?><?= $m['orcamento'] !== '' ? ' · verba ' . hh($m['orcamento']) : '' ?><?= $m['empresa'] !== '' ? ' · ' . hh($m['empresa']) : '' ?></p>
           <div class="sub">
             <?= badgeStatus($m) ?>
-            <?php if ($m['email'] !== ''): ?><a href="mailto:<?= hh(rawurlencode($m['email'])) ?>"><?= hh($m['email']) ?></a><?= $m['email_valido'] ? '' : ' <span class="muted">(formato não conferido)</span>' ?><?php endif; ?>
-            <?php if ($m['telefone'] !== ''): ?><span><?= hh($m['telefone']) ?></span><?php endif; ?>
-            <?php if ($m['empresa'] !== ''): ?><span><?= hh($m['empresa']) ?></span><?php endif; ?>
+            <?php if (!$abandonada): ?><?php if ($m['email_status'] === 'enviado'): ?><span class="st st-ok">aviso por e-mail aceito</span><?php elseif ($m['email_status'] === 'falhou'): ?><span class="st st-falha">aviso por e-mail falhou</span><?php elseif ($m['email_status'] === 'nao_aplica'): ?><?php else: ?><span class="st">aviso pendente</span><?php endif; ?><?php endif; ?>
+            <?php if ($foiWhats): ?><span class="st st-ok">foi ao WhatsApp</span><?php endif; ?>
+            <span><?= hh($manual ? 'Cadastrada à mão' : (MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site'))) ?> · <span title="<?= hh(mcmDataLocal($m['enviado_em'] ?? $m['criado_em'])) ?> (Brasília)"><?= hh(mcmTempoAtras($m['enviado_em'] ?? $m['criado_em'])) ?></span></span>
           </div>
         </div>
       </div>
-      <div class="mg-acoes">
-        <?php if ($waDigitos !== ''): ?><a class="btn wa" href="https://wa.me/<?= hh($waDigitos) ?>?text=<?= rawurlencode('Olá' . ($m['nome'] !== '' ? ' ' . explode(' ', trim((string)$m['nome']))[0] : '') . ', aqui é da Mclair. Recebemos a sua mensagem pelo site.') ?>" target="_blank" rel="noopener">Abrir WhatsApp</a><?php endif; ?>
-        <?php if ($m['email_valido']): ?><a class="btn secondary" href="mailto:<?= hh(rawurlencode($m['email'])) ?>?subject=<?= rawurlencode('Re: ' . ($m['assunto'] !== '' ? $m['assunto'] : 'sua mensagem pelo site da Mclair')) ?>">Responder por e-mail</a><?php endif; ?>
-        <button type="button" class="btn secondary" id="btnCopiar" data-texto="<?= hh(implode("\n", $copiar)) ?>">Copiar dados</button>
+      <?php if ($local || $horaLocal): ?>
+      <div class="mg-place">
+        <?php if ($local): ?><strong><?= hh($local['rotulo']) ?></strong><span><?= hh($local['fonte_rotulo']) ?></span><?php endif; ?>
+        <?php if ($horaLocal): ?><div style="margin-top:6px">Agora são <span class="clock" data-hora-local data-fuso="<?= hh($m['fuso']) ?>"><?= hh($horaLocal['hora']) ?></span> para a pessoa<?= $horaLocal['diferenca'] !== 'mesma hora de Brasília' ? '<br>' . hh($horaLocal['diferenca']) : '' ?><?= ($horaLocal['h'] < 8 || $horaLocal['h'] >= 21) ? '<br>melhor esperar para ligar' : '' ?></div><?php endif; ?>
       </div>
+      <?php endif; ?>
+    </div>
+
+    <div class="mg-acoes">
+      <?php if ($waDigitos !== '' && !$anonima): ?><a class="btn wa" href="https://wa.me/<?= hh($waDigitos) ?>?text=<?= rawurlencode('Olá' . ($m['nome'] !== '' ? ' ' . explode(' ', trim((string)$m['nome']))[0] : '') . ', aqui é da Mclair. Recebemos a sua mensagem pelo site.') ?>" target="_blank" rel="noopener">Abrir WhatsApp</a><?php endif; ?>
+      <?php if ($m['email_valido'] && !$anonima): ?><a class="btn secondary" href="mailto:<?= hh(rawurlencode($m['email'])) ?>?subject=<?= rawurlencode('Re: ' . ($m['assunto'] !== '' ? $m['assunto'] : 'sua mensagem pelo site da Mclair')) ?>">Responder por e-mail</a><?php endif; ?>
+      <button type="button" class="btn secondary" id="btnCopiar" data-texto="<?= hh(implode("\n", $copiar)) ?>">Copiar dados</button>
+      <?php if ($m['status'] === 'novo' && !$abandonada): ?>
+      <form method="post" style="display:inline"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" /><input type="hidden" name="status" value="em_atendimento" /><button type="submit" class="btn secondary">Marcar em atendimento</button></form>
+      <?php elseif (in_array($m['status'], ['em_atendimento', 'proposta_enviada'], true)): ?>
+      <form method="post" style="display:inline"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" /><input type="hidden" name="status" value="atendido" /><button type="submit" class="btn secondary">Marcar como atendido</button></form>
+      <?php endif; ?>
     </div>
 
     <?php if ($m['excluido_em'] !== null): ?>
@@ -328,17 +416,26 @@ if ($id > 0) {
       <form method="post" style="display:inline;margin-left:8px"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="restaurar" /><input type="hidden" name="id" value="<?= $id ?>" /><button type="submit" class="btn secondary" style="padding:6px 12px;font-size:.78rem">Restaurar</button></form>
     </div>
     <?php endif; ?>
+    <?php if ($anonima): ?>
+    <div class="mg-aviso">Dados pessoais apagados em <?= hh(mcmDataLocal($m['anonimizado_em'], 'd/m/Y')) ?> (retenção de 24 meses sem movimento para mensagens não fechadas). Ficaram formulário, data, assunto, origem, campanha, estado, país e o histórico de status.</div>
+    <?php endif; ?>
     <?php if ($abandonada): ?>
-    <div class="mg-aviso atencao">A pessoa preencheu nome e contato mas <strong>não chegou a enviar</strong> o formulário (dados capturados em <?= hh(mcmDataLocal($m['criado_em'])) ?>, última alteração <?= hh(mcmDataLocal($m['atualizado_em'])) ?>). Nenhum e-mail foi mandado. Vale um contato leve, sem presumir que ela pediu retorno.</div>
+    <div class="mg-aviso atencao">A pessoa preencheu nome e contato mas <strong>não chegou a enviar</strong> o formulário (dados capturados em <?= hh(mcmDataLocal($m['criado_em'])) ?>, última alteração <?= hh(mcmDataLocal($m['atualizado_em'])) ?>). Nenhum e-mail foi mandado e ela não foi ao WhatsApp por aqui. Vale um contato leve, sem presumir que ela pediu retorno.</div>
     <?php elseif ($m['email_status'] === 'falhou'): ?>
-    <div class="mg-aviso falha">O e-mail de aviso para <?= hh(MCM_DESTINO) ?> <strong>não saiu</strong> (<?= hh($m['email_erro'] ?: 'sem detalhe') ?>). A mensagem está completa aqui; responda pelos botões acima ou reenvie o aviso em "E-mail de aviso".</div>
+    <div class="mg-aviso falha">O e-mail de aviso para <?= hh($m['email_para'] ?: mcmDestino()) ?> <strong>não saiu</strong> (<?= hh($m['email_erro'] ?: 'sem detalhe') ?>). A mensagem está completa aqui; responda pelos botões acima ou reenvie o aviso em "E-mail de aviso".</div>
+    <?php endif; ?>
+    <?php if (!$abandonada && !$anonima && !$manual && $m['email'] === ''): ?>
+    <div class="mg-aviso atencao">Esta pessoa <strong>não deixou e-mail</strong>. <?= $waDigitos !== '' ? 'Responda pelo WhatsApp.' : ($m['telefone'] !== '' ? 'O telefone ' . hh($m['telefone']) . ' não tem DDD completo: confira antes de ligar.' : 'Não deixou nenhum contato.') ?></div>
+    <?php endif; ?>
+    <?php if ($foiWhats && !$abandonada): ?>
+    <div class="mg-aviso"><strong>Também foi ao WhatsApp.</strong> No mesmo clique de enviar, a pessoa foi levada ao WhatsApp da Mclair com a mensagem pronta. Não dá para saber se ela chegou a enviar lá; se não apareceu conversa no WhatsApp, responda pelos botões acima.</div>
     <?php endif; ?>
     <?php if ($m['observacao'] !== ''): ?><div class="mg-aviso"><?= hh($m['observacao']) ?></div><?php endif; ?>
 
     <div class="mg-grid">
       <div>
         <div class="mg-card">
-          <h3>O que a pessoa escreveu <small><?= hh(MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site')) ?></small></h3>
+          <h3>O que a pessoa escreveu <small><?= hh($manual ? 'cadastro à mão' : (MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site'))) ?></small></h3>
           <dl class="kv">
             <?php if ($m['assunto'] !== ''): ?><dt>Assunto</dt><dd><?= hh($m['assunto']) ?></dd><?php endif; ?>
             <?php if ($m['servicos'] !== ''): ?><dt>Serviços de interesse</dt><dd><?= hh($m['servicos']) ?></dd><?php endif; ?>
@@ -347,9 +444,37 @@ if ($id > 0) {
             <dt><?= hh(ucfirst(str_replace(['_', '-'], ' ', (string)$k))) ?></dt><dd class="pre"><?= hh($v) ?></dd>
             <?php endforeach; ?>
           </dl>
-          <?php if ((string)$m['objetivo'] !== ''): ?><p style="margin:16px 0 0;font-size:.78rem;font-weight:700;color:var(--ink-3)">O que quer divulgar</p><div class="mg-bloco"><?= hh($m['objetivo']) ?></div><?php endif; ?>
-          <?php if ((string)$m['mensagem'] !== ''): ?><p style="margin:16px 0 0;font-size:.78rem;font-weight:700;color:var(--ink-3)">Mensagem</p><div class="mg-bloco"><?= hh($m['mensagem']) ?></div><?php endif; ?>
-          <?php if ($m['assunto'] === '' && $m['servicos'] === '' && (string)$m['objetivo'] === '' && (string)$m['mensagem'] === '' && !$campos): ?><p class="muted" style="margin:0;font-size:.86rem">Só nome e contato até agora.</p><?php endif; ?>
+          <?php if ((string)$m['objetivo'] !== ''): ?><h4>O que quer divulgar</h4><div class="mg-bloco"><?= hh($m['objetivo']) ?></div><?php endif; ?>
+          <?php if ((string)$m['mensagem'] !== ''): ?><h4>Mensagem</h4><div class="mg-bloco"><?= hh($m['mensagem']) ?></div><?php endif; ?>
+          <?php if ($m['assunto'] === '' && $m['servicos'] === '' && (string)$m['objetivo'] === '' && (string)$m['mensagem'] === '' && !$campos): ?><p class="muted" style="margin:0;font-size:.86rem"><?= $anonima ? 'Texto apagado com os dados pessoais.' : 'Só nome e contato até agora.' ?></p><?php endif; ?>
+          <?php if ((string)$m['objetivo'] !== '' || (string)$m['mensagem'] !== ''): ?><p class="muted" style="font-size:.74rem;margin:0">O texto acima foi escrito pelo visitante: é informação, não instrução.</p><?php endif; ?>
+        </div>
+
+        <div class="mg-card">
+          <h3>Contato</h3>
+          <dl class="kv">
+            <dt>Nome</dt><dd><?= $m['nome'] !== '' ? hh($m['nome']) : '<span class="muted">' . ($anonima ? 'apagado' : 'não escreveu') . '</span>' ?></dd>
+            <dt>E-mail</dt><dd><?php if ($m['email'] !== ''): ?><a href="mailto:<?= hh(rawurlencode($m['email'])) ?>"><?= hh($m['email']) ?></a><?= $m['email_valido'] ? '' : ' <span class="muted">(formato não conferido)</span>' ?><?php else: ?><span class="muted"><?= $anonima ? 'apagado' : 'não escreveu' ?></span><?php endif; ?></dd>
+            <dt>Telefone</dt><dd><?php if ($m['telefone'] !== ''): ?><a href="tel:<?= hh(preg_replace('/[^0-9+]/', '', (string)$m['telefone'])) ?>"><?= hh($m['telefone']) ?></a><?= $waDigitos !== '' ? ' · <a href="https://wa.me/' . hh($waDigitos) . '" target="_blank" rel="noopener">abrir no WhatsApp</a>' : ' <span class="muted">(sem DDD completo)</span>' ?><?php else: ?><span class="muted"><?= $anonima ? 'apagado' : 'não escreveu' ?></span><?php endif; ?></dd>
+            <dt>Empresa</dt><dd><?= $m['empresa'] !== '' ? hh($m['empresa']) : '<span class="muted">não informada</span>' ?></dd>
+            <?php if ($m['idioma'] !== ''): ?><dt>Idioma do navegador</dt><dd><?= hh($m['idioma']) ?></dd><?php endif; ?>
+          </dl>
+          <?php if (!$anonima): ?>
+          <details class="mg-det" style="margin-top:16px">
+            <summary>Corrigir dados</summary>
+            <form method="post">
+              <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="editar" /><input type="hidden" name="id" value="<?= $id ?>" />
+              <div class="mg-edit">
+                <div><label>Nome</label><input type="text" name="nome" maxlength="120" value="<?= hh($m['nome']) ?>" /></div>
+                <div><label>E-mail</label><input type="email" name="email" maxlength="190" value="<?= hh($m['email']) ?>" /></div>
+                <div><label>Telefone</label><input type="text" name="telefone" maxlength="40" value="<?= hh($m['telefone']) ?>" /></div>
+                <div><label>Empresa</label><input type="text" name="empresa" maxlength="150" value="<?= hh($m['empresa']) ?>" /></div>
+              </div>
+              <label>Assunto</label><input type="text" name="assunto" maxlength="150" value="<?= hh($m['assunto']) ?>" />
+              <button type="submit" class="btn secondary" style="margin-top:12px">Salvar correção</button>
+            </form>
+          </details>
+          <?php endif; ?>
         </div>
 
         <div class="mg-card">
@@ -369,6 +494,7 @@ if ($id > 0) {
             <button type="submit" class="btn secondary">Salvar</button>
             <?php if ((int)$m['responsavel_id'] !== $meuId && isset($equipe[$meuId])): ?><button type="submit" class="btn" name="responsavel_id" value="<?= $meuId ?>">Eu atendo</button><?php endif; ?>
           </form>
+          <?php if ($m['responsavel_id']): ?><p class="muted" style="font-size:.78rem;margin:10px 0 0">Atendida por <?= hh(nomeUsuario($equipe, $m['responsavel_id'])) ?><?= $responsavelDesde !== '' ? ' desde ' . hh(mcmDataLocal($responsavelDesde)) : '' ?>.</p><?php endif; ?>
         </div>
 
         <div class="mg-card" id="linha-do-tempo">
@@ -384,79 +510,101 @@ if ($id > 0) {
               <?php if ($e['usuario_id']): ?><div class="quem"><?= hh(nomeUsuario($equipe, $e['usuario_id'])) ?></div><?php endif; ?></span></li>
             <?php endforeach; ?>
           </ul>
+          <p class="muted" style="font-size:.74rem;margin:10px 0 0">Horários de Brasília.</p>
+          <?php if (!$anonima): ?>
           <form method="post" style="margin-top:16px">
             <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="nota" /><input type="hidden" name="id" value="<?= $id ?>" />
             <label>Anotação interna</label>
             <textarea name="texto" class="nota" placeholder="Ligou e pediu proposta para dezembro, por exemplo. Só a equipe vê."></textarea>
             <button type="submit" class="btn secondary" style="margin-top:10px">Guardar anotação</button>
           </form>
+          <?php endif; ?>
         </div>
       </div>
 
       <div>
         <div class="mg-card">
-          <h3>Origem e visita</h3>
-          <dl class="kv" style="grid-template-columns:110px minmax(0,1fr)">
-            <dt>Origem</dt><dd><?= hh(origemTexto($m)) ?></dd>
-            <?php if ($m['utm_source'] !== '' || $m['utm_medium'] !== '' || $m['utm_campaign'] !== ''): ?>
-            <dt>Campanha</dt><dd><?= hh(implode(' / ', array_filter([$m['utm_source'], $m['utm_medium'], $m['utm_campaign']]))) ?></dd>
-            <?php endif; ?>
-            <?php if ($m['utm_term'] !== ''): ?><dt>Termo</dt><dd><?= hh($m['utm_term']) ?></dd><?php endif; ?>
-            <?php if ($m['utm_content'] !== ''): ?><dt>Conteúdo</dt><dd><?= hh($m['utm_content']) ?></dd><?php endif; ?>
-            <?php foreach (['gclid' => 'gclid', 'gbraid' => 'gbraid', 'wbraid' => 'wbraid', 'fbclid' => 'fbclid', 'msclkid' => 'msclkid', 'ttclid' => 'ttclid'] as $k => $r): if ($m[$k] === '') continue; ?>
-            <dt><?= $r ?></dt><dd style="font-family:ui-monospace,monospace;font-size:.78rem"><?= hh($m[$k]) ?></dd>
-            <?php endforeach; ?>
-            <?php if ($m['referrer'] !== ''): ?><dt>Veio de</dt><dd><?= hh($m['referrer']) ?></dd><?php endif; ?>
-            <?php if ($m['landing'] !== ''): ?><dt>Entrou por</dt><dd><a href="https://mclair.com.br<?= hh($m['landing']) ?>" target="_blank" rel="noopener"><?= hh($m['landing']) ?></a></dd><?php endif; ?>
-            <dt>Formulário em</dt><dd><?php if ($m['pagina'] !== ''): ?><a href="https://mclair.com.br<?= hh($m['pagina']) ?>" target="_blank" rel="noopener"><?= hh($m['pagina']) ?></a><?php else: ?><span class="muted">sem registro</span><?php endif; ?><?= $m['pagina_titulo'] !== '' ? '<div class="muted" style="font-size:.76rem">' . hh($m['pagina_titulo']) . '</div>' : '' ?></dd>
-            <dt>Visitas</dt><dd><?= $m['visitas'] > 0 ? (int)$m['visitas'] . ($m['visitas'] == 1 ? ' visita' : ' visitas') . ', ' . (int)$m['paginas_vistas'] . ($m['paginas_vistas'] == 1 ? ' página' : ' páginas') : '<span class="muted">sem registro</span>' ?></dd>
-            <?php if ($m['primeira_visita_em']): ?><dt>Primeira vez</dt><dd><?= hh(mcmDataLocal($m['primeira_visita_em'])) ?></dd><?php endif; ?>
-            <?php if (is_array($toques) && !empty($toques['ultimo']) && !empty($toques['primeiro']) && $toques['ultimo'] !== $toques['primeiro']): $u = $toques['ultimo']; $ou = mcmOrigemDoToque($u); ?>
-            <dt>Última vinda</dt><dd><?= hh($ou ? (MCM_ORIGENS[$ou[0]] ?? $ou[0]) . ($ou[1] !== '' ? ' · ' . $ou[1] : '') : 'Direto') ?><?= !empty($u['landing']) ? '<div class="muted" style="font-size:.76rem">' . hh($u['landing']) . '</div>' : '' ?></dd>
-            <?php endif; ?>
-          </dl>
-          <?php if (is_array($jornada) && !empty($jornada['paginas'])): $pags = array_slice($jornada['paginas'], -15); ?>
-          <p style="margin:16px 0 6px;font-size:.78rem;font-weight:700;color:var(--ink-3)">Páginas vistas<?= count($jornada['paginas']) > 15 ? ' (últimas 15 de ' . count($jornada['paginas']) . ')' : '' ?></p>
-          <ul class="pags">
-            <?php foreach ($pags as $p): ?><li><span title="<?= hh($p['t'] ?? '') ?>"><?= hh($p['p']) ?></span><span><?= hh(mcmDataLocal(gmdate('Y-m-d H:i:s', intdiv((int)$p['ts'], 1000)), 'd/m H:i')) ?></span></li><?php endforeach; ?>
-          </ul>
+          <h3>De onde escreve</h3>
+          <?php if ($temGeo): ?>
+          <div class="mg-mapa" id="mgMapa" data-lat="<?= hh((string)$local['lat']) ?>" data-lng="<?= hh((string)$local['lng']) ?>" data-fonte="<?= hh($local['fonte']) ?>" data-rotulo="<?= hh($local['rotulo']) ?>" aria-label="Mapa com a localização aproximada"></div>
           <?php endif; ?>
+          <?php if ($local): ?>
+          <p style="margin:0 0 4px;font-weight:700;font-size:.92rem"><?= hh($local['rotulo']) ?></p>
+          <p class="muted" style="margin:0;font-size:.8rem;line-height:1.5"><?= hh(ucfirst($local['fonte_rotulo'])) ?><?= $local['fonte'] === 'fuso' ? ' (' . hh($m['fuso']) . ')' : '' ?>. A cidade é aproximada: <?= $local['fonte'] === 'dbip' ? 'o IP aponta o provedor de internet, não o endereço da pessoa.' : 'o fuso horário só diz a região.' ?></p>
+          <?php elseif ($anonima): ?><p class="muted" style="margin:0;font-size:.84rem">Localização apagada com os dados pessoais<?= $m['geo_pais'] !== '' ? '; o país era ' . hh(mcmPais($m['geo_pais'])) : '' ?>.</p>
+          <?php else: ?><p class="muted" style="margin:0;font-size:.84rem">Não foi possível localizar<?= $m['ip'] === '' && $m['fuso'] === '' ? ($manual ? ' (cadastro à mão)' : ' (sem IP nem fuso horário)') : '' ?>.</p><?php endif; ?>
+          <?php if ($horaLocal): ?><p style="margin:12px 0 0;font-size:.84rem;line-height:1.5">Agora são <strong data-hora-local data-fuso="<?= hh($m['fuso']) ?>"><?= hh($horaLocal['hora']) ?></strong> de <?= hh($horaLocal['dia']) ?> para a pessoa (<?= hh($horaLocal['diferenca']) ?>).</p><?php endif; ?>
+          <?php if ($local && $local['fonte'] === 'dbip'): ?><p class="geo-atrib"><a href="https://db-ip.com" target="_blank" rel="noopener">IP Geolocation by DB-IP</a></p><?php endif; ?>
         </div>
 
         <div class="mg-card">
-          <h3>Dispositivo e local</h3>
-          <dl class="kv" style="grid-template-columns:110px minmax(0,1fr)">
-            <dt>Local</dt><dd><?= lugar($m) !== '' ? hh(lugar($m)) : '<span class="muted">não identificado</span>' ?></dd>
-            <dt>Dispositivo</dt><dd><?= hh(implode(' · ', array_filter([$m['dispositivo'], $m['navegador'], $m['sistema']]))) ?: '<span class="muted">sem registro</span>' ?></dd>
-            <?php if ($m['tela'] !== ''): ?><dt>Tela</dt><dd><?= hh($m['tela']) ?></dd><?php endif; ?>
-            <?php if ($m['idioma'] !== ''): ?><dt>Idioma</dt><dd><?= hh($m['idioma']) ?></dd><?php endif; ?>
-            <?php if ($m['fuso'] !== ''): ?><dt>Fuso</dt><dd><?= hh($m['fuso']) ?></dd><?php endif; ?>
-            <dt>IP</dt><dd style="font-family:ui-monospace,monospace;font-size:.78rem"><?= $m['ip'] !== '' ? hh($m['ip']) : '<span class="muted">sem registro</span>' ?></dd>
-            <?php if ($m['ga_client_id'] !== ''): ?><dt>GA4 client</dt><dd style="font-family:ui-monospace,monospace;font-size:.78rem"><?= hh($m['ga_client_id']) ?></dd><?php endif; ?>
+          <h3>De onde veio</h3>
+          <p style="margin:0 0 10px;font-size:.9rem"><strong><?= hh(MCM_ORIGENS[$m['origem']] ?? MCM_ORIGENS['']) ?></strong><?= $m['origem_detalhe'] !== '' ? ' · ' . hh($m['origem_detalhe']) : '' ?></p>
+          <?php if ($primeiroToque || $ultimoToque): ?>
+          <dl class="kv estreita">
+            <?php if ($primeiroToque): ?><dt>Primeiro toque</dt><dd><?= hh(mcmToqueTexto($primeiroToque)) ?><?= !empty($primeiroToque['ts']) ? ' <span class="muted">(' . hh(mcmDataLocal(gmdate('Y-m-d H:i:s', intdiv((int)$primeiroToque['ts'], 1000)))) . ')</span>' : '' ?></dd><?php endif; ?>
+            <?php if ($ultimoToque && $ultimoToque !== $primeiroToque): ?><dt>Último toque</dt><dd><?= hh(mcmToqueTexto($ultimoToque)) ?><?= !empty($ultimoToque['ts']) ? ' <span class="muted">(' . hh(mcmDataLocal(gmdate('Y-m-d H:i:s', intdiv((int)$ultimoToque['ts'], 1000)))) . ')</span>' : '' ?></dd><?php endif; ?>
           </dl>
-          <?php if ($m['geo_fonte'] === 'dbip'): ?><p class="geo-atrib">Local aproximado pelo IP. <a href="https://db-ip.com" target="_blank" rel="noopener">IP Geolocation by DB-IP</a></p><?php endif; ?>
+          <?php elseif ($m['origem'] === ''): ?><p class="muted" style="margin:0;font-size:.82rem"><?= $manual ? 'Cadastro à mão: a origem é o canal escolhido.' : 'Sem dado de origem: mensagem anterior ao registro, enviada sem JavaScript ou com cookies recusados.' ?></p>
+          <?php endif; ?>
+          <h4>Caminho antes de escrever</h4>
+          <?php if ($itens): ?>
+          <p class="mg-resumo"><?= (int)$resumoJ['paginas'] ?> <?= $resumoJ['paginas'] === 1 ? 'página' : 'páginas' ?><?= $resumoJ['visitas'] > 1 ? ' · voltou ' . (int)$resumoJ['visitas'] . ' vezes' : ' · 1 visita' ?><?= $m['primeira_visita_em'] ? ' · desde ' . hh(mcmDataLocal($m['primeira_visita_em'], 'd/m')) : '' ?></p>
+          <ol class="rec">
+            <?php foreach ($itens as $it): ?>
+            <?php if ($it['tipo'] === 'corte'): ?><li class="corte"><?= hh($it['texto']) ?></li><?php else: ?>
+            <li class="<?= $it['ultima'] ? 'ultima' : '' ?>"><span class="h"><?= $it['dia'] !== '' ? hh($it['dia']) . '<br>' : '' ?><?= hh($it['hora']) ?></span><span class="t"><a href="https://mclair.com.br<?= hh($it['caminho']) ?>" target="_blank" rel="noopener"><?= hh($it['titulo']) ?></a><span class="d"><?= $it['ultima'] ? ($abandonada ? 'Começou a preencher aqui' : 'Enviou o formulário daqui') : ($it['duracao'] !== '' ? hh($it['duracao']) . ' na página' : '') ?></span></span></li>
+            <?php endif; ?>
+            <?php endforeach; ?>
+          </ol>
+          <p class="muted" style="font-size:.74rem;margin:10px 0 0">Horário <?= $horaLocal ? 'da pessoa' : 'de Brasília' ?>. O caminho fica no navegador do visitante e só chega junto com o formulário.</p>
+          <?php else: ?>
+          <p class="muted" style="margin:0;font-size:.82rem"><?= $anonima ? 'Caminho apagado com os dados pessoais.' : ($manual ? 'Cadastro à mão: não há caminho no site.' : 'Sem caminho registrado: mensagem anterior a esta função, sem JavaScript ou com cookies recusados.') ?></p>
+          <?php endif; ?>
         </div>
 
         <div class="mg-card">
           <h3>E-mail de aviso</h3>
-          <dl class="kv" style="grid-template-columns:110px minmax(0,1fr)">
-            <dt>Para</dt><dd><?= hh(MCM_DESTINO) ?></dd>
-            <dt>Situação</dt><dd><?php if ($abandonada): ?><span class="muted">não se aplica (não enviou)</span><?php elseif ($m['email_status'] === 'enviado'): ?>Enviado em <?= hh(mcmDataLocal($m['email_enviado_em'])) ?><?php elseif ($m['email_status'] === 'falhou'): ?><span style="color:var(--red);font-weight:700">Falhou</span><?= $m['email_erro'] !== '' ? '<div class="muted" style="font-size:.76rem">' . hh($m['email_erro']) . '</div>' : '' ?><?php else: ?>Pendente<?php endif; ?></dd>
+          <dl class="kv estreita">
+            <dt>Situação</dt><dd><?php if ($abandonada || $m['email_status'] === 'nao_aplica'): ?><span class="muted"><?= $manual ? 'não se aplica (cadastro à mão)' : 'não se aplica (não enviou)' ?></span><?php elseif ($m['email_status'] === 'enviado'): ?><strong>Aceito pelo servidor de e-mail</strong><div class="muted" style="font-size:.76rem">O mail() da Hostinger aceitou a mensagem. Isso não confirma a entrega na caixa.</div><?php elseif ($m['email_status'] === 'falhou'): ?><span style="color:var(--red);font-weight:700">Falhou</span><?= $m['email_erro'] !== '' ? '<div class="muted" style="font-size:.76rem">' . hh($m['email_erro']) . '</div>' : '' ?><?php else: ?>Pendente<?php endif; ?></dd>
+            <dt>Para</dt><dd><?= hh($m['email_para'] !== '' ? $m['email_para'] : mcmDestino()) ?></dd>
+            <?php if ($m['email_enviado_em']): ?><dt>Quando</dt><dd><?= hh(mcmDataLocal($m['email_enviado_em'])) ?></dd><?php endif; ?>
+            <?php if ($m['email_message_id'] !== ''): ?><dt>Message-ID</dt><dd class="mono"><?= hh($m['email_message_id']) ?></dd>
+            <dt>Log do servidor</dt><dd><?= $logEmail !== '' ? 'Registrado em ' . hh(mcmDataLocal($logEmail)) . '<div class="muted" style="font-size:.76rem">Linha com este Message-ID no mail.log da Hostinger: o servidor recebeu o pedido de envio. Não é confirmação de entrega.</div>' : '<span class="muted">não encontrado no mail.log (o log guarda só os envios recentes)</span>' ?></dd><?php endif; ?>
           </dl>
-          <?php if (!$abandonada): ?>
-          <form method="post" style="margin-top:12px"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="reenviar" /><input type="hidden" name="id" value="<?= $id ?>" /><button type="submit" class="btn secondary" style="padding:8px 14px;font-size:.78rem">Reenviar aviso por e-mail</button></form>
+          <?php if (!$abandonada && !$manual && !$anonima): ?>
+          <form method="post" style="margin-top:12px"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="reenviar" /><input type="hidden" name="id" value="<?= $id ?>" /><button type="submit" class="btn secondary" style="padding:8px 14px;font-size:.78rem">Reenviar aviso para <?= hh(mcmDestino()) ?></button></form>
+          <?php endif; ?>
+          <?php if ((string)$m['email_texto'] !== ''): ?>
+          <details class="mg-det" style="margin-top:14px"><summary>Texto do e-mail como saiu</summary><pre class="mg-email"><?= hh($m['email_texto']) ?></pre></details>
           <?php endif; ?>
         </div>
 
         <div class="mg-card">
-          <h3>Registro</h3>
-          <dl class="kv" style="grid-template-columns:110px minmax(0,1fr)">
-            <dt>Criado</dt><dd><?= hh(mcmDataLocal($m['criado_em'])) ?></dd>
-            <dt>Enviado</dt><dd><?= $m['enviado_em'] ? hh(mcmDataLocal($m['enviado_em'])) : '<span class="muted">não enviou</span>' ?></dd>
-            <dt>Atualizado</dt><dd><?= hh(mcmDataLocal($m['atualizado_em'])) ?></dd>
-            <dt>Responsável</dt><dd><?= $m['responsavel_id'] ? hh(nomeUsuario($equipe, $m['responsavel_id'])) : '<span class="muted">ninguém ainda</span>' ?></dd>
-          </dl>
-          <div class="mg-rodape-acoes">
+          <details class="mg-det" open>
+            <summary>Dados técnicos</summary>
+            <dl class="kv estreita">
+              <dt>Página</dt><dd><?php if ($m['pagina'] !== ''): ?><a href="https://mclair.com.br<?= hh($m['pagina']) ?>" target="_blank" rel="noopener"><?= hh($m['pagina']) ?></a><?php else: ?><span class="muted">sem registro</span><?php endif; ?><?= $m['pagina_titulo'] !== '' ? '<div class="muted" style="font-size:.76rem">' . hh($m['pagina_titulo']) . '</div>' : '' ?></dd>
+              <?php if ($m['landing'] !== ''): ?><dt>Página de entrada</dt><dd><a href="https://mclair.com.br<?= hh($m['landing']) ?>" target="_blank" rel="noopener"><?= hh($m['landing']) ?></a></dd><?php endif; ?>
+              <?php if ($m['referrer'] !== ''): ?><dt>Veio de</dt><dd><?= hh($m['referrer']) ?></dd><?php endif; ?>
+              <?php foreach (['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content', 'gclid', 'gbraid', 'wbraid', 'fbclid', 'msclkid', 'ttclid'] as $k): if ($m[$k] === '') continue; ?>
+              <dt><?= $k ?></dt><dd class="mono"><?= hh($m[$k]) ?></dd>
+              <?php endforeach; ?>
+              <?php if ($manual): ?><dt>Chegou por</dt><dd><?= hh(MCM_CANAIS_MANUAIS[$m['canal']] ?? $m['canal']) ?></dd><?php elseif ($m['canal'] !== ''): ?><dt>Canal</dt><dd><?= $m['canal'] === 'whatsapp' ? 'formulário + WhatsApp no mesmo clique' : 'só formulário (e-mail)' ?></dd><?php endif; ?>
+              <dt>Dispositivo</dt><dd><?= hh(implode(' · ', array_filter([$m['dispositivo'], $m['navegador'], $m['sistema'], $m['tela']]))) ?: '<span class="muted">sem registro</span>' ?></dd>
+              <?php if ($m['user_agent'] !== ''): ?><dt>Navegador completo</dt><dd class="mono"><?= hh($m['user_agent']) ?></dd><?php endif; ?>
+              <?php if ($m['fuso'] !== ''): ?><dt>Fuso horário</dt><dd><?= hh($m['fuso']) ?></dd><?php endif; ?>
+              <?php if ($m['idioma'] !== ''): ?><dt>Idioma</dt><dd><?= hh($m['idioma']) ?></dd><?php endif; ?>
+              <dt>IP</dt><dd class="mono"><?= $m['ip'] !== '' ? hh($m['ip']) : '<span class="muted">' . ($anonima ? 'apagado' : 'sem registro') . '</span>' ?></dd>
+              <?php if ($local && $local['lat'] !== null): ?><dt>Coordenadas</dt><dd class="mono"><?= hh((string)$local['lat']) ?>, <?= hh((string)$local['lng']) ?> (<?= hh($local['fonte_rotulo']) ?>)</dd><?php endif; ?>
+              <?php if ($m['ga_client_id'] !== ''): ?><dt>GA4 client</dt><dd class="mono"><?= hh($m['ga_client_id']) ?></dd><?php endif; ?>
+              <?php if ($m['chave']): ?><dt>Chave da aba</dt><dd class="mono"><?= hh($m['chave']) ?></dd><?php endif; ?>
+              <dt>Criado</dt><dd><?= hh(mcmDataLocal($m['criado_em'])) ?></dd>
+              <dt>Enviado</dt><dd><?= $m['enviado_em'] ? hh(mcmDataLocal($m['enviado_em'])) : '<span class="muted">não enviou</span>' ?></dd>
+              <dt>Atualizado</dt><dd><?= hh(mcmDataLocal($m['atualizado_em'])) ?></dd>
+            </dl>
+          </details>
+          <div class="mg-rodape-acoes" style="margin-top:14px">
             <?php if ($m['excluido_em'] === null): ?>
             <form method="post" style="display:inline"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="excluir" /><input type="hidden" name="id" value="<?= $id ?>" /><button type="button" class="link" data-confirm="Mover esta mensagem para a lixeira?" data-yes="sim, mover" onclick="askConfirm(this)">Mover para a lixeira</button></form>
             <?php elseif ($souAdmin): ?>
@@ -466,6 +614,7 @@ if ($id > 0) {
         </div>
       </div>
     </div>
+    <?php if ($temGeo): ?><script src="/acesso/vendor/leaflet/leaflet.js"></script><?php endif; ?>
     <script>
     document.getElementById('btnCopiar').addEventListener('click', function () {
       var b = this, t = b.getAttribute('data-texto');
@@ -477,7 +626,52 @@ if ($id > 0) {
         ta.remove();
       }
     });
+    // Mapa: localização aproximada (círculo de 15 km pelo IP, 250 km pelo fuso).
+    var mapa = document.getElementById('mgMapa');
+    if (mapa && window.L) {
+      var lat = parseFloat(mapa.dataset.lat), lng = parseFloat(mapa.dataset.lng), porFuso = mapa.dataset.fonte === 'fuso';
+      if (!isNaN(lat) && !isNaN(lng)) {
+        var mp = L.map(mapa, { scrollWheelZoom: false, attributionControl: true });
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 17, attribution: '&copy; OpenStreetMap' }).addTo(mp);
+        mp.setView([lat, lng], porFuso ? 4 : 9);
+        L.circle([lat, lng], { radius: porFuso ? 250000 : 15000, color: '#C8102E', weight: 1, fillColor: '#C8102E', fillOpacity: .1 }).addTo(mp);
+        L.marker([lat, lng], { icon: L.divIcon({ className: '', html: '<div class="mg-pino"></div>', iconSize: [16, 16], iconAnchor: [8, 8] }), title: mapa.dataset.rotulo || '' }).addTo(mp);
+        setTimeout(function () { mp.invalidateSize(); }, 300);
+      }
+    }
+    // Relógio da pessoa, no fuso dela, atualizado a cada minuto.
+    document.querySelectorAll('[data-hora-local]').forEach(function (el) {
+      var fuso = el.getAttribute('data-fuso');
+      function tick() { try { el.textContent = new Intl.DateTimeFormat('pt-BR', { hour: '2-digit', minute: '2-digit', timeZone: fuso }).format(new Date()); } catch (e) {} }
+      tick(); setInterval(tick, 30000);
+    });
     </script>
+    <?php
+    adminLayoutBottom();
+    exit;
+}
+
+// ------------------------------------------------------------------ cadastro à mão
+if (isset($_GET['novo'])) {
+    adminLayoutTop('messages', 'Cadastrar mensagem', ['label' => 'Mensagens', 'href' => '/acesso/mensagens']);
+    ?>
+    <div class="card" style="max-width:720px">
+      <p style="margin:0 0 6px;font-size:.86rem;color:var(--ink-3)">Para quem chegou por telefone, WhatsApp direto, e-mail ou indicação, e não passou pelo site. Entra na lista como qualquer outra, sem e-mail de aviso.</p>
+      <form method="post">
+        <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="criar" />
+        <div class="mg-edit" style="display:grid;grid-template-columns:1fr 1fr;gap:0 14px">
+          <div><label>Nome</label><input type="text" name="nome" maxlength="120" required /></div>
+          <div><label>Empresa</label><input type="text" name="empresa" maxlength="150" /></div>
+          <div><label>E-mail</label><input type="email" name="email" maxlength="190" /></div>
+          <div><label>Telefone ou WhatsApp</label><input type="text" name="telefone" maxlength="40" /></div>
+          <div><label>Por onde chegou</label><select name="canal_manual"><?php foreach (MCM_CANAIS_MANUAIS as $k => $v): ?><option value="<?= hh($k) ?>"><?= hh($v) ?></option><?php endforeach; ?></select></div>
+          <div><label>Assunto</label><input type="text" name="assunto" maxlength="150" /></div>
+        </div>
+        <label>Mensagem ou resumo da conversa</label>
+        <textarea name="mensagem" style="min-height:120px" maxlength="4000"></textarea>
+        <button type="submit" class="btn" style="margin-top:14px">Cadastrar</button>
+      </form>
+    </div>
     <?php
     adminLayoutBottom();
     exit;
@@ -520,6 +714,8 @@ function urlFiltro(array $f, array $mudar): string {
 }
 $filtrando = $f['q'] !== '' || $f['status'] !== '' || $f['origem'] !== '' || $f['formulario'] !== '' || $f['de'] !== '' || $f['ate'] !== '';
 $okMsg = ['excluida' => 'Mensagem movida para a lixeira.', 'apagada' => 'Mensagem apagada.'][$_GET['ok'] ?? ''] ?? null;
+
+if (random_int(1, 30) === 1) { try { mcmAnonimizarAntigos($pdo); } catch (Throwable $e) { error_log('mensagens: retenção falhou: ' . $e->getMessage()); } }
 
 adminLayoutTop('messages', 'Mensagens');
 ?>
@@ -588,7 +784,7 @@ adminLayoutTop('messages', 'Mensagens');
 <div class="tablecard">
   <div class="tablecard-head">
     <div><strong><?= $f['lixeira'] ? 'Lixeira' : ($f['tipo'] === 'abandonadas' ? 'Começaram a preencher e não enviaram' : ($f['tipo'] === 'todas' ? 'Todas as mensagens' : 'Mensagens enviadas')) ?></strong><span class="count"><?= $total ?></span></div>
-    <?php if ($total > 0): ?><a class="btn secondary" href="<?= hh(urlFiltro($f, ['export' => 'csv'])) ?>" style="padding:8px 14px;font-size:.78rem">Exportar CSV</a><?php endif; ?>
+    <div style="display:flex;gap:8px"><?php if ($total > 0): ?><a class="btn secondary" href="<?= hh(urlFiltro($f, ['export' => 'csv'])) ?>" style="padding:8px 14px;font-size:.78rem">Exportar CSV</a><?php endif; ?><a class="btn" href="mensagens?novo=1" style="padding:8px 14px;font-size:.78rem">Cadastrar à mão</a></div>
   </div>
   <?php if (!$lista): ?>
   <div class="vazio"><strong><?= $filtrando ? 'Nada com esses filtros' : ($f['tipo'] === 'abandonadas' ? 'Ninguém deixou formulário pela metade' : 'Nenhuma mensagem por aqui ainda') ?></strong><?= $filtrando ? 'Tente limpar a busca ou mudar o período.' : 'Cada formulário enviado no site aparece nesta lista e manda um e-mail para a Kelly.' ?></div>
@@ -601,7 +797,7 @@ adminLayoutTop('messages', 'Mensagens');
       <td class="int"><span class="pri"><?= rotuloInteresse($m) !== '' ? hh(rotuloInteresse($m)) : '<span style="color:#9CA3AF">sem assunto</span>' ?></span><span class="sec"><?= hh(MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site')) ?><?= $m['pagina'] !== '' ? ' · ' . hh($m['pagina']) : '' ?></span></td>
       <td><?= hh(MCM_ORIGENS[$m['origem']] ?? MCM_ORIGENS['']) ?><?= $m['origem_detalhe'] !== '' ? '<span class="sec">' . hh(mb_substr($m['origem_detalhe'], 0, 50)) . '</span>' : '' ?><?= lugar($m) !== '' ? '<span class="sec">' . hh(lugar($m)) . '</span>' : '' ?></td>
       <td title="<?= hh(mcmDataLocal($quando)) ?>"><?= hh(mcmTempoAtras($quando)) ?><span class="sec"><?= hh(mcmDataLocal($quando, 'd/m H:i')) ?></span></td>
-      <td><?= badgeStatus($m) ?><?= $m['responsavel_id'] ? '<span class="sec">' . hh(nomeUsuario($equipe, $m['responsavel_id'])) . '</span>' : '' ?><?= !$abn && $m['email_status'] === 'falhou' ? '<span class="sec" style="color:var(--red)">e-mail falhou</span>' : '' ?></td>
+      <td><?= badgeStatus($m) ?><?= $m['responsavel_id'] ? '<span class="sec">' . hh(nomeUsuario($equipe, $m['responsavel_id'])) . '</span>' : '' ?><?= !$abn && $m['email_status'] === 'falhou' ? '<span class="sec" style="color:var(--red)">e-mail falhou</span>' : (!$abn && $m['email_status'] === 'enviado' ? '<span class="sec">e-mail aceito' . ($m['canal'] === 'whatsapp' ? ' · WhatsApp' : '') . '</span>' : '') ?></td>
       <td class="dt-actions"><a href="mensagens?id=<?= (int)$m['id'] ?>">abrir</a><?php if ($wa !== ''): ?><a href="https://wa.me/<?= hh($wa) ?>" target="_blank" rel="noopener" style="color:#1E7F4D">WhatsApp</a><?php endif; ?></td>
     </tr>
     <?php endforeach; ?>
