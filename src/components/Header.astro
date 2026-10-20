@@ -29,7 +29,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
     </a>
 
     <nav class="nav" aria-label="Navegação principal">
-      {menu.map(node => node.href === '/cases' ? (
+      {menu.map(node => node.href.replace(/\/$/, '') === '/cases' ? (
         <div class="nav-drop-wrap" id="cases-drop-wrap">
           <a href="/cases/" class="nav-link nav-parent">
             {node.label}
@@ -103,7 +103,7 @@ const WA = 'https://wa.me/5511988600372?text=Olá%20Mclair!%20Gostaria%20de%20co
       </button>
     </div>
     <nav class="drawer-nav">
-      {menu.map((node, i) => node.href === '/cases' ? (
+      {menu.map((node, i) => node.href.replace(/\/$/, '') === '/cases' ? (
         <div class="drawer-group" style={`--i:${i}`}>
           <a href="/cases/" class="drawer-link">{node.label}</a>
           <div class="drawer-sub">
