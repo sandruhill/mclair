@@ -199,14 +199,12 @@ const schema = [
 
 /* Lista com linhas finas, no padrão do hub de assessoria */
 .g-lista { list-style: none; padding: 0; margin: 6px 0 1.4em; }
-.g-lista li { padding: 14px 0; border-top: 1px solid var(--line); font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
-.g-lista li:last-child { border-bottom: 1px solid var(--line); }
+.g-lista li { padding: 14px 0; font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
 .g-lista strong { color: var(--ink); }
 
 /* Passos numerados */
 .g-passos { list-style: none; counter-reset: passo; padding: 0; margin: 6px 0 1.4em; }
-.g-passos > li { counter-increment: passo; position: relative; padding: 16px 0 16px 46px; border-top: 1px solid var(--line); font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
-.g-passos > li:last-child { border-bottom: 1px solid var(--line); }
+.g-passos > li { counter-increment: passo; position: relative; padding: 16px 0 16px 46px; font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
 .g-passos > li::before { content: counter(passo); position: absolute; left: 0; top: 15px; font-size: 1.15rem; font-weight: 900; color: var(--red); width: 30px; }
 .g-passos strong { color: var(--ink); }
 
@@ -271,8 +269,7 @@ const schema = [
 .g-mais { background: #fff; padding-block: clamp(48px, 6vw, 80px); }
 .g-mais .g-h2 { margin-top: 0; }
 .g-lista-guias { list-style: none; padding: 0; margin: 0; }
-.g-lista-guias li { padding: 18px 0; border-top: 1px solid var(--line); }
-.g-lista-guias li:last-child { border-bottom: 1px solid var(--line); }
+.g-lista-guias li { padding: 18px 0; }
 .g-lista-guias a { font-size: 1.2rem; font-weight: 800; letter-spacing: -.015em; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); text-wrap: balance; }
 .g-lista-guias a:hover { color: var(--red); }
 .g-lista-guias p { margin-top: 6px; font-size: 1rem; line-height: 1.65; color: var(--ink-3); text-wrap: pretty; }
