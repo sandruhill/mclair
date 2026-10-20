@@ -447,6 +447,12 @@ if ($id > 0) {
       .mg-resp select { width:auto; min-width:220px; flex:1; }
       .mg-resp .btn { padding:10px 14px; }
       .js .so-sem-js { display:none; }
+      /* Lead novo ou sem responsável: o bloco sobe e ganha fundo suave na cor
+         do painel com contorno, até alguém definir status e responsável. */
+      .mg-card.destaque { background:#FFF5F6; border-color:rgba(200,16,46,.4); box-shadow:0 0 0 3px rgba(200,16,46,.08); transition:background .3s, border-color .3s, box-shadow .3s; }
+      .mg-card.destaque h3 { color:var(--red); }
+      .mg-chamada { margin:-6px 0 14px; font-size:.86rem; font-weight:700; color:var(--red); }
+      .mg-chamada[hidden] { display:none; }
       .mg-rodape-acoes { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:6px; font-size:.8rem; }
       .mg-rodape-acoes button.link { background:none; border:none; padding:0; color:#9a1f1f; text-decoration:underline; font-weight:700; cursor:pointer; font-family:inherit; font-size:.8rem; }
       .geo-atrib { font-size:.7rem; color:#9CA3AF; margin:10px 0 0; }
@@ -513,8 +519,45 @@ if ($id > 0) {
     <?php endif; ?>
     <?php if ($m['observacao'] !== ''): ?><div class="mg-aviso"><?= hh($m['observacao']) ?></div><?php endif; ?>
 
+    <?php
+    // Lead novo ou sem responsável: o bloco Atendimento sobe para o topo da
+    // coluna, com destaque e uma chamada curta. O JS tira o destaque na hora
+    // em que o status sai de "novo" e alguém assume; o bloco fica no topo até
+    // a próxima abertura da ficha, quando volta à posição normal.
+    $pendente = !$abandonada && !$anonima && $m['excluido_em'] === null && ($m['status'] === 'novo' || !$m['responsavel_id']);
+    $chamada = $m['status'] === 'novo' ? 'Lead novo: defina quem atende e o status.' : 'Sem responsável: defina quem atende.';
+    ob_start();
+    ?>
+        <div class="mg-card<?= $pendente ? ' destaque' : '' ?>" id="cardAtendimento">
+          <h3>Atendimento</h3>
+          <p class="mg-chamada" id="mgChamada" <?= $pendente ? '' : 'hidden' ?>><?= hh($chamada) ?></p>
+          <form method="post" data-ajax id="formStatus">
+            <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" />
+            <label style="margin-top:0">Status</label>
+            <div class="mg-linha-salvo">
+              <div class="mg-status" role="group" aria-label="Status do atendimento">
+                <?php foreach (MCM_STATUS as $k => $v): ?><button type="submit" name="status" value="<?= hh($k) ?>" class="<?= $k === $m['status'] ? 'on' : '' ?>" aria-pressed="<?= $k === $m['status'] ? 'true' : 'false' ?>"><?= hh($v) ?></button><?php endforeach; ?>
+              </div>
+              <span class="mg-salvo" aria-live="polite"></span>
+            </div>
+          </form>
+          <form method="post" data-ajax id="formResponsavel" style="margin-top:4px">
+            <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="responsavel" /><input type="hidden" name="id" value="<?= $id ?>" />
+            <label>Quem atende</label>
+            <div class="mg-resp">
+              <select name="responsavel_id" data-salva-ao-trocar><option value="0">Ninguém ainda</option><?php foreach ($equipe as $uid => $un): ?><option value="<?= $uid ?>" <?= $uid === (int)$m['responsavel_id'] ? 'selected' : '' ?>><?= hh($un) ?></option><?php endforeach; ?></select>
+              <button type="submit" class="btn secondary so-sem-js">Salvar</button>
+              <?php if (isset($equipe[$meuId])): ?><button type="submit" class="btn secondary" id="btnEuAtendo" name="responsavel_id" value="<?= $meuId ?>" <?= (int)$m['responsavel_id'] === $meuId ? 'hidden' : '' ?>>Eu atendo</button><?php endif; ?>
+              <span class="mg-salvo" aria-live="polite"></span>
+            </div>
+            <p class="muted" id="mgRespTexto" style="font-size:.78rem;margin:10px 0 0;<?= $m['responsavel_id'] ? '' : 'display:none' ?>"><?= textoResponsavel($m, $equipe, $responsavelDesde) ?></p>
+          </form>
+        </div>
+    <?php $cardAtendimento = ob_get_clean(); ?>
+
     <div class="mg-grid">
       <div>
+        <?php if ($pendente) echo $cardAtendimento; ?>
         <div class="mg-card">
           <h3>O que a pessoa escreveu <small><?= hh($manual ? 'cadastro à mão' : (MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site'))) ?></small></h3>
           <dl class="kv">
@@ -558,30 +601,7 @@ if ($id > 0) {
           <?php endif; ?>
         </div>
 
-        <div class="mg-card">
-          <h3>Atendimento</h3>
-          <form method="post" data-ajax id="formStatus">
-            <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" />
-            <label style="margin-top:0">Status</label>
-            <div class="mg-linha-salvo">
-              <div class="mg-status" role="group" aria-label="Status do atendimento">
-                <?php foreach (MCM_STATUS as $k => $v): ?><button type="submit" name="status" value="<?= hh($k) ?>" class="<?= $k === $m['status'] ? 'on' : '' ?>" aria-pressed="<?= $k === $m['status'] ? 'true' : 'false' ?>"><?= hh($v) ?></button><?php endforeach; ?>
-              </div>
-              <span class="mg-salvo" aria-live="polite"></span>
-            </div>
-          </form>
-          <form method="post" data-ajax id="formResponsavel" style="margin-top:4px">
-            <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="responsavel" /><input type="hidden" name="id" value="<?= $id ?>" />
-            <label>Quem atende</label>
-            <div class="mg-resp">
-              <select name="responsavel_id" data-salva-ao-trocar><option value="0">Ninguém ainda</option><?php foreach ($equipe as $uid => $un): ?><option value="<?= $uid ?>" <?= $uid === (int)$m['responsavel_id'] ? 'selected' : '' ?>><?= hh($un) ?></option><?php endforeach; ?></select>
-              <button type="submit" class="btn secondary so-sem-js">Salvar</button>
-              <?php if (isset($equipe[$meuId])): ?><button type="submit" class="btn secondary" id="btnEuAtendo" name="responsavel_id" value="<?= $meuId ?>" <?= (int)$m['responsavel_id'] === $meuId ? 'hidden' : '' ?>>Eu atendo</button><?php endif; ?>
-              <span class="mg-salvo" aria-live="polite"></span>
-            </div>
-            <p class="muted" id="mgRespTexto" style="font-size:.78rem;margin:10px 0 0;<?= $m['responsavel_id'] ? '' : 'display:none' ?>"><?= textoResponsavel($m, $equipe, $responsavelDesde) ?></p>
-          </form>
-        </div>
+        <?php if (!$pendente) echo $cardAtendimento; ?>
 
         <div class="mg-card" id="linha-do-tempo">
           <h3>Linha do tempo</h3>
@@ -757,6 +777,17 @@ if ($id > 0) {
           if (eu) eu.hidden = r.responsavel.id === meuId;
           var txt = document.getElementById('mgRespTexto');
           if (txt) { txt.innerHTML = r.responsavel.texto; txt.style.display = r.responsavel.texto ? '' : 'none'; }
+        }
+        if (r.status && r.responsavel) {
+          // Destaque de lead novo: sai assim que o status deixa "novo" e
+          // alguém assume. O bloco fica onde está até a ficha ser reaberta.
+          var novo = r.status.chave === 'novo', semResp = r.responsavel.id === 0;
+          var card = document.getElementById('cardAtendimento'), chamada = document.getElementById('mgChamada');
+          if (card) card.classList.toggle('destaque', novo || semResp);
+          if (chamada) {
+            chamada.hidden = !(novo || semResp);
+            chamada.textContent = novo ? 'Lead novo: defina quem atende e o status.' : 'Sem responsável: defina quem atende.';
+          }
         }
         var acoes = document.getElementById('mgAcaoStatus');
         if (acoes && typeof r.acoes === 'string') acoes.innerHTML = r.acoes;
