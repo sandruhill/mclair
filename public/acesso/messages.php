@@ -24,14 +24,82 @@ function nomeUsuario(array $equipe, $id): string {
     return $id ? ($equipe[(int)$id] ?? ('usuário #' . (int)$id)) : '';
 }
 
+const MCM_ROTULO_EVENTO = [
+    'rascunho' => 'Começou a preencher', 'enviado' => 'Formulário enviado', 'whatsapp' => 'Levada ao WhatsApp', 'wa_clique' => 'Clique em WhatsApp',
+    'email_ok' => 'E-mail de aviso', 'email_falhou' => 'E-mail de aviso falhou', 'reenviado' => 'E-mail reenviado', 'ga4' => 'GA4',
+    'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'editado' => 'Dados editados', 'criado' => 'Cadastrada à mão',
+    'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'anonimizado' => 'Dados apagados',
+];
+
+// Um item da linha do tempo. Usado na ficha e na resposta JSON das ações
+// salvas sem recarregar (o JS acrescenta o HTML no fim da lista).
+function tlItem(array $e, array $equipe): string {
+    $h = '<li class="' . hh($e['tipo']) . '" data-ev="' . (int)$e['id'] . '"><span class="quando">' . hh(mcmDataLocal($e['criado_em'], 'd/m/Y')) . '<br>' . hh(mcmDataLocal($e['criado_em'], 'H:i')) . '</span>'
+        . '<span><span class="tipo">' . hh(MCM_ROTULO_EVENTO[$e['tipo']] ?? $e['tipo']) . '</span>';
+    if ((string)$e['texto'] !== '') $h .= '<div class="texto">' . hh($e['texto']) . '</div>';
+    if ($e['usuario_id']) $h .= '<div class="quem">' . hh(nomeUsuario($equipe, $e['usuario_id'])) . '</div>';
+    return $h . '</span></li>';
+}
+function textoResponsavel(array $m, array $equipe, string $desde): string {
+    if (!$m['responsavel_id']) return '';
+    return 'Atendida por ' . hh(nomeUsuario($equipe, $m['responsavel_id'])) . ($desde !== '' ? ' desde ' . hh(mcmDataLocal($desde)) : '') . '.';
+}
+// Atalho de status no topo da ficha ("Marcar em atendimento" / "Marcar como atendido").
+function botaoStatusRapido(array $m, int $id): string {
+    if ($m['enviado_em'] === null) return '';
+    $alvo = $m['status'] === 'novo' ? ['em_atendimento', 'Marcar em atendimento'] : (in_array($m['status'], ['em_atendimento', 'proposta_enviada'], true) ? ['atendido', 'Marcar como atendido'] : null);
+    if (!$alvo) return '';
+    return '<form method="post" style="display:inline" data-ajax><input type="hidden" name="csrf" value="' . hh(cmsCsrfToken()) . '" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="' . $id . '" /><input type="hidden" name="status" value="' . $alvo[0] . '" /><button type="submit" class="btn secondary">' . $alvo[1] . '</button></form>';
+}
+function respondeJson(int $code, array $dados): void {
+    http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
+    header('Cache-Control: no-store');
+    echo json_encode($dados, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    exit;
+}
+// Erro de uma ação: JSON para o fetch, texto simples para o POST comum.
+function falha(int $code, string $msg): void {
+    global $ajax;
+    if ($ajax) respondeJson($code, ['ok' => false, 'erro' => $msg]);
+    http_response_code($code);
+    die($msg);
+}
+// Depois de salvar via fetch: devolve o que mudou na ficha para o JS
+// atualizar sem recarregar (status, responsável, atalho do topo e os
+// eventos novos da linha do tempo a partir do último que a página já tinha).
+function respostaFicha(PDO $pdo, int $id, array $equipe, string $msg, int $desde): void {
+    $st = $pdo->prepare('SELECT * FROM cmstest_mensagens WHERE id = ?');
+    $st->execute([$id]);
+    $m = $st->fetch();
+    $ev = $pdo->prepare('SELECT * FROM cmstest_mensagens_eventos WHERE mensagem_id = ? AND id > ? ORDER BY criado_em, id');
+    $ev->execute([$id, $desde]);
+    $html = '';
+    foreach ($ev as $e) $html .= tlItem($e, $equipe);
+    $rd = $pdo->prepare("SELECT criado_em FROM cmstest_mensagens_eventos WHERE mensagem_id = ? AND tipo = 'responsavel' ORDER BY id DESC LIMIT 1");
+    $rd->execute([$id]);
+    $respDesde = (string)($rd->fetchColumn() ?: '');
+    respondeJson(200, [
+        'ok' => true, 'msg' => $msg,
+        'status' => ['chave' => $m['status'], 'rotulo' => MCM_STATUS[$m['status']] ?? $m['status'], 'badge' => badgeStatus($m)],
+        'responsavel' => ['id' => (int)$m['responsavel_id'], 'texto' => textoResponsavel($m, $equipe, $respDesde)],
+        'acoes' => botaoStatusRapido($m, $id),
+        'eventos' => $html,
+    ]);
+}
+
 // ---------------------------------------------------------------- ações
+$ajax = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // ajax=1 vem do JS da ficha (status, responsável e anotação salvos sem
+    // recarregar). Sem JS o mesmo formulário faz POST comum e redireciona.
+    $ajax = ($_POST['ajax'] ?? '') === '1';
     if (!cmsCsrfValidate($_POST['csrf'] ?? '')) {
-        http_response_code(403);
-        die('Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
+        falha(403, 'Sessão expirada ou requisição inválida. Recarregue a página e tente de novo.');
     }
     $id = (int)($_POST['id'] ?? 0);
     $acao = (string)($_POST['action'] ?? '');
+    $desde = (int)($_POST['ultimo_evento'] ?? 0);
     if ($acao === 'criar') {
         $nome = mc_linha($_POST['nome'] ?? '', 120);
         if (mb_strlen($nome) < 2) { http_response_code(422); die('Informe o nome.'); }
@@ -50,17 +118,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $st = $pdo->prepare('SELECT * FROM cmstest_mensagens WHERE id = ?');
     $st->execute([$id]);
     $m = $st->fetch();
-    if (!$m) { http_response_code(404); die('Mensagem não encontrada.'); }
+    if (!$m) falha(404, 'Mensagem não encontrada.');
     $volta = 'mensagens?id=' . $id;
     if ($acao === 'reenviar' && ($m['formulario'] === 'manual' || $m['anonimizado_em'] !== null)) { http_response_code(400); die('Cadastro à mão ou dados apagados: não há aviso a reenviar.'); }
-    if (in_array($acao, ['nota', 'editar'], true) && $m['anonimizado_em'] !== null) { http_response_code(400); die('Dados apagados pela retenção; a ficha não recebe mais texto.'); }
+    if (in_array($acao, ['nota', 'editar'], true) && $m['anonimizado_em'] !== null) falha(400, 'Dados apagados pela retenção; a ficha não recebe mais texto.');
 
     if ($acao === 'status') {
         $novo = (string)($_POST['status'] ?? '');
-        if (isset(MCM_STATUS[$novo]) && $novo !== $m['status']) {
+        if (!isset(MCM_STATUS[$novo])) falha(422, 'Status desconhecido.');
+        if ($novo !== $m['status']) {
             $pdo->prepare('UPDATE cmstest_mensagens SET status = ?, atualizado_em = UTC_TIMESTAMP() WHERE id = ?')->execute([$novo, $id]);
             mcmEvento($pdo, $id, 'status', 'Status mudou de "' . (MCM_STATUS[$m['status']] ?? $m['status']) . '" para "' . MCM_STATUS[$novo] . '"', $meuId);
         }
+        if ($ajax) respostaFicha($pdo, $id, $equipe, 'Salvo', $desde);
         header('Location: ' . $volta . '&ok=status');
         exit;
     }
@@ -76,6 +146,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mcmEvento($pdo, $id, 'status', 'Status mudou de "Novo" para "Em atendimento"', $meuId);
             }
         }
+        if ($ajax) respostaFicha($pdo, $id, $equipe, 'Salvo', $desde);
         header('Location: ' . $volta . '&ok=responsavel');
         exit;
     }
@@ -97,7 +168,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($acao === 'nota') {
         $texto = mc_texto($_POST['texto'] ?? '', 4000);
-        if ($texto !== '') mcmEvento($pdo, $id, 'nota', $texto, $meuId);
+        if ($texto === '') { if ($ajax) falha(422, 'Escreva a anotação antes de guardar.'); header('Location: ' . $volta . '#linha-do-tempo'); exit; }
+        mcmEvento($pdo, $id, 'nota', $texto, $meuId);
+        $pdo->prepare('UPDATE cmstest_mensagens SET atualizado_em = UTC_TIMESTAMP() WHERE id = ?')->execute([$id]);
+        if ($ajax) respostaFicha($pdo, $id, $equipe, 'Anotação guardada', $desde);
         header('Location: ' . $volta . '&ok=nota#linha-do-tempo');
         exit;
     }
@@ -127,8 +201,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         header('Location: ' . $volta . '&ok=' . ($ok ? 'reenviado' : 'reenvio_falhou'));
         exit;
     }
-    http_response_code(400);
-    die('Ação desconhecida.');
+    falha(400, 'Ação desconhecida.');
 }
 
 // ------------------------------------------------------- filtros da lista
@@ -279,12 +352,6 @@ if ($id > 0) {
     foreach ([['Nome', $m['nome']], ['E-mail', $m['email']], ['WhatsApp', $m['telefone']], ['Empresa', $m['empresa']], ['Assunto', $m['assunto']], ['Serviços', $m['servicos']], ['Verba', $m['orcamento']], ['O que quer divulgar', $m['objetivo']], ['Mensagem', $m['mensagem']], ['Formulário', MCM_FORMULARIOS[$m['formulario']] ?? $m['formulario']], ['Página', $m['pagina'] !== '' ? 'https://mclair.com.br' . $m['pagina'] : ''], ['Recebido em', mcmDataLocal($m['enviado_em'] ?? $m['criado_em'])], ['Origem', origemTexto($m)], ['Local', $local['rotulo'] ?? '']] as [$r, $v]) {
         if ((string)$v !== '') $copiar[] = $r . ': ' . $v;
     }
-    $rotuloEvento = [
-        'rascunho' => 'Começou a preencher', 'enviado' => 'Formulário enviado', 'whatsapp' => 'Levada ao WhatsApp', 'wa_clique' => 'Clique em WhatsApp',
-        'email_ok' => 'E-mail de aviso', 'email_falhou' => 'E-mail de aviso falhou', 'reenviado' => 'E-mail reenviado', 'ga4' => 'GA4',
-        'status' => 'Status', 'responsavel' => 'Responsável', 'nota' => 'Anotação', 'editado' => 'Dados editados', 'criado' => 'Cadastrada à mão',
-        'importado' => 'Importado', 'excluido' => 'Lixeira', 'restaurado' => 'Restaurada', 'anonimizado' => 'Dados apagados',
-    ];
     $temGeo = $local !== null && $local['lat'] !== null && $local['lng'] !== null;
 
     adminLayoutTop('messages', $titulo, ['label' => 'Mensagens', 'href' => '/acesso/mensagens']);
@@ -363,6 +430,23 @@ if ($id > 0) {
       .mg-pino { width:16px; height:16px; border-radius:50%; background:var(--red); border:3px solid #fff; box-shadow:0 0 0 2px rgba(200,16,46,.45); }
       .mg-resumo { font-size:.84rem; margin:0 0 10px; }
       textarea.nota { min-height:90px; }
+      /* Atendimento: status em botões segmentados (cada um é um submit: sem
+         JS o clique faz POST comum; com JS salva por fetch), responsável
+         salva ao trocar, anotação com um botão só. */
+      .mg-status { display:flex; flex-wrap:wrap; gap:6px; }
+      .mg-status button { font-family:inherit; cursor:pointer; padding:8px 13px; border-radius:8px; font-size:.8rem; font-weight:700; color:var(--ink-3); background:var(--paper); border:1px solid var(--line); }
+      .mg-status button:hover { color:var(--ink); border-color:#C7CBD1; }
+      .mg-status button.on { background:var(--ink); color:#fff; border-color:var(--ink); }
+      .mg-status button:focus-visible { outline:2px solid rgba(200,16,46,.25); outline-offset:1px; }
+      .mg-salvo { font-size:.78rem; font-weight:700; color:#1E7F4D; opacity:0; transition:opacity .2s; white-space:nowrap; }
+      .mg-salvo.show { opacity:1; }
+      .mg-salvo.erro { color:var(--red); }
+      .mg-linha-salvo { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+      form.enviando .mg-status button, form.enviando select, form.enviando .btn, form.enviando textarea { opacity:.6; pointer-events:none; }
+      .mg-resp { display:flex; gap:8px; align-items:center; flex-wrap:wrap; }
+      .mg-resp select { width:auto; min-width:220px; flex:1; }
+      .mg-resp .btn { padding:10px 14px; }
+      .js .so-sem-js { display:none; }
       .mg-rodape-acoes { display:flex; gap:14px; flex-wrap:wrap; align-items:center; margin-top:6px; font-size:.8rem; }
       .mg-rodape-acoes button.link { background:none; border:none; padding:0; color:#9a1f1f; text-decoration:underline; font-weight:700; cursor:pointer; font-family:inherit; font-size:.8rem; }
       .geo-atrib { font-size:.7rem; color:#9CA3AF; margin:10px 0 0; }
@@ -374,6 +458,7 @@ if ($id > 0) {
       details.mg-det > summary + * { margin-top:14px; }
       pre.mg-email { background:var(--soft); border-radius:8px; padding:12px 14px; font-size:.76rem; line-height:1.5; white-space:pre-wrap; word-break:break-word; margin:10px 0 0; max-height:360px; overflow:auto; font-family:ui-monospace,SFMono-Regular,Menlo,monospace; }
     </style>
+    <script>document.documentElement.classList.add('js');</script>
 
     <?php if ($okMsg): ?><div class="msg ok"><?= cmsCheckIcon() ?><span><?= hh($okMsg) ?></span></div><?php endif; ?>
 
@@ -385,7 +470,7 @@ if ($id > 0) {
           <?php $interesse = rotuloInteresse($m); ?>
           <p class="ask"><?php if ($interesse !== ''): ?>Quer falar sobre <strong><?= hh($interesse) ?></strong><?php else: ?><?= hh(MCM_FORMULARIOS[$m['formulario']] ?? 'Formulário do site') ?><?php endif; ?><?= $m['orcamento'] !== '' ? ' · verba ' . hh($m['orcamento']) : '' ?><?= $m['empresa'] !== '' ? ' · ' . hh($m['empresa']) : '' ?></p>
           <div class="sub">
-            <?= badgeStatus($m) ?>
+            <span id="mgBadge"><?= badgeStatus($m) ?></span>
             <?php if (!$abandonada): ?><?php if ($m['email_status'] === 'enviado'): ?><span class="st st-ok">aviso por e-mail aceito</span><?php elseif ($m['email_status'] === 'falhou'): ?><span class="st st-falha">aviso por e-mail falhou</span><?php elseif ($m['email_status'] === 'nao_aplica'): ?><?php else: ?><span class="st">aviso pendente</span><?php endif; ?><?php endif; ?>
             <?php if ($foiWhats): ?><span class="st st-ok">foi ao WhatsApp</span><?php endif; ?>
             <span><?= hh($manual ? 'Cadastrada à mão' : (MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site'))) ?> · <span title="<?= hh(mcmDataLocal($m['enviado_em'] ?? $m['criado_em'])) ?> (Brasília)"><?= hh(mcmTempoAtras($m['enviado_em'] ?? $m['criado_em'])) ?></span></span>
@@ -404,11 +489,7 @@ if ($id > 0) {
       <?php if ($waDigitos !== '' && !$anonima): ?><a class="btn wa" href="https://wa.me/<?= hh($waDigitos) ?>?text=<?= rawurlencode('Olá' . ($m['nome'] !== '' ? ' ' . explode(' ', trim((string)$m['nome']))[0] : '') . ', aqui é da Mclair. Recebemos a sua mensagem pelo site.') ?>" target="_blank" rel="noopener">Abrir WhatsApp</a><?php endif; ?>
       <?php if ($m['email_valido'] && !$anonima): ?><a class="btn secondary" href="mailto:<?= hh(rawurlencode($m['email'])) ?>?subject=<?= rawurlencode('Re: ' . ($m['assunto'] !== '' ? $m['assunto'] : 'sua mensagem pelo site da Mclair')) ?>">Responder por e-mail</a><?php endif; ?>
       <button type="button" class="btn secondary" id="btnCopiar" data-texto="<?= hh(implode("\n", $copiar)) ?>">Copiar dados</button>
-      <?php if ($m['status'] === 'novo' && !$abandonada): ?>
-      <form method="post" style="display:inline"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" /><input type="hidden" name="status" value="em_atendimento" /><button type="submit" class="btn secondary">Marcar em atendimento</button></form>
-      <?php elseif (in_array($m['status'], ['em_atendimento', 'proposta_enviada'], true)): ?>
-      <form method="post" style="display:inline"><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" /><input type="hidden" name="status" value="atendido" /><button type="submit" class="btn secondary">Marcar como atendido</button></form>
-      <?php endif; ?>
+      <span id="mgAcaoStatus" style="display:contents"><?= botaoStatusRapido($m, $id) ?></span>
     </div>
 
     <?php if ($m['excluido_em'] !== null): ?>
@@ -479,44 +560,44 @@ if ($id > 0) {
 
         <div class="mg-card">
           <h3>Atendimento</h3>
-          <form method="post" class="mg-form-linha">
+          <form method="post" data-ajax id="formStatus">
             <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= $id ?>" />
-            <div><label>Status</label>
-              <select name="status"><?php foreach (MCM_STATUS as $k => $v): ?><option value="<?= hh($k) ?>" <?= $k === $m['status'] ? 'selected' : '' ?>><?= hh($v) ?></option><?php endforeach; ?></select>
+            <label style="margin-top:0">Status</label>
+            <div class="mg-linha-salvo">
+              <div class="mg-status" role="group" aria-label="Status do atendimento">
+                <?php foreach (MCM_STATUS as $k => $v): ?><button type="submit" name="status" value="<?= hh($k) ?>" class="<?= $k === $m['status'] ? 'on' : '' ?>" aria-pressed="<?= $k === $m['status'] ? 'true' : 'false' ?>"><?= hh($v) ?></button><?php endforeach; ?>
+              </div>
+              <span class="mg-salvo" aria-live="polite"></span>
             </div>
-            <button type="submit" class="btn">Salvar status</button>
           </form>
-          <form method="post" class="mg-form-linha" style="margin-top:14px">
+          <form method="post" data-ajax id="formResponsavel" style="margin-top:4px">
             <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="responsavel" /><input type="hidden" name="id" value="<?= $id ?>" />
-            <div><label>Quem atende</label>
-              <select name="responsavel_id"><option value="0">Ninguém ainda</option><?php foreach ($equipe as $uid => $un): ?><option value="<?= $uid ?>" <?= $uid === (int)$m['responsavel_id'] ? 'selected' : '' ?>><?= hh($un) ?></option><?php endforeach; ?></select>
+            <label>Quem atende</label>
+            <div class="mg-resp">
+              <select name="responsavel_id" data-salva-ao-trocar><option value="0">Ninguém ainda</option><?php foreach ($equipe as $uid => $un): ?><option value="<?= $uid ?>" <?= $uid === (int)$m['responsavel_id'] ? 'selected' : '' ?>><?= hh($un) ?></option><?php endforeach; ?></select>
+              <button type="submit" class="btn secondary so-sem-js">Salvar</button>
+              <?php if (isset($equipe[$meuId])): ?><button type="submit" class="btn secondary" id="btnEuAtendo" name="responsavel_id" value="<?= $meuId ?>" <?= (int)$m['responsavel_id'] === $meuId ? 'hidden' : '' ?>>Eu atendo</button><?php endif; ?>
+              <span class="mg-salvo" aria-live="polite"></span>
             </div>
-            <button type="submit" class="btn secondary">Salvar</button>
-            <?php if ((int)$m['responsavel_id'] !== $meuId && isset($equipe[$meuId])): ?><button type="submit" class="btn" name="responsavel_id" value="<?= $meuId ?>">Eu atendo</button><?php endif; ?>
+            <p class="muted" id="mgRespTexto" style="font-size:.78rem;margin:10px 0 0;<?= $m['responsavel_id'] ? '' : 'display:none' ?>"><?= textoResponsavel($m, $equipe, $responsavelDesde) ?></p>
           </form>
-          <?php if ($m['responsavel_id']): ?><p class="muted" style="font-size:.78rem;margin:10px 0 0">Atendida por <?= hh(nomeUsuario($equipe, $m['responsavel_id'])) ?><?= $responsavelDesde !== '' ? ' desde ' . hh(mcmDataLocal($responsavelDesde)) : '' ?>.</p><?php endif; ?>
         </div>
 
         <div class="mg-card" id="linha-do-tempo">
           <h3>Linha do tempo</h3>
-          <ul class="tl">
+          <ul class="tl" id="tlLista">
             <?php if ($m['primeira_visita_em']): ?>
             <li><span class="quando"><?= hh(mcmDataLocal($m['primeira_visita_em'], 'd/m/Y')) ?><br><?= hh(mcmDataLocal($m['primeira_visita_em'], 'H:i')) ?></span><span><span class="tipo">Primeira visita ao site</span><div class="texto muted"><?= hh(origemTexto($m)) ?><?= $m['landing'] !== '' ? ' · entrou por ' . hh($m['landing']) : '' ?></div></span></li>
             <?php endif; ?>
-            <?php foreach ($eventos as $e): ?>
-            <li class="<?= hh($e['tipo']) ?>"><span class="quando"><?= hh(mcmDataLocal($e['criado_em'], 'd/m/Y')) ?><br><?= hh(mcmDataLocal($e['criado_em'], 'H:i')) ?></span>
-              <span><span class="tipo"><?= hh($rotuloEvento[$e['tipo']] ?? $e['tipo']) ?></span>
-              <?php if ((string)$e['texto'] !== ''): ?><div class="texto"><?= hh($e['texto']) ?></div><?php endif; ?>
-              <?php if ($e['usuario_id']): ?><div class="quem"><?= hh(nomeUsuario($equipe, $e['usuario_id'])) ?></div><?php endif; ?></span></li>
-            <?php endforeach; ?>
+            <?php foreach ($eventos as $e) echo tlItem($e, $equipe), "\n"; ?>
           </ul>
           <p class="muted" style="font-size:.74rem;margin:10px 0 0">Horários de Brasília.</p>
           <?php if (!$anonima): ?>
-          <form method="post" style="margin-top:16px">
+          <form method="post" style="margin-top:16px" data-ajax id="formNota">
             <input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="nota" /><input type="hidden" name="id" value="<?= $id ?>" />
             <label>Anotação interna</label>
-            <textarea name="texto" class="nota" placeholder="Ligou e pediu proposta para dezembro, por exemplo. Só a equipe vê."></textarea>
-            <button type="submit" class="btn secondary" style="margin-top:10px">Guardar anotação</button>
+            <textarea name="texto" class="nota" placeholder="Ligou e pediu proposta para dezembro, por exemplo. Só a equipe vê." required></textarea>
+            <div class="mg-linha-salvo" style="margin-top:10px"><button type="submit" class="btn secondary">Guardar anotação</button><span class="mg-salvo" aria-live="polite"></span></div>
           </form>
           <?php endif; ?>
         </div>
@@ -639,6 +720,80 @@ if ($id > 0) {
         setTimeout(function () { mp.invalidateSize(); }, 300);
       }
     }
+    // Atendimento sem recarregar: os formulários com data-ajax (status,
+    // responsável, anotação e o atalho do topo) fazem POST por fetch com o
+    // mesmo CSRF e os mesmos campos; o servidor grava os eventos como sempre
+    // e devolve o que mudou. Sem JS, os mesmos formulários fazem POST comum.
+    (function () {
+      var meuId = <?= (int)$meuId ?>;
+      function ultimoEvento() {
+        var lis = document.querySelectorAll('#tlLista li[data-ev]');
+        return lis.length ? lis[lis.length - 1].getAttribute('data-ev') : '0';
+      }
+      var timers = new WeakMap();
+      function aviso(form, texto, erro) {
+        var el = form.querySelector('.mg-salvo');
+        if (!el) return;
+        el.textContent = texto;
+        el.classList.toggle('erro', !!erro);
+        el.classList.add('show');
+        clearTimeout(timers.get(el));
+        timers.set(el, setTimeout(function () { el.classList.remove('show'); }, erro ? 5000 : 2000));
+      }
+      function aplicar(r) {
+        if (r.status) {
+          document.querySelectorAll('#formStatus .mg-status button').forEach(function (b) {
+            var on = b.value === r.status.chave;
+            b.classList.toggle('on', on);
+            b.setAttribute('aria-pressed', on ? 'true' : 'false');
+          });
+          var badge = document.getElementById('mgBadge');
+          if (badge && r.status.badge) badge.innerHTML = r.status.badge;
+        }
+        if (r.responsavel) {
+          var sel = document.querySelector('#formResponsavel select[name=responsavel_id]');
+          if (sel) sel.value = String(r.responsavel.id);
+          var eu = document.getElementById('btnEuAtendo');
+          if (eu) eu.hidden = r.responsavel.id === meuId;
+          var txt = document.getElementById('mgRespTexto');
+          if (txt) { txt.innerHTML = r.responsavel.texto; txt.style.display = r.responsavel.texto ? '' : 'none'; }
+        }
+        var acoes = document.getElementById('mgAcaoStatus');
+        if (acoes && typeof r.acoes === 'string') acoes.innerHTML = r.acoes;
+        if (r.eventos) {
+          var ul = document.getElementById('tlLista');
+          if (ul) ul.insertAdjacentHTML('beforeend', r.eventos);
+        }
+      }
+      document.addEventListener('submit', function (e) {
+        var f = e.target.closest ? e.target.closest('form[data-ajax]') : null;
+        if (!f || !window.fetch || !window.FormData) return;
+        e.preventDefault();
+        if (f.classList.contains('enviando')) return;
+        var fd = new FormData(f);
+        if (e.submitter && e.submitter.name) fd.set(e.submitter.name, e.submitter.value);
+        fd.set('ajax', '1');
+        fd.set('ultimo_evento', ultimoEvento());
+        f.classList.add('enviando');
+        fetch(f.action || location.href, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+          .then(function (res) { return res.json().then(function (j) { return { http: res.status, j: j }; }); })
+          .then(function (res) {
+            f.classList.remove('enviando');
+            if (!res.j || !res.j.ok) { aviso(f, (res.j && res.j.erro) || 'Não salvou. Tente de novo.', true); return; }
+            aplicar(res.j);
+            if (f.id === 'formNota') f.querySelector('textarea').value = '';
+            if (f.id === 'formStatus' || f.id === 'formResponsavel' || f.id === 'formNota') aviso(f, res.j.msg || 'Salvo');
+            else aviso(document.getElementById('formStatus'), res.j.msg || 'Salvo');
+          })
+          .catch(function () { f.classList.remove('enviando'); aviso(f, 'Sem conexão. Tente de novo.', true); });
+      });
+      document.addEventListener('change', function (e) {
+        var sel = e.target;
+        if (!sel.matches || !sel.matches('[data-salva-ao-trocar]')) return;
+        var f = sel.form;
+        if (f) { if (f.requestSubmit) f.requestSubmit(); else f.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true })); }
+      });
+    })();
     // Relógio da pessoa, no fuso dela, atualizado a cada minuto.
     document.querySelectorAll('[data-hora-local]').forEach(function (el) {
       var fuso = el.getAttribute('data-fuso');
