@@ -30,7 +30,7 @@ export const CAMINHO_POLITICA = '/politica-de-privacidade/';
 export const CHAVE_CONSENTIMENTO = 'mclair:consentimento';
 
 // Mudou o texto da política? Atualize a data.
-export const POLITICA_ATUALIZADA_EM = '17 de outubro de 2026';
+export const POLITICA_ATUALIZADA_EM = '21 de outubro de 2026';
 
 // Dados do controlador tirados de consulta pública ao CNPJ.
 // CONFIRMAR COM A MCLAIR: razão social, CNPJ e endereço completo (rua e CEP),
@@ -43,10 +43,11 @@ export const CONTROLADOR = {
   email: 'kelly@mclair.com.br',
 };
 
-// Encarregado pelo tratamento de dados (DPO), art. 41 da LGPD.
-// A DEFINIR PELA MCLAIR. Vazio: no rascunho aparece "[a definir pela Mclair]";
-// com a política ligada, o canal mostrado passa a ser o e-mail do controlador.
+// Canal de privacidade. Como agente de tratamento de pequeno porte, a Mclair
+// está dispensada de indicar encarregado (Resolução CD/ANPD nº 2/2022,
+// art. 11), mas precisa manter um canal de comunicação. Decidido pela Kelly
+// em 21/10/2026: e-mail do Thiago.
 export const ENCARREGADO = {
   nome: '',
-  email: '',
+  email: 'thiago@mclair.com.br',
 };

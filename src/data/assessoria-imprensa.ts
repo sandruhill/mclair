@@ -88,7 +88,7 @@ export const FAQ_ASSESSORIA: Pergunta[] = [
   {
     pergunta: 'Preciso dar entrevistas pessoalmente?',
     resposta:
-      'Em boa parte das pautas, sim: o jornalista quer ouvir quem decide. Por isso o trabalho inclui o posicionamento do porta-voz e o media training, em TV, rádio, podcast ou por escrito.',
+      'Em boa parte das pautas, sim: o jornalista quer ouvir quem decide. Por isso a assessoria inclui um treinamento básico do porta-voz e o acompanhamento de todas as entrevistas. O media training completo, para TV, rádio, podcast ou entrevista por escrito, é contratado à parte.',
   },
 ];
 
@@ -260,7 +260,7 @@ export const FAQ_ASSESSORIA_BSB: Pergunta[] = [
   {
     pergunta: 'Vocês garantem matéria no Correio Braziliense, no Metrópoles ou no Poder360?',
     resposta:
-      'Não. A Mclair não tem acordo com esses veículos e não vende espaço em nenhum deles. Quem decide o que sai é o editor. A assessoria leva ao repórter do assunto um fato novo, um dado conferido e uma fonte disponível na hora do fechamento.',
+      'Não. Esses veículos vendem espaço publicitário, como publieditorial e brand content, mas isso é anúncio, não assessoria. A Mclair não tem acordo com eles e trabalha para conquistar espaço na reportagem, onde quem decide o que sai é o editor. A assessoria leva ao repórter do assunto um fato novo, um dado conferido e uma fonte disponível na hora do fechamento.',
   },
   {
     pergunta: 'Como preparar o presidente de uma entidade para falar com a imprensa?',
@@ -311,7 +311,7 @@ export const FAQ_ASSESSORIA_POA: Pergunta[] = [
   {
     pergunta: 'Dá para garantir matéria na Zero Hora, no Correio do Povo ou no Jornal do Comércio?',
     resposta:
-      'Não. Nenhum desses veículos vende espaço editorial, e a Mclair não tem parceria com eles. A pauta é apresentada ao jornalista que cobre o assunto, com dado do Rio Grande do Sul e porta-voz disponível. Se ele achar relevante para o leitor, publica.',
+      'Não. Esses veículos vendem publieditorial e brand content, mas reportagem não se compra, e a Mclair não tem parceria com eles. A pauta é apresentada ao jornalista que cobre o assunto, com dado do Rio Grande do Sul e porta-voz disponível. Se ele achar relevante para o leitor, publica.',
   },
   {
     pergunta: 'Minha empresa deve focar na imprensa gaúcha ou na nacional?',

@@ -125,9 +125,8 @@ const servicos = [
     <div class="container ft-bottom-inner">
       <span>© {new Date().getFullYear()} Mclair Comunicação. Todos os direitos reservados.</span>
       <div class="ft-bottom-links">
-        {PRIVACIDADE_ATIVA
-          ? <a href={CAMINHO_POLITICA}>Política de privacidade</a>
-          : <a href="/contato/">Dúvidas sobre privacidade e dados</a>}
+        {PRIVACIDADE_ATIVA && <a href={CAMINHO_POLITICA}>Política de privacidade</a>}
+        <a href="/contato/">Dúvidas sobre privacidade e dados</a>
       </div>
     </div>
   </div>

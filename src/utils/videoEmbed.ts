@@ -53,7 +53,7 @@ export function lerVideo(url: string): VideoEmbed | null {
   if (yt) {
     const ehShort = /\/shorts\//.test(u.pathname);
     return {
-      src: `https://www.youtube.com/embed/${encodeURIComponent(yt)}`,
+      src: `https://www.youtube-nocookie.com/embed/${encodeURIComponent(yt)}`,
       vertical: ehShort,
       titulo: 'Vídeo do YouTube',
     };

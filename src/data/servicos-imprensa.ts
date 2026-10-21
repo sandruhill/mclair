@@ -155,7 +155,7 @@ export const FAQ_MEDIA_TRAINING: Pergunta[] = [
   {
     pergunta: 'Quanto custa um media training?',
     resposta:
-      'Varia com o número de porta-vozes, a quantidade de sessões, os formatos treinados (TV, rádio, podcast, entrevista por escrito) e se há gravação com análise. Por isso a Mclair só passa valor depois de entender quem será treinado e para quê. Clientes de assessoria de imprensa podem ter o media training dentro do contrato.',
+      'Varia com o número de porta-vozes, a quantidade de sessões, os formatos treinados (TV, rádio, podcast, entrevista por escrito) e se há gravação com análise. Por isso a Mclair só passa valor depois de entender quem será treinado e para quê. O media training é sempre orçado à parte, mesmo para quem já tem a assessoria de imprensa da Mclair.',
   },
   {
     pergunta: 'Como funciona o media training?',

@@ -94,7 +94,7 @@ const MARKETING_AUTORIDADE: ServicoAmpliado = {
   entregasIntro: 'O que entra no trabalho, frente por frente:',
   explicacoes: {
     'Mentoria em posicionamento digital e marca pessoal':
-      'Encontros com o executivo ou especialista para definir em que tema ele quer ser lembrado, qual história sustenta essa escolha e onde ela deve aparecer primeiro. Para quem prefere aprender o método em um programa próprio, o caminho são as <a href="/mentorias/">mentorias Bolder e Bolder Press</a>.',
+      'Encontros com o executivo ou especialista para definir em que tema ele quer ser lembrado, qual história sustenta essa escolha e onde ela deve aparecer primeiro. Para quem prefere aprender o método em um programa próprio, o caminho é a <a href="/mentorias/#bolder">mentoria Bolder</a>.',
     'Estratégias de conteúdo para Marketing de Autoridade':
       'Pauta de artigos, colunas, posts e episódios a partir do que o cliente sabe e o mercado ainda não ouviu. Conteúdo que ensina alguma coisa, assinado por quem entende do assunto.',
     'Gestão de presença digital multiplataforma':
@@ -605,7 +605,7 @@ const MENTORIAS: ServicoAmpliado = {
   aberturaTitulo: 'Fazer por você ou ensinar você a fazer',
   abertura: [
     'Existem duas formas de trabalhar com a Mclair. Na primeira, a agência faz por você: escreve, pauta, fala com as redações. Na segunda, você aprende a fazer, com a pessoa que comanda esse trabalho dentro da agência. As mentorias são a segunda forma.',
-    'São dois programas conduzidos por Kelly Pinheiro. O Bolder, também chamado de Be Bolder, é para profissionais e empreendedores que querem construir marca pessoal e se posicionar como referência no próprio nicho. O Bolder Press é para jornalistas e profissionais de comunicação que querem se especializar em assessoria de imprensa.',
+    'São dois programas conduzidos por Kelly Pinheiro. O Bolder, que leva a assinatura Be Bolder, é para profissionais e empreendedores que querem construir marca pessoal e se posicionar como referência no próprio nicho. O Bolder Press é para jornalistas e profissionais de comunicação que querem se especializar em assessoria de imprensa.',
     'A descrição completa de cada programa, com etapas e módulos, está na página das <a href="/mentorias/">mentorias Bolder e Bolder Press</a>. Aqui está o que ajuda a decidir: para quem é cada um, como funciona a participação e quando a mentoria não é o melhor caminho.',
   ],
   lateral: 'Não sabe qual programa escolher? Conte o que você faz hoje e aonde quer chegar, e a equipe indica o caminho.',
@@ -631,7 +631,7 @@ const MENTORIAS: ServicoAmpliado = {
     { titulo: 'Escolha do programa', texto: 'Bolder, se o objetivo é a sua marca. Bolder Press, se o objetivo é dominar a assessoria de imprensa como ofício.' },
     { titulo: 'Encontros online', texto: 'Dois meses de mentoria com Kelly Pinheiro, em encontros online.' },
     { titulo: 'Encontro presencial', texto: 'Os dois programas incluem um encontro presencial com a Kelly.' },
-    { titulo: 'O bônus de cada trilha', texto: 'No Bolder Press, media training. No Be Bolder, aulas mensais ao vivo com especialistas convidados.' },
+    { titulo: 'O bônus de cada trilha', texto: 'No Bolder Press, media training. No Bolder, aulas mensais ao vivo com especialistas convidados.' },
   ],
   casesTitulo: 'O método aplicado em clientes da agência',
   casesIntro: 'Os cases abaixo não são de alunos: são de clientes da Mclair. Mostram, na prática, o tipo de trabalho que as mentorias ensinam a fazer.',

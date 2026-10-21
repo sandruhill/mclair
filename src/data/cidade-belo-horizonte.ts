@@ -36,7 +36,7 @@ export const FAQ_ASSESSORIA_BH: Pergunta[] = [
   {
     pergunta: 'Vocês prometem matéria no Estado de Minas, em O Tempo ou na Itatiaia?',
     resposta:
-      'Não. A Mclair não tem parceria com esses veículos e nenhum deles vende espaço na reportagem. O trabalho é chegar ao repórter certo com uma notícia de Minas apurada, número conferido e porta-voz que atende no mesmo dia. A decisão de publicar é da redação.',
+      'Não. A Mclair não tem parceria com esses veículos Eles vendem publieditorial e brand content, mas a reportagem não está à venda, e é nela que a assessoria trabalha. O trabalho é chegar ao repórter certo com uma notícia de Minas apurada, número conferido e porta-voz que atende no mesmo dia. A decisão de publicar é da redação.',
   },
   {
     pergunta: 'Mineradora ou siderúrgica precisa de cuidado especial com a imprensa?',

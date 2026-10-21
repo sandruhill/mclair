@@ -37,7 +37,7 @@ export const FAQ_ASSESSORIA_CWB: Pergunta[] = [
   {
     pergunta: 'Vocês conseguem matéria na Gazeta do Povo ou na RPC?',
     resposta:
-      'Ninguém sério consegue prometer isso. A Mclair não tem parceria com a Gazeta do Povo, o Bem Paraná, a Tribuna ou a RPC, e nenhum deles vende espaço editorial. O trabalho é levar ao repórter certo um fato com dado do Paraná e um porta-voz que atende no mesmo dia. A decisão de publicar é dele.',
+      'Ninguém sério consegue prometer isso. A Mclair não tem parceria com a Gazeta do Povo, o Bem Paraná, a Tribuna ou a RPC, Esses veículos vendem publieditorial e brand content, mas a reportagem não está à venda, e é nela que a assessoria trabalha. O trabalho é levar ao repórter certo um fato com dado do Paraná e um porta-voz que atende no mesmo dia. A decisão de publicar é dele.',
   },
   {
     pergunta: 'Assessoria de comunicação e assessoria de imprensa são a mesma coisa?',

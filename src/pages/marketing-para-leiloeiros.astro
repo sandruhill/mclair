@@ -77,6 +77,10 @@ const cases = ([
 
 const faqs = [
   {
+    q: 'O que faz uma assessoria de imprensa para leiloeiros?',
+    a: 'Transforma cada leilão em pauta para jornalistas de economia e mercado imobiliário, para que o leilão apareça nos veículos em que o arrematante já confia. Na Mclair, isso já gerou mais de 3.000 inserções na mídia para leiloeiros como Fidalgo Leilões, Globo Leilões e VIP Leilões.',
+  },
+  {
     q: 'Já invisto em tráfego pago. Preciso de assessoria de imprensa também?',
     a: 'Sim, e são complementares. Tráfego pago alcança quem já está navegando. Assessoria de imprensa alcança quem ainda está decidindo em quem confiar. Juntas, aumentam tanto o alcance quanto a taxa de conversão em lance.',
   },
@@ -103,7 +107,7 @@ const desafios = [
 ---
 
 <Layout
-  title="Assessoria de Imprensa para Leiloeiros e Marketing de Leilões | Mclair"
+  title="Assessoria de Imprensa para Leilões e Marketing para Leiloeiros | Mclair"
   description="Comunicação especializada para o mercado de leilões: assessoria de imprensa, growth e conteúdo que transformam visibilidade em arrematantes reais. Cases: Fidalgo, Globo e VIP Leilões."
   keywords="assessoria de imprensa para leiloeiros, marketing para leilões, comunicação para leiloeiros, mclair leilões, growth para leilões"
   ogImage="https://mclair.com.br/paginas/marketing-para-leiloeiros-mclair.webp"
@@ -112,7 +116,7 @@ const desafios = [
       '@context': 'https://schema.org',
       '@type': 'WebPage',
       '@id': 'https://mclair.com.br/marketing-para-leiloeiros#webpage',
-      name: 'Marketing para Leiloeiros: Assessoria de Imprensa e Growth para Leilões, por Mclair',
+      name: 'Assessoria de Imprensa para Leilões e Marketing para Leiloeiros, por Mclair',
       description: 'Comunicação especializada para o mercado de leilões: assessoria de imprensa, growth e conteúdo que transformam visibilidade em arrematantes reais.',
       url: 'https://mclair.com.br/marketing-para-leiloeiros',
       isPartOf: { '@id': 'https://mclair.com.br/#website' },
@@ -160,7 +164,7 @@ const desafios = [
   </div>
   <div class="container lh-hero-inner">
     <p class="eyebrow eyebrow-light hero-instant" data-anim style="justify-content:flex-start">
-      Marketing para Leiloeiros · por Mclair
+      Assessoria de Imprensa para Leilões e Marketing para Leiloeiros · por Mclair
     </p>
     <h1 class="lh-title hero-instant sem-entrada" data-anim data-delay="1">
       Seu leilão merece <br/>
@@ -261,7 +265,7 @@ const desafios = [
       if (iframe) return;
       const rect = wrap.getBoundingClientRect();
       iframe = document.createElement('iframe');
-      iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3`;
+      iframe.src = `https://www.youtube-nocookie.com/embed/${videoId}?autoplay=1&mute=1&loop=1&playlist=${videoId}&controls=0&modestbranding=1&playsinline=1&rel=0&iv_load_policy=3`;
       iframe.title = '';
       iframe.frameBorder = '0';
       iframe.width = String(Math.round(rect.width));
@@ -557,7 +561,7 @@ const desafios = [
       if (loaded) return;
       loaded = true;
       var iframe = document.createElement('iframe');
-      iframe.src = 'https://www.youtube.com/embed/' + CASES_BG_VIDEO_ID
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + CASES_BG_VIDEO_ID
         + '?autoplay=1&mute=1&loop=1&playlist=' + CASES_BG_VIDEO_ID
         + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3';
       iframe.title = '';

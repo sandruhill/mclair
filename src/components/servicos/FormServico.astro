@@ -8,6 +8,7 @@
 // GTM reconhecer o envio como os outros formulários do site.
 // Estilos com prefixo fs- (e .mc-campo, igual ao de quanto-custa) em
 // is:global porque o form entra no slot de AssessoriaFilha.
+import { PRIVACIDADE_ATIVA, CAMINHO_POLITICA } from '../../data/privacidade';
 interface Props {
   /** id do form, começando por "wa-form-" */
   id: string;
@@ -77,7 +78,7 @@ const p = id.replace(/^wa-form-/, 'fs-');
       </div>
       <button type="submit" class="btn-primary fs-enviar">Enviar e abrir o WhatsApp</button>
       <p class="fs-aviso" data-mc-aviso role="status" aria-live="polite"></p>
-      <p class="fs-privacidade">Seus dados vão só para a equipe da Mclair, para responder ao seu contato.</p>
+      <p class="fs-privacidade">Seus dados vão só para a equipe da Mclair, para responder ao seu contato.{PRIVACIDADE_ATIVA && <> Ao enviar, você concorda com a <a href={CAMINHO_POLITICA}>Política de privacidade</a>.</>}</p>
     </form>
   </div>
 </section>

@@ -43,6 +43,7 @@ const COOKIES = [
   { nome: '_fbc', quem: 'Meta (pixel)', para: 'Guardar o clique em um anúncio da Meta que trouxe a visita', prazo: '90 dias', tipo: 'Publicidade' },
   { nome: 'fr e outros', quem: 'Meta (domínio facebook.com)', para: 'Publicidade, para quem está logado no Facebook ou no Instagram', prazo: 'Até 90 dias', tipo: 'Publicidade' },
   { nome: 'mclair:consentimento', quem: 'Mclair (armazenamento local do navegador)', para: 'Lembrar se você aceitou ou recusou os cookies', prazo: 'Até você apagar os dados do navegador', tipo: 'Necessário' },
+  { nome: 'mclair_consentimento', quem: 'Mclair', para: 'Avisar o servidor da Mclair da sua escolha, para ele não mandar nada à Meta se você recusou', prazo: '1 ano', tipo: 'Necessário' },
   { nome: 'PHPSESSID', quem: 'Mclair (só no painel /acesso/)', para: 'Manter o login da equipe no painel', prazo: 'Até fechar o navegador', tipo: 'Necessário' },
 ];
 
@@ -103,10 +104,10 @@ const SUMARIO = [
         {/* CONFIRMAR COM A MCLAIR: razão social, CNPJ e se quer o endereço completo aqui. */}
       </p>
       <p>
-        Encarregado pelo tratamento de dados pessoais:
-        {nomeEncarregado && <> <strong>{nomeEncarregado}</strong>,</>}
-        {' '}pelo e-mail <a href={`mailto:${emailEncarregado}`}>{emailEncarregado}</a>.
-        É com essa pessoa que você fala sobre qualquer assunto desta política.
+        Por ser agente de tratamento de pequeno porte, a Mclair está dispensada de indicar um encarregado
+        pelo tratamento de dados (Resolução CD/ANPD nº 2/2022, art. 11). Mesmo assim, mantém um canal só
+        para privacidade: o e-mail <a href={`mailto:${emailEncarregado}`}>{emailEncarregado}</a>. É por ele
+        que você fala sobre qualquer assunto desta política.
       </p>
 
       <h2 id="dados">Que dados coletamos e por quê</h2>
@@ -157,7 +158,7 @@ const SUMARIO = [
 
       <h3>Medição de visitas e publicidade (cookies)</h3>
       <p>
-        Se você aceitar no aviso de cookies, o site carrega, pelo Google Tag Manager, duas ferramentas:
+        Se você aceitar no aviso de cookies, o site carrega, pelo Google Tag Manager, três ferramentas:
       </p>
       <ul>
         <li>
@@ -175,6 +176,11 @@ const SUMARIO = [
           identificadores dos cookies da Meta. <strong>Não leva</strong> nome, e-mail, telefone nem o texto
           que você escreveu no formulário.
         </li>
+        <li>
+          <strong>Google Ads</strong>, para saber se uma visita que veio de um anúncio da Mclair no Google
+          terminou em contato (conversão) e para mostrar anúncios da Mclair a quem já visitou o site
+          (remarketing). Usa o cookie <code>_gcl_au</code>, da tabela de cookies abaixo.
+        </li>
       </ul>
       <p>
         <strong>Base legal:</strong> o seu consentimento (art. 7º, I). Se você recusar, essas ferramentas
@@ -182,11 +188,18 @@ const SUMARIO = [
         sem identificação, previstos no modo de consentimento dele, para estimar o total de visitas. Você
         pode mudar de ideia quando quiser, no botão do fim da seção de cookies.
       </p>
+      <p>
+        A recusa vale também para o aviso que o nosso servidor manda à Meta. Antes de enviar qualquer
+        evento, o servidor confere a sua escolha. Sem o aceite, nada é enviado.
+      </p>
 
       <h3>Vídeo incorporado</h3>
       <p>
-        A página de marketing para leiloeiros mostra um vídeo do YouTube. Quando o vídeo carrega, o Google
-        pode receber dados de navegação conforme a política dele.
+        Algumas páginas mostram vídeos do YouTube, como a de marketing para leiloeiros e posts do blog.
+        Todos usam o modo de privacidade reforçada do YouTube (<code>youtube-nocookie.com</code>), em que o
+        Google não grava cookies de publicidade no seu navegador só porque o vídeo apareceu. Se você der
+        play ou abrir o vídeo no YouTube, vale a política do Google. <strong>Base legal:</strong> legítimo
+        interesse em mostrar o conteúdo da página (art. 7º, IX).
       </p>
 
       <h3>Painel de administração</h3>
@@ -208,7 +221,7 @@ const SUMARIO = [
         <li><strong>Google</strong>: Google Tag Manager, Google Analytics 4, Google Ads e YouTube, nos usos descritos acima.</li>
         <li><strong>Meta</strong>: pixel e API de Conversões (Facebook e Instagram) e o WhatsApp, por onde segue a conversa que você inicia.</li>
         <li><strong>Hostinger</strong>: empresa que hospeda o site, o servidor que envia os e-mails do formulário e o painel.</li>
-        <li><strong>Provedores de e-mail</strong>: o serviço de e-mail em que a caixa da Mclair recebe as mensagens do formulário.{/* CONFIRMAR COM A MCLAIR: qual provedor (Hostinger, Google Workspace, Microsoft etc.). */}</li>
+        <li><strong>Google Workspace</strong>: o serviço de e-mail em que as caixas da Mclair recebem as mensagens do formulário.</li>
         <li><strong>Autoridades</strong>: quando a lei ou uma ordem judicial exigir.</li>
       </ul>
       <p>
@@ -221,8 +234,8 @@ const SUMARIO = [
       <p>
         Google e Meta guardam dados em servidores nos Estados Unidos e em outros países, e a hospedagem
         pode estar fora do Brasil conforme o servidor contratado. Essas transferências seguem o art. 33 da
-        LGPD, com as garantias que esses fornecedores oferecem, como as cláusulas-padrão contratuais
-        previstas pela Autoridade Nacional de Proteção de Dados (ANPD).
+        LGPD, com as garantias contratuais oferecidas por esses fornecedores, nos termos do art. 33 da LGPD
+        e da regulamentação da ANPD.
         {/* CONFIRMAR COM A MCLAIR: país do servidor contratado na Hostinger. */}
       </p>
 

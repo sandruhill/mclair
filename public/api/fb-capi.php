@@ -17,6 +17,18 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Com a política de privacidade ligada, o servidor também confere o
+// consentimento: sem o cookie 'mclair_consentimento=aceito' (gravado pelo
+// aviso de cookies) nada vai para a Meta, mesmo que o GTM dispare a chamada.
+// O arquivo exige-consentimento.txt sai do build (src/pages/api/) com 'sim'
+// quando PRIVACIDADE_ATIVA é true.
+$exige = @file_get_contents(__DIR__ . '/exige-consentimento.txt');
+if (trim((string) $exige) === 'sim' && ($_COOKIE['mclair_consentimento'] ?? '') !== 'aceito') {
+    http_response_code(202);
+    echo json_encode(['skipped' => 'sem consentimento']);
+    exit;
+}
+
 $configPath = __DIR__ . '/fb-capi-config.php';
 if (!file_exists($configPath)) {
     http_response_code(500);

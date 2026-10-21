@@ -82,7 +82,7 @@ const cases = (allCases as any[])
       var wrap = document.getElementById('hero-video-wrap');
       if (!wrap || wrap.querySelector('iframe')) return;
       var iframe = document.createElement('iframe');
-      iframe.src = 'https://www.youtube.com/embed/' + videoId
+      iframe.src = 'https://www.youtube-nocookie.com/embed/' + videoId
         + '?autoplay=1&mute=1&loop=1&playlist=' + videoId
         + '&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&start=15';
       iframe.frameBorder = '0';

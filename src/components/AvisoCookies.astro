@@ -21,7 +21,8 @@ const config = JSON.stringify({ chave: CHAVE_CONSENTIMENTO });
 const codigo = `(function(w,d,c){
 var CHAVE=c.chave;
 function ler(){try{return w.localStorage.getItem(CHAVE);}catch(x){return null;}}
-function gravar(v){try{w.localStorage.setItem(CHAVE,v);}catch(x){}}
+function cookie(v){d.cookie='mclair_consentimento='+v+';max-age=31536000;path=/;SameSite=Lax;Secure';}
+function gravar(v){try{w.localStorage.setItem(CHAVE,v);}catch(x){}cookie(v);}
 function gtag(){w.dataLayer=w.dataLayer||[];w.dataLayer.push(arguments);}
 function apagarCookies(){
   var nomes=d.cookie.split(';').map(function(s){return s.split('=')[0].trim();})
@@ -52,7 +53,7 @@ function ligar(){
   var a=el();if(!a||a.dataset.ligado)return;a.dataset.ligado='1';
   a.querySelector('[data-cookies="aceitar"]').addEventListener('click',aceitar);
   a.querySelector('[data-cookies="recusar"]').addEventListener('click',recusar);
-  if(!ler())mostrar();
+  var e=ler();if(e)cookie(e);else mostrar();
 }
 if(!w.McCookies){
   w.McCookies={abrir:function(){ligar();mostrar();var b=el();b&&b.querySelector('button').focus();},escolha:ler};
