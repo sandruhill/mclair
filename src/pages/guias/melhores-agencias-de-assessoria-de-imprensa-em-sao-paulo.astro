@@ -1,0 +1,698 @@
+---
+// /guias/melhores-agencias-de-assessoria-de-imprensa-em-sao-paulo/
+// Guia das agências de assessoria de imprensa de São Paulo, escrito pela
+// Mclair, que também é agência de SP e concorre com as listadas. Por isso
+// não há ranking numérico e a Mclair aparece num bloco à parte.
+// RASCUNHO até a Kelly aprovar: ver src/data/guia-agencias.ts.
+// Não usa GuiaArtigo porque o guia ainda não está em GUIAS (entraria no
+// índice de /guias/ e no "Outros guias"). A moldura e os estilos .g-* são os
+// mesmos de src/components/guias/GuiaArtigo.astro.
+// Agências e endereços conferidos nos sites oficiais em 21/10/2026.
+export const prerender = true;
+import Layout from '../../layouts/Layout.astro';
+import {
+  BASE, URL_GUIAS, URL_HUB_ASSESSORIA, URL_PRECO, URL_KELLY, ID_KELLY, ID_ORG,
+  dataPorExtenso, GUIAS, wa,
+} from '../../components/guias/guias';
+import { GUIA_AGENCIAS_ATIVO, CAMINHO_GUIA_AGENCIAS } from '../../data/guia-agencias';
+
+const rascunho = !GUIA_AGENCIAS_ATIVO;
+const URL = `${BASE}${CAMINHO_GUIA_AGENCIAS}`;
+const PUBLICADO = '2026-10-21';
+const REVISADO = '2026-10-21';
+const CONSULTA = '21/10/2026';
+const URL_SP = '/servicos/assessoria-de-imprensa/sao-paulo/';
+
+const TITLE = 'Melhores agências de assessoria de imprensa em São Paulo | Mclair';
+const DESCRIPTION = 'Guia das agências de assessoria de imprensa de São Paulo, com critérios explicados, endereços e mapa. Escrito pela Mclair, que também é agência de SP e por isso fica fora da lista principal.';
+const H1 = 'Melhores agências de assessoria de imprensa em São Paulo';
+const WA = wa('Olá Mclair! Li o guia das agências de assessoria de imprensa de São Paulo e quero conversar sobre a minha empresa.');
+
+interface Agencia {
+  n: number;
+  nome: string;
+  site: string;
+  endereco: string;
+  bairro: string;
+  texto: string;
+  fonte: string;
+}
+
+const GRANDES: Agencia[] = [
+  {
+    n: 1, nome: 'FSB Comunicação', site: 'https://www.fsb.com.br/',
+    endereco: 'Av. Presidente Juscelino Kubitschek, 1.400, 6º andar', bairro: 'Itaim Bibi',
+    texto: 'Faz parte da FSB Holding e lidera o ranking de agências do Anuário da Comunicação Corporativa, da Mega Brasil, desde 2009, quando a lista começou. Na edição de 2025, com dados de 2024, declarou 693 colaboradores e 420 clientes. Foco em reputação de grandes empresas.',
+    fonte: 'Site oficial e Poder360 sobre o Anuário 2025',
+  },
+  {
+    n: 2, nome: 'InPress', site: 'https://www.inpresspni.com.br/',
+    endereco: 'Rua Henrique Schaumann, 270, 7º andar', bairro: 'Pinheiros',
+    texto: 'Mais de 30 anos de mercado e segundo lugar no ranking do Anuário da Comunicação Corporativa de 2025, com 701 colaboradores e 495 clientes declarados. Tem escritórios também no Rio de Janeiro e em Brasília.',
+    fonte: 'Site oficial e Poder360 sobre o Anuário 2025',
+  },
+  {
+    n: 3, nome: 'Grupo Burson Brasil', site: 'https://bursonglobal.com/locations/brazil',
+    endereco: 'Av. Mofarrej, 971', bairro: 'Vila Leopoldina',
+    texto: 'Reúne marcas como Máquina, JeffreyGroup e Burson, esta ligada à rede global. Ficou em terceiro no ranking do Anuário de 2025. Tem escritórios em São Paulo, Rio de Janeiro e Brasília.',
+    fonte: 'Site oficial, Propmark e Poder360 sobre o Anuário 2025',
+  },
+  {
+    n: 4, nome: 'Edelman', site: 'https://www.edelman.com/br',
+    endereco: 'Rua Fradique Coutinho, 50, 13º andar', bairro: 'Pinheiros',
+    texto: 'Rede americana de relações públicas que chegou ao Brasil em 1997, com escritório em São Paulo. Hoje opera também no Rio de Janeiro e em Brasília. Em 2022, segundo a própria Edelman, a equipe no Brasil tinha 250 pessoas.',
+    fonte: 'Site oficial da Edelman',
+  },
+  {
+    n: 5, nome: 'CDN Comunicação', site: 'https://www.cdn.com.br/',
+    endereco: 'Rua Eugênio de Medeiros, 303, 8º andar', bairro: 'Pinheiros',
+    texto: 'Mais de 35 anos de atuação, com assessoria de imprensa, influência, crise e mensuração. Em julho de 2026 anunciou a saída da rede Omnicom, depois de dez anos, para um grupo de acionistas brasileiros. A operação depende do CADE.',
+    fonte: 'Site oficial e ABC da Comunicação',
+  },
+  {
+    n: 6, nome: 'Approach Comunicação', site: 'https://www.approach.com.br/',
+    endereco: 'Rua George Ohm, 230', bairro: 'Cidade Monções',
+    texto: 'Agência de comunicação integrada, com PR e imprensa, sustentabilidade, comunicação interna e influência. Cita entre os clientes Nivea, BIC e Rock in Rio.',
+    fonte: 'Site oficial',
+  },
+];
+
+const INDEPENDENTES: Agencia[] = [
+  {
+    n: 7, nome: 'RPMA Comunicação', site: 'https://rpmacomunicacao.com.br/',
+    endereco: 'Av. das Nações Unidas, 12.901, Torre Oeste, 14º andar (CENU)', bairro: 'Brooklin',
+    texto: 'Independente, comandada pelo sócio e co-CEO Marcio Cavalieri. Trabalha reputação, crise, influência e conteúdo, com cases em alimentos, serviços financeiros, varejo e setor automotivo.',
+    fonte: 'Site oficial e Propmark',
+  },
+  {
+    n: 8, nome: 'Tamer Comunicação', site: 'https://www.tamer.com.br/',
+    endereco: 'Av. Pedroso de Morais, 1.553', bairro: 'Alto de Pinheiros',
+    texto: 'Diz ter atendido mais de 60 empresas, em saúde, educação, sustentabilidade, finanças, tecnologia e beleza. Oferece imprensa, treinamento de porta-voz e comunicação interna.',
+    fonte: 'Site oficial',
+  },
+];
+
+const ESPECIALIZADAS: Agencia[] = [
+  {
+    n: 9, nome: 'Bendita Imagem', site: 'https://www.benditaimagem.com.br/',
+    endereco: 'Av. Rebouças, 1.585', bairro: 'Jardins',
+    texto: 'Foco declarado em inovação e tecnologia. Cuida da relação com a imprensa do Inova.São, centro de inovação do São Paulo Futebol Clube, inclusive com a imprensa especializada em tecnologia e negócios.',
+    fonte: 'Site oficial e Grandes Nomes da Propaganda',
+  },
+  {
+    n: 10, nome: 'Medellín Comunicação', site: 'https://www.medellincomunicacao.com.br/',
+    endereco: 'Largo Nossa Senhora do Bom Parto, 60', bairro: 'Tatuapé',
+    texto: 'Fundada em 2015 e especializada em saúde, bem-estar e comportamento. Atende médicos, sociedades e associações médicas, centros de estudo e clínicas.',
+    fonte: 'Site oficial',
+  },
+];
+
+const TODAS = [...GRANDES, ...INDEPENDENTES, ...ESPECIALIZADAS];
+
+// Posição aproximada por bairro no mapa (viewBox 560 x 560).
+const PINOS: Record<number, [number, number]> = {
+  1: [256, 332], 2: [242, 224], 3: [96, 116], 4: [204, 196], 5: [172, 246],
+  6: [296, 418], 7: [234, 456], 8: [134, 186], 9: [276, 262], 10: [498, 140],
+};
+
+const FONTES = [
+  { nome: 'Poder360. FSB chega ao 15º ano na liderança das maiores agências do país (Anuário da Comunicação Corporativa 2025, Mega Brasil)', url: 'https://www.poder360.com.br/poder-midia/fsb-chega-ao-15o-ano-na-lideranca-das-maiores-agencias-do-pais/' },
+  { nome: 'FSB Comunicação, site oficial', url: 'https://www.fsb.com.br/' },
+  { nome: 'InPress, site oficial', url: 'https://www.inpresspni.com.br/' },
+  { nome: 'Burson, página do Brasil', url: 'https://bursonglobal.com/locations/brazil' },
+  { nome: 'Propmark. Grupo Burson aposta em modelo multimarcas para atender mercado', url: 'https://propmark.com.br/agencias/grupo-burson-aposta-em-modelo-multimarcas-para-atender-mercado-2/' },
+  { nome: 'Edelman, sobre a Edelman no Brasil', url: 'https://www.edelman.com/br/sobre-nos' },
+  { nome: 'Edelman, escritórios na América Latina', url: 'https://edelman.com/office/bogota' },
+  { nome: 'CDN Comunicação, site oficial', url: 'https://www.cdn.com.br/' },
+  { nome: 'ABC da Comunicação. CDN Comunicação anuncia nova fase independente', url: 'https://www.abcdacomunicacao.com.br/cdn-comunicacao-anuncia-nova-fase-independente/' },
+  { nome: 'Approach Comunicação, site oficial', url: 'https://www.approach.com.br/' },
+  { nome: 'RPMA Comunicação, site oficial', url: 'https://rpmacomunicacao.com.br/' },
+  { nome: 'Propmark. Uma boa campanha não se sustenta se não houver reputação', url: 'https://propmark.com.br/mercado/uma-boa-campanha-nao-se-sustenta-se-nao-houver-reputacao/' },
+  { nome: 'Tamer Comunicação, site oficial', url: 'https://www.tamer.com.br/' },
+  { nome: 'Bendita Imagem, site oficial', url: 'https://www.benditaimagem.com.br/' },
+  { nome: 'Grandes Nomes da Propaganda. Bendita Imagem é assessoria de imprensa do Inova.São', url: 'https://grandesnomesdapropaganda.com.br/?p=191208' },
+  { nome: 'Medellín Comunicação, site oficial', url: 'https://www.medellincomunicacao.com.br/' },
+];
+
+const FAQ = [
+  { pergunta: 'Quanto custa uma agência de assessoria de imprensa em São Paulo?', resposta: 'O formato mais comum é o fee mensal, com contrato de seis meses a um ano. O valor muda com o número de porta-vozes, de pautas por mês e de cidades cobertas, e agências grandes cobram mais pela estrutura. A página quanto custa assessoria de imprensa, da Mclair, explica cada modelo de cobrança.' },
+  { pergunta: 'Agência grande ou pequena: qual escolher?', resposta: 'Agência grande faz sentido quando a empresa precisa de cobertura nacional, várias frentes ao mesmo tempo e equipe para crise. Agência pequena ou média costuma valer mais para quem quer o sócio experiente perto da conta e não precisa de estrutura em vários estados. A pergunta que decide é quem vai atender você no dia a dia.' },
+  { pergunta: 'Quanto tempo leva até a primeira matéria?', resposta: 'Depende do que a empresa tem de notícia. Com um fato forte e um porta-voz pronto, a primeira matéria pode sair nas primeiras semanas. Sem fato novo, o trabalho começa construindo pauta, e o resultado costuma aparecer ao longo dos primeiros três meses. Desconfie de quem promete prazo exato.' },
+  { pergunta: 'Como comparar propostas de agências diferentes?', resposta: 'Ponha lado a lado quem atende a conta, o que entra no escopo, como o resultado é medido e quanto custa por mês, com prazo de contrato e multa. Peça a cada uma três matérias recentes com link, de clientes parecidos com você. Proposta que não responde a essas perguntas não está pronta para ser comparada.' },
+  { pergunta: 'Agência de assessoria de imprensa garante publicação?', resposta: 'Não deveria. Quem decide o que sai é o editor do veículo. Se alguém garante matéria num jornal específico, provavelmente está vendendo espaço pago, que tem outro nome e outro preço.' },
+  { pergunta: 'Preciso de uma agência com sede em São Paulo?', resposta: 'Não é obrigatório, mas ajuda. As redações de economia e negócios dos principais veículos do país ficam em São Paulo, e uma agência daqui costuma conhecer esses jornalistas e circular nos mesmos eventos. Para pautas regionais, uma agência local da sua cidade pode render mais.' },
+];
+
+const SUMARIO = [
+  { id: 'quem-escreve', texto: 'Quem escreve e por que a Mclair não está no topo' },
+  { id: 'criterios', texto: 'Os critérios usados neste guia' },
+  { id: 'comparar', texto: 'Como comparar duas propostas' },
+  { id: 'mapa', texto: 'Onde ficam as agências' },
+  { id: 'grandes', texto: 'Grandes agências' },
+  { id: 'independentes', texto: 'Independentes de porte médio' },
+  { id: 'especializadas', texto: 'Especializadas por setor' },
+  { id: 'e-a-mclair', texto: 'E a Mclair?' },
+  { id: 'alerta', texto: 'Sinais de alerta' },
+  { id: 'fontes', texto: 'Fontes consultadas' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    '@id': `${URL}#article`,
+    headline: H1,
+    description: DESCRIPTION,
+    url: URL,
+    mainEntityOfPage: URL,
+    inLanguage: 'pt-BR',
+    datePublished: PUBLICADO,
+    dateModified: REVISADO,
+    author: { '@type': 'Person', '@id': ID_KELLY, name: 'Kelly Pinheiro', url: `${BASE}${URL_KELLY}` },
+    publisher: { '@id': ID_ORG },
+    isPartOf: { '@id': `${BASE}${URL_GUIAS}#colecao` },
+    about: [
+      { '@type': 'Thing', name: 'melhores agências de assessoria de imprensa em São Paulo' },
+      { '@type': 'Thing', name: 'como escolher agência de assessoria de imprensa' },
+    ],
+    mentions: { '@id': `${URL}#agencias` },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'ItemList',
+    '@id': `${URL}#agencias`,
+    name: 'Agências de assessoria de imprensa em São Paulo, agrupadas por perfil',
+    itemListOrder: 'https://schema.org/ItemListUnordered',
+    numberOfItems: TODAS.length,
+    itemListElement: TODAS.map((a, i) => ({
+      '@type': 'ListItem',
+      position: i + 1,
+      item: {
+        '@type': 'Organization',
+        name: a.nome,
+        url: a.site,
+        address: { '@type': 'PostalAddress', streetAddress: a.endereco, addressLocality: 'São Paulo', addressRegion: 'SP', addressCountry: 'BR' },
+      },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Guias', item: `${BASE}${URL_GUIAS}` },
+      { '@type': 'ListItem', position: 3, name: 'Agências de assessoria de imprensa em São Paulo', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={TITLE}
+  description={DESCRIPTION}
+  keywords="melhores agências de assessoria de imprensa em São Paulo, agência de assessoria de imprensa SP, como escolher agência de assessoria de imprensa, agências de comunicação São Paulo"
+  ogType="article"
+  ogImage={`${BASE}/kelly-pinheiro/kelly-pinheiro-og.jpg`}
+  ogImageAlt="Kelly Pinheiro, jornalista e fundadora da Mclair"
+  articleAuthor="Kelly Pinheiro"
+  articlePublishedTime={PUBLICADO}
+  articleModifiedTime={REVISADO}
+  articleSection="Guias de assessoria de imprensa"
+  schema={schema}
+>
+<article class="g-artigo">
+  <header class="g-hero">
+    <div class="container"><div class="g-hero-inner">
+      {rascunho && (
+        <p class="ag-rascunho" role="note">Rascunho para aprovação da Mclair. Esta página não aparece no Google.</p>
+      )}
+      <nav class="g-trilha" aria-label="Você está em">
+        <a href="/">Início</a><span aria-hidden="true">/</span>
+        <a href={URL_GUIAS}>Guias</a><span aria-hidden="true">/</span>
+        <span aria-current="page">Agências de São Paulo</span>
+      </nav>
+      <h1 class="g-h1">{H1}</h1>
+      <p class="g-resposta">Dez agências de São Paulo que fazem assessoria de imprensa hoje, agrupadas por perfil e sem nota nem posição inventada. Quem escreve é a Mclair, agência paulistana que concorre com todas elas. Por isso os critérios estão abertos, cada fato tem fonte e a Mclair aparece num bloco separado, no fim da lista.</p>
+      <p class="g-assinatura">
+        Por <a href={URL_KELLY} rel="author">Kelly Pinheiro</a>, jornalista e fundadora da Mclair.
+        <span class="g-datas">Publicado em <time datetime={PUBLICADO}>{dataPorExtenso(PUBLICADO)}</time>. Revisado em <time datetime={REVISADO}>{dataPorExtenso(REVISADO)}</time>.</span>
+      </p>
+    </div></div>
+  </header>
+
+  <div class="container">
+    <div class="g-corpo">
+      <nav class="g-sumario" aria-labelledby="g-sumario-titulo">
+        <p class="g-sumario-titulo" id="g-sumario-titulo">Neste guia</p>
+        <ol>
+          {SUMARIO.map((s) => <li><a href={`#${s.id}`}>{s.texto}</a></li>)}
+          <li><a href="#perguntas-frequentes">Perguntas frequentes</a></li>
+        </ol>
+      </nav>
+
+<section class="g-secao" aria-labelledby="quem-escreve">
+  <h2 class="g-h2" id="quem-escreve">Quem escreve e por que a Mclair não está no topo</h2>
+  <p class="g-p">Toda lista de "melhores agências" publicada por uma agência tem um problema de origem. Quem escreve tem interesse no resultado. Algumas resolvem isso se colocando em primeiro lugar e torcendo para o leitor não reparar. Preferimos dizer logo: este guia é da Mclair, agência de assessoria de imprensa fundada em São Paulo em 2017, e todas as agências citadas aqui disputam os mesmos clientes que nós.</p>
+  <p class="g-p">Por isso a lista não tem ranking numérico. As agências estão agrupadas por perfil, porque a melhor agência para uma multinacional em crise não é a melhor para uma clínica que quer aparecer na imprensa de saúde. Cada descrição traz só fatos que dá para conferir no site da agência ou em publicações do setor, com o link no fim da página. Quando citamos posição no ranking do Anuário da Comunicação Corporativa, da Mega Brasil, dizemos o ano.</p>
+  <p class="g-p">A Mclair aparece depois, num bloco chamado "E a Mclair?". Assim você lê a lista sem a nossa mão no meio e decide se quer saber de nós.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="criterios">
+  <h2 class="g-h2" id="criterios">Os critérios usados neste guia</h2>
+  <p class="g-p">São os mesmos critérios que recomendamos para quem está escolhendo agência. Para entrar na lista, a agência precisava ter endereço em São Paulo publicado no site oficial e oferecer assessoria de imprensa como serviço hoje. Na dúvida sobre qualquer um dos dois pontos, a agência ficou de fora. Para escolher entre elas, olhe estes sete pontos.</p>
+
+  <h3 class="g-h3">1. Jornalistas na equipe</h3>
+  <p class="g-p">Assessoria de imprensa é conversa com redação. Quem já trabalhou numa sabe o que um editor aceita e o que vai direto para o lixo. Pergunte quantos jornalistas vão mexer na sua conta, e não quantos a agência tem no total.</p>
+
+  <h3 class="g-h3">2. Cases com matéria publicada</h3>
+  <p class="g-p">Logo de cliente no site não prova nada. Matéria prova. Peça três reportagens recentes, com link, conseguidas para clientes parecidos com você. Se a agência só mostra números de alcance, desconfie.</p>
+
+  <h3 class="g-h3">3. Setores que a agência conhece</h3>
+  <p class="g-p">Cada editoria tem seus repórteres, suas datas e seu vocabulário. Uma agência que atende três hospitais conhece a imprensa de saúde melhor do que uma que nunca atendeu nenhum. Isso vale para tecnologia, agronegócio, varejo e mercado financeiro.</p>
+
+  <h3 class="g-h3">4. Porte dos clientes</h3>
+  <p class="g-p">Agência acostumada a contas de grandes grupos pode deixar a empresa média em segundo plano. Agência pequena pode não ter braço para uma crise nacional. Veja se os clientes atuais têm o tamanho da sua empresa.</p>
+
+  <h3 class="g-h3">5. Promessa de publicação</h3>
+  <p class="g-p">Este critério elimina. Quem decide o que sai é o editor. Agência séria promete trabalho, pauta e contato, não veículo nem data.</p>
+
+  <h3 class="g-h3">6. Como mede o resultado</h3>
+  <p class="g-p">A medida que importa é a matéria publicada, com veículo, data e link. Centimetragem convertida em "valor de anúncio" faz bonito em relatório e diz pouco sobre reputação. Pergunte como será o relatório antes de assinar.</p>
+
+  <h3 class="g-h3">7. Contrato e fee</h3>
+  <p class="g-p">A maioria trabalha com fee mensal. Leia o prazo mínimo, a multa de saída e o que acontece se a pessoa que vendeu a conta sair da agência. A página <a href={URL_PRECO}>quanto custa assessoria de imprensa</a> explica os modelos de cobrança.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="comparar">
+  <h2 class="g-h2" id="comparar">Como comparar duas propostas</h2>
+  <p class="g-p">Na hora de decidir, as propostas costumam chegar em formatos diferentes. Ponha as duas lado a lado e faça as mesmas quatro perguntas. Abaixo, o que conta a favor e o que acende o alerta em cada resposta.</p>
+  <div class="ag-info" role="group" aria-label="Como comparar duas propostas de agência">
+    <div class="ag-info-linha">
+      <p class="ag-info-num" aria-hidden="true">1</p>
+      <div class="ag-info-corpo">
+        <p class="ag-info-pergunta">Quem atende a conta?</p>
+        <div class="ag-info-respostas">
+          <p class="ag-bom"><span>Conta a favor</span>Nome, cargo e anos de redação de quem fala com você toda semana.</p>
+          <p class="ag-ruim"><span>Acende o alerta</span>"Uma equipe dedicada", sem nome, ou o sócio só na reunião de venda.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ag-info-linha">
+      <p class="ag-info-num" aria-hidden="true">2</p>
+      <div class="ag-info-corpo">
+        <p class="ag-info-pergunta">O que entra no escopo?</p>
+        <div class="ag-info-respostas">
+          <p class="ag-bom"><span>Conta a favor</span>Quantas pautas por mês, quantos porta-vozes e se media training e crise estão incluídos.</p>
+          <p class="ag-ruim"><span>Acende o alerta</span>"Gestão de imprensa" sem número, ou disparo de release como entrega principal.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ag-info-linha">
+      <p class="ag-info-num" aria-hidden="true">3</p>
+      <div class="ag-info-corpo">
+        <p class="ag-info-pergunta">Como mede o resultado?</p>
+        <div class="ag-info-respostas">
+          <p class="ag-bom"><span>Conta a favor</span>Relatório com cada matéria, veículo, data e link, e uma conversa mensal sobre o que funcionou.</p>
+          <p class="ag-ruim"><span>Acende o alerta</span>"Valor equivalente em publicidade" como número principal.</p>
+        </div>
+      </div>
+    </div>
+    <div class="ag-info-linha">
+      <p class="ag-info-num" aria-hidden="true">4</p>
+      <div class="ag-info-corpo">
+        <p class="ag-info-pergunta">Quanto custa e por quanto tempo?</p>
+        <div class="ag-info-respostas">
+          <p class="ag-bom"><span>Conta a favor</span>Fee mensal fechado, prazo mínimo claro e multa de saída por escrito.</p>
+          <p class="ag-ruim"><span>Acende o alerta</span>Cobrança por matéria publicada ou preço que só aparece depois da assinatura.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="g-secao" aria-labelledby="mapa">
+  <h2 class="g-h2" id="mapa">Onde ficam as agências de São Paulo</h2>
+  <p class="g-p">A maior parte está no eixo oeste e sul da cidade, entre Pinheiros, Faria Lima e Marginal Pinheiros, perto das sedes de muitos clientes e das redações de economia. Os números do mapa são os mesmos da lista.</p>
+  <figure class="ag-mapa">
+    <svg viewBox="0 0 560 560" role="img" aria-labelledby="ag-mapa-titulo ag-mapa-desc">
+      <title id="ag-mapa-titulo">Mapa esquemático das agências de assessoria de imprensa de São Paulo</title>
+      <desc id="ag-mapa-desc">Mapa simplificado das regiões central, oeste e sul de São Paulo com o Rio Tietê, a Marginal Pinheiros, a Avenida Paulista, a Faria Lima e a Berrini. Dez pinos numerados marcam o bairro de cada agência da lista, em posição aproximada.</desc>
+      <path class="ag-area" d="M30,96 C120,58 300,70 470,60 C530,58 548,110 540,190 C532,280 470,330 400,380 C350,430 320,500 290,545 L200,548 C170,470 120,400 70,330 C36,270 18,170 30,96 Z" />
+      <path class="ag-rio" d="M14,74 C150,44 330,80 546,56" />
+      <path class="ag-rio" d="M58,84 C120,172 168,244 200,322 S236,470 246,548" />
+      <path class="ag-via" d="M272,214 L352,276" />
+      <path class="ag-via" d="M196,214 L262,330" />
+      <path class="ag-via" d="M258,398 L272,486" />
+      <circle class="ag-centro" cx="380" cy="140" r="9" />
+      <text class="ag-rotulo" x="380" y="182" text-anchor="middle">Centro</text>
+      <text class="ag-rotulo ag-rotulo-rio" x="410" y="40">Rio Tietê</text>
+      <text class="ag-rotulo ag-rotulo-rio" x="36" y="364">Marginal</text>
+      <text class="ag-rotulo ag-rotulo-rio" x="36" y="392">Pinheiros</text>
+      <text class="ag-rotulo" x="334" y="308">Av. Paulista</text>
+      <text class="ag-rotulo" x="286" y="360">Faria Lima</text>
+      <text class="ag-rotulo" x="290" y="500">Berrini</text>
+      <text class="ag-rotulo" x="498" y="192" text-anchor="middle">Tatuapé</text>
+      {TODAS.map((a) => (
+        <g class="ag-pino">
+          <circle cx={PINOS[a.n][0]} cy={PINOS[a.n][1]} r="20" />
+          <text x={PINOS[a.n][0]} y={PINOS[a.n][1] + 8} text-anchor="middle">{a.n}</text>
+        </g>
+      ))}
+      <g class="ag-norte" aria-hidden="true">
+        <path d="M520,520 L520,476 M508,490 L520,476 L532,490" />
+        <text x="520" y="548" text-anchor="middle">N</text>
+      </g>
+    </svg>
+    <figcaption>
+      <ol class="ag-legenda">
+        {TODAS.map((a) => <li><span class="ag-legenda-n">{a.n}</span> {a.nome}, {a.bairro}</li>)}
+      </ol>
+      <p class="ag-legenda-nota">Mapa esquemático, fora de escala. Posição aproximada por bairro, a partir do endereço publicado no site de cada agência.</p>
+    </figcaption>
+  </figure>
+</section>
+
+<section class="g-secao" aria-labelledby="grandes">
+  <h2 class="g-h2" id="grandes">Grandes agências, com estrutura nacional e internacional</h2>
+  <p class="g-p">Servem a quem precisa de muita gente ao mesmo tempo: lançamento em vários estados, crise com repercussão nacional, porta-vozes em mais de um país. O preço acompanha a estrutura, e a conta de uma empresa média pode ficar com a equipe mais júnior. A ordem abaixo segue o número do mapa, não é ranking.</p>
+  <ul class="ag-lista">
+    {GRANDES.map((a) => (
+      <li class="ag-item">
+        <h3 class="ag-nome"><span class="ag-n">{a.n}</span> <a href={a.site} target="_blank" rel="noopener nofollow">{a.nome}</a></h3>
+        <p class="ag-end">{a.endereco}, {a.bairro}, São Paulo</p>
+        <p class="ag-texto">{a.texto}</p>
+        <p class="ag-fonte">Fonte: {a.fonte}.</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="g-secao" aria-labelledby="independentes">
+  <h2 class="g-h2" id="independentes">Independentes de porte médio</h2>
+  <p class="g-p">Não pertencem a grandes redes e costumam ter os sócios mais perto do dia a dia. Atendem tanto empresa grande quanto média, com equipes menores e decisão mais rápida.</p>
+  <ul class="ag-lista">
+    {INDEPENDENTES.map((a) => (
+      <li class="ag-item">
+        <h3 class="ag-nome"><span class="ag-n">{a.n}</span> <a href={a.site} target="_blank" rel="noopener nofollow">{a.nome}</a></h3>
+        <p class="ag-end">{a.endereco}, {a.bairro}, São Paulo</p>
+        <p class="ag-texto">{a.texto}</p>
+        <p class="ag-fonte">Fonte: {a.fonte}.</p>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<section class="g-secao" aria-labelledby="especializadas">
+  <h2 class="g-h2" id="especializadas">Especializadas por setor</h2>
+  <p class="g-p">Quando o setor tem imprensa própria, com repórteres, revistas e congressos específicos, uma agência que vive nele chega mais rápido ao jornalista certo. Saúde e tecnologia são os casos mais claros.</p>
+  <ul class="ag-lista">
+    {ESPECIALIZADAS.map((a) => (
+      <li class="ag-item">
+        <h3 class="ag-nome"><span class="ag-n">{a.n}</span> <a href={a.site} target="_blank" rel="noopener nofollow">{a.nome}</a></h3>
+        <p class="ag-end">{a.endereco}, {a.bairro}, São Paulo</p>
+        <p class="ag-texto">{a.texto}</p>
+        <p class="ag-fonte">Fonte: {a.fonte}.</p>
+      </li>
+    ))}
+  </ul>
+  <p class="g-p">Ficaram de fora agências que conhecemos e respeitamos, mas cujo endereço em São Paulo não encontramos publicado no site oficial na data da consulta. A lista será revista. Se a sua agência deveria estar aqui, escreva para a Mclair com o link.</p>
+</section>
+
+<section class="g-secao ag-mclair" aria-labelledby="e-a-mclair">
+  <h2 class="g-h2" id="e-a-mclair">E a Mclair?</h2>
+  <p class="g-p">A Mclair é uma agência pequena, e isso é escolha. Quem conduz a estratégia de cada cliente é a fundadora, <a href={URL_KELLY}>Kelly Pinheiro</a>, jornalista desde 2004 e colunista da Exame por dois anos e meio. Ela abriu a agência em São Paulo em janeiro de 2017. Segundo o próprio site, desde então foram mais de 11.600 inserções na mídia para mais de 200 clientes.</p>
+  <p class="g-p">Não temos a estrutura das grandes redes e não fingimos ter. O que oferecemos é a jornalista sênior dentro da conta e matéria com link no relatório. Os <a href="/cases/">cases</a> mostram os resultados com veículo e data, e a página <a href="/mclair-na-midia/">Mclair na mídia</a> reúne o que a imprensa publicou sobre nós. Atendemos a partir de São Paulo, sem escritório aberto ao público.</p>
+  <p class="g-p">Se quiser comparar com as agências acima, veja como funciona a <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa da Mclair</a>, o trabalho com a <a href={URL_SP}>imprensa de São Paulo</a> e <a href={URL_PRECO}>quanto custa</a>.</p>
+</section>
+
+<section class="g-secao" aria-labelledby="alerta">
+  <h2 class="g-h2" id="alerta">Sinais de alerta</h2>
+  <ul class="g-lista">
+    <li><strong>Matéria garantida.</strong> Se a agência promete reportagem num veículo específico, ela está vendendo espaço pago ou prometendo o que não controla.</li>
+    <li><strong>Cobrança por publicação.</strong> Pagar por matéria saída empurra a agência para veículos pequenos que publicam qualquer release.</li>
+    <li><strong>Mailing gigante como argumento.</strong> Lista de dezenas de milhares de jornalistas é sinal de disparo em massa. Lista boa é curta e feita à mão.</li>
+    <li><strong>Relatório sem link.</strong> Se a matéria não pode ser aberta, ela não conta.</li>
+    <li><strong>Ninguém de redação na equipe.</strong> Assessoria feita só por quem nunca fechou uma pauta tende a mandar material que o jornalista não usa.</li>
+    <li><strong>Contrato longo sem saída.</strong> Um ano de fidelidade sem multa proporcional prende você a um trabalho que pode não andar.</li>
+  </ul>
+</section>
+
+<section class="g-secao" aria-labelledby="fontes">
+  <h2 class="g-h2" id="fontes">Fontes consultadas</h2>
+  <p class="g-p">Todas consultadas em {CONSULTA}. Endereços tirados do site oficial de cada agência.</p>
+  <ol class="ag-fontes">
+    {FONTES.map((f) => <li><a href={f.url} target="_blank" rel="noopener nofollow">{f.nome}</a></li>)}
+  </ol>
+  <p class="g-nota">Revisado em <time datetime={REVISADO}>{dataPorExtenso(REVISADO)}</time>. Encontrou um dado errado? Escreva para a Mclair que a página é corrigida.</p>
+</section>
+
+      <section class="g-autora" aria-labelledby="g-autora-titulo">
+        <img
+          src="/kelly-pinheiro/kelly-pinheiro-retrato-sorriso-800.webp"
+          width="800" height="1208" loading="lazy" decoding="async"
+          alt="Kelly Pinheiro sorrindo, de roupa preta, sentada em uma poltrona de madeira"
+        />
+        <div>
+          <h2 class="g-autora-nome" id="g-autora-titulo">Quem escreve: <a href={URL_KELLY} rel="author">Kelly Pinheiro</a></h2>
+          <p>Jornalista desde 2004, Kelly fundou a Mclair em São Paulo, em janeiro de 2017. Foi colunista da Exame por dois anos e meio e conduz pessoalmente a estratégia de imprensa dos clientes da agência. A Mclair concorre com as agências deste guia, e por isso ele traz só fatos com fonte.</p>
+        </div>
+      </section>
+
+      <section class="g-faq" id="perguntas-frequentes" aria-labelledby="g-faq-titulo">
+        <h2 class="g-h2" id="g-faq-titulo">Perguntas frequentes</h2>
+        {FAQ.map((q, i) => (
+          <details class="g-faq-item" open={i === 0}>
+            <summary>{q.pergunta}</summary>
+            <p>{q.resposta}</p>
+          </details>
+        ))}
+      </section>
+    </div>
+  </div>
+
+  <section class="g-fim" aria-labelledby="g-fim-titulo">
+    <div class="container"><div class="g-corpo">
+      <h2 class="g-h2 g-claro" id="g-fim-titulo">Quer uma opinião franca sobre a sua escolha?</h2>
+      <p>Se você já tem propostas de outras agências, a Mclair olha com você o que cada uma promete e o que falta perguntar. Mesmo que a escolha não seja a gente.</p>
+      <div class="g-fim-acoes">
+        <a href={WA} class="btn-primary" target="_blank" rel="noopener">Falar no WhatsApp</a>
+        <a href={URL_HUB_ASSESSORIA} class="g-link-claro">Como funciona a assessoria da Mclair</a>
+        <a href={URL_PRECO} class="g-link-claro">Quanto custa</a>
+      </div>
+    </div></div>
+  </section>
+
+  <section class="g-mais" aria-labelledby="g-mais-titulo">
+    <div class="container"><div class="g-corpo">
+      <h2 class="g-h2" id="g-mais-titulo">Outros guias</h2>
+      <ul class="g-lista-guias">
+        {GUIAS.map((g) => (
+          <li>
+            <a href={g.path}>{g.titulo}</a>
+            <p>{g.resumo}</p>
+          </li>
+        ))}
+      </ul>
+      <p class="g-nota"><a href={URL_GUIAS}>Ver todos os guias</a></p>
+    </div></div>
+  </section>
+</article>
+</Layout>
+
+<style is:global>
+/* Cópia dos estilos .g-* de src/components/guias/GuiaArtigo.astro. */
+.g-hero { background: var(--dark); padding-top: 88px; }
+.g-hero-inner { padding-block: clamp(44px, 6vw, 80px); max-width: 860px; }
+.g-trilha { display: flex; flex-wrap: wrap; gap: 6px 10px; font-size: .9rem; color: rgba(255,255,255,.5); margin-bottom: 18px; }
+.g-trilha a { color: rgba(255,255,255,.65); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.25); }
+.g-trilha a:hover { color: #fff; }
+.g-h1 { font-size: clamp(2.1rem, 4.6vw, 3.5rem); font-weight: 900; letter-spacing: -.04em; line-height: 1.06; color: #fff; margin-bottom: 22px; text-wrap: balance; }
+.g-resposta { font-size: clamp(1.08rem, 1.5vw, 1.25rem); line-height: 1.7; color: rgba(255,255,255,.88); max-width: 720px; margin-bottom: 26px; text-wrap: pretty; }
+.g-assinatura { font-size: .95rem; line-height: 1.65; color: rgba(255,255,255,.62); max-width: 720px; }
+.g-assinatura a { color: #fff; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(255,255,255,.35); }
+.g-datas { display: block; }
+
+.g-corpo { max-width: 760px; }
+.g-artigo > .container > .g-corpo { padding-block: clamp(40px, 5vw, 64px) clamp(56px, 7vw, 88px); }
+
+.g-sumario { padding: 4px 0 6px; margin-bottom: 8px; }
+.g-sumario-titulo { font-size: 1rem; font-weight: 800; color: var(--ink); margin-bottom: 10px; }
+.g-sumario ol { list-style: decimal; padding-left: 1.3em; margin: 0; display: grid; gap: 6px; }
+.g-sumario li { font-size: 1rem; line-height: 1.5; color: var(--ink-3); padding-left: 4px; }
+.g-sumario a { color: var(--ink-2); text-decoration: underline; text-underline-offset: 3px; text-decoration-color: var(--line-2); }
+.g-sumario a:hover { color: var(--red); text-decoration-color: var(--red); }
+
+.g-secao { scroll-margin-top: 96px; }
+.g-h2 { font-size: clamp(1.55rem, 2.8vw, 2.2rem); font-weight: 900; letter-spacing: -.03em; line-height: 1.12; color: var(--ink); margin: clamp(48px, 6vw, 68px) 0 18px; text-wrap: balance; }
+.g-h3 { font-size: 1.18rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.3; color: var(--ink); margin: 30px 0 8px; text-wrap: balance; }
+.g-p { font-size: clamp(1.02rem, 1.25vw, 1.1rem); line-height: 1.8; color: var(--ink-2); margin-bottom: 1.1em; text-wrap: pretty; }
+.g-p strong { color: var(--ink); }
+.g-p a, .g-lista a, .g-passos a, .g-tabela a, .g-chamada a:not(.btn-primary), .g-nota a, .g-faq-item a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
+.g-p a:hover, .g-lista a:hover, .g-passos a:hover, .g-tabela a:hover, .g-chamada a:not(.btn-primary):hover, .g-nota a:hover { color: var(--red); text-decoration-color: var(--red); }
+
+/* Lista com linhas finas, no padrão do hub de assessoria */
+.g-lista { list-style: none; padding: 0; margin: 6px 0 1.4em; }
+.g-lista li { padding: 14px 0; font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
+.g-lista strong { color: var(--ink); }
+
+/* Passos numerados */
+.g-passos { list-style: none; counter-reset: passo; padding: 0; margin: 6px 0 1.4em; }
+.g-passos > li { counter-increment: passo; position: relative; padding: 16px 0 16px 46px; font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
+.g-passos > li::before { content: counter(passo); position: absolute; left: 0; top: 15px; font-size: 1.15rem; font-weight: 900; color: var(--red); width: 30px; }
+.g-passos strong { color: var(--ink); }
+
+/* Tabela: rola dentro da própria caixa no celular, nunca a página */
+.g-tabela-caixa { overflow-x: auto; -webkit-overflow-scrolling: touch; margin: 10px 0 1.6em; }
+.g-tabela { width: 100%; min-width: 0; border-collapse: collapse; font-size: .98rem; line-height: 1.55; }
+.g-tabela caption { text-align: left; font-size: .92rem; color: var(--ink-3); padding-bottom: 10px; caption-side: top; }
+.g-tabela th, .g-tabela td { text-align: left; vertical-align: top; padding: 12px 14px 12px 0; border-bottom: 1px solid var(--line); color: var(--ink-2); }
+.g-tabela thead th { font-weight: 800; color: var(--ink); border-bottom: 2px solid var(--ink); }
+.g-tabela tbody th { font-weight: 700; color: var(--ink); }
+.g-tabela-larga { min-width: 520px; }
+.g-tabela th[scope="row"] { width: 38%; }
+
+/* Chamada discreta no meio do texto */
+.g-chamada { background: var(--cream-2); border-radius: var(--r-md); padding: clamp(22px, 3.5vw, 32px); margin: clamp(40px, 5vw, 56px) 0; }
+.g-chamada-titulo { font-size: 1.15rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.35; color: var(--ink); margin-bottom: 8px; text-wrap: balance; }
+.g-chamada p { font-size: 1rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
+.g-chamada-acoes { display: flex; flex-wrap: wrap; gap: 12px 22px; align-items: center; margin-top: 16px; }
+.g-chamada-acoes a:not(.btn-primary) { font-size: .95rem; font-weight: 700; }
+
+/* Modelo de release */
+.g-modelo { margin: 16px 0 1.6em; }
+.g-modelo-aviso { font-size: .95rem; line-height: 1.6; color: var(--ink-3); margin-bottom: 14px; }
+.g-modelo-parte { display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 0 28px; padding: 18px 0; border-top: 1px solid var(--line); }
+.g-modelo-parte:last-child { border-bottom: 1px solid var(--line); }
+.g-modelo-texto { background: #fff; border: 1px solid var(--line-2); border-radius: var(--r-md); padding: 16px 18px; font-size: 1rem; line-height: 1.7; color: var(--ink); text-wrap: pretty; }
+.g-modelo-texto p + p { margin-top: .8em; }
+.g-modelo-rotulo { display: block; font-size: .85rem; font-weight: 800; color: var(--ink-3); margin-bottom: 6px; }
+.g-modelo-titulo { font-size: 1.2rem; font-weight: 900; line-height: 1.3; letter-spacing: -.015em; }
+.g-modelo-com { font-size: .97rem; line-height: 1.7; color: var(--ink-2); padding-top: 4px; text-wrap: pretty; }
+.g-modelo-com strong { color: var(--ink); }
+
+.g-nota { margin-top: 24px; font-size: 1rem; line-height: 1.7; color: var(--ink-3); text-wrap: pretty; }
+
+/* Quem escreve */
+.g-autora { display: grid; grid-template-columns: 96px minmax(0, 1fr); gap: 22px; align-items: start; margin-top: clamp(48px, 6vw, 72px); padding: 26px 0; border-top: 1px solid var(--line); border-bottom: 1px solid var(--line); }
+.g-autora img { width: 96px; height: 96px; border-radius: 50%; object-fit: cover; object-position: 50% 18%; }
+.g-autora-nome { font-size: 1.15rem; font-weight: 800; color: var(--ink); line-height: 1.35; margin-bottom: 8px; text-wrap: balance; }
+.g-autora-nome a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
+.g-autora p { font-size: 1rem; line-height: 1.7; color: var(--ink-2); text-wrap: pretty; }
+
+/* FAQ */
+.g-faq { scroll-margin-top: 96px; }
+.g-faq-item { border-top: 1px solid var(--line); }
+.g-faq-item:last-child { border-bottom: 1px solid var(--line); }
+.g-faq-item summary { cursor: pointer; list-style: none; padding: 20px 40px 20px 0; position: relative; font-size: 1.08rem; font-weight: 700; color: var(--ink); letter-spacing: -.01em; line-height: 1.4; text-wrap: balance; }
+.g-faq-item summary::-webkit-details-marker { display: none; }
+.g-faq-item summary::after { content: '+'; position: absolute; right: 4px; top: 18px; font-size: 1.5rem; font-weight: 300; color: var(--red); line-height: 1; transition: transform .25s; }
+.g-faq-item[open] summary::after { transform: rotate(45deg); }
+.g-faq-item p { padding: 0 40px 22px 0; font-size: 1.02rem; line-height: 1.75; color: var(--ink-2); text-wrap: pretty; }
+
+/* Fechamento */
+.g-fim { background: var(--dark); padding-block: clamp(56px, 7vw, 92px); }
+.g-fim .g-h2 { margin-top: 0; }
+.g-claro { color: #fff; }
+.g-fim p { font-size: clamp(1.04rem, 1.4vw, 1.18rem); font-weight: 300; line-height: 1.7; color: rgba(255,255,255,.82); margin-bottom: 28px; text-wrap: pretty; }
+.g-fim-acoes { display: flex; gap: 14px 26px; align-items: center; flex-wrap: wrap; }
+.g-link-claro { font-size: .95rem; font-weight: 700; color: #fff; text-decoration: underline; text-underline-offset: 5px; text-decoration-color: rgba(255,255,255,.45); }
+.g-link-claro:hover { text-decoration-color: #fff; }
+
+/* Outros guias */
+.g-mais { background: #fff; padding-block: clamp(48px, 6vw, 80px); }
+.g-mais .g-h2 { margin-top: 0; }
+.g-lista-guias { list-style: none; padding: 0; margin: 0; }
+.g-lista-guias li { padding: 18px 0; }
+.g-lista-guias a { font-size: 1.2rem; font-weight: 800; letter-spacing: -.015em; color: var(--ink); text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); text-wrap: balance; }
+.g-lista-guias a:hover { color: var(--red); }
+.g-lista-guias p { margin-top: 6px; font-size: 1rem; line-height: 1.65; color: var(--ink-3); text-wrap: pretty; }
+
+@media (max-width: 760px) {
+  .g-modelo-parte { grid-template-columns: 1fr; gap: 12px; }
+}
+@media (max-width: 640px) {
+  .g-hero-inner { padding-block: 36px 44px; }
+  .g-h1 { font-size: clamp(1.95rem, 8.6vw, 2.5rem); }
+  .g-h2 { font-size: clamp(1.45rem, 6.6vw, 1.8rem); }
+  .g-autora { grid-template-columns: 72px minmax(0, 1fr); gap: 16px; }
+  .g-autora img { width: 72px; height: 72px; }
+  .g-faq-item summary { font-size: 1.02rem; padding-right: 34px; }
+  .g-faq-item p { padding-right: 0; }
+  .g-fim-acoes { flex-direction: column; align-items: stretch; }
+  .g-fim-acoes .btn-primary { justify-content: center; }
+  .g-chamada-acoes .btn-primary { width: 100%; justify-content: center; box-sizing: border-box; }
+}
+</style>
+
+<style>
+.ag-rascunho { display: inline-block; font-size: .92rem; line-height: 1.5; color: rgba(255,255,255,.85); border: 1px solid rgba(255,255,255,.3); border-radius: var(--r-md); padding: 8px 14px; margin: 0 0 20px; }
+
+/* Lista de agências */
+.ag-lista { list-style: none; padding: 0; margin: 8px 0 1.4em; }
+.ag-item { padding: 22px 0; border-top: 1px solid var(--line); }
+.ag-item:last-child { border-bottom: 1px solid var(--line); }
+.ag-nome { display: flex; align-items: center; gap: 12px; font-size: 1.2rem; font-weight: 800; letter-spacing: -.015em; line-height: 1.3; color: var(--ink); margin: 0 0 6px; }
+.ag-nome a { color: inherit; text-decoration: underline; text-underline-offset: 4px; text-decoration-color: rgba(200,16,46,.45); }
+.ag-nome a:hover { color: var(--red); }
+.ag-n { flex: none; display: inline-grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--red); color: #fff; font-size: .95rem; font-weight: 900; }
+.ag-end { font-size: .98rem; color: var(--ink-3); margin: 0 0 8px; padding-left: 44px; }
+.ag-texto { font-size: 1.02rem; line-height: 1.75; color: var(--ink-2); margin: 0 0 6px; padding-left: 44px; text-wrap: pretty; }
+.ag-fonte { font-size: .92rem; color: var(--ink-3); margin: 0; padding-left: 44px; }
+
+/* Infográfico: comparar propostas */
+.ag-info { background: var(--dark); color: #fff; border-radius: var(--r-lg); padding: clamp(20px, 4vw, 40px); margin: 14px 0 1.8em; }
+.ag-info-linha { display: grid; grid-template-columns: 72px minmax(0, 1fr); gap: 0 18px; padding: 22px 0; border-top: 1px solid rgba(255,255,255,.14); }
+.ag-info-linha:first-child { border-top: 0; padding-top: 4px; }
+.ag-info-num { font-size: clamp(3rem, 7vw, 4.4rem); font-weight: 900; line-height: .9; color: var(--red); letter-spacing: -.05em; margin: 0; }
+.ag-info-pergunta { font-size: clamp(1.3rem, 2.6vw, 1.7rem); font-weight: 900; letter-spacing: -.025em; line-height: 1.2; margin: 0 0 14px; color: #fff; text-wrap: balance; }
+.ag-info-respostas { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.ag-info-respostas p { margin: 0; font-size: 1.04rem; line-height: 1.55; color: rgba(255,255,255,.9); padding: 14px 16px; border-radius: var(--r-md); text-wrap: pretty; }
+.ag-info-respostas span { display: block; font-size: .9rem; font-weight: 800; margin-bottom: 6px; }
+.ag-bom { background: rgba(27,138,118,.22); }
+.ag-bom span { color: #7fd8c6; }
+.ag-ruim { background: rgba(200,16,46,.22); }
+.ag-ruim span { color: #ff9aa9; }
+
+/* Mapa */
+.ag-mapa { margin: 14px 0 1.8em; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; align-items: start; }
+.ag-mapa svg { width: 100%; height: auto; display: block; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
+.ag-area { fill: var(--cream-2); stroke: var(--line-2); stroke-width: 2; }
+.ag-rio { fill: none; stroke: var(--teal); stroke-width: 7; stroke-linecap: round; opacity: .55; }
+.ag-via { fill: none; stroke: var(--ink-3); stroke-width: 5; stroke-linecap: round; }
+.ag-centro { fill: var(--ink); }
+.ag-rotulo { font-family: var(--font); font-size: 24px; font-weight: 700; fill: var(--ink-2); }
+.ag-rotulo-rio { fill: var(--teal); }
+.ag-pino circle { fill: var(--red); stroke: #fff; stroke-width: 3; }
+.ag-pino text { font-family: var(--font); font-size: 24px; font-weight: 900; fill: #fff; }
+.ag-norte path { fill: none; stroke: var(--ink-3); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+.ag-norte text { font-family: var(--font); font-size: 24px; font-weight: 800; fill: var(--ink-3); }
+.ag-legenda { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.ag-legenda li { display: flex; align-items: center; gap: 10px; font-size: 1rem; line-height: 1.35; color: var(--ink-2); }
+.ag-legenda-n { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--red); color: #fff; font-size: .9rem; font-weight: 900; }
+.ag-legenda-nota { margin-top: 14px; font-size: .92rem; line-height: 1.55; color: var(--ink-3); }
+
+.ag-fontes { padding-left: 1.3em; margin: 0 0 1em; display: grid; gap: 8px; }
+.ag-fontes li { font-size: .98rem; line-height: 1.55; color: var(--ink-2); }
+.ag-fontes a { color: inherit; text-decoration: underline; text-underline-offset: 3px; text-decoration-color: rgba(200,16,46,.45); overflow-wrap: anywhere; }
+.ag-fontes a:hover { color: var(--red); }
+
+@media (max-width: 760px) {
+  .ag-mapa { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .ag-info-linha { grid-template-columns: 1fr; }
+  .ag-info-num { font-size: 2.8rem; margin-bottom: 6px; }
+  .ag-info-respostas { grid-template-columns: 1fr; }
+  .ag-end, .ag-texto, .ag-fonte { padding-left: 0; }
+}
+</style>
