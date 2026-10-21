@@ -96,16 +96,16 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
       </div>
 
       <div class="kw capas">
-        <h3>Diagnóstico por camada, em 15 de outubro</h3>
-        <div class="intro">Retrato da véspera da primeira rodada de correções. O que mudou depois disso está nas tarefas do plano.</div>
+        <h3>Diagnóstico por camada, de 15 de outubro até hoje</h3>
+        <div class="intro">Como cada camada estava na véspera da primeira rodada de correções e o que já foi feito depois. Atualizado em 21/10. O detalhe de cada item está nas tarefas do plano.</div>
         <div class="scroll"><table>
-          <tr><td class="n">SEO técnico</td><td class="e curso"><i></i>Em andamento</td><td class="det">Saudável no Google: canonical certo, 301 das 69 URLs antigas em PHP e robots correto. Faltavam o 301 do <code>www</code>, o IndexNow e os <code>h1</code> com palavras coladas. O sitemap estava com erro no Bing e foi reenviado em 23/09.</td></tr>
-          <tr><td class="n">Página de serviço</td><td class="e nada"><i></i>A fazer</td><td class="det">Cerca de 181 palavras de conteúdo, sem FAQ, sem cases ligados no texto e sem nenhum veículo citado pelo nome. O schema já era o mais completo do mercado analisado.</td></tr>
-          <tr><td class="n">Silo de cidades</td><td class="e nada"><i></i>A fazer</td><td class="det">Nenhuma página de cidade ou de segmento além de <code>/marketing-para-leiloeiros/</code>. Plano: dez cidades em <code>/servicos/assessoria-de-imprensa/{cidade}/</code>, ligadas pelo hub e pelo rodapé, fora do menu.</td></tr>
-          <tr><td class="n">Entidade</td><td class="e curso"><i></i>Em andamento</td><td class="det"><code>AdvertisingAgency</code> com a fundadora e <code>knowsAbout</code>; <b>Person canônico da Kelly no ar desde 15/10</b>. Faltavam o LinkedIn pessoal no <code>sameAs</code> e um nome só, "Mclair Comunicação", no Facebook.</td></tr>
-          <tr><td class="n">Fichas externas</td><td class="e nada"><i></i>A fazer</td><td class="det">Perfil do Google sem área, na categoria errada e sem avaliação; Bing Places inexistente; ausente do oHub. São as fontes que as IAs leram em 23/09.</td></tr>
-          <tr><td class="n">AEO e GEO</td><td class="e curso"><i></i>Em andamento</td><td class="det">Em leilões a Mclair já é a resposta. Em assessoria de imprensa em geral, nenhuma IA a cita. Faltavam FAQPage na página de serviço e presença nas fontes que as IAs consultam.</td></tr>
-          <tr><td class="n">Conversão</td><td class="e listo"><i></i>Bom</td><td class="det">Sete links de WhatsApp, o primeiro logo abaixo do H1. Faltava a mensagem dizer de qual página o contato veio.</td></tr>
+          <tr><td class="n">SEO técnico</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 já estava saudável no Google (canonical, 301 das 69 URLs antigas, robots). <b>Feito em 16/10:</b> 301 do <code>www</code>, IndexNow ligado, títulos sem palavras coladas, sitemap com datas reais e reenviado, <code>llms.txt</code> novo. <b>Fica de fora:</b> o GPTBot, bloqueado por regra fixa da Hostinger.</td></tr>
+          <tr><td class="n">Página de serviço</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 tinha cerca de 181 palavras, sem FAQ, sem cases e sem veículo citado. <b>Feito em 16/10:</b> reescrita com cerca de 1.800 palavras, 10 perguntas frequentes, cases ligados no texto e os veículos em que os clientes saíram. Em volta dela entraram Quanto custa, Assessor de imprensa, Gestão de crise, Media training e três guias. <b>Falta:</b> a revisão da Kelly.</td></tr>
+          <tr><td class="n">Silo de cidades</td><td class="e curso"><i></i>6 de 10</td><td class="det">Em 15/10 não havia nenhuma página de cidade. <b>No ar:</b> São Paulo, Brasília e Porto Alegre (16 e 17/10), Curitiba, Rio de Janeiro e Belo Horizonte (21/10), com texto próprio, ligadas pelo hub (seção "nas capitais") e pelo rodapé. <b>Falta:</b> Florianópolis, Joinville e Goiânia em janeiro, e Cuiabá só com case em MT.</td></tr>
+          <tr><td class="n">Entidade</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> Person canônico da Kelly (15/10), com o LinkedIn pessoal no <code>sameAs</code> (16/10), e o nome dela ligado à página em todo o site. <b>Falta:</b> o Facebook ainda se chama "M. Clair Comunicação", decisão da Kelly.</td></tr>
+          <tr><td class="n">Fichas externas</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> Perfil do Google na categoria Assessoria de imprensa, com as 9 cidades, descrição, 7 serviços e fotos da Kelly (16 e 17/10), e o link de avaliação com a mensagem pronta (21/10). <b>Falta, tudo com a Mclair:</b> a primeira avaliação (hoje são zero), a conta no Bing Places, no oHub e no Clutch (o básico é grátis).</td></tr>
+          <tr><td class="n">AEO e GEO</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> FAQPage na página de serviço e nas cidades, <code>llms.txt</code>, robôs de IA liberados e a página <a href="/mclair-na-midia/">Mclair na mídia</a> (21/10), que é a prova que as IAs leem. O guia das melhores agências de SP espera aprovação. <b>Falta:</b> estar nas fontes que as IAs consultam (oHub, Clutch, avaliações) e medir de novo as respostas das IAs em 15/11.</td></tr>
+          <tr><td class="n">Conversão</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 já havia sete links de WhatsApp. <b>Feito em 16/10:</b> a mensagem diz de qual página o contato veio, os formulários mandam e-mail para a Kelly, e o envio conta como conversão no Analytics. Desde 19/10 cada contato fica gravado no painel, com a origem.</td></tr>
         </table></div>
       </div>
     </section>
@@ -242,19 +242,19 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
       <h3>As cidades do plano</h3>
       <p>Buscas por mês somando as variações de cada cidade (Semrush, base br, 15/10). São poucas, mas com intenção de contratar: no topo de quase todas estão diretórios, órgãos públicos e Instagram, e a autoridade do domínio da Mclair é igual à das agências locais que lideram. Cada cidade ganha página com texto próprio.</p>
       <div class="scroll"><table class="tabela">
-        <tr><th>Cidade</th><th>Buscas/mês</th><th>Disputa hoje</th><th>Mês</th></tr>
-        <tr><td>São Paulo</td><td class="num">cerca de 300</td><td>primeira agência real só na 8ª posição</td><td>novembro</td></tr>
-        <tr><td>Brasília e DF</td><td class="num">100</td><td>fraca no on-page</td><td>novembro</td></tr>
-        <tr><td>Porto Alegre e RS</td><td class="num">120</td><td>locais sem H1 nem FAQ</td><td>novembro</td></tr>
-        <tr><td>Curitiba</td><td class="num">90</td><td>a mais disputada do Sul</td><td>dezembro</td></tr>
-        <tr><td>Rio de Janeiro</td><td class="num">cerca de 100</td><td>sem medição do Google</td><td>dezembro</td></tr>
-        <tr><td>Belo Horizonte</td><td class="num">cerca de 60</td><td>sem medição do Google</td><td>dezembro</td></tr>
+        <tr><th>Cidade</th><th>Buscas/mês</th><th>Disputa hoje</th><th>Quando</th></tr>
+        <tr><td>São Paulo</td><td class="num">cerca de 300</td><td>primeira agência real só na 8ª posição</td><td><a href="/servicos/assessoria-de-imprensa/sao-paulo/">no ar desde 16/10</a></td></tr>
+        <tr><td>Brasília e DF</td><td class="num">100</td><td>fraca no on-page</td><td><a href="/servicos/assessoria-de-imprensa/brasilia/">no ar desde 17/10</a></td></tr>
+        <tr><td>Porto Alegre e RS</td><td class="num">120</td><td>locais sem H1 nem FAQ</td><td><a href="/servicos/assessoria-de-imprensa/porto-alegre/">no ar desde 17/10</a></td></tr>
+        <tr><td>Curitiba</td><td class="num">90</td><td>a mais disputada do Sul</td><td><a href="/servicos/assessoria-de-imprensa/curitiba/">no ar desde 21/10</a></td></tr>
+        <tr><td>Rio de Janeiro</td><td class="num">cerca de 100</td><td>sem medição do Google</td><td><a href="/servicos/assessoria-de-imprensa/rio-de-janeiro/">no ar desde 21/10</a></td></tr>
+        <tr><td>Belo Horizonte</td><td class="num">cerca de 60</td><td>sem medição do Google</td><td><a href="/servicos/assessoria-de-imprensa/belo-horizonte/">no ar desde 21/10</a></td></tr>
         <tr><td>Florianópolis e SC</td><td class="num">60</td><td>média</td><td>janeiro</td></tr>
         <tr><td>Joinville</td><td class="num">40</td><td>nenhuma agência no top 12</td><td>janeiro</td></tr>
         <tr><td>Goiânia</td><td class="num">40</td><td>muito fraca</td><td>janeiro</td></tr>
         <tr><td>Cuiabá</td><td class="num">10</td><td>muito fraca</td><td>março, só com case em MT</td></tr>
       </table></div>
-      <p><b>A lição das concorrentes:</b> a F&amp;B publicou 535 páginas de cidade com o mesmo texto e está na posição 94. A MGA Press reescreveu 26 cidades com setores e imprensa locais e aparece entre os primeiros. Aqui vale o segundo modelo, com o endereço real da Mclair em São Paulo e nenhum endereço inventado nas outras cidades.</p>
+      <p><b>A lição das concorrentes:</b> a F&amp;B publicou 535 páginas de cidade com o mesmo texto e está na posição 94. A MGA Press reescreveu 26 cidades com setores e imprensa locais e aparece entre os primeiros. Aqui vale o segundo modelo, com a Mclair em São Paulo, atendendo a distância, e nenhum endereço inventado nas outras cidades.</p>
       </div>
     </details>
 
