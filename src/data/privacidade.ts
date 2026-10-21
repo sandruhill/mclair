@@ -1,7 +1,7 @@
 /*
  * Política de privacidade (LGPD) e aviso de cookies.
  *
- * ESTADO: DESLIGADO até a Mclair aprovar o texto de /politica-de-privacidade/.
+ * ESTADO: LIGADO em 21/10/2026, depois da revisão da Kelly e do ajuste no GTM.
  *
  * Enquanto PRIVACIDADE_ATIVA = false:
  *   - o aviso de cookies não aparece (src/components/AvisoCookies.astro);
@@ -22,7 +22,7 @@
  *   Com true: aviso ligado, consentimento ativo, página indexável e no
  *   sitemap, link "Política de privacidade" no rodapé.
  */
-export const PRIVACIDADE_ATIVA = false;
+export const PRIVACIDADE_ATIVA = true;
 
 export const CAMINHO_POLITICA = '/politica-de-privacidade/';
 
