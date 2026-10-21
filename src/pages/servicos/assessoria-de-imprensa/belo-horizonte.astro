@@ -1,0 +1,186 @@
+---
+// /servicos/assessoria-de-imprensa/belo-horizonte/
+// Página dona de "assessoria de imprensa bh", "assessoria de imprensa belo
+// horizonte" e "assessoria de imprensa mg" (cerca de 60 buscas por mês no
+// plano de SEO). Uberlândia, Juiz de Fora e Contagem entram como seção, não
+// como página: quem fez uma página igual para cada cidade caiu para o fundo
+// da busca. A Mclair não tem escritório em Minas e não há case mineiro, então
+// os cases citados valem como prova de método e a página diz isso. Estado de
+// Minas, O Tempo, Hoje em Dia, TV Globo Minas e Itatiaia aparecem só como
+// contexto. Dados e FAQ em src/data/cidade-belo-horizonte.ts. Rota estática:
+// não criar no CMS um serviço filho com o slug "belo-horizonte".
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import { URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO } from '../../../data/assessoria-imprensa';
+import {
+  SEO_ASSESSORIA_BH, WA_ASSESSORIA_BH, FAQ_ASSESSORIA_BH, URL_ASSESSORIA_BH,
+} from '../../../data/cidade-belo-horizonte';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_BH}`;
+const URL_ASSESSORIA_RJ = '/servicos/assessoria-de-imprensa/rio-de-janeiro/';
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const SETORES = [
+  { nome: 'Mineração e siderurgia.', texto: 'O Quadrilátero Ferrífero começa nos arredores da capital, e a Usiminas tem usina em Ipatinga, no Vale do Aço. Investimento, emprego e exportação têm leitor garantido. Barragem, licença ambiental e relação com a comunidade também têm, e por isso o porta-voz treina essas perguntas antes de qualquer anúncio.' },
+  { nome: 'Café.', texto: 'Minas é o maior estado produtor de café do Brasil. Quem produz no Sul de Minas ou no Cerrado Mineiro fala com uma imprensa de agro atenta a safra, preço pago ao produtor, exportação e cafés especiais.' },
+  { nome: 'Startups.', texto: 'San Pedro Valley é o apelido da comunidade de startups de Belo Horizonte, nascido de um grupo de empresas no bairro São Pedro. Hotmart e Sympla começaram na cidade. Rodada, contratação e produto novo interessam aos portais de tecnologia e aos cadernos de negócios.' },
+  { nome: 'Saúde.', texto: 'Hospitais, clínicas, laboratórios e cooperativas médicas da capital têm assunto o ano todo. A pauta que funciona é a de serviço, com um especialista que explica sem jargão o que o leitor precisa saber.' },
+  { nome: 'Varejo.', texto: 'Redes mineiras de supermercado, atacarejo e moda disputam o consumidor com as nacionais. Loja nova, vagas abertas e preço no carrinho são assunto para jornal, rádio e TV local.' },
+];
+
+const PROVAS = [
+  { href: '/cases/elemar-jr/', nome: 'Software no UOL, no CanalTech e no Startupi', texto: 'Para a EximiaCo, consultoria de arquitetura de software de Elemar Jr., a Mclair colocou o fundador em colunas e entrevistas no CanalTech, no UOL Tecnologia, no IT Forum 365, no Olhar Digital e no Startupi. É a vitrine que uma startup do San Pedro Valley procura para ser lida fora de Minas.' },
+  { href: '/cases/fidalgo/', nome: 'Uma pauta nacional que também roda nos regionais', texto: 'Desde janeiro de 2022, os leilões do Fidalgo para a Caixa, a Justiça Federal e os Correios somam mais de 1.600 inserções na mídia. A mesma pauta saiu na Folha de S.Paulo, na Exame e no jornal O Povo, de Fortaleza.' },
+  { href: '/cases/alexandre-magno/', nome: 'Reputação protegida numa aquisição', texto: 'Na compra da Emergee pelo Itaú, a Mclair cuidou da narrativa e da proteção de reputação do consultor Alexandre Magno. Depois, a chegada da The Cynefin Co ao Brasil saiu na HSM Management, e ele deu entrevista ao MIT Sloan Review Brasil. Setores sob escrutínio, como a mineração, pedem esse mesmo cuidado.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa em Belo Horizonte',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_BH.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Belo Horizonte',
+      containedInPlace: { '@type': 'State', name: 'Minas Gerais' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_BH.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Belo Horizonte', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_BH.title}
+  description={SEO_ASSESSORIA_BH.description}
+  keywords={SEO_ASSESSORIA_BH.keywords}
+  ogImage="/cases-img/elemar-jr-5.webp"
+  ogImageAlt="Artigo de Elemar Jr. sobre vazamento de dados na editoria de Tecnologia do UOL"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Belo Horizonte' },
+  ]}
+  h1={SEO_ASSESSORIA_BH.h1}
+  intro="Em Belo Horizonte, muita gente começa o dia com a Itatiaia no rádio do carro, lê o Estado de Minas ou O Tempo no celular e termina a noite com o telejornal da TV Globo Minas. É nesse caminho que o seu cliente mineiro decide em quem confiar. A Mclair escreve a pauta para esse leitor e, quando a notícia aguenta, para o resto do país."
+  wa={WA_ASSESSORIA_BH}
+  cta="Conversar sobre Minas no WhatsApp"
+  ctaForm="Prefiro deixar meus dados"
+  faq={FAQ_ASSESSORIA_BH}
+  faqTitulo="O que empresas mineiras perguntam"
+  fimTitulo="O que a sua empresa tem de novo para contar em Minas?"
+  fimTexto="Pode ser uma mina que amplia a produção, uma safra de café acima da média, uma rodada de startup, uma clínica nova. Mande pelo WhatsApp e a Mclair responde se a história tem cara de notícia e para qual redação."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Ou use o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Como o mineiro se informa</h2>
+    <p class="af-p">O Estado de Minas, dos Diários Associados, circula desde 1928. O Tempo, lançado em 1996, disputa o mesmo leitor da capital. O Hoje em Dia completa a lista dos títulos que o belo-horizontino conhece pelo nome. Na TV, a TV Globo Minas faz o jornalismo local da Globo. No rádio, a Itatiaia está no ar desde 1952 e virou referência de notícia em tempo real.</p>
+    <p class="af-p">Repórter de redação mineira recebe muito release escrito em São Paulo com o nome de Minas colado no fim. Ele percebe na primeira linha. O que passa é o fato local com número: quantas vagas em Contagem, quantas sacas no Sul de Minas, quanto a startup captou e quem ela vai contratar em BH. O guia de <a href="/guias/press-release/">press release</a> mostra como montar esse texto.</p>
+    <p class="af-p">Esses veículos estão aqui para situar o leitor. A Mclair não tem parceria com nenhum deles, não compra espaço e não promete publicação.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Do minério ao software: onde está a pauta mineira</h2>
+    <p class="af-p">A economia de Minas é variada, e cada setor tem repórter e calendário próprios. Estes são os que mais pedem assessoria.</p>
+    <ul class="af-lista">
+      {SETORES.map((s) => (
+        <li><strong>{s.nome}</strong> {s.texto}</li>
+      ))}
+    </ul>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Exemplos reais, e de onde eles vêm</h2>
+      <p class="af-p">Nenhum dos cases publicados pela Mclair é de empresa mineira. Os três abaixo foram escolhidos porque tratam de problemas que aparecem em Minas, como a startup que quer projeção nacional, a pauta que precisa render em jornal regional e a empresa que não pode errar o tom.</p>
+      <dl class="af-def">
+        {PROVAS.map((c) => (
+          <div>
+            <dt><a href={c.href}>{c.nome}</a></dt>
+            <dd>{c.texto}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="af-nota">Todos os cases, com as matérias publicadas, estão em <a href="/cases/">mclair.com.br/cases</a>.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/elemar-jr-5.webp" alt="Página de Tecnologia do UOL com o artigo Vazamento de dados: contingência, irresponsabilidade ou simples incompetência?, de Elemar Jr." width="1400" height="803" loading="lazy" decoding="async" />
+      <figcaption>Artigo de Elemar Jr. no UOL Tecnologia, parte do trabalho da Mclair para a <a href="/cases/elemar-jr/">EximiaCo</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Uberlândia, Juiz de Fora, Contagem</h2>
+    <p class="af-p">Minas tem 853 municípios, e a imprensa de BH não cobre todos com a mesma atenção. Uberlândia, no Triângulo Mineiro, é polo de atacado e logística com noticiário regional próprio. Juiz de Fora, na Zona da Mata, tem a Tribuna de Minas e uma relação antiga com o Rio. Contagem, colada na capital, é uma das cidades mais industriais da Grande BH.</p>
+    <p class="af-p">Para uma empresa dessas cidades, a ordem da divulgação conta. Primeiro o veículo da região, que conhece o empresário e dá o espaço maior. Depois a imprensa da capital, com o efeito no estado. Por último o setorial ou o nacional, se houver número que justifique. O guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a> detalha essa escolha.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">A distância, sem rodeio</h2>
+    <p class="af-p">A dúvida que mais trava a contratação é simples: uma agência de São Paulo entende Minas? A Mclair não tem escritório no estado e não finge ter. O atendimento é feito por videochamada, WhatsApp e telefone, com a mesma equipe do começo ao fim. Na prática, o repórter de BH avalia a notícia e a fonte que você oferece, e o CEP de quem enviou o e-mail não entra na conta.</p>
+    <p class="af-p">Quem responde pela estratégia é <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>. Ela é jornalista desde 2004, foi colunista da Exame e fundou a Mclair em 2017. Os jornalistas da equipe cuidam da apuração, do texto, do contato com as redações e do clipping.</p>
+    <p class="af-p">Se o serviço ainda é novidade para você, comece por <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a>. O escopo completo está na página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>, e a formação do preço em <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a>. Para quem também mira o Sudeste vizinho, há páginas de <a href={URL_ASSESSORIA_SP}>São Paulo</a> e do <a href={URL_ASSESSORIA_RJ}>Rio de Janeiro</a>.</p>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-belo-horizonte"
+  ancora="fale-com-a-mclair"
+  titulo="Conte o que está acontecendo na sua empresa"
+  assunto="Assessoria de imprensa em Belo Horizonte (página de cidade)"
+  waIntro="Olá Mclair! Vim pela página de Assessoria de Imprensa em Belo Horizonte e quero conversar sobre a minha empresa em Minas."
+  perguntaLabel="Qual é a novidade que você quer levar à imprensa?"
+  perguntaDica="Uma linha basta: investimento, safra, rodada, unidade nova, um número do setor."
+  perguntaRotulo="Novidade"
+  opcoesLabel="Que imprensa interessa mais?"
+  opcoes={['A de Minas Gerais', 'A nacional', 'As duas', 'Ainda não sei']}
+  opcoesRotulo="Imprensa"
+>
+  <p class="af-p">Os dados vão por e-mail para a Kelly Pinheiro, e o WhatsApp da Mclair abre com a mensagem já escrita para você enviar.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>

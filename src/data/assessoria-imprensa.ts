@@ -110,10 +110,13 @@ export const URL_ASSESSORIA_POA = '/servicos/assessoria-de-imprensa/porto-alegre
  * src/pages/servicos/assessoria-de-imprensa/{cidade}.astro e acrescente
  * aqui; o rodapé passa a listar sozinho.
  */
-export const CIDADES_COM_PAGINA: { nome: string; href: string }[] = [
-  { nome: 'São Paulo', href: URL_ASSESSORIA_SP },
-  { nome: 'Brasília', href: URL_ASSESSORIA_BSB },
-  { nome: 'Porto Alegre', href: URL_ASSESSORIA_POA },
+export const CIDADES_COM_PAGINA: { nome: string; href: string; resumo: string }[] = [
+  { nome: 'São Paulo', href: URL_ASSESSORIA_SP, resumo: 'A base da Mclair e a imprensa de economia e negócios do país.' },
+  { nome: 'Rio de Janeiro', href: '/servicos/assessoria-de-imprensa/rio-de-janeiro/', resumo: 'As redações nacionais que ficam no Rio, energia, saúde e economia criativa.' },
+  { nome: 'Belo Horizonte', href: '/servicos/assessoria-de-imprensa/belo-horizonte/', resumo: 'Mineração, café, as startups de BH e a imprensa mineira.' },
+  { nome: 'Curitiba', href: '/servicos/assessoria-de-imprensa/curitiba/', resumo: 'Indústria, tecnologia e a imprensa paranaense.' },
+  { nome: 'Porto Alegre', href: URL_ASSESSORIA_POA, resumo: 'Indústria da Serra, agro e a imprensa gaúcha.' },
+  { nome: 'Brasília', href: URL_ASSESSORIA_BSB, resumo: 'Entidades de classe, associações e a imprensa política.' },
 ];
 
 export const SEO_ASSESSORIA_SP = {

@@ -180,6 +180,18 @@ const CASES = [
   </div>
 </section>
 
+<section class="ai-secao ai-secao-creme ai-guias" aria-labelledby="ai-capitais-titulo">
+  <div class="container ai-guias-wrap">
+    <h2 class="ai-h2" id="ai-capitais-titulo">Assessoria de imprensa nas capitais</h2>
+    <p class="ai-p ai-p-intro">A Mclair fica em São Paulo e atende o Brasil todo a distância. Para algumas capitais há uma página com a imprensa local, os setores que mais rendem pauta e as perguntas de quem é de lá.</p>
+    <ul class="ai-guias-lista">
+      {CIDADES_COM_PAGINA.map((c) => (
+        <li><a href={c.href}>Assessoria de imprensa em {c.nome}</a>. {c.resumo}</li>
+      ))}
+    </ul>
+  </div>
+</section>
+
 <section class="ai-secao" id="perguntas-frequentes">
   <div class="container ai-faq-wrap">
     <h2 class="ai-h2">Perguntas de quem vai contratar</h2>

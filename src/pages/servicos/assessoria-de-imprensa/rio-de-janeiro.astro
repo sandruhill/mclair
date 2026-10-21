@@ -1,0 +1,192 @@
+---
+// /servicos/assessoria-de-imprensa/rio-de-janeiro/
+// Página dona de "assessoria de imprensa rio de janeiro", "no rio de
+// janeiro" e "assessoria de imprensa rj" (plano de SEO, cerca de 100 buscas
+// por mês). A Mclair não tem escritório no Rio e nenhum case publicado é de
+// empresa carioca. A prova local que existe são as matérias do Extra nos
+// cases Globo Leilões e VIP Leilões, e a página diz exatamente isso. TV
+// Globo, O Globo, Extra e O Dia aparecem como contexto, sem parceria. Rota
+// estática: não criar no CMS um serviço filho com o slug "rio-de-janeiro".
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import { URL_HUB_ASSESSORIA, URL_ASSESSORIA_SP, URL_ASSESSORIA_PRECO } from '../../../data/assessoria-imprensa';
+import {
+  SEO_ASSESSORIA_RJ, WA_ASSESSORIA_RJ, FAQ_ASSESSORIA_RJ, URL_ASSESSORIA_RJ,
+} from '../../../data/cidade-rio-de-janeiro';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_RJ}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+const URL_BH = '/servicos/assessoria-de-imprensa/belo-horizonte/';
+
+const NO_EXTRA = [
+  { href: '/cases/globo-leiloes/', nome: 'Globo Leilões no Extra', texto: 'O jornal noticiou um leilão de 2.693 imóveis retomados no Sudeste. Desses, 2.468 ficavam no estado do Rio. O case reúne ainda matérias em IstoÉ Dinheiro, Exame, Folha Vitória e Folha de S.Paulo, e soma 685 inserções na mídia.' },
+  { href: '/cases/vip-leiloes/', nome: 'VIP Leilões no Extra', texto: 'A editoria de economia publicou que Caixa e Bradesco levariam 571 imóveis a leilão, com ofertas de até 76% de desconto e lance inicial a partir de R$ 35.400.' },
+];
+
+const SETORES = [
+  { titulo: 'Petróleo, gás e energia.', texto: 'Petrobras e Agência Nacional do Petróleo têm sede no Rio, e a cadeia de fornecedores em volta delas é enorme. Contrato, investimento e emprego interessam à editoria de economia. Para o repórter, o dado só vale se vier com fonte que responda pergunta técnica.' },
+  { titulo: 'Audiovisual e cultura.', texto: 'A cidade abriga os Estúdios Globo, em Jacarepaguá, e uma produção de cinema, música e teatro que vive de estreia. Quem cobre cultura recebe convite todo dia. Sai na frente quem traz bastidor, número de público ou um personagem.' },
+  { titulo: 'Turismo e eventos.', texto: 'Carnaval, Rock in Rio, congressos e feiras disputam a mesma janela no noticiário. A pauta boa chega antes da data, com o que muda para o morador e para o visitante.' },
+  { titulo: 'Saúde e pesquisa.', texto: 'A Fiocruz tem sede no Rio, e hospitais, clínicas e laboratórios da cidade são fonte frequente. Aqui o cuidado dobra: cada número precisa de origem, e o porta-voz precisa saber até onde pode afirmar.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa no Rio de Janeiro',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_RJ.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Rio de Janeiro',
+      containedInPlace: { '@type': 'State', name: 'Rio de Janeiro' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_RJ.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Rio de Janeiro', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_RJ.title}
+  description={SEO_ASSESSORIA_RJ.description}
+  keywords={SEO_ASSESSORIA_RJ.keywords}
+  ogImage="/cases-img/globo-leiloes-1.webp"
+  ogImageAlt="Matéria do Extra sobre leilão de 2.693 imóveis no Sudeste, 2.468 deles no Rio de Janeiro, pauta da Mclair para a Globo Leilões"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Rio de Janeiro' },
+  ]}
+  h1={SEO_ASSESSORIA_RJ.h1}
+  intro="Quem toca uma empresa no Rio liga a TV e vê o jornal local feito a poucos quilômetros dali. A redação está perto. O difícil é chegar com algo que o repórter carioca queira contar ao leitor dele. É nesse ponto que a Mclair trabalha, de São Paulo, com pauta pensada para o Rio."
+  wa={WA_ASSESSORIA_RJ}
+  cta="Conversar sobre o Rio no WhatsApp"
+  ctaForm="Prefiro deixar meus dados"
+  faq={FAQ_ASSESSORIA_RJ}
+  faqTitulo="O que empresas do Rio perguntam antes de contratar"
+  fimTitulo="O que a sua empresa tem para contar ao Rio?"
+  fimTexto="Pode ser um contrato, uma estreia, uma unidade nova ou um número do setor. Mande pelo WhatsApp. A Mclair responde se aquilo tem cara de pauta e em que redação."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Preencher o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Uma agência paulistana entende o Rio?</h2>
+    <p class="af-p">É a primeira dúvida de quem chega aqui, e ela é justa. A resposta curta: o editor do Rio não pergunta de que cidade veio o e-mail. Ele pergunta se aquilo interessa a quem mora em Niterói, na Barra ou em Campo Grande.</p>
+    <p class="af-p">Por isso o trabalho começa pelo leitor, não pela empresa. Um leilão de imóveis vira pauta no jornal popular quando diz quantas casas ficam no estado e qual é o lance mínimo. Um contrato de energia vira pauta quando diz quantas vagas abre e onde. A Mclair monta o <a href="/guias/press-release/">release</a> em volta desse dado local e manda só para quem cobre o assunto.</p>
+    <p class="af-p">O que uma agência de fora não tem é a conversa de corredor. A Mclair não finge ter. Compensa com leitura diária dos jornais do Rio e com uma lista de repórteres atualizada por editoria.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Onde o noticiário carioca é produzido</h2>
+    <p class="af-p">A TV Globo tem sede no Rio. Os jornais O Globo e Extra também são feitos na cidade, e O Dia é carioca desde a fundação. São redações com leitores diferentes. Uma mesma notícia pode servir a uma e não à outra, e escolher o veículo errado costuma custar a pauta inteira.</p>
+    <p class="af-p">Citamos esses nomes para situar quem lê. A Mclair não tem parceria com nenhum deles e não promete publicação. O passo a passo de como uma pauta chega até a redação está no guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a>.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">O que já saiu no Extra</h2>
+      <p class="af-p">Sendo direto: nenhum case publicado no site é de empresa com sede no Rio. O que temos são duas leiloeiras atendidas pela Mclair que entraram no Extra com pauta de imóveis, uma delas com o estado do Rio no centro da notícia.</p>
+      <dl class="af-def">
+        {NO_EXTRA.map((c) => (
+          <div>
+            <dt><a href={c.href}>{c.nome}</a></dt>
+            <dd>{c.texto}</dd>
+          </div>
+        ))}
+      </dl>
+      <p class="af-nota">As matérias, com veículo e manchete, estão em cada case. A lista completa fica em <a href="/cases/">mclair.com.br/cases</a>.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/globo-leiloes-1.webp" alt="Destaques da Globo Leilões: Extra com leilão de 2.693 imóveis no Sudeste, IstoÉ Dinheiro, Folha Vitória, Exame e Folha de S.Paulo" width="1400" height="791" loading="lazy" decoding="async" />
+      <figcaption>O Extra, à esquerda, abre a seleção de matérias da <a href="/cases/globo-leiloes/">Globo Leilões</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Quatro economias que pedem pautas diferentes</h2>
+    <p class="af-p">O Rio não é uma cidade de um setor só. Cada um destes tem editoria própria e um jeito próprio de receber notícia. A Mclair ainda não tem case publicado neles, e diz isso na primeira conversa.</p>
+    <dl class="af-def">
+      {SETORES.map((s) => (
+        <div>
+          <dt>{s.titulo}</dt>
+          <dd>{s.texto}</dd>
+        </div>
+      ))}
+    </dl>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Como a conta anda de São Paulo</h2>
+    <p class="af-p">A Mclair não tem escritório no Rio. O atendimento é a distância: reunião por vídeo para alinhar a pauta, WhatsApp e telefone para o dia a dia, e retorno rápido quando um repórter pede entrevista em cima do fechamento.</p>
+    <p class="af-p">Quem define a estratégia é <a href={KELLY} class="pessoa-link">Kelly Pinheiro</a>. Ela é jornalista desde 2004, foi colunista da Exame e fundou a agência em 2017. Uma equipe de jornalistas escreve, envia, acompanha cada retorno e monta o clipping.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Para ler antes da primeira conversa</h2>
+    <p class="af-p">Se a empresa nunca teve assessoria, comece por <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a>. O escopo completo do serviço está na página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Sobre valores, a Mclair não publica tabela, porque o diagnóstico vem antes do preço. A página <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> mostra o que pesa na conta.</p>
+    <p class="af-p">Empresas que também atuam nos estados vizinhos podem ver as páginas de <a href={URL_ASSESSORIA_SP}>São Paulo</a> e de <a href={URL_BH}>Belo Horizonte</a>.</p>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-rio-de-janeiro"
+  ancora="fale-com-a-mclair"
+  titulo="Conte o que está acontecendo na empresa"
+  assunto="Assessoria de imprensa no Rio de Janeiro (página de cidade)"
+  waIntro="Olá Mclair! Vim pela página de Assessoria de Imprensa no Rio de Janeiro e quero conversar sobre a minha empresa."
+  perguntaLabel="Qual é a notícia da sua empresa?"
+  perguntaDica="Uma linha basta: contrato, estreia, unidade nova, número do setor."
+  perguntaRotulo="Notícia"
+  opcoesLabel="Que imprensa você quer alcançar?"
+  opcoes={['A do Rio de Janeiro', 'A nacional', 'As duas', 'Ainda não sei']}
+  opcoesRotulo="Imprensa"
+>
+  <p class="af-p">Os dados vão por e-mail para a Kelly Pinheiro, e o WhatsApp da Mclair abre com a mensagem pronta para você enviar.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>

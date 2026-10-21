@@ -34,6 +34,9 @@ const CIDADES = [
   'brasília', 'brasilia', 'df', 'distrito federal', 'brasiliense', 'brasilienses',
   'porto alegre', 'poa', 'rs', 'rio grande do sul', 'gaúcho', 'gaúcha', 'gaúchos', 'gaúchas', 'porto-alegrense',
   'caxias do sul', 'curitiba', 'florianópolis', 'joinville', 'goiânia', 'cuiabá',
+  'paraná', 'pr', 'curitibano', 'curitibana', 'curitibanos', 'curitibanas', 'paranaense', 'paranaenses',
+  'rio de janeiro', 'rj', 'carioca', 'cariocas', 'fluminense', 'fluminenses',
+  'belo horizonte', 'bh', 'minas gerais', 'mg', 'minas', 'mineiro', 'mineira', 'mineiros', 'mineiras', 'belo-horizontino', 'belo-horizontina',
 ];
 
 if (!existsSync(PASTA)) {

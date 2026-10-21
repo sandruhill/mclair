@@ -1,0 +1,185 @@
+---
+// /servicos/assessoria-de-imprensa/curitiba/
+// Página dona de "assessoria de imprensa curitiba", "assessoria de imprensa
+// paraná" e "assessoria de comunicação curitiba" (plano de SEO, cerca de 90
+// buscas por mês, a praça mais disputada do Sul). A Mclair não tem escritório
+// no Paraná e não há case paranaense publicado: os cases citados são de
+// outros estados e servem como prova de método. Não há case de saúde, e o
+// texto diz isso. Gazeta do Povo, Bem Paraná, Tribuna e RPC aparecem só como
+// contexto. Dados e FAQ em src/data/cidade-curitiba.ts. Rota estática: não
+// criar no CMS um serviço filho com o slug "curitiba".
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import FormServico from '../../../components/servicos/FormServico.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import {
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_POA, URL_ASSESSORIA_PRECO,
+} from '../../../data/assessoria-imprensa';
+import {
+  SEO_ASSESSORIA_CWB, WA_ASSESSORIA_CWB, FAQ_ASSESSORIA_CWB, URL_ASSESSORIA_CWB,
+} from '../../../data/cidade-curitiba';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_CWB}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const CASES = [
+  { href: '/cases/bms-abimaq/', nome: 'Máquinas brasileiras na mineração e na África', texto: 'Para o Brazil Machinery Solutions, programa da ABIMAQ com a ApexBrasil, a Mclair escreveu pautas como a estimativa de US$ 11,6 milhões em exportações para a mineração e a busca de fabricantes brasileiros pelo mercado africano. O programa somou mais de 2 mil inserções, 1.734 delas na imprensa internacional.' },
+  { href: '/cases/elemar-jr/', nome: 'Um arquiteto de software com coluna', texto: 'Elemar Jr., fundador da EximiaCo, assinou textos sobre vazamento de dados no UOL Tecnologia e no Canaltech, escreveu sobre segurança de infraestrutura no IT Forum 365 e teve coluna no Olhar Digital Pro.' },
+  { href: '/cases/zbra/', nome: 'Rebranding que virou notícia', texto: 'A Zbra, empresa de tecnologia, trocou de marca e precisava que o mercado entendesse o novo posicionamento. A cobertura saiu na Exame e no Grandes Nomes da Propaganda, junto com o trabalho de redes sociais.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa em Curitiba',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_CWB.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    areaServed: {
+      '@type': 'City',
+      name: 'Curitiba',
+      containedInPlace: { '@type': 'State', name: 'Paraná' },
+    },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_CWB.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Curitiba', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_CWB.title}
+  description={SEO_ASSESSORIA_CWB.description}
+  keywords={SEO_ASSESSORIA_CWB.keywords}
+  ogImage="/cases-img/elemar-jr-5.webp"
+  ogImageAlt="Artigo de Elemar Jr. no UOL Tecnologia sobre vazamento de dados, pauta da Mclair"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Curitiba' },
+  ]}
+  h1={SEO_ASSESSORIA_CWB.h1}
+  intro="Quem toca uma empresa em Curitiba já recebeu proposta de agência que promete matéria em uma semana. A conta raramente fecha. O repórter paranaense escolhe o que publica, e escolhe com rigor. A Mclair trabalha com o que faz ele abrir o e-mail: um fato novo, um número do Paraná e alguém pronto para falar."
+  wa={WA_ASSESSORIA_CWB}
+  cta="Falar sobre o Paraná no WhatsApp"
+  ctaForm="Ou deixe seus dados"
+  faq={FAQ_ASSESSORIA_CWB}
+  faqTitulo="O que empresas do Paraná perguntam antes de contratar"
+  fimTitulo="O que a sua empresa tem para contar ao Paraná?"
+  fimTexto="Mande a novidade em duas linhas: a linha de produção nova, o software que entrou no mercado, a clínica que abriu outra unidade. A Mclair responde dizendo se aquilo é notícia e para quem."
+  fimForm={{ href: '#fale-com-a-mclair', texto: 'Ou preencha o formulário' }}
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">O que chega à redação curitibana e quase nunca sai</h2>
+    <p class="af-p">A caixa de entrada de um jornalista de Curitiba enche de release sobre prêmio interno, aniversário de empresa e evento de networking. O que passa tem cara de notícia: quantas pessoas a fábrica contrata, quanto a empresa passou a exportar, o que muda para o paciente ou para o cliente na cidade.</p>
+    <p class="af-p">O terreno tem veículos de perfis bem diferentes. A Gazeta do Povo, fundada em 1919, trocou a edição impressa diária pelo digital em 2017 e hoje tem leitores no país todo. O Bem Paraná acompanha a cidade e a política do estado. A Tribuna fala com o leitor de linguagem mais popular. A RPC, afiliada da Globo, tem emissoras em Curitiba e no interior. Cada um pede um tipo de pauta, e o mesmo texto mandado aos quatro tende a ser ignorado.</p>
+    <p class="af-p">Estes nomes estão aqui só para descrever o cenário. A Mclair não tem parceria com nenhum deles e não promete publicação em veículo algum. O guia de <a href="/guias/press-release/">press release</a> mostra como escrever um texto que o repórter lê até o fim.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Fábrica, software e consultório pedem abordagens opostas</h2>
+    <ul class="af-lista">
+      <li><strong>Indústria.</strong> A Cidade Industrial de Curitiba existe desde 1973, e a Região Metropolitana reúne montadoras como Renault e Volvo e uma longa cadeia de fornecedores. Aqui a pauta boa é de negócio: contrato, exportação, investimento em linha de produção.</li>
+      <li><strong>Tecnologia.</strong> A prefeitura batizou de Vale do Pinhão o programa de inovação da cidade, e Curitiba tem uma comunidade grande de software e startups. Para quem vende tecnologia, a matéria no jornal local ajuda na contratação de gente. A venda costuma vir do portal especializado, lido por gestores de TI do país inteiro.</li>
+      <li><strong>Saúde.</strong> Hospital, clínica e healthtech têm muito a explicar ao leitor. A regra é outra, porém. Médico responde às normas de publicidade do Conselho Federal de Medicina mesmo numa entrevista, então a pauta precisa informar sem parecer anúncio de procedimento.</li>
+    </ul>
+    <p class="af-p">O grupo da sua história define a lista de jornalistas e o tom do texto. O guia <a href="/guias/como-aparecer-na-midia/">como aparecer na mídia</a> ajuda a fazer essa triagem antes da primeira conversa.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Provas de trabalho, com uma ressalva honesta</h2>
+      <p class="af-p">Nenhum dos cases abaixo é de empresa paranaense, e nenhum é da área da saúde. Eles estão aqui porque mostram como a Mclair transforma assunto técnico de indústria e de tecnologia em matéria publicada, com veículo e data conferíveis.</p>
+      <dl class="af-def">
+        {CASES.map((c) => (
+          <div>
+            <dt><a href={c.href}>{c.nome}</a></dt>
+            <dd>{c.texto}</dd>
+          </div>
+        ))}
+      </dl>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/elemar-jr-5.webp" alt="Artigo de Elemar Jr. no UOL Tecnologia sobre vazamento de dados" width="1400" height="803" loading="lazy" decoding="async" />
+      <figcaption>Artigo de Elemar Jr. no UOL Tecnologia. Veja o <a href="/cases/elemar-jr/">case completo</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Assessoria de comunicação ou de imprensa?</h2>
+    <p class="af-p">Quem procura assessoria de comunicação em Curitiba muitas vezes quer, na prática, aparecer no jornal. Outras vezes quer alguém para cuidar do Instagram, do site e da marca. São trabalhos diferentes, e um contrato vago que mistura os dois costuma decepcionar.</p>
+    <p class="af-p">O centro do trabalho da Mclair é a relação com jornalistas. Quando a empresa precisa de mais, a agência também cuida de marca e redes sociais, como fez com a Zbra. A primeira conversa serve para separar o que é imprensa do que é outra coisa. O guia <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a> explica o básico.</p>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Três dúvidas que seguram a decisão</h2>
+    <p class="af-p"><strong>O preço.</strong> Ele depende de quantos porta-vozes a empresa tem, de quantas pautas cabem no mês e de onde ela quer aparecer. A Mclair só fecha número depois de um diagnóstico. Antes disso, leia <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a> para entender como o mercado cobra.</p>
+    <p class="af-p"><strong>A distância.</strong> A Mclair fica em São Paulo e não tem escritório no Paraná. Clientes de Curitiba são atendidos por vídeo, WhatsApp e telefone, que é como as redações também trabalham hoje. O repórter que pede uma entrevista liga para o porta-voz, esteja ele no Centro Cívico ou em Maringá.</p>
+    <p class="af-p"><strong>A garantia.</strong> Não existe. Quem garante publicação está vendendo espaço pago com outro nome. O que a Mclair oferece é método e um relatório com cada matéria, menção e pedido de entrevista que surgir.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Quem escreve a sua pauta</h2>
+    <p class="af-p"><a href={KELLY} class="pessoa-link">Kelly Pinheiro</a> é jornalista desde 2004, foi colunista da Exame e fundou a Mclair em 2017. Ela define a estratégia de cada cliente, e uma equipe de jornalistas cuida da rotina: escrever a pauta, falar com as redações e montar o clipping.</p>
+    <p class="af-p">Para conhecer o serviço inteiro, veja a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a>. Se a sua empresa também opera no Rio Grande do Sul, há uma página sobre <a href={URL_ASSESSORIA_POA}>assessoria de imprensa em Porto Alegre</a>.</p>
+  </div></div>
+</section>
+
+<FormServico
+  id="wa-form-curitiba"
+  ancora="fale-com-a-mclair"
+  titulo="Diga o que a sua empresa quer contar"
+  assunto="Assessoria de imprensa em Curitiba (página de cidade)"
+  waIntro="Olá Mclair! Vim pela página de Assessoria de Imprensa em Curitiba e quero conversar sobre a minha empresa no Paraná."
+  perguntaLabel="Qual é a novidade da sua empresa?"
+  perguntaDica="Uma frase resolve: um contrato, um produto, uma unidade nova, um dado do setor."
+  perguntaRotulo="Novidade"
+  opcoesLabel="Qual imprensa você quer alcançar?"
+  opcoes={['A imprensa do Paraná', 'A imprensa nacional', 'A imprensa do meu setor', 'Ainda não sei']}
+  opcoesRotulo="Imprensa"
+>
+  <p class="af-p">Os dados enviados chegam por e-mail à Kelly Pinheiro, e o WhatsApp da Mclair abre com a mensagem já escrita. Se preferir, chame direto pelo WhatsApp.</p>
+</FormServico>
+
+</AssessoriaFilha>
+</Layout>

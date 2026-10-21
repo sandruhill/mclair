@@ -49,6 +49,11 @@ export const GET: APIRoute = async () => {
     }
   }
 
+  // Lista de matérias de clientes, montada dos cases no build.
+  if (!content.includes('/mclair-na-midia/')) {
+    content = `${content.trimEnd()}\n\n## Imprensa\n\n- [Mclair na mídia](${BASE}/mclair-na-midia/): matérias conquistadas pela Mclair para clientes, organizadas por veículo e por cliente, com link para cada matéria e para o case.\n`;
+  }
+
   // A página da Kelly é a entidade-pessoa do site; garante que apareça no
   // llms.txt mesmo que o texto do CMS ainda não a cite.
   if (!content.includes('/kelly-pinheiro/')) {
