@@ -111,8 +111,8 @@ const TODAS = [...GRANDES, ...INDEPENDENTES, ...ESPECIALIZADAS];
 
 // Coordenadas do endereço de cada agência (OpenStreetMap, 21/10/2026). A
 // Burson (3) e a Approach (6) ficaram no ponto da rua, porque o número não
-// está na base. O mapa usa Leaflet servido pelo próprio site e o fundo da
-// CARTO, liberado só nesta página pelo .htaccess da pasta.
+// está na base. O mapa usa Leaflet servido pelo próprio site e o fundo do
+// OpenStreetMap, liberado só nesta página pelo .htaccess da pasta.
 const COORD: Record<number, [number, number]> = {
   1: [-23.5902, -46.6826], 2: [-23.5622, -46.6789], 3: [-23.5372, -46.7418], 4: [-23.5659, -46.6845], 5: [-23.5690, -46.7006],
   6: [-23.6135, -46.6942], 7: [-23.6111, -46.6967], 8: [-23.5594, -46.6976], 9: [-23.5634, -46.6761], 10: [-23.5494, -46.5688],
@@ -372,7 +372,7 @@ const schema = [
     </div>
     <iframe id="ag-gmaps-frame" title="Endereço da agência no Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
   </div>
-  <p class="ag-legenda-nota">Clique num número, no mapa ou na lista, para ver a agência no Google Maps aqui mesmo. Endereços publicados no site de cada agência, consultados em 21/10/2026. Mapa © colaboradores do OpenStreetMap e CARTO.</p>
+  <p class="ag-legenda-nota">Clique num número, no mapa ou na lista, para ver a agência no Google Maps aqui mesmo. Endereços publicados no site de cada agência, consultados em 21/10/2026. Mapa © colaboradores do OpenStreetMap.</p>
   <noscript><ul class="ag-legenda">{PONTOS.map((p) => <li><a href={gmaps(p.endereco)}>{p.n}. {p.nome}, {p.endereco}</a></li>)}</ul></noscript>
   <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
   <script is:inline src="/vendor/leaflet/leaflet.js" defer></script>
@@ -383,9 +383,9 @@ const schema = [
       if (!el || !window.L) return;
       var pontos = JSON.parse(document.getElementById('ag-pontos').textContent);
       var mapa = L.map(el, { scrollWheelZoom: false, zoomControl: true });
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-        subdomains: 'abcd', maxZoom: 19,
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">colaboradores do OpenStreetMap</a>'
       }).addTo(mapa);
       var marcas = {};
       var caixa = document.getElementById('ag-gmaps'), frame = document.getElementById('ag-gmaps-frame');
