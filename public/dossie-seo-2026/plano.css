@@ -187,6 +187,8 @@ body.solo-leitura .cyc{cursor:default}
 
 /* Responder dentro de cada tarefa */
 .resp{margin-top:10px}
+/* Tarefa feita não recebe resposta nova; as respostas antigas continuam à vista. */
+.task.is-done .resp-btn,.task.is-done .resp-panel{display:none}
 .resp-btn{font-size:15px; font-weight:700; color:var(--ink); background:var(--surface); border:1px solid var(--line-2); border-radius:6px; padding:8px 14px; min-height:40px; cursor:pointer}
 .resp-btn:hover{border-color:var(--ink-4)}
 .resp-btn[aria-expanded="true"]{background:var(--surface-2)}
