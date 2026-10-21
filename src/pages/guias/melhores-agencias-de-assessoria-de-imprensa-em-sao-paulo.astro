@@ -109,11 +109,18 @@ const ESPECIALIZADAS: Agencia[] = [
 
 const TODAS = [...GRANDES, ...INDEPENDENTES, ...ESPECIALIZADAS];
 
-// Posição aproximada por bairro no mapa (viewBox 560 x 560).
-const PINOS: Record<number, [number, number]> = {
-  1: [256, 332], 2: [242, 224], 3: [96, 116], 4: [204, 196], 5: [172, 246],
-  6: [296, 418], 7: [234, 456], 8: [134, 186], 9: [276, 262], 10: [498, 140],
+// Coordenadas do endereço de cada agência (OpenStreetMap, 21/10/2026). A
+// Burson (3) e a Approach (6) ficaram no ponto da rua, porque o número não
+// está na base. O mapa usa Leaflet servido pelo próprio site e o fundo da
+// CARTO, liberado só nesta página pelo .htaccess da pasta.
+const COORD: Record<number, [number, number]> = {
+  1: [-23.5902, -46.6826], 2: [-23.5622, -46.6789], 3: [-23.5372, -46.7418], 4: [-23.5659, -46.6845], 5: [-23.5690, -46.7006],
+  6: [-23.6135, -46.6942], 7: [-23.6111, -46.6967], 8: [-23.5594, -46.6976], 9: [-23.5634, -46.6761], 10: [-23.5494, -46.5688],
 };
+const PONTOS = TODAS.map((a) => ({
+  n: a.n, nome: a.nome, endereco: `${a.endereco}, ${a.bairro}, São Paulo`, lat: COORD[a.n][0], lng: COORD[a.n][1],
+}));
+const gmaps = (end: string) => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(end)}`;
 
 const FONTES = [
   { nome: 'Poder360. FSB chega ao 15º ano na liderança das maiores agências do país (Anuário da Comunicação Corporativa 2025, Mega Brasil)', url: 'https://www.poder360.com.br/poder-midia/fsb-chega-ao-15o-ano-na-lideranca-das-maiores-agencias-do-pais/' },
@@ -342,44 +349,70 @@ const schema = [
 
 <section class="g-secao" aria-labelledby="mapa">
   <h2 class="g-h2" id="mapa">Onde ficam as agências de São Paulo</h2>
-  <p class="g-p">A maior parte está no eixo oeste e sul da cidade, entre Pinheiros, Faria Lima e Marginal Pinheiros, perto das sedes de muitos clientes e das redações de economia. Os números do mapa são os mesmos da lista.</p>
-  <figure class="ag-mapa">
-    <svg viewBox="0 0 560 560" role="img" aria-labelledby="ag-mapa-titulo ag-mapa-desc">
-      <title id="ag-mapa-titulo">Mapa esquemático das agências de assessoria de imprensa de São Paulo</title>
-      <desc id="ag-mapa-desc">Mapa simplificado das regiões central, oeste e sul de São Paulo com o Rio Tietê, a Marginal Pinheiros, a Avenida Paulista, a Faria Lima e a Berrini. Dez pinos numerados marcam o bairro de cada agência da lista, em posição aproximada.</desc>
-      <path class="ag-area" d="M30,96 C120,58 300,70 470,60 C530,58 548,110 540,190 C532,280 470,330 400,380 C350,430 320,500 290,545 L200,548 C170,470 120,400 70,330 C36,270 18,170 30,96 Z" />
-      <path class="ag-rio" d="M14,74 C150,44 330,80 546,56" />
-      <path class="ag-rio" d="M58,84 C120,172 168,244 200,322 S236,470 246,548" />
-      <path class="ag-via" d="M272,214 L352,276" />
-      <path class="ag-via" d="M196,214 L262,330" />
-      <path class="ag-via" d="M258,398 L272,486" />
-      <circle class="ag-centro" cx="380" cy="140" r="9" />
-      <text class="ag-rotulo" x="380" y="182" text-anchor="middle">Centro</text>
-      <text class="ag-rotulo ag-rotulo-rio" x="410" y="40">Rio Tietê</text>
-      <text class="ag-rotulo ag-rotulo-rio" x="36" y="364">Marginal</text>
-      <text class="ag-rotulo ag-rotulo-rio" x="36" y="392">Pinheiros</text>
-      <text class="ag-rotulo" x="334" y="308">Av. Paulista</text>
-      <text class="ag-rotulo" x="286" y="360">Faria Lima</text>
-      <text class="ag-rotulo" x="290" y="500">Berrini</text>
-      <text class="ag-rotulo" x="498" y="192" text-anchor="middle">Tatuapé</text>
-      {TODAS.map((a) => (
-        <g class="ag-pino">
-          <circle cx={PINOS[a.n][0]} cy={PINOS[a.n][1]} r="20" />
-          <text x={PINOS[a.n][0]} y={PINOS[a.n][1] + 8} text-anchor="middle">{a.n}</text>
-        </g>
-      ))}
-      <g class="ag-norte" aria-hidden="true">
-        <path d="M520,520 L520,476 M508,490 L520,476 L532,490" />
-        <text x="520" y="548" text-anchor="middle">N</text>
-      </g>
-    </svg>
-    <figcaption>
+  <p class="g-p">A maior parte está no eixo oeste e sul da cidade, entre Pinheiros, Faria Lima e Marginal Pinheiros, perto das sedes de muitos clientes e das redações de economia. Os números do mapa são os mesmos da lista, e cada pino está no endereço da agência.</p>
+  <div class="ag-mapa">
+    <div id="ag-mapa-vivo" class="ag-mapa-vivo" role="region" aria-label="Mapa de São Paulo com as dez agências da lista"></div>
+    <div class="ag-lado">
       <ol class="ag-legenda">
-        {TODAS.map((a) => <li><span class="ag-legenda-n">{a.n}</span> {a.nome}, {a.bairro}</li>)}
+        {PONTOS.map((p) => (
+          <li>
+            <button type="button" class="ag-escolhe" data-n={p.n}>
+              <span class="ag-legenda-n">{p.n}</span>
+              <span><b>{p.nome}</b><small>{p.endereco}</small></span>
+            </button>
+          </li>
+        ))}
       </ol>
-      <p class="ag-legenda-nota">Mapa esquemático, fora de escala. Posição aproximada por bairro, a partir do endereço publicado no site de cada agência.</p>
-    </figcaption>
-  </figure>
+    </div>
+  </div>
+  <div class="ag-gmaps" id="ag-gmaps" hidden>
+    <div class="ag-gmaps-topo">
+      <p id="ag-gmaps-nome"></p>
+      <a id="ag-gmaps-abrir" href="#" target="_blank" rel="noopener">Abrir no Google Maps</a>
+    </div>
+    <iframe id="ag-gmaps-frame" title="Endereço da agência no Google Maps" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+  </div>
+  <p class="ag-legenda-nota">Clique num número, no mapa ou na lista, para ver a agência no Google Maps aqui mesmo. Endereços publicados no site de cada agência, consultados em 21/10/2026. Mapa © colaboradores do OpenStreetMap e CARTO.</p>
+  <noscript><ul class="ag-legenda">{PONTOS.map((p) => <li><a href={gmaps(p.endereco)}>{p.n}. {p.nome}, {p.endereco}</a></li>)}</ul></noscript>
+  <link rel="stylesheet" href="/vendor/leaflet/leaflet.css" />
+  <script is:inline src="/vendor/leaflet/leaflet.js" defer></script>
+  <script is:inline type="application/json" id="ag-pontos" set:html={JSON.stringify(PONTOS)}></script>
+  <script is:inline>
+    window.addEventListener('DOMContentLoaded', function () {
+      var el = document.getElementById('ag-mapa-vivo');
+      if (!el || !window.L) return;
+      var pontos = JSON.parse(document.getElementById('ag-pontos').textContent);
+      var mapa = L.map(el, { scrollWheelZoom: false, zoomControl: true });
+      L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
+        subdomains: 'abcd', maxZoom: 19,
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>'
+      }).addTo(mapa);
+      var marcas = {};
+      var caixa = document.getElementById('ag-gmaps'), frame = document.getElementById('ag-gmaps-frame');
+      var nome = document.getElementById('ag-gmaps-nome'), abrir = document.getElementById('ag-gmaps-abrir');
+      function mostra(n, rolar) {
+        var p = pontos.find(function (x) { return x.n === n; });
+        if (!p) return;
+        document.querySelectorAll('.ag-escolhe').forEach(function (b) { b.classList.toggle('ativo', Number(b.dataset.n) === n); });
+        Object.keys(marcas).forEach(function (k) { marcas[k].getElement() && marcas[k].getElement().classList.toggle('ativo', Number(k) === n); });
+        mapa.flyTo([p.lat, p.lng], 16, { duration: .6 });
+        nome.textContent = p.n + '. ' + p.nome + ', ' + p.endereco;
+        abrir.href = 'https://www.google.com/maps/search/?api=1&query=' + encodeURIComponent(p.endereco);
+        frame.src = 'https://www.google.com/maps?q=' + encodeURIComponent(p.endereco) + '&z=16&output=embed';
+        caixa.hidden = false;
+        if (rolar) caixa.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+      }
+      pontos.forEach(function (p) {
+        var icone = L.divIcon({ className: 'ag-pino-vivo', html: '<span>' + p.n + '</span>', iconSize: [34, 34], iconAnchor: [17, 17] });
+        marcas[p.n] = L.marker([p.lat, p.lng], { icon: icone, title: p.nome, keyboard: true }).addTo(mapa)
+          .on('click', function () { mostra(p.n, true); });
+      });
+      mapa.fitBounds(pontos.map(function (p) { return [p.lat, p.lng]; }), { padding: [36, 36] });
+      document.querySelectorAll('.ag-escolhe').forEach(function (b) {
+        b.addEventListener('click', function () { mostra(Number(b.dataset.n), true); });
+      });
+    });
+  </script>
 </section>
 
 <section class="g-secao" aria-labelledby="grandes">
@@ -664,22 +697,25 @@ const schema = [
 .ag-ruim span { color: #ff9aa9; }
 
 /* Mapa */
-.ag-mapa { margin: 14px 0 1.8em; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 24px; align-items: start; }
-.ag-mapa svg { width: 100%; height: auto; display: block; background: #fff; border: 1px solid var(--line); border-radius: var(--r-lg); }
-.ag-area { fill: var(--cream-2); stroke: var(--line-2); stroke-width: 2; }
-.ag-rio { fill: none; stroke: var(--teal); stroke-width: 7; stroke-linecap: round; opacity: .55; }
-.ag-via { fill: none; stroke: var(--ink-3); stroke-width: 5; stroke-linecap: round; }
-.ag-centro { fill: var(--ink); }
-.ag-rotulo { font-family: var(--font); font-size: 24px; font-weight: 700; fill: var(--ink-2); }
-.ag-rotulo-rio { fill: var(--teal); }
-.ag-pino circle { fill: var(--red); stroke: #fff; stroke-width: 3; }
-.ag-pino text { font-family: var(--font); font-size: 24px; font-weight: 900; fill: #fff; }
-.ag-norte path { fill: none; stroke: var(--ink-3); stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
-.ag-norte text { font-family: var(--font); font-size: 24px; font-weight: 800; fill: var(--ink-3); }
-.ag-legenda { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
-.ag-legenda li { display: flex; align-items: center; gap: 10px; font-size: 1rem; line-height: 1.35; color: var(--ink-2); }
+.ag-mapa { margin: 14px 0 18px; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 2fr); gap: 20px; align-items: stretch; }
+.ag-mapa-vivo { height: 520px; border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; z-index: 0; background: #eef0f2; }
+.ag-lado { max-height: 520px; overflow-y: auto; }
+.ag-legenda { list-style: none; padding: 0; margin: 0; display: grid; gap: 6px; }
+.ag-escolhe { width: 100%; display: flex; align-items: flex-start; gap: 12px; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; font: inherit; color: var(--ink-2); transition: border-color .15s, box-shadow .15s; }
+.ag-escolhe:hover, .ag-escolhe.ativo { border-color: var(--red); box-shadow: 0 4px 14px rgba(200,16,46,.12); }
+.ag-escolhe b { display: block; font-size: 1rem; color: var(--ink); line-height: 1.3; }
+.ag-escolhe small { display: block; font-size: .88rem; line-height: 1.4; color: var(--ink-3); margin-top: 2px; }
 .ag-legenda-n { flex: none; display: inline-grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: var(--red); color: #fff; font-size: .9rem; font-weight: 900; }
-.ag-legenda-nota { margin-top: 14px; font-size: .92rem; line-height: 1.55; color: var(--ink-3); }
+.ag-legenda-nota { margin-top: 12px; font-size: .92rem; line-height: 1.55; color: var(--ink-3); }
+.ag-gmaps { border: 1px solid var(--line); border-radius: var(--r-lg); overflow: hidden; background: #fff; }
+.ag-gmaps[hidden] { display: none; }
+.ag-gmaps-topo { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; padding: 12px 16px; border-bottom: 1px solid var(--line); }
+.ag-gmaps-topo p { margin: 0; font-weight: 700; color: var(--ink); font-size: 1rem; }
+.ag-gmaps-topo a { color: var(--red); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.ag-gmaps iframe { display: block; width: 100%; height: 380px; border: 0; }
+:global(.ag-pino-vivo) { background: none; border: 0; }
+:global(.ag-pino-vivo span) { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: var(--red); color: #fff; font: 900 15px/1 var(--font); border: 3px solid #fff; box-shadow: 0 3px 10px rgba(0,0,0,.35); transition: transform .15s; }
+:global(.ag-pino-vivo:hover span), :global(.ag-pino-vivo.ativo span) { transform: scale(1.18); background: var(--ink); }
 
 .ag-fontes { padding-left: 1.3em; margin: 0 0 1em; display: grid; gap: 8px; }
 .ag-fontes li { font-size: .98rem; line-height: 1.55; color: var(--ink-2); }
@@ -688,6 +724,9 @@ const schema = [
 
 @media (max-width: 760px) {
   .ag-mapa { grid-template-columns: 1fr; }
+  .ag-mapa-vivo { height: 380px; }
+  .ag-lado { max-height: none; }
+  .ag-gmaps iframe { height: 300px; }
 }
 @media (max-width: 640px) {
   .ag-info-linha { grid-template-columns: 1fr; }
