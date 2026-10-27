@@ -212,7 +212,7 @@ export const FAQ_ASSESSORIA_PRECO: Pergunta[] = [
   {
     pergunta: 'Quanto custa um media training?',
     resposta:
-      'Varia com o número de porta-vozes, a duração e o formato: preparação para TV, rádio, podcast ou entrevista por escrito, com ou sem simulação gravada. Na Mclair, ele faz parte da preparação de porta-vozes dentro da assessoria de imprensa, e o diagnóstico define quem passa por ele.',
+      'Varia com o número de porta-vozes, a duração e o formato: preparação para TV, rádio, podcast ou entrevista por escrito, com ou sem simulação gravada. Na Mclair, a assessoria de imprensa já inclui uma preparação básica dos porta-vozes. O media training completo, com simulações gravadas, é orçado à parte, e o diagnóstico define quem passa por ele.',
   },
   {
     pergunta: 'Assessoria de imprensa vale a pena?',
