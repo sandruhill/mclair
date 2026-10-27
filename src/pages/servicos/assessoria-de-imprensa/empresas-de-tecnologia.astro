@@ -1,0 +1,159 @@
+---
+// /servicos/assessoria-de-imprensa/empresas-de-tecnologia/
+// Página de setor para "assessoria de imprensa para empresas de tecnologia",
+// "para startups" e "para SaaS" (aprovada em 27/10/2026). Link só no
+// rodapé, fora do menu principal. Rota estática, mesma ressalva das páginas
+// de cidade: não criar no CMS um serviço filho com este slug. Toda prova
+// citada vem dos cases publicados em /cases/.
+export const prerender = true;
+import Layout from '../../../layouts/Layout.astro';
+import AssessoriaFilha from '../../../components/servicos/AssessoriaFilha.astro';
+import { paginaDaPessoa } from '../../../utils/blogAuthors';
+import {
+  SEO_ASSESSORIA_TECH, WA_ASSESSORIA_TECH, FAQ_ASSESSORIA_TECH,
+  URL_HUB_ASSESSORIA, URL_ASSESSORIA_TECH, URL_ASSESSORIA_PRECO, URL_ASSESSORIA_SP,
+} from '../../../data/assessoria-imprensa';
+
+const BASE = 'https://mclair.com.br';
+const URL = `${BASE}${URL_ASSESSORIA_TECH}`;
+const KELLY = paginaDaPessoa('kelly-pinheiro') ?? '/kelly-pinheiro/';
+
+const CASES = [
+  { href: '/cases/lambda3/', nome: 'Lambda3', texto: 'Consultoria de tecnologia atendida pela Mclair por cinco anos, desde 2018, com assessoria de imprensa e comunicação digital. Deu entrevistas ao SBT, à Record TV, à Band e à Gazeta, e teve pautas sobre os 12 anos da empresa e as palestras no TDC Business.' },
+  { href: '/cases/diego-nogare/', nome: 'Diego Nogare', texto: 'Especialista em dados e inteligência artificial, com passagem por Microsoft, Deloitte, Bayer e Itaú. Teve duas matérias seguidas na home da CNN Brasil, assinou artigo na Exame sobre vibe coding e escreveu na HSM Management, no IT Forum e no Baguete.' },
+  { href: '/cases/elemar-jr/', nome: 'Elemar Jr.', texto: 'Arquiteto de software e fundador da EximiaCo, marca criada pela Mclair. Escreveu sobre vazamento de dados no UOL Tecnologia e no Canaltech, sobre segurança de infraestrutura no IT Forum 365 e teve coluna no Olhar Digital Pro. Também saiu no Baguete e no Startupi.' },
+  { href: '/cases/zbra/', nome: 'Zbra', texto: 'Empresa de tecnologia que trocou de marca e precisava que o mercado entendesse o novo posicionamento. A cobertura do rebranding saiu na Exame e no Grandes Nomes da Propaganda, junto com o trabalho de redes sociais.' },
+  { href: '/cases/nexinvoice/', nome: 'Guiando / nexinvoice', texto: 'Solução de automação financeira para empresas. A Mclair criou o nome, o conceito, a identidade visual e a mascote Annie. O nexinvoice foi adquirido pela Asaas, que manteve a comunicação visual.' },
+];
+
+const schema = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'Service',
+    '@id': `${URL}#service`,
+    name: 'Assessoria de imprensa para empresas de tecnologia',
+    serviceType: 'Assessoria de imprensa',
+    description: SEO_ASSESSORIA_TECH.description,
+    url: URL,
+    provider: { '@id': `${BASE}/#organization` },
+    audience: { '@type': 'BusinessAudience', name: 'Empresas de tecnologia, startups, SaaS e especialistas em software, dados e inteligência artificial' },
+    areaServed: { '@type': 'Country', name: 'Brasil' },
+    isRelatedTo: { '@id': `${BASE}${URL_HUB_ASSESSORIA}#service` },
+    inLanguage: 'pt-BR',
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    '@id': `${URL}#faq`,
+    mainEntity: FAQ_ASSESSORIA_TECH.map((q) => ({
+      '@type': 'Question',
+      name: q.pergunta,
+      acceptedAnswer: { '@type': 'Answer', text: q.resposta },
+    })),
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Início', item: `${BASE}/` },
+      { '@type': 'ListItem', position: 2, name: 'Serviços', item: `${BASE}/servicos/` },
+      { '@type': 'ListItem', position: 3, name: 'Assessoria de Imprensa', item: `${BASE}${URL_HUB_ASSESSORIA}` },
+      { '@type': 'ListItem', position: 4, name: 'Empresas de tecnologia', item: URL },
+    ],
+  },
+];
+---
+
+<Layout
+  title={SEO_ASSESSORIA_TECH.title}
+  description={SEO_ASSESSORIA_TECH.description}
+  keywords={SEO_ASSESSORIA_TECH.keywords}
+  ogImage="/cases-img/diego-nogare-1.webp"
+  ogImageAlt="Diego Nogare com duas matérias seguidas na home da CNN Brasil sobre inteligência artificial, pauta da Mclair"
+  schema={schema}
+>
+<AssessoriaFilha
+  trilha={[
+    { nome: 'Início', href: '/' },
+    { nome: 'Serviços', href: '/servicos/' },
+    { nome: 'Assessoria de Imprensa', href: URL_HUB_ASSESSORIA },
+    { nome: 'Empresas de tecnologia' },
+  ]}
+  h1={SEO_ASSESSORIA_TECH.h1}
+  intro="A Mclair é uma agência de assessoria de imprensa de São Paulo que atende empresas de tecnologia, startups, SaaS e especialistas em software, dados e inteligência artificial. Fundada em 2017 pela jornalista Kelly Pinheiro, ex-colunista da Exame, soma mais de 11.600 inserções para mais de 200 clientes. A Lambda3 deu entrevistas ao SBT, à Record TV e à Band, Diego Nogare saiu na CNN Brasil e Elemar Jr. escreveu no UOL Tecnologia. Para contratar, comece pelo diagnóstico no WhatsApp (11) 98860-0372."
+  wa={WA_ASSESSORIA_TECH}
+  cta="Falar com a Mclair"
+  faq={FAQ_ASSESSORIA_TECH}
+  faqTitulo="Perguntas de empresas de tecnologia e startups"
+  fimTitulo="Sua empresa de tecnologia tem uma história para a imprensa?"
+  fimTexto="Conte o que está acontecendo no seu negócio. Na primeira conversa a Mclair avalia o que é notícia, para quais veículos e com qual porta-voz."
+>
+
+<section class="af-secao">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Tecnologia vira pauta quando vira assunto de negócio</h2>
+      <p class="af-p">O jornalista não publica funcionalidade. Publica o problema que ela resolve, o dado que ninguém tinha e a opinião de quem entende do assunto. Para uma empresa de tecnologia, o trabalho da assessoria começa aí: traduzir o que a equipe faz em algo que o leitor de cada veículo quer ler.</p>
+      <p class="af-p">E os leitores são diferentes. Os portais especializados, como Canaltech, Olhar Digital, IT Forum e Baguete, falam com quem compra e usa tecnologia. A imprensa de negócios, como Exame, CNN Brasil e HSM Management, fala com quem decide o orçamento. A TV leva o assunto ao público geral. A mesma empresa pode render pauta nos três, com ângulos diferentes.</p>
+      <p class="af-p">O caminho mais curto costuma ser o especialista da casa. Fundador, CTO ou cientista de dados que explica bem vira fonte procurada pelos repórteres e passa a assinar artigos. Foi assim com <a href="/cases/diego-nogare/">Diego Nogare</a> na Exame e na CNN Brasil e com <a href="/cases/elemar-jr/">Elemar Jr.</a> no UOL Tecnologia e no Canaltech.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/diego-nogare-1.webp" alt="Diego Nogare com duas matérias seguidas na home da CNN Brasil sobre inteligência artificial" width="1400" height="873" loading="lazy" decoding="async" />
+      <figcaption>Duas matérias seguidas na home da CNN Brasil, pauta da Mclair para <a href="/cases/diego-nogare/">Diego Nogare</a>.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">O que entra na assessoria para empresas de tecnologia</h2>
+    <ul class="af-lista">
+      <li><strong>Diagnóstico.</strong> O que a empresa tem de notícia, quem fala por ela e quais veículos o seu cliente lê.</li>
+      <li><strong>Porta-voz como fonte.</strong> Artigos assinados, colunas e entrevistas que colocam o especialista da casa no debate sobre dados, software, inteligência artificial e segurança.</li>
+      <li><strong>Pautas de empresa.</strong> Aniversário, lançamento, contratação de executivo, evento e rebranding, cada um apresentado ao repórter que cobre o assunto. A Zbra, por exemplo, saiu na Exame com o rebranding.</li>
+      <li><strong>Preparação para entrevista.</strong> Treino básico do porta-voz incluído na assessoria. O <a href="/servicos/media-training/">media training</a> completo, para TV, rádio e podcast, é orçado à parte.</li>
+      <li><strong>Momentos sensíveis.</strong> Vazamento, falha de sistema ou venda da empresa pedem nota rápida e porta-voz único. A Mclair conduziu a comunicação da aquisição da Emergee pelo Itaú. Veja a página de <a href="/servicos/gestao-de-crise/">gestão de crise</a>.</li>
+      <li><strong>Clipping e relatório.</strong> Toda publicação com veículo, data e link, junto com as pautas em andamento.</li>
+    </ul>
+  </div></div>
+</section>
+
+<section class="af-secao" id="cases">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Empresas e especialistas de tecnologia atendidos pela Mclair</h2>
+    <p class="af-p">Cada case tem as matérias publicadas, com veículo e data.</p>
+    <dl class="af-def">
+      {CASES.map((c) => (
+        <div>
+          <dt><a href={c.href}>{c.nome}</a></dt>
+          <dd>{c.texto}</dd>
+        </div>
+      ))}
+    </dl>
+    <p class="af-nota">Todos os cases estão em <a href="/cases/">mclair.com.br/cases</a>.</p>
+  </div></div>
+</section>
+
+<section class="af-secao af-secao-creme">
+  <div class="container"><div class="af-duas">
+    <div>
+      <h2 class="af-h2">Uma jornalista à frente da conta</h2>
+      <p class="af-p"><a href={KELLY} class="pessoa-link">Kelly Pinheiro</a> é jornalista desde 2004 e fundou a Mclair em São Paulo. Foi colunista da Exame por dois anos e meio e sabe, pelo lado de dentro, o que uma redação de negócios aproveita e o que descarta.</p>
+      <p class="af-p">Ela define a estratégia de cada cliente, e uma equipe de jornalistas cuida do dia a dia. Quando faz sentido, a assessoria anda junto com branding e redes sociais, como na Lambda3, na Zbra e na EximiaCo. <a href={KELLY}>Leia a trajetória completa de Kelly Pinheiro</a>.</p>
+    </div>
+    <figure class="af-foto">
+      <img src="/cases-img/lambda3-1.webp" alt="Lambda3 na mídia: entrevistas para SBT, Record TV, Band e Gazeta" width="1400" height="763" loading="lazy" decoding="async" />
+      <figcaption>Entrevistas da <a href="/cases/lambda3/">Lambda3</a> para SBT, Record TV, Band e Gazeta.</figcaption>
+    </figure>
+  </div></div>
+</section>
+
+<section class="af-secao">
+  <div class="container"><div class="af-estreito">
+    <h2 class="af-h2">Antes de contratar</h2>
+    <p class="af-p">Se você ainda está entendendo o serviço, o guia <a href="/guias/o-que-e-assessoria-de-imprensa/">o que é assessoria de imprensa</a> explica o básico, e a página de <a href={URL_HUB_ASSESSORIA}>assessoria de imprensa</a> mostra o que entra no trabalho, do diagnóstico ao clipping. Se a dúvida é orçamento, veja <a href={URL_ASSESSORIA_PRECO}>quanto custa assessoria de imprensa</a>. A Mclair fica em São Paulo, e a página de <a href={URL_ASSESSORIA_SP}>assessoria de imprensa em São Paulo</a> conta como é o atendimento na cidade e no Brasil todo.</p>
+  </div></div>
+</section>
+
+</AssessoriaFilha>
+</Layout>

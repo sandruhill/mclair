@@ -329,3 +329,64 @@ export const FAQ_ASSESSORIA_POA: Pergunta[] = [
       'Cada publicação entra no clipping com o nome do veículo, a data e o link. No relatório periódico vêm também as pautas em andamento e os pedidos de entrevista que chegaram das redações, gaúchas ou não.',
   },
 ];
+
+/* ------------------------------------------------------------------------
+ * Página de setor: /servicos/assessoria-de-imprensa/empresas-de-tecnologia/
+ * (aprovada em 27/10/2026). Link só no rodapé, fora do menu. Toda prova
+ * vem dos cases de tecnologia publicados em /cases/: Lambda3, Zbra, Elemar
+ * Jr., Diego Nogare e nexinvoice. Nada de número, preço ou depoimento que
+ * não esteja no site.
+ * --------------------------------------------------------------------- */
+
+export const URL_ASSESSORIA_TECH = '/servicos/assessoria-de-imprensa/empresas-de-tecnologia/';
+
+export const SEO_ASSESSORIA_TECH = {
+  title: 'Assessoria de Imprensa para Empresas de Tecnologia | Mclair',
+  h1: 'Assessoria de imprensa para empresas de tecnologia',
+  description:
+    'Assessoria de imprensa para empresas de tecnologia, startups e SaaS. Clientes da Mclair saíram na CNN Brasil, Exame, UOL Tecnologia, Canaltech, IT Forum e SBT. Fale com a Mclair.',
+  keywords:
+    'assessoria de imprensa para empresas de tecnologia, assessoria de imprensa para startups, assessoria de imprensa para saas, assessoria de imprensa tecnologia, assessoria de imprensa ti, assessoria de imprensa para software, mclair',
+};
+
+export const WA_ASSESSORIA_TECH =
+  'https://wa.me/5511988600372?text=' +
+  encodeURIComponent('Olá Mclair! Vim pela página de Assessoria de Imprensa para Empresas de Tecnologia e quero conversar sobre a minha empresa.');
+
+export const FAQ_ASSESSORIA_TECH: Pergunta[] = [
+  {
+    pergunta: 'Quanto custa assessoria de imprensa para uma startup ou empresa de tecnologia?',
+    resposta:
+      'Depende do escopo: quantos porta-vozes, quantas pautas por mês, se o alvo são os portais de tecnologia, a imprensa de negócios ou as duas, e se entram media training, redes sociais ou branding. A Mclair monta a proposta depois do diagnóstico, que é a primeira conversa. A página sobre quanto custa assessoria de imprensa explica como o mercado cobra.',
+  },
+  {
+    pergunta: 'Minha startup ainda é pequena. Assessoria de imprensa faz sentido?',
+    resposta:
+      'Faz quando existe algo que interessa ao leitor de algum veículo: um dado novo, uma opinião bem fundamentada sobre o mercado ou um fundador que entende do assunto. Especialistas como Diego Nogare, em dados e inteligência artificial, e Elemar Jr., em arquitetura de software, ganharam espaço na Exame, na CNN Brasil e no UOL Tecnologia falando do que sabem. O porte da empresa define o escopo, não a chance de virar notícia.',
+  },
+  {
+    pergunta: 'Em quais veículos de tecnologia clientes da Mclair já saíram?',
+    resposta:
+      'Nos portais especializados, Canaltech, UOL Tecnologia, Olhar Digital Pro, IT Forum, Baguete e Startupi. Na imprensa de negócios, Exame, CNN Brasil e HSM Management. Na TV, a Lambda3 deu entrevistas ao SBT, à Record TV, à Band e à Gazeta. Cada case em mclair.com.br/cases mostra as matérias publicadas.',
+  },
+  {
+    pergunta: 'Vocês garantem matéria na Exame, no Canaltech ou em outro veículo?',
+    resposta:
+      'Não. Quem decide o que sai é o editor, e nenhuma assessoria séria vende espaço editorial. O que a Mclair garante é método: pauta com interesse jornalístico, porta-voz preparado e contato com o repórter que cobre o assunto.',
+  },
+  {
+    pergunta: 'Meu produto é técnico demais, um SaaS B2B por exemplo. Dá para virar pauta?',
+    resposta:
+      'Dá, quando a pauta fala do problema que o produto resolve e não só da funcionalidade. O jornalista de negócios quer saber o impacto para empresas e pessoas, e o de tecnologia quer a explicação de quem entende. Artigo assinado pelo especialista da casa costuma ser o caminho mais curto, como fizeram Diego Nogare na Exame e Elemar Jr. no UOL Tecnologia e no Canaltech.',
+  },
+  {
+    pergunta: 'A assessoria pode vir junto com branding e redes sociais?',
+    resposta:
+      'Pode. Na Zbra, a Mclair alinhou imprensa e redes sociais ao rebranding da empresa. Na Lambda3, foram cinco anos de assessoria de imprensa com comunicação digital. Para o Elemar Jr., o trabalho incluiu o branding da EximiaCo. E para o time Guiando, a Mclair criou o nome e a identidade do nexinvoice, produto depois adquirido pela Asaas.',
+  },
+  {
+    pergunta: 'Minha empresa de tecnologia não fica em São Paulo. Vocês atendem?',
+    resposta:
+      'Sim. A Mclair tem base em São Paulo e atende o Brasil todo de forma remota, por vídeo, telefone e WhatsApp. Para a imprensa de tecnologia, o que conta é a pauta e a fonte, não a cidade de quem envia.',
+  },
+];

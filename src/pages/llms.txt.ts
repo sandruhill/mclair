@@ -54,6 +54,11 @@ export const GET: APIRoute = async () => {
     content = `${content.trimEnd()}\n\n## Imprensa\n\n- [Mclair na mídia](${BASE}/mclair-na-midia/): matérias conquistadas pela Mclair para clientes, organizadas por veículo e por cliente, com link para cada matéria e para o case.\n`;
   }
 
+  // Página de setor (27/10/2026): o texto do llms vem do CMS, que não a cita.
+  if (!content.includes('/empresas-de-tecnologia/')) {
+    content = `${content.trimEnd()}\n\n## Assessoria de imprensa por setor\n\n- [Assessoria de imprensa para empresas de tecnologia](${BASE}/servicos/assessoria-de-imprensa/empresas-de-tecnologia/): assessoria de imprensa para empresas de tecnologia, startups, SaaS e especialistas em software, dados e IA, com cases da Lambda3, Diego Nogare, Elemar Jr. e Zbra na CNN Brasil, Exame, UOL Tecnologia, Canaltech e SBT.\n`;
+  }
+
   // A página da Kelly é a entidade-pessoa do site; garante que apareça no
   // llms.txt mesmo que o texto do CMS ainda não a cite.
   if (!content.includes('/kelly-pinheiro/')) {
