@@ -806,7 +806,7 @@ if ($id > 0) {
         fd.set('ajax', '1');
         fd.set('ultimo_evento', ultimoEvento());
         f.classList.add('enviando');
-        fetch(f.action || location.href, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+        fetch(f.getAttribute('action') || location.href, { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
           .then(function (res) { return res.json().then(function (j) { return { http: res.status, j: j }; }); })
           .then(function (res) {
             f.classList.remove('enviando');
