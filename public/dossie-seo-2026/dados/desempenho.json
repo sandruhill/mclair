@@ -1,9 +1,10 @@
 {
- "actualizado": "2026-10-15",
- "fuentes": "Search Console, Bing Webmaster Tools (com o relatório de IA), Semrush base Brasil, o Perfil da Empresa no Google e as perguntas fixas às IAs",
+ "actualizado": "2026-10-30",
+ "fuentes": "Search Console (desempenho, índice e recursos de IA), Bing Webmaster Tools (com o relatório de IA), Semrush base Brasil (histórico e backlinks), o Perfil da Empresa no Google e as perguntas fixas às IAs",
  "calendario": [
   "2026-09-23",
   "2026-10-15",
+  "2026-10-30",
   "2026-11-15",
   "2026-12-15",
   "2027-01-15",
@@ -61,10 +62,16 @@
    "mejor": "arriba"
   },
   {
-   "id": "citas_copilot",
-   "nombre": "Citações no Copilot (3 meses)",
+   "id": "ia_google",
+   "nombre": "Impressões nas IAs do Google (3 meses)",
    "mejor": "arriba",
-   "nota": "Relatório de IA do Bing Webmaster."
+   "nota": "Visão Geral criada por IA e Modo IA, pelo relatório de recursos de IA generativa do Search Console."
+  },
+  {
+   "id": "citas_copilot",
+   "nombre": "Citações nas IAs da Microsoft (3 meses)",
+   "mejor": "arriba",
+   "nota": "Copilot e parceiros, pelo relatório AI Performance do Bing Webmaster."
   },
   {
    "id": "ia_sp",
@@ -76,7 +83,7 @@
    "id": "ia_leiloes",
    "nombre": "IAs que citam a Mclair em 1º para leiloeiros",
    "mejor": "arriba",
-   "nota": "ChatGPT e Perplexity."
+   "nota": "Das perguntas fixas: ChatGPT, Perplexity e, desde 30/10, o Modo IA do Google."
   },
   {
    "id": "semrush_kw",
@@ -159,32 +166,60 @@
    "authority": 7,
    "dominios_ref": 193,
    "gbp_avaliacoes": 0,
-   "fichas_ok": 0
+   "fichas_ok": 0,
+   "ia_google": null
   },
   {
    "fecha": "2026-10-15",
-   "nota": "Leitura parcial, só Semrush, feita na pesquisa de SERP comercial: nenhuma consulta do painel no top 100. O Authority Score e os domínios vêm do relatório de backlinks dessa data e não batem com os de 23/09, que eram da visão geral do domínio. No mesmo dia entrou no ar a página da Kelly.",
-   "google_indexadas": null,
-   "google_cliques": null,
-   "google_impressoes": null,
-   "consultas": null,
-   "consultas_imprensa": null,
+   "nota": "Completada em 30/10 com o histórico: Search Console e Bing de três meses até 15/10, índice do Google no gráfico do dia, Semrush pelo histórico diário. Ficam sem dado as páginas no Bing (o Bing não guarda histórico) e as perguntas às IAs, que não dá para refazer no passado. O Authority Score e os domínios vêm do relatório de backlinks. No mesmo dia entrou no ar a página da Kelly.",
+   "google_indexadas": 378,
+   "google_cliques": 15,
+   "google_impressoes": 758,
+   "consultas": 62,
+   "consultas_imprensa": 0,
    "bing_indexadas": null,
-   "bing_cliques": null,
-   "bing_impressoes": null,
-   "citas_copilot": null,
+   "bing_cliques": 1,
+   "bing_impressoes": 14,
+   "citas_copilot": 0,
    "ia_sp": null,
    "ia_leiloes": null,
-   "semrush_kw": null,
-   "semrush_trafego": null,
+   "semrush_kw": 9,
+   "semrush_trafego": 0,
    "kw_top100": 0,
    "kw_top20": 0,
    "kw_top10": 0,
    "cidades_indexadas": 0,
    "authority": 6,
    "dominios_ref": 271,
-   "gbp_avaliacoes": null,
-   "fichas_ok": null
+   "gbp_avaliacoes": 0,
+   "fichas_ok": 0,
+   "ia_google": 60
+  },
+  {
+   "fecha": "2026-10-30",
+   "nota": "Medição extra, duas semanas depois das páginas novas (16/10 a 21/10). Pela primeira vez o Google mostra a Mclair em buscas com \"assessoria de imprensa\": 30 consultas e 531 impressões, quase todas na página de Curitiba (posição 21). A página \"quanto custa\" está na posição 9 e trouxe o primeiro clique de assessoria. Seis páginas de cidade aparecem no Google. As IAs do Google saltaram de 60 para 200 impressões. Nas perguntas fixas, ChatGPT, Perplexity e o Modo IA do Google citam a Mclair em primeiro para leiloeiros; para São Paulo, nenhuma das três cita (usam Anuário da Comunicação, Clutch e oHub). Perfil do Google verificado e completo, ainda sem avaliações. Índice do Google: relatório atualizado em 22/10.",
+   "google_indexadas": 387,
+   "google_cliques": 23,
+   "google_impressoes": 2110,
+   "consultas": 158,
+   "consultas_imprensa": 30,
+   "bing_indexadas": 235,
+   "bing_cliques": 1,
+   "bing_impressoes": 20,
+   "ia_google": 200,
+   "citas_copilot": 0,
+   "ia_sp": 0,
+   "ia_leiloes": 3,
+   "semrush_kw": 17,
+   "semrush_trafego": 0,
+   "kw_top100": 16,
+   "kw_top20": 0,
+   "kw_top10": 0,
+   "cidades_indexadas": 6,
+   "authority": 6,
+   "dominios_ref": 297,
+   "gbp_avaliacoes": 0,
+   "fichas_ok": 2
   }
  ]
 }

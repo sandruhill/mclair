@@ -1,8 +1,9 @@
 {
- "fuente": "Semrush, base Brasil (br), pesquisa de 15/10/2026",
- "actualizado": "2026-10-15",
+ "fuente": "Semrush, base Brasil (br), pesquisa de 15/10/2026 (volumes e dificuldade). A partir de 30/10, as posições vêm do Search Console: posição média real no Google no mês",
+ "actualizado": "2026-10-30",
  "calendario": [
   "2026-10-15",
+  "2026-10-30",
   "2026-11-15",
   "2026-12-15",
   "2027-01-15",
@@ -396,6 +397,28 @@
    "fecha": "2026-10-15",
    "nota": "Linha de base. A Mclair não aparece em nenhuma consulta com \"imprensa\" no Semrush br; o domínio sem www não tem dados e o www tem uma palavra só (\"filme comunicação\", posição 12, numa URL antiga).",
    "posiciones": {}
+  },
+  {
+   "fecha": "2026-10-30",
+   "nota": "Primeira leitura pelo Search Console (posição média real no Google, de 1 a 30/10), no lugar da estimativa do Semrush. 16 das 48 consultas já aparecem; a melhor é \"assessoria de imprensa curitiba\", na posição 21. Em 15/10 nenhuma aparecia.",
+   "posiciones": {
+    "assessoria de imprensa": 80,
+    "acessoria de imprensa": 84,
+    "assesoria de imprensa": 79,
+    "assessorias de imprensa": 77,
+    "contratar assessoria de imprensa": 74,
+    "empresa de assessoria de imprensa": 75,
+    "empresas de assessoria de imprensa": 94,
+    "assessoria de imprensa sp": 68,
+    "assessoria de imprensa em sp": 52,
+    "assessoria de imprensa são paulo": 47,
+    "assessoria de imprensa em são paulo": 46,
+    "assessoria de imprensa rj": 48,
+    "assessoria de imprensa rio de janeiro": 42,
+    "assessoria de imprensa curitiba": 21,
+    "quanto custa assessoria de imprensa": 48,
+    "assessoria de imprensa preço": 42
+   }
   }
  ]
 }
