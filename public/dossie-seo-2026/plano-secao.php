@@ -69,6 +69,26 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
       <h2 id="resultados-h">Resultados</h2>
       <p class="sec-intro">A medição é feita no dia 15 de cada mês e acrescenta uma coluna aos dois primeiros painéis.</p>
 
+      <div class="kw">
+        <h3>O que mudou de 15 a 30 de outubro</h3>
+        <div class="intro">Medição extra, duas semanas depois das páginas novas (16 a 21/10). A coluna de 15/10 foi completada com o histórico do Search Console, do Bing e do Semrush.</div>
+        <div class="scroll"><table>
+          <thead><tr><th>O que medimos</th><th class="num">15/10</th><th class="num">30/10</th><th>O que quer dizer</th></tr></thead>
+          <tbody>
+          <tr><td>Buscas com "assessoria de imprensa" em que o Google mostrou o site<span class="mnota">Search Console, 3 meses</span></td><td class="num">0</td><td class="num">30</td><td>Pela primeira vez a Mclair aparece para o que vende. Essas 30 buscas somaram 531 exibições, 325 delas em "assessoria de imprensa curitiba".</td></tr>
+          <tr><td>Consultas do painel no top 100 do Google<span class="mnota">das 48 que a Mclair disputa</span></td><td class="num">0</td><td class="num">16</td><td>A melhor é Curitiba, na posição 21. "assessoria de imprensa", a maior de todas, está na 80.</td></tr>
+          <tr><td>Páginas de cidade aparecendo no Google</td><td class="num">0</td><td class="num">6</td><td>São Paulo, Curitiba, Rio de Janeiro, Belo Horizonte, Porto Alegre e Brasília.</td></tr>
+          <tr><td>Página "Quanto custa" no Google</td><td class="num">não existia</td><td class="num">posição 9</td><td>Trouxe o primeiro clique de quem procurava assessoria de imprensa.</td></tr>
+          <tr><td>Exibições nas IAs do Google<span class="mnota">Visão Geral e Modo IA, 3 meses</span></td><td class="num">60</td><td class="num">200</td><td>O salto começa em 16/10. Aparecem até perguntas longas, como o custo médio de uma assessoria em São Paulo, com a Mclair na posição 3.</td></tr>
+          <tr><td>Citações nas IAs da Microsoft<span class="mnota">Copilot, 3 meses</span></td><td class="num">0</td><td class="num">0</td><td>O Bing ainda não usa o site como fonte. A ficha do Bing Places segue sem publicação.</td></tr>
+          <tr><td>IAs que citam a Mclair em 1º para leiloeiros</td><td class="num">sem dado</td><td class="num">3 de 3</td><td>ChatGPT, Perplexity e, pela primeira vez, o Modo IA do Google.</td></tr>
+          <tr><td>IAs que citam a Mclair entre as melhores de SP</td><td class="num">sem dado</td><td class="num">0 de 3</td><td>Elas usam o Anuário da Comunicação, o Clutch e as listas do oHub. As avaliações no Google e o perfil do oHub são o caminho.</td></tr>
+          <tr><td>Páginas no Bing</td><td class="num">sem dado</td><td class="num">235</td><td>Eram 50 em 23/09.</td></tr>
+          <tr><td>Avaliações no Perfil do Google</td><td class="num">0</td><td class="num">0</td><td>O perfil está verificado e completo; falta a primeira avaliação.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+
       <div class="kw" id="perf"></div>
       <div class="kw" id="kw"></div>
 
@@ -97,14 +117,14 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
 
       <div class="kw capas">
         <h3>Diagnóstico por camada, de 15 de outubro até hoje</h3>
-        <div class="intro">Como cada camada estava na véspera da primeira rodada de correções e o que já foi feito depois. Atualizado em 21/10. O detalhe de cada item está nas tarefas do plano.</div>
+        <div class="intro">Como cada camada estava na véspera da primeira rodada de correções e o que já foi feito depois. Atualizado em 30/10. O detalhe de cada item está nas tarefas do plano.</div>
         <div class="scroll"><table>
           <tr><td class="n">SEO técnico</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 já estava saudável no Google (canonical, 301 das 69 URLs antigas, robots). <b>Feito em 16/10:</b> 301 do <code>www</code>, IndexNow ligado, títulos sem palavras coladas, sitemap com datas reais e reenviado, <code>llms.txt</code> novo. <b>Fica de fora:</b> o GPTBot, bloqueado por regra fixa da Hostinger.</td></tr>
           <tr><td class="n">Página de serviço</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 tinha cerca de 181 palavras, sem FAQ, sem cases e sem veículo citado. <b>Feito em 16/10:</b> reescrita com cerca de 1.800 palavras, 10 perguntas frequentes, cases ligados no texto e os veículos em que os clientes saíram. Em volta dela entraram Quanto custa, Assessor de imprensa, Gestão de crise, Media training e três guias. <b>Falta:</b> a revisão da Kelly.</td></tr>
           <tr><td class="n">Silo de cidades</td><td class="e curso"><i></i>6 de 9</td><td class="det">Em 15/10 não havia nenhuma página de cidade. <b>No ar:</b> São Paulo, Brasília e Porto Alegre (16 e 17/10), Curitiba, Rio de Janeiro e Belo Horizonte (21/10), com texto próprio, ligadas pelo hub (seção "nas capitais") e pelo rodapé. <b>Falta:</b> Florianópolis, Joinville e Goiânia em janeiro. Cuiabá saiu do plano em 21/10, sem case em MT.</td></tr>
           <tr><td class="n">Entidade</td><td class="e listo"><i></i>Feito</td><td class="det"><b>Feito:</b> Person canônico da Kelly (15/10), com o LinkedIn pessoal no <code>sameAs</code> (16/10), e o nome dela ligado à página em todo o site. <b>Feito em 22/10:</b> o Facebook passou a se chamar "Mclair Comunicação", o mesmo nome de todos os cadastros.</td></tr>
-          <tr><td class="n">Fichas externas</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> Perfil do Google na categoria Assessoria de imprensa, com as 9 cidades, descrição, 7 serviços e fotos da Kelly (16 e 17/10), e o link de avaliação com a mensagem pronta (21/10). <b>Falta, tudo com a Mclair:</b> a primeira avaliação (hoje são zero), a conta no Bing Places, no oHub e no Clutch (o básico é grátis).</td></tr>
-          <tr><td class="n">AEO e GEO</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> FAQPage na página de serviço e nas cidades, <code>llms.txt</code>, robôs de IA liberados e a página <a href="/mclair-na-midia/">Mclair na mídia</a> (21/10), que é a prova que as IAs leem. O guia das melhores agências de SP espera aprovação. <b>Falta:</b> estar nas fontes que as IAs consultam (oHub, Clutch, avaliações) e medir de novo as respostas das IAs em 15/11.</td></tr>
+          <tr><td class="n">Fichas externas</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> Perfil do Google na categoria Assessoria de imprensa, com as 9 cidades, descrição, 7 serviços e fotos da Kelly (16 e 17/10), e o link de avaliação com a mensagem pronta (21/10). <b>Feito em 30/10:</b> perfil do oHub preenchido. <b>Em andamento:</b> Bing Places importado em 21/10 e ainda não publicado no Bing Maps (conferido em 30/10). <b>Falta, tudo com a Mclair:</b> a primeira avaliação no Google (hoje são zero) e o Clutch (o básico é grátis).</td></tr>
+          <tr><td class="n">AEO e GEO</td><td class="e curso"><i></i>Em andamento</td><td class="det"><b>Feito:</b> FAQPage na página de serviço e nas cidades, <code>llms.txt</code>, robôs de IA liberados e a página <a href="/mclair-na-midia/">Mclair na mídia</a> (21/10), que é a prova que as IAs leem. O guia das melhores agências de SP espera aprovação. <b>Medido em 30/10:</b> ChatGPT, Perplexity e o Modo IA do Google citam a Mclair em primeiro para leiloeiros; para São Paulo, nenhuma das três. As exibições nas IAs do Google foram de 60 para 200. <b>Falta:</b> avaliações no Google, Clutch e a nova medição em 15/11.</td></tr>
           <tr><td class="n">Conversão</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 já havia sete links de WhatsApp. <b>Feito em 16/10:</b> a mensagem diz de qual página o contato veio, os formulários mandam e-mail para a Kelly, e o envio conta como conversão no Analytics. Desde 19/10 cada contato fica gravado no painel, com a origem.</td></tr>
         </table></div>
       </div>
