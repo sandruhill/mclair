@@ -150,8 +150,12 @@
 .task[hidden]{display:none}
 .task{padding:14px 20px; border-top:1px solid var(--line); scroll-margin-top:64px}
 .task:first-child{border-top:0}
-.tasks-feitas .task{background:var(--surface)}
-.tasks-feitas .task.expandida{background:var(--done-bg)}
+.tasks-feitas{border-color:#b7dcc9}
+.task.is-done,.tasks-feitas .task{background:var(--done-bg)}
+.tasks-feitas .task{border-top-color:#cbe6d8}
+.tasks-feitas .task.expandida{background:#d4ebe0}
+.task.is-done:not(.is-desc) .task-linha b::before{content:"Feita"; display:inline-block; margin-right:8px; padding:1px 7px; border-radius:4px; background:var(--done); color:#fff; font-size:12px; font-weight:700; vertical-align:2px}
+.task.is-done:not(.is-desc) .task-linha b{color:var(--done)}
 .task:not(.is-done)[data-who="Mclair"]{background:var(--agency-bg)}
 .task:not(.is-done):not([data-who="Mclair"]){background:var(--ikoeh-bg)}
 .task.is-desc{background:var(--surface-2)}
