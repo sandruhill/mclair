@@ -30,6 +30,7 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
         <a href="#depende">O que depende da Mclair</a>
         <a href="#plano">Plano mês a mês</a>
         <a href="#resultados">Resultados</a>
+        <a href="#sazonalidade">Sazonalidade</a>
         <a href="#anexos">Anexos</a>
       </nav>
     </section>
@@ -128,6 +129,38 @@ if (!defined('DOSSIE_PLANO') || !isset($json, $versao, $atualizado, $anexoDossie
           <tr><td class="n">Conversão</td><td class="e listo"><i></i>Feito</td><td class="det">Em 15/10 já havia sete links de WhatsApp. <b>Feito em 16/10:</b> a mensagem diz de qual página o contato veio, os formulários mandam e-mail para a Kelly, e o envio conta como conversão no Analytics. Desde 19/10 cada contato fica gravado no painel, com a origem. <b>Feito em 21/10:</b> política de privacidade revisada pela Kelly e aviso de cookies no ar; o Analytics e o pixel da Meta só ligam depois do aceite.</td></tr>
         </table></div>
       </div>
+    </section>
+    <section class="sec" id="sazonalidade" aria-labelledby="sazonalidade-h">
+      <h2 id="sazonalidade-h">Sazonalidade da busca</h2>
+      <p class="sec-intro">Quanto se procura por assessoria de imprensa em cada mês, comparado com a média do ano (100). A linha de hoje anda sozinha com o calendário; os botões ligam e desligam cada série e o seletor põe um ano por cima da média.</p>
+
+      <p class="saz-agora" id="saz-agora" aria-live="polite"></p>
+
+      <div class="saz-caixa">
+        <div class="saz-ctl" role="group" aria-label="Séries do gráfico" id="saz-botoes"></div>
+        <label class="saz-ano">Comparar com o ano
+          <select id="saz-ano"><option value="">nenhum</option></select>
+        </label>
+        <div class="saz-graf" id="saz-graf">
+          <noscript><p class="regla">O gráfico precisa de JavaScript ligado no navegador.</p></noscript>
+        </div>
+        <div class="saz-dica" id="saz-dica" role="status" hidden></div>
+        <p class="saz-fonte" id="saz-fonte"></p>
+      </div>
+
+      <div class="kw capas saz-leitura">
+        <h3>O que o gráfico diz</h3>
+        <div class="scroll"><table>
+          <tr><td class="n">O ano é quase plano</td><td class="det">De janeiro a novembro a busca fica entre 96 e 114. Quem contrata assessoria de imprensa procura o ano inteiro, sem temporada como turismo ou varejo.</td></tr>
+          <tr><td class="n">Dezembro é o único buraco</td><td class="det">71 no Brasil e 66 em São Paulo, cerca de 30% abaixo da média. Em janeiro a busca já volta ao normal.</td></tr>
+          <tr><td class="n">Dois picos: março e setembro</td><td class="det">Março (114) é o mais alto, depois do Carnaval. Setembro (105) vem com o planejamento do fim do ano. Em "assessoria de comunicação" setembro é ainda mais forte (117).</td></tr>
+          <tr><td class="n">A tendência dos anos</td><td class="det">A busca subiu 19% de 2023 para 2024 e ficou igual em 2025. Em 2026, de janeiro a outubro, está 10% abaixo do mesmo período de 2025 no Brasil e 13% em São Paulo. "Assessoria de comunicação" quase não caiu (2%).</td></tr>
+          <tr><td class="n">O que muda no plano</td><td class="det"><b>Dezembro é mês de produzir, não de medir.</b> A medição de 15/12 vai mostrar queda que é do calendário, não do trabalho; a comparação justa é com dezembro do ano anterior. <b>Março se prepara em janeiro.</b> Página nova leva semanas para firmar posição no Google, então as cidades de janeiro (Florianópolis, Joinville e Goiânia) precisam sair até o fim do mês para pegar o pico. <b>Setembro se prepara em julho</b>, com o mesmo raciocínio.</td></tr>
+        </table></div>
+        <div class="cal">O Google Trends mostra interesse relativo, não número de buscas. Serve para dizer quando a procura sobe e desce; o volume de cada termo continua vindo do Semrush, nos painéis de Resultados.</div>
+      </div>
+      <script type="application/json" id="saz-dados"><?php readfile(__DIR__ . '/dados/sazonalidade.json'); ?></script>
+      <script src="<?= PLANO_BASE ?>saz.js?v=<?= planoH((string) filemtime(__DIR__ . '/saz.js')) ?>" defer></script>
     </section>
 
   </div>

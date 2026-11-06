@@ -271,3 +271,42 @@ body.solo-leitura .cyc{cursor:default}
 .ilustrado .diagram{overflow-x:auto}
 .ilustrado .diagram svg{display:block; width:100%; min-width:640px; height:auto}
 .ilustrado svg text{font-family:var(--font)}
+
+/* Sazonalidade: gráfico desenhado pelo saz.js a partir de dados/sazonalidade.json */
+.saz-agora{margin-top:18px; max-width:70ch; font-size:16.5px; color:var(--ink-2); text-wrap:pretty}
+.saz-agora b{color:var(--ink)}
+.saz-caixa{margin-top:18px; border:1px solid var(--line); border-radius:10px; background:var(--surface); padding:16px 18px 12px; position:relative}
+.saz-ctl{display:flex; flex-wrap:wrap; gap:8px}
+.saz-bt{display:inline-flex; align-items:center; gap:8px; font-size:14px; font-weight:700; padding:7px 12px; border-radius:6px; border:1px solid var(--line-2); background:#fff; color:var(--ink-3); cursor:pointer}
+.saz-bt i{width:14px; height:3px; border-radius:2px; background:var(--c); opacity:.35}
+.saz-bt[aria-pressed="true"]{color:var(--ink); border-color:var(--ink-4)}
+.saz-bt[aria-pressed="true"] i{opacity:1}
+.saz-bt:focus-visible,.saz-ano select:focus-visible{outline:2px solid var(--teal); outline-offset:2px}
+.saz-ano{display:inline-flex; align-items:center; gap:8px; margin-top:10px; font-size:14px; color:var(--ink-3)}
+.saz-ano select{font:inherit; font-size:14px; padding:6px 8px; border:1px solid var(--line-2); border-radius:6px; background:#fff; color:var(--ink)}
+.saz-graf{margin-top:8px}
+.saz-graf svg{display:block; width:100%; height:auto; touch-action:pan-y}
+.saz-graf text{font-family:var(--font); fill:var(--ink-3); font-size:13px}
+.saz-graf .eixo{font-variant-numeric:tabular-nums}
+.saz-graf .grade{stroke:var(--line); stroke-width:1}
+.saz-graf .base{stroke:var(--ink-4); stroke-width:1; stroke-dasharray:4 4}
+.saz-graf .faixa{fill:var(--cream-2)}
+.saz-graf .faixa-t{font-size:12.5px; fill:var(--ink-3); font-weight:700}
+.saz-graf .hoje{stroke:var(--ink); stroke-width:1.5}
+.saz-graf .hoje-t{fill:var(--ink); font-weight:700; font-size:12.5px}
+.saz-graf .linha{fill:none; stroke-width:2.5; stroke-linejoin:round; stroke-linecap:round}
+.saz-graf .linha.ano{stroke-width:2; stroke-dasharray:6 5}
+.saz-graf .guia{stroke:var(--ink-4); stroke-width:1}
+.saz-graf .val{font-size:12.5px; font-weight:700; fill:var(--ink-2); font-variant-numeric:tabular-nums}
+.saz-graf .mes-hoje{fill:var(--ink); font-weight:700}
+.saz-dica{position:absolute; pointer-events:none; background:#fff; border:1px solid var(--line-2); border-radius:8px; padding:8px 11px; font-size:13.5px; line-height:1.5; box-shadow:0 4px 14px rgba(28,26,23,.08); min-width:150px; z-index:2}
+.saz-dica b{display:block; color:var(--ink); margin-bottom:2px}
+.saz-dica span{display:flex; justify-content:space-between; gap:14px; color:var(--ink-2)}
+.saz-dica em{font-style:normal; font-variant-numeric:tabular-nums; font-weight:700}
+.saz-fonte{margin-top:6px; font-size:13px; color:var(--ink-4)}
+.saz-leitura .n{white-space:normal; width:200px}
+@media (max-width:560px){
+  .saz-caixa{padding:12px 10px 10px}
+  .saz-leitura .n{width:120px}
+}
+.saz-dica i{font-style:normal; font-weight:700}
