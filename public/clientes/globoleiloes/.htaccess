@@ -1,0 +1,8 @@
+# Documento de cliente. Bloqueio de indexacao no cabecalho HTTP, que vale
+# mesmo se alguem pedir o arquivo sem interpretar o HTML.
+<IfModule mod_headers.c>
+  Header always set X-Robots-Tag "noindex, nofollow, noarchive, nosnippet, noimageindex"
+</IfModule>
+
+# Sem listagem de diretorio: ninguem descobre o conteudo da pasta pela URL.
+Options -Indexes
