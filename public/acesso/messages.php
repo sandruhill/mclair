@@ -131,6 +131,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             mcmEvento($pdo, $id, 'status', 'Status mudou de "' . (MCM_STATUS[$m['status']] ?? $m['status']) . '" para "' . MCM_STATUS[$novo] . '"', $meuId);
         }
         if ($ajax) respostaFicha($pdo, $id, $equipe, 'Salvo', $desde);
+        if (isset($_POST['retorno'])) {
+            // Veio do seletor da lista (sem JS): volta para a lista com os mesmos filtros.
+            parse_str((string)$_POST['retorno'], $rq);
+            $rq = array_intersect_key(is_array($rq) ? $rq : [], array_flip(['q', 'status', 'origem', 'formulario', 'tipo', 'de', 'ate', 'lixeira', 'p']));
+            $rq = array_filter(array_map(static fn($v) => is_string($v) ? $v : '', $rq), static fn($v) => $v !== '');
+            $rq['ok'] = 'status';
+            header('Location: mensagens?' . http_build_query($rq));
+            exit;
+        }
         header('Location: ' . $volta . '&ok=status');
         exit;
     }
@@ -899,7 +908,8 @@ function urlFiltro(array $f, array $mudar): string {
     return 'mensagens' . ($q ? '?' . http_build_query($q) : '');
 }
 $filtrando = $f['q'] !== '' || $f['status'] !== '' || $f['origem'] !== '' || $f['formulario'] !== '' || $f['de'] !== '' || $f['ate'] !== '';
-$okMsg = ['excluida' => 'Mensagem movida para a lixeira.', 'apagada' => 'Mensagem apagada.'][$_GET['ok'] ?? ''] ?? null;
+$okMsg = ['excluida' => 'Mensagem movida para a lixeira.', 'apagada' => 'Mensagem apagada.', 'status' => 'Status atualizado.'][$_GET['ok'] ?? ''] ?? null;
+$retornoLista = http_build_query(array_filter(['q' => $f['q'], 'status' => $f['status'], 'origem' => $f['origem'], 'formulario' => $f['formulario'], 'tipo' => $f['tipo'] !== 'enviadas' ? $f['tipo'] : '', 'de' => $f['de'], 'ate' => $f['ate'], 'lixeira' => $f['lixeira'] ? '1' : '', 'p' => $page > 1 ? (string)$page : ''], static fn($v) => $v !== ''));
 
 if (random_int(1, 30) === 1) { try { mcmAnonimizarAntigos($pdo); } catch (Throwable $e) { error_log('mensagens: retenção falhou: ' . $e->getMessage()); } }
 
@@ -935,6 +945,35 @@ adminLayoutTop('messages', 'Mensagens');
   table.dt td.int .pri { display:block; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
   table.dt tr.linha { cursor:pointer; }
   table.dt tr.linha.nova .quem .nm { color:var(--red); }
+  /* Lista cabe na largura: colunas com largura fixa e texto cortado com reticências */
+  .tablecard.lista { overflow-x:auto; }
+  table.dt.msgs { table-layout:fixed; min-width:880px; }
+  table.dt.msgs th, table.dt.msgs td { padding-left:12px; padding-right:12px; }
+  table.dt.msgs col.c-quem { width:27%; }
+  table.dt.msgs col.c-int { width:22%; }
+  table.dt.msgs col.c-ori { width:16%; }
+  table.dt.msgs col.c-qdo { width:11%; }
+  table.dt.msgs col.c-st { width:15%; }
+  table.dt.msgs col.c-ac { width:9%; }
+  table.dt.msgs td { overflow:hidden; }
+  table.dt.msgs td .sec, table.dt.msgs td .pri { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  table.dt.msgs .quem .ct { max-width:none; }
+  table.dt.msgs td.int { max-width:none; }
+  table.dt.msgs .dt-actions { white-space:nowrap; }
+  table.dt.msgs .dt-actions a { display:block; margin:0 0 4px; }
+  .st-sel { width:100%; padding:6px 26px 6px 9px; border-radius:6px; font-size:.76rem; font-weight:700; border:1px solid transparent; cursor:pointer; background-color:var(--soft); color:var(--ink-3); }
+  .st-sel:focus { outline:2px solid var(--ink); outline-offset:1px; }
+  .st-sel.st-novo { background-color:rgba(200,16,46,.1); color:var(--red); }
+  .st-sel.st-em_atendimento { background-color:#E8F0FB; color:#1D4ED8; }
+  .st-sel.st-atendido { background-color:#E6F4EC; color:#1E7F4D; }
+  .st-sel.st-proposta_enviada { background-color:#EFE9FB; color:#6D28D9; }
+  .st-sel.st-fechado { background-color:#1E7F4D; color:#fff; }
+  .st-sel.st-perdido { background-color:#F1F2F4; color:#6B7280; }
+  .st-sel option { background:#fff; color:#111; }
+  .st-form { margin:0; }
+  .st-form.salvando .st-sel { opacity:.55; }
+  .st-aviso { display:block; font-size:.72rem; font-weight:700; margin-top:3px; min-height:1em; color:#1E7F4D; }
+  .st-aviso.erro { color:var(--red); }
   .vazio { padding:40px 20px; text-align:center; color:var(--ink-3); font-size:.9rem; }
   .vazio strong { display:block; color:var(--ink); font-size:1rem; margin-bottom:6px; }
 </style>
@@ -967,7 +1006,7 @@ adminLayoutTop('messages', 'Mensagens');
   <div style="display:flex;gap:6px"><button type="submit" class="btn">Filtrar</button><?php if ($filtrando): ?><a class="btn secondary" href="<?= hh(urlFiltro($f, ['q' => '', 'status' => '', 'origem' => '', 'formulario' => '', 'de' => '', 'ate' => ''])) ?>">Limpar</a><?php endif; ?></div>
 </form>
 
-<div class="tablecard">
+<div class="tablecard lista">
   <div class="tablecard-head">
     <div><strong><?= $f['lixeira'] ? 'Lixeira' : ($f['tipo'] === 'abandonadas' ? 'Começaram a preencher e não enviaram' : ($f['tipo'] === 'todas' ? 'Todas as mensagens' : 'Mensagens enviadas')) ?></strong><span class="count"><?= $total ?></span></div>
     <div style="display:flex;gap:8px"><?php if ($total > 0): ?><a class="btn secondary" href="<?= hh(urlFiltro($f, ['export' => 'csv'])) ?>" style="padding:8px 14px;font-size:.78rem">Exportar CSV</a><?php endif; ?><a class="btn" href="mensagens?novo=1" style="padding:8px 14px;font-size:.78rem">Cadastrar à mão</a></div>
@@ -975,7 +1014,8 @@ adminLayoutTop('messages', 'Mensagens');
   <?php if (!$lista): ?>
   <div class="vazio"><strong><?= $filtrando ? 'Nada com esses filtros' : ($f['tipo'] === 'abandonadas' ? 'Ninguém deixou formulário pela metade' : 'Nenhuma mensagem por aqui ainda') ?></strong><?= $filtrando ? 'Tente limpar a busca ou mudar o período.' : 'Cada formulário enviado no site aparece nesta lista e manda um e-mail para a Kelly.' ?></div>
   <?php else: ?>
-  <table class="dt">
+  <table class="dt msgs">
+    <colgroup><col class="c-quem" /><col class="c-int" /><col class="c-ori" /><col class="c-qdo" /><col class="c-st" /><col class="c-ac" /></colgroup>
     <tr><th>Quem</th><th>Interesse</th><th>Origem</th><th class="s">Quando</th><th>Status</th><th>Ações</th></tr>
     <?php foreach ($lista as $m): $wa = mcmTelefoneWa((string)$m['telefone']); $abn = $m['enviado_em'] === null; $quando = $m['enviado_em'] ?? $m['atualizado_em']; ?>
     <tr class="linha <?= !$abn && $m['status'] === 'novo' ? 'nova' : '' ?>" data-href="mensagens?id=<?= (int)$m['id'] ?>">
@@ -983,7 +1023,7 @@ adminLayoutTop('messages', 'Mensagens');
       <td class="int"><span class="pri"><?= rotuloInteresse($m) !== '' ? hh(rotuloInteresse($m)) : '<span style="color:#9CA3AF">sem assunto</span>' ?></span><span class="sec"><?= hh(MCM_FORMULARIOS[$m['formulario']] ?? ($m['formulario'] !== '' ? $m['formulario'] : 'formulário do site')) ?><?= $m['pagina'] !== '' ? ' · ' . hh($m['pagina']) : '' ?></span></td>
       <td><?= hh(MCM_ORIGENS[$m['origem']] ?? MCM_ORIGENS['']) ?><?= $m['origem_detalhe'] !== '' ? '<span class="sec">' . hh(mb_substr($m['origem_detalhe'], 0, 50)) . '</span>' : '' ?><?= lugar($m) !== '' ? '<span class="sec">' . hh(lugar($m)) . '</span>' : '' ?></td>
       <td title="<?= hh(mcmDataLocal($quando)) ?>"><?= hh(mcmTempoAtras($quando)) ?><span class="sec"><?= hh(mcmDataLocal($quando, 'd/m H:i')) ?></span></td>
-      <td><?= badgeStatus($m) ?><?= $m['responsavel_id'] ? '<span class="sec">' . hh(nomeUsuario($equipe, $m['responsavel_id'])) . '</span>' : '' ?><?= !$abn && $m['email_status'] === 'falhou' ? '<span class="sec" style="color:var(--red)">e-mail falhou</span>' : (!$abn && $m['email_status'] === 'enviado' ? '<span class="sec">e-mail aceito' . ($m['canal'] === 'whatsapp' ? ' · WhatsApp' : '') . '</span>' : '') ?></td>
+      <td><?php if ($abn || $f['lixeira']): ?><?= badgeStatus($m) ?><?php else: ?><form method="post" class="st-form" data-status-lista><input type="hidden" name="csrf" value="<?= hh(cmsCsrfToken()) ?>" /><input type="hidden" name="action" value="status" /><input type="hidden" name="id" value="<?= (int)$m['id'] ?>" /><input type="hidden" name="retorno" value="<?= hh($retornoLista) ?>" /><select name="status" class="st-sel st-<?= hh($m['status']) ?>" aria-label="Status de <?= hh($m['nome'] !== '' ? $m['nome'] : 'mensagem sem nome') ?>"><?php foreach (MCM_STATUS as $k => $v): ?><option value="<?= hh($k) ?>" <?= $k === $m['status'] ? 'selected' : '' ?>><?= hh($v) ?></option><?php endforeach; ?></select><noscript><button type="submit" class="btn secondary" style="margin-top:4px;padding:4px 10px;font-size:.72rem">Salvar</button></noscript><span class="st-aviso" aria-live="polite"></span></form><?php endif; ?><?= $m['responsavel_id'] ? '<span class="sec">' . hh(nomeUsuario($equipe, $m['responsavel_id'])) . '</span>' : '' ?><?= !$abn && $m['email_status'] === 'falhou' ? '<span class="sec" style="color:var(--red)">e-mail falhou</span>' : (!$abn && $m['email_status'] === 'enviado' ? '<span class="sec">e-mail aceito' . ($m['canal'] === 'whatsapp' ? ' · WhatsApp' : '') . '</span>' : '') ?></td>
       <td class="dt-actions"><a href="mensagens?id=<?= (int)$m['id'] ?>">abrir</a><?php if ($wa !== ''): ?><a href="https://wa.me/<?= hh($wa) ?>" target="_blank" rel="noopener" style="color:#1E7F4D">WhatsApp</a><?php endif; ?></td>
     </tr>
     <?php endforeach; ?>
@@ -999,11 +1039,42 @@ adminLayoutTop('messages', 'Mensagens');
 </div>
 <?php endif; ?>
 <script>
-// Linha inteira abre a ficha; links e botões dentro dela continuam normais.
+// Linha inteira abre a ficha; links, botões e o seletor de status continuam normais.
 document.querySelectorAll('tr.linha').forEach(function (tr) {
   tr.addEventListener('click', function (e) {
-    if (e.target.closest('a, button, form')) return;
+    if (e.target.closest('a, button, form, select')) return;
     location.href = tr.getAttribute('data-href');
+  });
+});
+// Status direto na lista: salva ao escolher, sem abrir a ficha nem recarregar.
+document.querySelectorAll('form[data-status-lista]').forEach(function (f) {
+  var sel = f.querySelector('select'), aviso = f.querySelector('.st-aviso'), atual = sel.value, timer;
+  function avisar(txt, erro) {
+    clearTimeout(timer);
+    aviso.textContent = txt;
+    aviso.classList.toggle('erro', !!erro);
+    if (!erro) timer = setTimeout(function () { aviso.textContent = ''; }, 1800);
+  }
+  f.addEventListener('submit', function (e) { e.preventDefault(); });
+  sel.addEventListener('change', function () {
+    var fd = new FormData(f);
+    fd.set('ajax', '1');
+    fd.delete('retorno');
+    f.classList.add('salvando');
+    sel.disabled = true;
+    fetch('mensagens', { method: 'POST', body: fd, credentials: 'same-origin', headers: { 'Accept': 'application/json' } })
+      .then(function (res) { return res.json().then(function (j) { return { http: res.status, j: j }; }); })
+      .then(function (r) {
+        f.classList.remove('salvando'); sel.disabled = false;
+        if (!r.j || !r.j.ok) { sel.value = atual; avisar((r.j && r.j.erro) || 'Não salvou. Tente de novo.', true); return; }
+        sel.className = 'st-sel st-' + r.j.status.chave;
+        sel.value = r.j.status.chave;
+        atual = sel.value;
+        var tr = f.closest('tr');
+        if (tr) tr.classList.toggle('nova', atual === 'novo');
+        avisar('Salvo');
+      })
+      .catch(function () { f.classList.remove('salvando'); sel.disabled = false; sel.value = atual; avisar('Sem conexão. Tente de novo.', true); });
   });
 });
 </script>
